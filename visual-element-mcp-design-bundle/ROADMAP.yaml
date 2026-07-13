@@ -5,6 +5,7 @@ requirements_source: docs/requirements.yaml
 status_values:
   task: [todo, in_progress, blocked, done]
   phase: [todo, in_progress, blocked, passed, failed]
+  decision: [pending, continue, adjust, stop]
 execution_policy:
   atomic_task_only: true
   require_task_dependencies: true
@@ -13,11 +14,35 @@ execution_policy:
   continue_on_failure: false
   require_progress_update: true
   require_phase_gate: true
+  require_decision_dependencies: true
+  decision_task_pending_until_done: true
+  decision_task_done_requires_non_pending: true
+  decision_verdict_does_not_replace_task_status: true
+  decision_verdict_is_immutable: true
+  decision_retry_requires_new_attempt_task: true
+  adjust_requires_remediation_and_new_attempt: true
+  stop_fails_owning_phase: true
   edge_first: true
   security_floor_must_not_fallback: true
   require_direct_contract_bindings: true
   require_bidirectional_contract_mapping: true
   atomic_task_expected_workdays: [1, 3]
+  migration_source_display_path: /mnt/d/vem
+  owner_migration_target: /home/qwzx/src/VEM
+  canonical_project_root_rule: git-top-level
+  staging_identity_rule: git-top-level-plus-device-inode
+  project_contents_at_git_root: true
+  p0_scope_boundary: proof-of-value-first
+  calendar_schedule_is_advisory: true
+  task_prompt_source: docs/tasks/ATOMIC_TASK_PROMPTS.md
+
+decisions:
+  P0-VALUE: {phase: P0, current_attempt: P0-T17B}
+  P0-GOLDEN: {phase: P0, current_attempt: P0-T9C}
+  P1-INJECTED: {phase: P1, current_attempt: P1-T17}
+  P2-TRUSTED: {phase: P2, current_attempt: P2-T13D}
+  P3-VISUAL: {phase: P3, current_attempt: P3-T19}
+  P4-V1: {phase: P4, current_attempt: P4-T6C}
 
 phases:
   - id: P0
@@ -26,9 +51,10 @@ phases:
     depends_on: []
     gate:
       commands: ["pnpm edge:preflight:verify", "pnpm install --frozen-lockfile", "pnpm roadmap:validate", "pnpm build", "pnpm typecheck", "pnpm test"]
+      requires_decisions: {P0-VALUE: continue, P0-GOLDEN: continue}
       done_when:
-        - EDGE-PREFLIGHT-001 has reproducible canonical-Git fixed-toolchain filesystem Edge Stable Windows-WSL HTTP-WebSocket-HMR loopback private-runtime ACL and real-process evidence or the phase remains blocked.
-        - The preregistered P0 value micro-pilot completes before topology and verification expansion and records an honest continue-or-adjust verdict without consuming later holdouts.
+        - EDGE-PREFLIGHT-001 has reproducible staging-to-canonical ext4 Git-root parity fixed Node-pnpm-Playwright direct and channel Edge Stable Windows-WSL HTTP-WebSocket-HMR loopback private-runtime ACL and real-process evidence or the phase remains blocked.
+        - The preregistered P0 value micro-pilot completes before topology and verification expansion with isolated contexts and records an explicit continue verdict without consuming later holdouts; done with adjust or stop does not authorize dependent tasks.
         - Workspace checks are reproducible.
         - Edge Stable can select one intrinsic JSX button and return a PRIV-MIN-001 bounded source resolution backed by the minimum EvidenceGraph through MCP.
         - Injected selection is reported as page-untrusted under SEL-PROV-001 and strict prepared work requires an external prompt or confirmation binding.
@@ -39,23 +65,36 @@ phases:
         - The minimum protocol including MCP-COMPAT-001 task and no-task behavior injected-browser source-anchor and verification decisions are recorded as accepted ADRs.
         - Production output contains no generated VEM marker client endpoint or mapping.
     tasks:
-      - {id: P0-T0, title: Record EDGE-PREFLIGHT-001 ADR and standalone probes for canonical Git fixed Node-pnpm execution profile filesystem registry-proxy Edge Stable launch Windows-WSL HTTP-WebSocket-HMR loopback private ACL two-process and evidence schema, contracts: [EDGE-PREFLIGHT-001], status: todo, depends_on: [], tests: [Git-worktree and evidence-commit probe, Node-pnpm-registry-proxy and filesystem watcher probe, Edge msedge channel launch, Windows-WSL HTTP-WebSocket-HMR reachability, runtime-directory owner-ACL, two-process restart and non-loopback fail-closed checks]}
-      - {id: P0-T1, title: Create pnpm TypeScript monorepo with pinned Node pnpm strict mode Vitest ESLint and record LICENSE-POLICY-001 project dependency and third-party notice baseline, contracts: [LICENSE-POLICY-001, TEST-GATE-001], status: todo, depends_on: [P0-T0], tests: [workspace smoke tests, clean frozen install package-license dependency-policy third-party-notice and vendored-asset checks]}
-      - {id: P0-T2, title: Add REQ-TRACE-001 roadmap requirements contract-ID and internal-link validator with consistent task phase state rules, contracts: [REQ-TRACE-001, TEST-GATE-001], status: todo, depends_on: [P0-T1], tests: [valid invalid unknown-contract uncovered-normative-section missing-test-map broken-link orphan cyclic and inconsistent-state fixtures]}
-      - {id: P0-T3, title: Record MCP-COMPAT-001 baseline protocol ADR and specifications for negotiated revisions task-no-task behavior RevisionContext PRIV-MIN-001 bounded summary VemError and minimum EvidenceGraph, contracts: [CORE-BOUND-001, REV-ID-001, EVIDENCE-TRUST-001, PRIV-MIN-001, MCP-COMPAT-001], status: todo, depends_on: [P0-T1], tests: [ADR lint contract-ID revision semantics primary-compat initialization no-task schema size privacy output evidence and compatibility tests]}
-      - {id: P0-T4, title: Create React Vite TypeScript demo privacy prompt-injection and malicious-input fixtures, contracts: [PRIV-MIN-001], status: todo, depends_on: [P0-T1], tests: [demo build, private-field URL-secret prompt-data and malicious fixture smoke tests]}
-      - {id: P0-T5, title: Record SEL-PROV-001 injected-browser ADR and add minimum selector overlay PRIV-MIN-001 projection bounded summary and external-confirmation limitation, contracts: [BROWSER-MODE-001, SEL-PROV-001, PRIV-MIN-001], status: todo, depends_on: [P0-T3, P0-T4], tests: [ADR lint target overlay page-untrusted provenance strict-confirmation private-field redaction prompt-data and summary-bound tests]}
+      - {id: P0-T0A0, title: Read-only inventory the staging identity baseline dirty and untracked payload target readiness ext4 capacity case collisions and migration plan, contracts: [EDGE-PREFLIGHT-001], status: todo, depends_on: [], tests: [Git-top-level device-inode source-baseline-HEAD dirty-bundle untracked-manifest target-collision ext4-capacity permission case-collision and no-target-mutation checks]}
+      - {id: P0-T0A1, title: Execute owner-authorized prefix-normalized migration layout commit and single-writer cutover while retaining the source as read-only rollback, contracts: [EDGE-PREFLIGHT-001], status: todo, depends_on: [P0-T0A0], tests: [source-baseline-parent prefix-normalized-content-hash dirty-payload-preservation clean-target non-nested-Git-root single-writer and read-only-rollback checks]}
+      - {id: P0-T0A2, title: Define the preflight evidence schema and exact reproducible Node-pnpm bootstrap decision at the migrated Git root, contracts: [EDGE-PREFLIGHT-001], status: todo, depends_on: [P0-T0A1], tests: [evidence-schema machine-classified-result Node-LTS pnpm-exact version-command and secret-redaction checks]}
+      - {id: P0-T0B, title: Probe registry proxy CA disk path case symlink pnpm install and ext4 watcher-HMR behavior, contracts: [EDGE-PREFLIGHT-001], status: todo, depends_on: [P0-T0A2], tests: [registry-proxy-CA disk path case symlink frozen-install ext4-watcher and HMR-latency checks]}
+      - {id: P0-T0C, title: Probe direct Windows Edge Stable binary launch interop and enterprise-policy classification, contracts: [EDGE-PREFLIGHT-001], status: todo, depends_on: [P0-T0A1], tests: [Edge-binary direct-headless-smoke version interop cleanup and policy-classification checks]}
+      - {id: P0-T0D, title: Probe Windows-WSL HTTP WebSocket HMR loopback exposure port-close and restart path, contracts: [EDGE-PREFLIGHT-001], status: todo, depends_on: [P0-T0B, P0-T0C], tests: [Windows-WSL HTTP-WebSocket-HMR two-process non-loopback-refusal port-close and restart checks]}
+      - {id: P0-T0E, title: Probe ext4 private runtime owner mode cleanup and reject DrvFS ACL evidence, contracts: [EDGE-PREFLIGHT-001], status: todo, depends_on: [P0-T0A1], tests: [runtime-directory owner-mode other-subject refusal cleanup and DrvFS-ACL-rejection checks]}
+      - {id: P0-T0F, title: Record preflight ADR aggregate signed-hash evidence and pass-or-block verdict, contracts: [EDGE-PREFLIGHT-001], status: todo, depends_on: [P0-T0D, P0-T0E], tests: [evidence hash completeness redaction reproducibility aggregate-verdict and fail-closed checks]}
+      - {id: P0-T1, title: Create pnpm TypeScript monorepo with pinned Node pnpm strict mode Vitest ESLint and record LICENSE-POLICY-001 project dependency and third-party notice baseline, contracts: [LICENSE-POLICY-001, TEST-GATE-001], status: todo, depends_on: [P0-T0F], tests: [workspace smoke tests, clean frozen install package-license dependency-policy third-party-notice and vendored-asset checks]}
+      - {id: P0-T0G, title: Pin Playwright and prove real Edge Stable msedge headed-headless channel plus policy classification, contracts: [EDGE-PREFLIGHT-001], status: todo, depends_on: [P0-T1], tests: [Playwright exact-version msedge-channel headed-headless temporary-profile policy-classification and cleanup checks]}
+      - {id: P0-T2, title: Add REQ-TRACE-001 roadmap requirements contract-ID internal-link and decision-dependency validator with consistent task phase state rules, contracts: [REQ-TRACE-001, TEST-GATE-001], status: todo, depends_on: [P0-T1], tests: [valid invalid unknown-contract uncovered-normative-section missing-test-map broken-link orphan cyclic decision-reference decision-status-verdict and inconsistent-state fixtures]}
+      - {id: P0-T3, title: Record MCP-COMPAT-001 baseline protocol ADR and specifications for negotiated revisions task-no-task behavior RevisionContext ConfirmationBinding PRIV-MIN-001 bounded summary VemError and minimum EvidenceGraph, contracts: [CORE-BOUND-001, REV-ID-001, EVIDENCE-TRUST-001, PRIV-MIN-001, MCP-COMPAT-001, CONF-BIND-001], status: todo, depends_on: [P0-T0G], tests: [ADR lint contract-ID revision semantics primary-compat initialization no-task confirmation schema size privacy output evidence and compatibility tests]}
+      - {id: P0-T4, title: Create React Vite TypeScript demo privacy prompt-injection and malicious-input fixtures, contracts: [PRIV-MIN-001], status: todo, depends_on: [P0-T0G], tests: [demo build, private-field URL-secret prompt-data and malicious fixture smoke tests]}
+      - {id: P0-T5, title: Record SEL-PROV-001 injected-browser ADR and add minimum selector overlay PRIV-MIN-001 projection bounded summary external-confirmation limitation and ephemeral lifecycle, contracts: [BROWSER-MODE-001, SEL-PROV-001, PRIV-MIN-001, DATA-LIFE-001], status: todo, depends_on: [P0-T3, P0-T4], tests: [ADR lint target overlay page-untrusted provenance strict-confirmation private-field redaction prompt-data summary-bound session-expiry project-restart-clear tests]}
       - {id: P0-T15, title: Record source-anchor and PROD-LEAK-001 ADR then implement only the dev-only intrinsic-JSX transform for the pinned Vite React matrix, contracts: [REV-ID-001, EVIDENCE-TRUST-001, PROD-LEAK-001], status: todo, depends_on: [P0-T3, P0-T4], tests: [ADR lint plugin-order sourcemap Fast-Refresh reserved-attribute build-nonexecution production-leakage and user-attribute tests]}
       - {id: P0-T16, title: Implement revision-scoped source registry publication and lookup prototype over the P0 transform output, contracts: [REV-ID-001, EVIDENCE-TRUST-001], status: todo, depends_on: [P0-T15], tests: [registry revision collision relative-location transform-compatibility and stale-anchor tests]}
-      - {id: P0-T17, title: Execute preregistered three-to-five-task UX-GATE-001 value micro-pilot comparing direct source search with selection-summary source candidates, contracts: [UX-GATE-001], status: todo, depends_on: [P0-T5, P0-T16], tests: [evidence-plan immutability task-timing source-top-k wrong-attribution setup-cost and continue-or-adjust verdict checks]}
-      - {id: P0-T7, title: Record TOP-P0-001 topology ADR and implement MCP-owned coordinator private runtime discovery project-instance ownership and restart semantics, contracts: [TOP-P0-001], status: todo, depends_on: [P0-T17], tests: [real-process discovery ACL owner restart stale-instance and ambiguity tests]}
+      - {id: P0-T17A, title: Implement versioned read-only pilot harness and canonical JSON evidence-bundle builder, contracts: [UX-GATE-001], status: todo, depends_on: [P0-T5, P0-T16], tests: [read-only enforcement canonical-JSON schema input-hash timing-boundary path-redaction and later-holdout-exclusion checks]}
+      - {id: P0-T17B, title: Execute preregistered three-to-five-task UX-GATE-001 value micro-pilot from immutable evidence bundles, contracts: [UX-GATE-001], status: todo, decision_key: P0-VALUE, decision_attempt: 1, supersedes_attempt: null, decision: pending, depends_on: [P0-T17A], tests: [evidence-plan immutability isolated-Codex-context counterbalanced-arm-order withheld-ground-truth task-timing source-top-k wrong-attribution separate-setup-cost raw-hash and continue-adjust-stop verdict checks]}
+      - {id: P0-T7, title: Record TOP-P0-001 topology ADR and implement MCP-owned coordinator private runtime discovery project-instance ownership and restart semantics, contracts: [TOP-P0-001], status: todo, depends_on: [P0-T17B], requires_decisions: {P0-VALUE: continue}, tests: [real-process discovery ACL owner restart stale-instance and ambiguity tests]}
       - {id: P0-T11, title: Add Vite same-origin browser proxy with separate untrusted page ingress and authenticated build-integration registry channel, contracts: [EVIDENCE-TRUST-001, TOP-P0-001, PRIV-MIN-001], status: todo, depends_on: [P0-T7], tests: [proxy routing ingress schema size privacy build-capability source-registry privilege and reconnect tests]}
-      - {id: P0-T12, title: Add MCP initialization single-consumer immutable claim and bounded source-resolution tools over the authoritative coordinator, contracts: [CORE-BOUND-001, EVIDENCE-TRUST-001, TOP-P0-001, SEL-PROV-001, MCP-COMPAT-001], status: todo, depends_on: [P0-T11], tests: [MCP initialization consumer identity claim source-evidence structured-output compatible-text and cancellation tests]}
-      - {id: P0-T8, title: Record VER-TXN-001 ADR and implement atomic prepare before-Observation RevisionContext barrier fixed target scope and bounded in-memory journal, contracts: [OBS-FRESH-001, VER-TXN-001], status: todo, depends_on: [P0-T12], tests: [ADR lint prepare atomicity target-scope journal-cursor expiry claim and stale-project tests]}
+      - {id: P0-T12A, title: Add MCP initialization revision negotiation no-task compatibility and minimum static truthful CapabilityReport, contracts: [CORE-BOUND-001, TOP-P0-001, MCP-COMPAT-001], status: todo, depends_on: [P0-T11], tests: [MCP primary-compat initialization no-task truthful-static-capability unavailable-later-capabilities compatible-text and cancellation tests]}
+      - {id: P0-T12B, title: Add server-derived single-consumer identity immutable selection claim and ConfirmationBinding lifecycle, contracts: [EVIDENCE-TRUST-001, TOP-P0-001, SEL-PROV-001, CONF-BIND-001, DATA-LIFE-001], status: todo, depends_on: [P0-T12A], tests: [consumer-identity claim snapshot-binding confirmation TTL one-use conflict disconnect restart-clear and terminal-state tests]}
+      - {id: P0-T12C, title: Add bounded source-resolution MCP tools and resources with privacy evidence and compatibility output, contracts: [CORE-BOUND-001, EVIDENCE-TRUST-001, TOP-P0-001, PRIV-MIN-001, MCP-COMPAT-001], status: todo, depends_on: [P0-T12B], tests: [source-evidence tool-allowlist privacy structured-output compatible-text resource-expiry error and cancellation tests]}
+      - {id: P0-T8, title: Record VER-TXN-001 ADR and implement single-use ConfirmationBinding atomic prepare before-Observation RevisionContext barrier fixed target scope bounded in-memory journal and ephemeral cleanup, contracts: [OBS-FRESH-001, VER-TXN-001, CONF-BIND-001, DATA-LIFE-001], status: todo, depends_on: [P0-T12C], tests: [ADR lint confirmation reserve-consume prepare atomicity target-scope journal-cursor expiry replay claim stale-project process-restart and explicit-clear tests]}
       - {id: P0-T13, title: Implement coordinator-observed relevant update matching bounded batch assembly and early-HMR journal replay, contracts: [VER-TXN-001], status: todo, depends_on: [P0-T8], tests: [early replay irrelevant-only timeout relevant-unrelated interleave multi-save JS-CSS batch module-graph ambiguity and journal-bound tests]}
       - {id: P0-T14, title: Implement prepared verification complete OBS-FRESH-001 direct before-after observation minimum DOM settle reattachment text assertions and honest terminal states, contracts: [OBS-FRESH-001, VER-TXN-001], status: todo, depends_on: [P0-T13], tests: [fresh-observation context browser receipt two-frame mutation-quiet assertion-poll text failed ambiguous timeout cancel and stale-document tests]}
-      - {id: P0-T9, title: Add real-process Edge Stable select confirm prepare edit relevant-HMR complete walking-skeleton E2E and preregistered 10-to-20-task golden evidence, contracts: [UX-GATE-001, EDGE-PREFLIGHT-001, TOP-P0-001, VER-TXN-001], status: todo, depends_on: [P0-T14], tests: [Edge Stable two-OS-process vertical E2E, project-instance restart source top-k and zero-false-positive-passed golden baseline]}
-      - {id: P0-T10, title: Add CI baseline roadmap validation and production leakage gate, contracts: [REQ-TRACE-001, PROD-LEAK-001, TEST-GATE-001], status: todo, depends_on: [P0-T2, P0-T9], tests: [local CI command production leakage and user-attribute preservation tests]}
+      - {id: P0-T9A, title: Add real-process Edge Stable select confirm prepare edit relevant-HMR complete walking-skeleton E2E, contracts: [EDGE-PREFLIGHT-001, TOP-P0-001, VER-TXN-001, CONF-BIND-001], status: todo, depends_on: [P0-T14], tests: [Edge Stable two-OS-process vertical E2E and single-use confirmation checks]}
+      - {id: P0-T9B, title: Add project-instance restart stale-session and unrelated-update negative Edge E2E, contracts: [EDGE-PREFLIGHT-001, TOP-P0-001, VER-TXN-001], status: todo, depends_on: [P0-T9A], tests: [project-instance restart stale confirmation unrelated-update and ambiguity Edge E2E]}
+      - {id: P0-T9C, title: Execute preregistered 10-to-20-task P0 golden evidence verdict, contracts: [UX-GATE-001], status: todo, decision_key: P0-GOLDEN, decision_attempt: 1, supersedes_attempt: null, decision: pending, depends_on: [P0-T9B], tests: [source top-k ambiguity zero-false-positive-passed and continue-adjust-stop golden baseline]}
+      - {id: P0-T10, title: Add CI baseline roadmap validation and production leakage gate, contracts: [REQ-TRACE-001, PROD-LEAK-001, TEST-GATE-001], status: todo, depends_on: [P0-T2, P0-T9C], tests: [local CI command production leakage and user-attribute preservation tests]}
 
   - id: P1
     title: Harden the Edge Vite-injected MVP
@@ -63,6 +102,7 @@ phases:
     depends_on: [P0]
     gate:
       commands: ["pnpm roadmap:validate", "pnpm build", "pnpm typecheck", "pnpm test", "pnpm test:edge:injected", "pnpm evidence:verify --phase P1"]
+      requires_decisions: {P1-INJECTED: continue}
       done_when:
         - The minimum selector overlay and text-verification path from P0 is hardened for interaction accessibility and recovery.
         - Bounded context and the existing minimum EvidenceGraph are hardened without changing conflict-first semantics.
@@ -74,24 +114,25 @@ phases:
         - A new project can install configure run and cleanly uninstall the injected preview without relying on P7 packaging.
         - UX-GATE-001 preregistered thresholds pass on at least three held-out React Vite projects for install-to-first-selection source confirmation first-edit keep-or-revert and uninstall evidence against a comparable no-VEM baseline before the project proceeds to P2.
     tasks:
-      - {id: P1-T1, title: Harden the minimum selector mode state machine and local hover coalescing, contracts: [TEST-GATE-001], status: todo, depends_on: [P0-T9], tests: [state machine tests, hover coalescing tests]}
-      - {id: P1-T2, title: Harden hover target filtering and bounding-box observation across DOM fixtures, contracts: [TEST-GATE-001], status: todo, depends_on: [P1-T1], tests: [DOM target fixtures]}
-      - {id: P1-T3, title: Harden the isolated non-blocking overlay and click confirmation behavior, contracts: [TEST-GATE-001], status: todo, depends_on: [P1-T2], tests: [overlay integration tests]}
-      - {id: P1-T4, title: Extend selection with ancestor switching page-root protection and keyboard cleanup, contracts: [TEST-GATE-001], status: todo, depends_on: [P1-T3], tests: [nested selection tests, accessibility checks]}
+      - {id: P1-T1, title: Harden the minimum selector mode state machine and local hover coalescing, contracts: [SEL-PROV-001], status: todo, depends_on: [P0-T9C], tests: [state machine tests, hover coalescing tests]}
+      - {id: P1-T2, title: Harden hover target filtering and bounding-box observation across DOM fixtures, contracts: [SEL-PROV-001], status: todo, depends_on: [P1-T1], tests: [DOM target fixtures]}
+      - {id: P1-T3, title: Harden the isolated non-blocking overlay and click confirmation behavior, contracts: [SEL-PROV-001], status: todo, depends_on: [P1-T2], tests: [overlay integration tests]}
+      - {id: P1-T4, title: Extend selection with ancestor switching page-root protection and keyboard cleanup, contracts: [SEL-PROV-001], status: todo, depends_on: [P1-T3], tests: [nested selection tests, accessibility checks]}
       - {id: P1-T5, title: Implement cross-revision anchor signatures migration candidates and ambiguity, contracts: [REV-ID-001], status: todo, depends_on: [P0-T16], tests: [anchor edit move collision and ambiguity tests]}
-      - {id: P1-T6, title: Harden revision-scoped source registry with relative locations and compatibility namespace, contracts: [TEST-GATE-001], status: todo, depends_on: [P1-T5], tests: [mapping metadata revision and transform-compatibility tests]}
-      - {id: P1-T7, title: Inject Vite page client with explicit-import fallback and capability probe, contracts: [TEST-GATE-001], status: todo, depends_on: [P1-T3, P1-T6], tests: [Vite injection integration tests]}
+      - {id: P1-T6, title: Harden revision-scoped source registry with relative locations and compatibility namespace, contracts: [REV-ID-001, EVIDENCE-TRUST-001], status: todo, depends_on: [P1-T5], tests: [mapping metadata revision and transform-compatibility tests]}
+      - {id: P1-T7, title: Inject Vite page client with explicit-import fallback and capability probe, contracts: [BROWSER-MODE-001, PRIV-MIN-001, PROD-LEAK-001], status: todo, depends_on: [P1-T3, P1-T6], tests: [Vite injection integration tests]}
       - {id: P1-T8, title: Add immutable selection snapshots and DATA-LIFE-001 bounded crash-safe non-sensitive control-state journal, contracts: [REV-ID-001, DATA-LIFE-001], status: todo, depends_on: [P1-T7], tests: [session snapshot recovery schema atomicity privacy TTL quota and corrupt-journal tests]}
-      - {id: P1-T9, title: Harden server-derived MCP consumer identity and expiring immutable selection claims for concurrent consumers, contracts: [SEL-PROV-001], status: todo, depends_on: [P1-T8], tests: [claim conflict TTL release disconnect and active-selection-race tests]}
+      - {id: P1-T9, title: Harden server-derived MCP consumer identity expiring immutable claims and unified ConfirmationBinding for concurrent consumers, contracts: [SEL-PROV-001, CONF-BIND-001], status: todo, depends_on: [P1-T8], tests: [claim conflict confirmation one-use TTL release disconnect and active-selection-race tests]}
       - {id: P1-T10, title: Harden MCP capabilities resources MCP-COMPAT-001 no-task and optional task-extension adapters cancellation VemError and compatibility output, contracts: [MCP-COMPAT-001], status: todo, depends_on: [P1-T9], tests: [MCP primary-compat initialization no-task wait optional-task adapter resource subscription cancellation error and output-schema tests]}
-      - {id: P1-T11, title: Add minimum explicit ContextRequest support and Codex-local TaskIntent planning for the injected MVP, contracts: [TEST-GATE-001], status: todo, depends_on: [P1-T10], tests: [context projection budget and local-planning tests]}
+      - {id: P1-T11, title: Add minimum explicit ContextRequest support and Codex-local TaskIntent planning for the injected MVP, contracts: [PRIV-MIN-001], status: todo, depends_on: [P1-T10], tests: [context projection budget and local-planning tests]}
       - {id: P1-T12, title: Extend HMR transactions for CSS update full reload compile error RevisionContext and browser receipts, contracts: [REV-ID-001], status: todo, depends_on: [P1-T7, P1-T8], tests: [HMR revision causality and state integration tests]}
       - {id: P1-T13, title: Harden prepared VerificationRun text assertions barrier expiry and complete ObservationDiff results, contracts: [VER-TXN-001], status: todo, depends_on: [P1-T11, P1-T12], tests: [text verification early-replay ambiguous diff and stale-document tests]}
       - {id: P1-T14, title: Extend Edge E2E for nested malicious stale concurrent-consumer and recovery fixtures, contracts: [TEST-GATE-001], status: todo, depends_on: [P1-T4, P1-T13], tests: [Edge Stable hardened vertical E2E]}
       - {id: P1-T15, title: Harden production leakage and development-marker side-effect checks, contracts: [PROD-LEAK-001], status: todo, depends_on: [P1-T6, P1-T7], tests: [production leakage data-selector DOM-snapshot and user-attribute tests]}
       - {id: P1-T16, title: Package versioned injected-preview CLI and Codex MCP config generator with dry-run idempotent fresh-project install, contracts: [UX-GATE-001, LICENSE-POLICY-001], status: todo, depends_on: [P1-T14, P1-T15], tests: [CLI dry-run allowed-file idempotency config-generation fresh-project install and first-selection tests]}
-      - {id: P1-T18, title: Implement injected-preview compatibility upgrade and clean-uninstall with production configuration runtime and data residue checks, contracts: [UX-GATE-001, LICENSE-POLICY-001, PROD-LEAK-001], status: todo, depends_on: [P1-T16], tests: [version compatibility upgrade rollback clean-uninstall and no-production-residue tests]}
-      - {id: P1-T17, title: Execute UX-GATE-001 preregistered injected-MVP pilot on at least three held-out React Vite projects against a no-VEM baseline, contracts: [UX-GATE-001], status: todo, depends_on: [P1-T18], tests: [evidence-plan immutability, comparable timing boundaries, install and source-confirmation metrics, first-edit disposition, uninstall residue and threshold verdict checks]}
+      - {id: P1-T18A, title: Implement injected-preview compatibility upgrade preflight migration and rollback, contracts: [UX-GATE-001, LICENSE-POLICY-001], status: todo, depends_on: [P1-T16], tests: [version compatibility migration dry-run upgrade rollback and partial-failure tests]}
+      - {id: P1-T18B, title: Implement clean-uninstall and production configuration runtime and data residue verification, contracts: [UX-GATE-001, LICENSE-POLICY-001, PROD-LEAK-001], status: todo, depends_on: [P1-T18A], tests: [clean-uninstall idempotency user-file-preservation and no-production-runtime-data-residue tests]}
+      - {id: P1-T17, title: Execute UX-GATE-001 preregistered injected-MVP pilot on at least three held-out React Vite projects against a no-VEM baseline, contracts: [UX-GATE-001], status: todo, decision_key: P1-INJECTED, decision_attempt: 1, supersedes_attempt: null, decision: pending, depends_on: [P1-T18B], tests: [evidence-plan immutability, comparable timing boundaries, install and source-confirmation metrics, first-edit disposition, uninstall residue and continue-adjust-stop threshold verdict checks]}
 
   - id: P2
     title: Edge MV3 extension, layered trust, and transport adapters
@@ -99,30 +140,34 @@ phases:
     depends_on: [P1]
     gate:
       commands: ["pnpm roadmap:validate", "pnpm build", "pnpm typecheck", "pnpm test", "pnpm test:edge:extension", "pnpm test:security:extension", "pnpm evidence:verify --phase P2"]
+      requires_decisions: {P2-TRUSTED: continue}
       done_when:
         - Edge extension selects the same fixture through isolated content script.
         - Page runtime and content script can never read the pairing token or trusted-context project and origin metadata.
         - Pairing requires user confirmation atomic consumption of a terminal one-time bootstrap code and an honestly documented short-lived scoped bearer capability bound server-side to exact project origin coordinator instance connection epoch and capability scope.
         - Service worker derives sender identity and rejects forged replayed and oversized messages.
         - Tier-1 Windows and Windows-WSL Edge topologies pass; Linux local IPC has contract coverage while container SSH and remote gates remain in P7.
-        - Fresh Edge profile pilot evidence records pairing success failure recovery revoke and uninstall outcomes before visual infrastructure expands.
+        - Fresh Edge profile evidence records pairing success failure recovery revoke and uninstall outcomes and P2-T13D records decision continue before visual infrastructure expands; done with adjust or stop does not pass the phase.
     tasks:
       - {id: P2-T1, title: Scaffold shared Chromium MV3 extension with Edge manifest first and pin the minimum Edge Chromium service-worker capability matrix, contracts: [LICENSE-POLICY-001, BROWSER-MODE-001, SEC-PAIR-001], status: todo, depends_on: [P1-T14], tests: [manifest minimum-version CSP permission validation, Edge sideload and service-worker idle smoke tests]}
-      - {id: P2-T2, title: Reuse selector and overlay in isolated content script, contracts: [TEST-GATE-001], status: todo, depends_on: [P2-T1], tests: [content-script selection tests]}
-      - {id: P2-T3, title: Add page runtime adapter for claimed React and HMR evidence only, contracts: [TEST-GATE-001], status: todo, depends_on: [P2-T2], tests: [runtime evidence schema tests, no-token test]}
-      - {id: P2-T4, title: Add request-correlated Page to Content ingress validation, contracts: [TEST-GATE-001], status: todo, depends_on: [P2-T3], tests: [forged postMessage replay depth and size tests]}
+      - {id: P2-T2, title: Reuse selector and overlay in isolated content script, contracts: [SEL-PROV-001], status: todo, depends_on: [P2-T1], tests: [content-script selection tests]}
+      - {id: P2-T3, title: Add page runtime adapter for claimed React and HMR evidence only, contracts: [EVIDENCE-TRUST-001, PRIV-MIN-001], status: todo, depends_on: [P2-T2], tests: [runtime evidence schema tests, no-token test]}
+      - {id: P2-T4, title: Add request-correlated Page to Content ingress validation, contracts: [EVIDENCE-TRUST-001, PRIV-MIN-001], status: todo, depends_on: [P2-T3], tests: [forged postMessage replay depth and size tests]}
       - {id: P2-T5, title: Record SEC-PAIR-001 ADR and implement user-confirmed pairing state plus atomic terminal bootstrap-code consumption and single-use challenge issuance, contracts: [SEC-PAIR-001], status: todo, depends_on: [P2-T1], tests: [ADR lint missing guessed expired concurrent-consumption malicious-web local-client challenge-replay and pairing-state tests]}
       - {id: P2-T14, title: Implement short-lived scoped bearer issuance connection binding and trusted-context storage without rotation or revoke UI, contracts: [SEC-PAIR-001], status: todo, depends_on: [P2-T5], tests: [scope connection-epoch copied-bearer risk trusted-context access-level browser-restart extension-update and non-disclosure tests]}
       - {id: P2-T16, title: Implement bearer generation rotation absolute expiry overlap and server-side revocation semantics, contracts: [SEC-PAIR-001], status: todo, depends_on: [P2-T14], tests: [generation overlap expiry revoke replay bounded-revoked-identifier and project-restart tests]}
       - {id: P2-T15, title: Implement extension-owned pairing popup exact-origin optional-host-permission bootstrap transfer recovery and user-visible revoke workflow, contracts: [SEC-PAIR-001], status: todo, depends_on: [P2-T16], tests: [popup project-origin display copy-paste transfer no-secret-echo permission CSP fail-closed recovery and revoke interaction tests]}
-      - {id: P2-T6, title: Add sender-derived tab frame document identity action allowlist and directly-observed extension SelectionProvenance, contracts: [SEC-PAIR-001, SEL-PROV-001], status: todo, depends_on: [P2-T4, P2-T15], tests: [sender mismatch document replacement interaction binding selection provenance and privilege tests]}
+      - {id: P2-T6, title: Add sender-derived tab frame document identity action allowlist extension ConfirmationBinding and directly-observed SelectionProvenance, contracts: [SEC-PAIR-001, SEL-PROV-001, CONF-BIND-001], status: todo, depends_on: [P2-T4, P2-T15], tests: [sender mismatch document replacement interaction confirmation binding selection provenance and privilege tests]}
       - {id: P2-T7, title: Add authenticated browser channel with Host Origin CSP loopback DNS-rebinding and service-worker lifecycle defenses, contracts: [SEC-PAIR-001], status: todo, depends_on: [P2-T6], tests: [origin host token CSP rebinding 30-second idle worker termination network change keepalive reconnect and project-instance reset tests]}
-      - {id: P2-T8, title: Harden P0 loopback broker and add Windows Named Pipe plus Linux UDS local coordinator transports, contracts: [TEST-GATE-001], status: todo, depends_on: [P1-T10, P0-T7], tests: [private-discovery loopback named-pipe UDS transport contract tests]}
-      - {id: P2-T9, title: Add explicit local transport selection and future remote configuration seams without implementing SSH or remote mode, contracts: [TEST-GATE-001], status: todo, depends_on: [P2-T8], tests: [config validation unsupported-remote and unsafe-fallback rejection tests]}
-      - {id: P2-T10, title: Implement project-instance discovery and multi-project multi-tab selection, contracts: [TEST-GATE-001], status: todo, depends_on: [P2-T7, P2-T8], tests: [ambiguous session and stale instance tests]}
-      - {id: P2-T11, title: Add Tier-1 Windows and Windows-WSL Edge topology smoke plus Linux local IPC contract suite, contracts: [TEST-GATE-001], status: todo, depends_on: [P2-T9, P2-T10], tests: [Windows WSL Edge smoke and Linux local IPC suite]}
+      - {id: P2-T8, title: Harden P0 loopback broker and add Windows Named Pipe plus Linux UDS local coordinator transports, contracts: [TOP-P0-001], status: todo, depends_on: [P1-T10, P0-T7], tests: [private-discovery loopback named-pipe UDS transport contract tests]}
+      - {id: P2-T9, title: Add explicit local transport selection and future remote configuration seams without implementing SSH or remote mode, contracts: [TOP-P0-001, BROWSER-MODE-001], status: todo, depends_on: [P2-T8], tests: [config validation unsupported-remote and unsafe-fallback rejection tests]}
+      - {id: P2-T10, title: Implement project-instance discovery and multi-project multi-tab selection, contracts: [TOP-P0-001, REV-ID-001], status: todo, depends_on: [P2-T7, P2-T8], tests: [ambiguous session and stale instance tests]}
+      - {id: P2-T11, title: Add Tier-1 Windows and Windows-WSL Edge topology smoke plus Linux local IPC contract suite, contracts: [EDGE-PREFLIGHT-001, TOP-P0-001], status: todo, depends_on: [P2-T9, P2-T10], tests: [Windows WSL Edge smoke and Linux local IPC suite]}
       - {id: P2-T12, title: Add layered trust security integration suite, contracts: [SEC-PAIR-001], status: todo, depends_on: [P2-T4, P2-T6, P2-T7, P2-T10], tests: [extension ingress security suite]}
-      - {id: P2-T13, title: Produce reproducible Edge sideload package pairing setup upgrade revoke and clean-uninstall workflow, contracts: [UX-GATE-001, LICENSE-POLICY-001, SEC-PAIR-001], status: todo, depends_on: [P2-T11, P2-T12], tests: [fresh-profile sideload first-pair upgrade revoke uninstall and no-token-residue tests]}
+      - {id: P2-T13A, title: Produce reproducible Edge sideload package and versioned setup guide, contracts: [UX-GATE-001, LICENSE-POLICY-001], status: todo, depends_on: [P2-T11, P2-T12], tests: [reproducible package manifest hash fresh-profile sideload and setup checks]}
+      - {id: P2-T13B, title: Validate fresh-profile first pairing recovery and revoke workflow, contracts: [UX-GATE-001, SEC-PAIR-001], status: todo, depends_on: [P2-T13A], tests: [first-pair failure recovery revoke and no-live-token checks]}
+      - {id: P2-T13C, title: Validate Edge extension upgrade and clean-uninstall residue workflow, contracts: [UX-GATE-001, LICENSE-POLICY-001, SEC-PAIR-001], status: todo, depends_on: [P2-T13B], tests: [upgrade rollback uninstall storage permission runtime and token-residue checks]}
+      - {id: P2-T13D, title: Execute the preregistered fresh-profile install pairing recovery revoke and uninstall evidence verdict, contracts: [UX-GATE-001, SEC-PAIR-001], status: todo, decision_key: P2-TRUSTED, decision_attempt: 1, supersedes_attempt: null, decision: pending, depends_on: [P2-T13C], tests: [evidence-plan immutability fresh-profile outcomes residue and continue-adjust-stop verdict checks]}
 
   - id: P3
     title: First trusted visual slice then bounded pipeline and lifecycle hardening
@@ -130,6 +175,7 @@ phases:
     depends_on: [P2]
     gate:
       commands: ["pnpm roadmap:validate", "pnpm build", "pnpm typecheck", "pnpm test", "pnpm test:edge:visual", "pnpm test:pipeline", "pnpm evidence:verify --phase P3"]
+      requires_decisions: {P3-VISUAL: continue}
       done_when:
         - Selection sends a bounded summary and details are pulled by ContextRequest.
         - Edge captures the intended active tab and element with consent local masks pre/post tab-document checks and short-lived memory-first resources.
@@ -140,23 +186,24 @@ phases:
         - At least 50 categorized tasks plus a separate held-out project set record source top-k payload first-edit verification ambiguity correctness and zero false-positive passed results.
     tasks:
       - {id: P3-T1, title: Define MessageEnvelope ACK idempotency and cancellation contracts, contracts: [PIPE-BOUND-001], status: todo, depends_on: [P0-T3, P2-T7], tests: [protocol contract tests]}
-      - {id: P3-T2, title: Generalize bounded SelectionSummary and explicit ContextRequest for all detail profiles, contracts: [TEST-GATE-001], status: todo, depends_on: [P3-T1], tests: [summary size context-limit and profile tests]}
+      - {id: P3-T2, title: Generalize bounded SelectionSummary and explicit ContextRequest for all detail profiles, contracts: [PRIV-MIN-001], status: todo, depends_on: [P3-T1], tests: [summary size context-limit and profile tests]}
       - {id: P3-T3, title: Generalize P0 PRIV-MIN-001 into ContextRequest field projection privacy filtering prompt-data marking and audit per boundary, contracts: [PRIV-MIN-001], status: todo, depends_on: [P3-T2], tests: [P0 privacy-regression profile redaction projection audit and compatible-text tests]}
       - {id: P3-T18, title: Add bounded nearest React list-key claim and shared-definition single-item refusal guard before Visual V1, contracts: [EVIDENCE-TRUST-001], status: todo, depends_on: [P2-T3, P3-T3, P1-T6], tests: [map reorder key-unavailable claimed-evidence shared-definition and only-current-item refusal tests]}
-      - {id: P3-T4, title: Add bounded computed-style profiles parent layout chain and objective geometry assertions, contracts: [TEST-GATE-001], status: todo, depends_on: [P3-T3, P1-T13], tests: [style serialization flex grid geometry delta and overflow tests]}
+      - {id: P3-T4, title: Add bounded computed-style profiles parent layout chain and objective geometry assertions, contracts: [OBS-FRESH-001, VER-TXN-001], status: todo, depends_on: [P3-T3, P1-T13], tests: [style serialization flex grid geometry delta and overflow tests]}
       - {id: P3-T5, title: Implement DATA-LIFE-001 memory-first binary resource records ownership hard TTL quota lease immediate deletion and MCP compatibility reads without durable pin claims, contracts: [DATA-LIFE-001], status: todo, depends_on: [P3-T1, P1-T10], tests: [ephemeral ownership expiry quota lease session-clear process-exit delete MIME compatibility fallback and pin-unavailable tests]}
       - {id: P3-T13, title: Implement minimum isolated binary upload lane with byte quota concurrency high-low-water backpressure timeout cancellation and control-plane isolation, contracts: [PIPE-BOUND-001], status: todo, depends_on: [P3-T1, P3-T5], tests: [high-low-water cancellation byte-quota timeout screenshot-load auth-HMR responsiveness and partial-upload release tests]}
       - {id: P3-T6, title: Record CAP-RACE-001 ADR and implement capture consent target identity captureEpoch invalidation latch and sensitive-page policy, contracts: [CAP-RACE-001], status: todo, depends_on: [P2-T6, P3-T13], tests: [ADR lint consent sensitive-page expected-target A-B-A activation navigation document mask epoch and fail-closed tests]}
       - {id: P3-T14, title: Implement Edge activeTab capture execution with per-window serialization platform rate limit and pre-post active tab document epoch checks, contracts: [CAP-RACE-001], status: todo, depends_on: [P3-T6, P3-T9], tests: [wrong-tab serialization rate-limit pre-post document epoch discard provider-error and recovery tests]}
       - {id: P3-T7, title: Hide overlay synchronize frames snapshot masks reject or cover dynamic pixels and crop locally with bitmap DPR zoom viewport calibration, contracts: [CAP-RACE-001], status: todo, depends_on: [P3-T14], tests: [crop alignment mask-before-upload DOM canvas video animation cross-origin mask-race and calibration tests]}
-      - {id: P3-T8, title: Add Edge real-pixel style geometry prepare-complete visual proof and expanded golden-task baseline, contracts: [CAP-RACE-001], status: todo, depends_on: [P3-T4, P3-T7, P3-T18], tests: [Edge trusted visual vertical E2E, at-least-50 source-pattern tasks top-k payload ambiguity and false-positive-passed metrics]}
+      - {id: P3-T8A, title: Add Edge real-pixel style geometry prepare-complete visual proof, contracts: [CAP-RACE-001], status: todo, depends_on: [P3-T4, P3-T7, P3-T18], tests: [Edge trusted visual vertical E2E and objective geometry assertions]}
+      - {id: P3-T8B, title: Build categorized at-least-50-task visual golden corpus and immutable ground truth, contracts: [UX-GATE-001], status: todo, depends_on: [P3-T8A], tests: [corpus category source-pattern ground-truth hash holdout-exclusion and ambiguity fixtures]}
       - {id: P3-T9, title: Generalize the minimum binary seam into priority control and data queues with bounded backpressure and drop policy before capture execution, contracts: [PIPE-BOUND-001], status: todo, depends_on: [P3-T1, P3-T13], tests: [queue saturation screenshot-load HMR-auth responsiveness priority and forbidden-control-drop tests]}
       - {id: P3-T10, title: Add ACK retry duplicate suppression and reconnect spool metadata, contracts: [PIPE-BOUND-001], status: todo, depends_on: [P3-T9], tests: [duplicate reconnect and restart tests]}
       - {id: P3-T11, title: Add DATA-LIFE-001 memory-first diagnostics ring and optional separately stored bounded allowlist audit metadata, contracts: [DATA-LIFE-001], status: todo, depends_on: [P3-T9], tests: [diagnostics flood audit-redaction metadata owner TTL opt-out manual-clear and no-artifact-capability tests]}
       - {id: P3-T12, title: Implement OBS-FRESH-001 RevisionContext and runtime target viewport epoch keyed source and context caches with verification revalidation bypass, contracts: [OBS-FRESH-001], status: todo, depends_on: [P3-T2], tests: [cache hit miss project-instance document async-DOM target-resize scroll zoom route epoch provider-namespace revalidation and verification-no-stale-pass tests]}
       - {id: P3-T16, title: Implement CapabilityRegistry and FALLBACK-POLICY-001 strict balanced compatibility fallback, contracts: [FALLBACK-POLICY-001], status: todo, depends_on: [P2-T9, P3-T2], tests: [fallback policy and forbidden downgrade tests]}
       - {id: P3-T17, title: Add ephemeral data-pipeline reliability quota session-clear and process-exit integration suite, contracts: [OBS-FRESH-001, DATA-LIFE-001, FALLBACK-POLICY-001], status: todo, depends_on: [P3-T10, P3-T11, P3-T12, P3-T16], tests: [pipeline stress quota lease session-clear process-exit-delete and fallback suite]}
-      - {id: P3-T19, title: Execute the preregistered P3 visual golden and separate-held-out-project evidence verdict, contracts: [UX-GATE-001], status: todo, depends_on: [P3-T8, P3-T17], tests: [evidence-plan immutability at-least-50 categorized tasks held-out separation source-top-k payload ambiguity and zero-false-positive-passed gate]}
+      - {id: P3-T19, title: Execute the preregistered P3 visual golden and separate-held-out-project evidence verdict, contracts: [UX-GATE-001], status: todo, decision_key: P3-VISUAL, decision_attempt: 1, supersedes_attempt: null, decision: pending, depends_on: [P3-T8B, P3-T17], tests: [evidence-plan immutability at-least-50 categorized tasks held-out separation source-top-k payload ambiguity zero-false-positive-passed and continue-adjust-stop gate]}
 
   - id: P4
     title: Edge advanced visual evidence stabilization and Visual V1 gate
@@ -164,6 +211,7 @@ phases:
     depends_on: [P3]
     gate:
       commands: ["pnpm roadmap:validate", "pnpm build", "pnpm typecheck", "pnpm test", "pnpm test:edge:visual-v1", "pnpm evidence:verify --phase P4"]
+      requires_decisions: {P4-V1: continue}
       done_when:
         - Edge extension preserves the P3 capture and geometry proof while adding advanced style evidence and visual stabilization.
         - Zoom DPR scroll and viewport metadata produce correct crops.
@@ -173,12 +221,14 @@ phases:
         - A fresh Edge profile and fresh project can install pair complete one visual task and cleanly uninstall the developer distribution.
         - UX-GATE-001 preregistered Visual V1 holdout thresholds pass and release evidence has zero false-positive passed results.
     tasks:
-      - {id: P4-T1, title: Add Level A and B StyleEvidence for inline variables design tokens CSS Modules and Tailwind, contracts: [TEST-GATE-001], status: todo, depends_on: [P3-T4, P1-T6], tests: [style evidence and design-token fixtures]}
-      - {id: P4-T2, title: Add Codex-local compound intent planning profile hints and incremental explicit context requests, contracts: [TEST-GATE-001], status: todo, depends_on: [P3-T2, P3-T4], tests: [local intent profile-hint and incremental-request tests]}
+      - {id: P4-T1, title: Add Level A and B StyleEvidence for inline variables design tokens CSS Modules and Tailwind, contracts: [EVIDENCE-TRUST-001], status: todo, depends_on: [P3-T4, P1-T6], tests: [style evidence and design-token fixtures]}
+      - {id: P4-T2, title: Add Codex-local compound intent planning profile hints and incremental explicit context requests, contracts: [PRIV-MIN-001], status: todo, depends_on: [P3-T2, P3-T4], tests: [local intent profile-hint and incremental-request tests]}
       - {id: P4-T3, title: Generalize prepared VerificationSpec for accessibility responsive style and overflow, contracts: [OBS-FRESH-001, VER-TXN-001], status: todo, depends_on: [P3-T4, P1-T13], tests: [objective prepared-verification tests]}
       - {id: P4-T4, title: Extend DOM settle with fonts animations caret and dynamic-mask stabilization, contracts: [VER-TXN-001], status: todo, depends_on: [P3-T7, P4-T3], tests: [visual stabilization tests]}
-      - {id: P4-T5, title: Return needs-review for subjective visual requirements, contracts: [TEST-GATE-001], status: todo, depends_on: [P4-T3, P4-T4], tests: [subjective status tests]}
-      - {id: P4-T6, title: Add Edge zoom DPR scroll responsive style-layout clean-install holdout and Visual V1 golden gate, contracts: [UX-GATE-001], status: todo, depends_on: [P4-T1, P4-T2, P4-T5, P2-T13, P3-T18], tests: [Edge visual E2E matrix, fresh-profile install-pair-uninstall, separate holdout and zero-false-positive golden-task gate]}
+      - {id: P4-T5, title: Return needs-review for subjective visual requirements, contracts: [VER-TXN-001], status: todo, depends_on: [P4-T3, P4-T4], tests: [subjective status tests]}
+      - {id: P4-T6A, title: Add Edge zoom DPR scroll and responsive style-layout E2E matrix, contracts: [UX-GATE-001], status: todo, depends_on: [P4-T1, P4-T2, P4-T5, P3-T18], tests: [Edge visual zoom-DPR-scroll-responsive E2E matrix]}
+      - {id: P4-T6B, title: Validate fresh-project fresh-profile install pair one visual task revoke and clean-uninstall, contracts: [UX-GATE-001], status: todo, depends_on: [P4-T6A, P2-T13C], tests: [fresh-profile install-pair-visual-task-revoke-uninstall and residue checks]}
+      - {id: P4-T6C, title: Execute separate Visual V1 holdout and zero-false-positive golden release verdict, contracts: [UX-GATE-001], status: todo, decision_key: P4-V1, decision_attempt: 1, supersedes_attempt: null, decision: pending, depends_on: [P4-T6B], tests: [separate holdout threshold immutability zero-false-positive and continue-adjust-stop golden-task gate]}
 
   - id: P5
     title: Full runtime owner evidence, shared impact, and multi-select
@@ -192,14 +242,14 @@ phases:
         - Shared definitions usages and unknown impact are distinguished.
         - Multi-select groups edits and reports partial results.
     tasks:
-      - {id: P5-T1, title: Implement document-scoped runtime node identity and reattach fingerprint, contracts: [TEST-GATE-001], status: todo, depends_on: [P2-T6, P1-T6], tests: [identity reorder and detach tests]}
-      - {id: P5-T2, title: Extend minimum list-key claims into bounded React owner-frame evidence, contracts: [TEST-GATE-001], status: todo, depends_on: [P2-T3, P3-T18, P5-T1], tests: [owner key provenance conflict and unavailable evidence tests]}
-      - {id: P5-T3, title: Find usage candidates and model shared impact unknown explicitly, contracts: [TEST-GATE-001], status: todo, depends_on: [P5-T2], tests: [shared component fixtures]}
-      - {id: P5-T4, title: Add source-map and DOM-clue fallback candidates, contracts: [TEST-GATE-001], status: todo, depends_on: [P3-T16, P5-T3], tests: [source-map and heuristic fixtures]}
+      - {id: P5-T1, title: Implement document-scoped runtime node identity and reattach fingerprint, contracts: [REV-ID-001], status: todo, depends_on: [P2-T6, P1-T6], tests: [identity reorder and detach tests]}
+      - {id: P5-T2, title: Extend minimum list-key claims into bounded React owner-frame evidence, contracts: [EVIDENCE-TRUST-001], status: todo, depends_on: [P2-T3, P3-T18, P5-T1], tests: [owner key provenance conflict and unavailable evidence tests]}
+      - {id: P5-T3, title: Find usage candidates and model shared impact unknown explicitly, contracts: [EVIDENCE-TRUST-001], status: todo, depends_on: [P5-T2], tests: [shared component fixtures]}
+      - {id: P5-T4, title: Add source-map and DOM-clue fallback candidates, contracts: [EVIDENCE-TRUST-001, FALLBACK-POLICY-001], status: todo, depends_on: [P3-T16, P5-T3], tests: [source-map and heuristic fixtures]}
       - {id: P5-T5, title: Extend the minimum EvidenceGraph with React source confidence bands conflicts and corroboration, contracts: [EVIDENCE-TRUST-001], status: todo, depends_on: [P5-T2, P5-T4], tests: [evidence scoring provenance freshness and conflict tests]}
-      - {id: P5-T6, title: Add Shift multi-select and session-bounded per-target instruction storage, contracts: [TEST-GATE-001], status: todo, depends_on: [P2-T2, P3-T5, P1-T8], tests: [multi-select interaction and ephemeral lifecycle tests]}
-      - {id: P5-T7, title: Group targets by source and merge shared-component plans, contracts: [TEST-GATE-001], status: todo, depends_on: [P5-T3, P5-T6], tests: [grouping and merge tests]}
-      - {id: P5-T8, title: Model partial success failure ambiguity and needs-review, contracts: [TEST-GATE-001], status: todo, depends_on: [P5-T7], tests: [partial-result tests]}
+      - {id: P5-T6, title: Add Shift multi-select and session-bounded per-target instruction storage, contracts: [SEL-PROV-001, DATA-LIFE-001], status: todo, depends_on: [P2-T2, P3-T5, P1-T8], tests: [multi-select interaction and ephemeral lifecycle tests]}
+      - {id: P5-T7, title: Group targets by source and merge shared-component plans, contracts: [EVIDENCE-TRUST-001], status: todo, depends_on: [P5-T3, P5-T6], tests: [grouping and merge tests]}
+      - {id: P5-T8, title: Model partial success failure ambiguity and needs-review, contracts: [EVIDENCE-TRUST-001, VER-TXN-001], status: todo, depends_on: [P5-T7], tests: [partial-result tests]}
       - {id: P5-T9, title: Add reorder shared-impact and multi-select Edge E2E, contracts: [TEST-GATE-001], status: todo, depends_on: [P5-T5, P5-T8], tests: [Edge shared multi-select E2E]}
 
   - id: P6
@@ -214,14 +264,14 @@ phases:
         - Reference crops are session-bound resources with lifecycle rules.
         - Page root and region requests return graphs or groups and require staged plans.
     tasks:
-      - {id: P6-T1, title: Add behavior context props event route and diagnostics candidates, contracts: [TEST-GATE-001], status: todo, depends_on: [P5-T5, P3-T11], tests: [behavior context fixtures]}
-      - {id: P6-T2, title: Add runtime build diagnostic correlation and redaction, contracts: [TEST-GATE-001], status: todo, depends_on: [P6-T1], tests: [diagnostic correlation security tests]}
-      - {id: P6-T3, title: Register reference image resources with ownership TTL and quota, contracts: [TEST-GATE-001], status: todo, depends_on: [P6-T11, P3-T7], tests: [reference lifecycle tests]}
-      - {id: P6-T4, title: Crop and bind reference regions to selections, contracts: [TEST-GATE-001], status: todo, depends_on: [P6-T3], tests: [reference crop and binding tests]}
-      - {id: P6-T5, title: Build page-root DOM component and source graph, contracts: [TEST-GATE-001], status: todo, depends_on: [P5-T5], tests: [page graph tests]}
-      - {id: P6-T6, title: Add rectangular region interaction intersection and snap, contracts: [TEST-GATE-001], status: todo, depends_on: [P5-T6], tests: [region geometry tests]}
-      - {id: P6-T7, title: Represent regions as groups with common ancestors and multiple anchors, contracts: [TEST-GATE-001], status: todo, depends_on: [P6-T5, P6-T6], tests: [region group tests]}
-      - {id: P6-T8, title: Require staged plans for broad cross-file page edits, contracts: [TEST-GATE-001], status: todo, depends_on: [P6-T7], tests: [page plan gate tests]}
+      - {id: P6-T1, title: Add behavior context props event route and diagnostics candidates, contracts: [EVIDENCE-TRUST-001, PRIV-MIN-001], status: todo, depends_on: [P5-T5, P3-T11], tests: [behavior context fixtures]}
+      - {id: P6-T2, title: Add runtime build diagnostic correlation and redaction, contracts: [EVIDENCE-TRUST-001, PRIV-MIN-001, DATA-LIFE-001], status: todo, depends_on: [P6-T1], tests: [diagnostic correlation security tests]}
+      - {id: P6-T3, title: Register reference image resources with ownership TTL and quota, contracts: [DATA-LIFE-001], status: todo, depends_on: [P6-T11, P3-T7], tests: [reference lifecycle tests]}
+      - {id: P6-T4, title: Crop and bind reference regions to selections, contracts: [DATA-LIFE-001], status: todo, depends_on: [P6-T3], tests: [reference crop and binding tests]}
+      - {id: P6-T5, title: Build page-root DOM component and source graph, contracts: [EVIDENCE-TRUST-001, PRIV-MIN-001], status: todo, depends_on: [P5-T5], tests: [page graph tests]}
+      - {id: P6-T6, title: Add rectangular region interaction intersection and snap, contracts: [SEL-PROV-001], status: todo, depends_on: [P5-T6], tests: [region geometry tests]}
+      - {id: P6-T7, title: Represent regions as groups with common ancestors and multiple anchors, contracts: [EVIDENCE-TRUST-001, SEL-PROV-001], status: todo, depends_on: [P6-T5, P6-T6], tests: [region group tests]}
+      - {id: P6-T8, title: Require staged plans for broad cross-file page edits, contracts: [CORE-BOUND-001, SEL-PROV-001], status: todo, depends_on: [P6-T7], tests: [page plan gate tests]}
       - {id: P6-T9, title: Add bounded reference refinement and page-region E2E, contracts: [TEST-GATE-001], status: todo, depends_on: [P6-T4, P6-T8], tests: [reference page region E2E]}
       - {id: P6-T10, title: Upgrade binary resources to durable ArtifactStore with atomic temporary upload and explicit pinning, contracts: [DATA-LIFE-001], status: todo, depends_on: [P3-T5, P3-T9], tests: [binary upload abort pin persistence and MIME tests]}
       - {id: P6-T11, title: Implement durable DataLifecycleManager TTL absolute expiry quota lease tombstones and memory-versus-pinned retention, contracts: [DATA-LIFE-001], status: todo, depends_on: [P3-T12, P6-T10], tests: [durable lifecycle unit tests]}
@@ -240,14 +290,18 @@ phases:
         - Edge Stable remains the release gate and Chrome is a compatibility target.
     tasks:
       - {id: P7-T1, title: Add optional Edge CDP provider with separate-profile safeguards, contracts: [BROWSER-MODE-001], status: todo, depends_on: [P3-T7, P3-T16], tests: [CDP connection and profile-safety tests]}
-      - {id: P7-T2, title: Add full-page capture matched CSS media and viewport capabilities, contracts: [TEST-GATE-001], status: todo, depends_on: [P7-T1], tests: [CDP capability fixtures]}
-      - {id: P7-T3, title: Implement container and SSH-stdio documented remote workflows over the P2 configuration seams, contracts: [TEST-GATE-001], status: todo, depends_on: [P2-T9], tests: [container and SSH transport smoke tests]}
-      - {id: P7-T4, title: Implement explicit HTTPS WSS remote mode with auth expiry and rate limits, contracts: [TEST-GATE-001], status: todo, depends_on: [P7-T3], tests: [remote security suite]}
+      - {id: P7-T2, title: Add full-page capture matched CSS media and viewport capabilities, contracts: [BROWSER-MODE-001, CAP-RACE-001, EVIDENCE-TRUST-001], status: todo, depends_on: [P7-T1], tests: [CDP capability fixtures]}
+      - {id: P7-T3A, title: Implement the documented least-privilege container workflow over the P2 configuration seams, contracts: [TOP-P0-001, CONTAINER-SEC-001], status: todo, depends_on: [P2-T9], tests: [non-root dropped-capabilities mount-allowlist no-docker-socket secret-redaction network-boundary cleanup and container transport smoke tests]}
+      - {id: P7-T3B, title: Implement the documented host-key-verified SSH-stdio workflow over the P2 configuration seams, contracts: [TOP-P0-001, REMOTE-SEC-001], status: todo, depends_on: [P2-T9], tests: [SSH host-key exact-project auth-expiry cleanup and stdio transport smoke tests]}
+      - {id: P7-T4, title: Implement explicit HTTPS WSS remote mode with auth expiry and rate limits, contracts: [REMOTE-SEC-001], status: todo, depends_on: [P2-T9], tests: [remote security suite]}
       - {id: P7-T5, title: Generate Edge and Chrome manifests and store-specific metadata, contracts: [BROWSER-MODE-001], status: todo, depends_on: [P2-T1], tests: [dual-package manifest tests]}
-      - {id: P7-T6, title: Evaluate optional Native Messaging without making it an MVP dependency, contracts: [TEST-GATE-001], status: todo, depends_on: [P7-T5], tests: [native-host feasibility and extension-ID tests]}
-      - {id: P7-T7, title: Add Edge enterprise policy capability errors and fallback behavior, contracts: [TEST-GATE-001], status: todo, depends_on: [P3-T16, P7-T1], tests: [policy restriction tests]}
-      - {id: P7-T8, title: Add Edge release Chrome compatibility and remote gate matrix, contracts: [TEST-GATE-001], status: todo, depends_on: [P7-T2, P7-T4, P7-T5, P7-T7], tests: [release matrix]}
-      - {id: P7-T9, title: Promote existing developer packages to public npm Codex plugin and store distributions with migration docs, contracts: [LICENSE-POLICY-001, TEST-GATE-001], status: todo, depends_on: [P7-T8, P1-T18, P2-T13], tests: [published-package migration store-package and plugin smoke tests]}
+      - {id: P7-T6, title: Evaluate optional Native Messaging without making it an MVP dependency, contracts: [BROWSER-MODE-001], status: todo, depends_on: [P7-T5], tests: [native-host feasibility and extension-ID tests]}
+      - {id: P7-T7, title: Add Edge enterprise policy capability errors and fallback behavior, contracts: [BROWSER-MODE-001, FALLBACK-POLICY-001], status: todo, depends_on: [P3-T16, P7-T1], tests: [policy restriction tests]}
+      - {id: P7-T8, title: Add Edge release Chrome compatibility container and remote gate matrix, contracts: [BROWSER-MODE-001, CONTAINER-SEC-001, REMOTE-SEC-001], status: todo, depends_on: [P7-T2, P7-T3A, P7-T3B, P7-T4, P7-T5, P7-T7], tests: [release matrix]}
+      - {id: P7-T9A, title: Promote the existing developer packages to public npm with migration documentation, contracts: [UX-GATE-001, LICENSE-POLICY-001, TEST-GATE-001], status: todo, depends_on: [P7-T8, P1-T18B, P2-T13C], tests: [published-package provenance clean-install upgrade rollback and migration checks]}
+      - {id: P7-T9B, title: Publish and smoke-test the Codex plugin distribution against the public package, contracts: [UX-GATE-001, LICENSE-POLICY-001, TEST-GATE-001], status: todo, depends_on: [P7-T9A], tests: [plugin manifest install configuration upgrade uninstall and package-compatibility smoke tests]}
+      - {id: P7-T9C, title: Publish and verify the Microsoft Edge Add-ons store distribution, contracts: [UX-GATE-001, LICENSE-POLICY-001, TEST-GATE-001], status: todo, depends_on: [P7-T9B], tests: [Edge store metadata permission privacy install upgrade uninstall and release evidence checks]}
+      - {id: P7-T9D, title: Publish and verify the Chrome Web Store compatibility distribution, contracts: [UX-GATE-001, LICENSE-POLICY-001, TEST-GATE-001], status: todo, depends_on: [P7-T9C], tests: [Chrome store metadata manifest compatibility install upgrade uninstall and release evidence checks]}
 
   - id: P8
     title: Additional framework adapters
@@ -259,7 +313,8 @@ phases:
         - Framework adapters preserve protocol trust lifecycle and verification boundaries.
         - Unsupported capabilities degrade explicitly.
     tasks:
-      - {id: P8-T1, title: Add Vue Vite adapter and fixtures, contracts: [TEST-GATE-001], status: todo, depends_on: [P7-T9], tests: [Vue unit integration and Edge E2E]}
-      - {id: P8-T2, title: Add Next.js adapter and server-client evidence boundaries, contracts: [TEST-GATE-001], status: todo, depends_on: [P8-T1], tests: [Next.js unit integration and Edge E2E]}
-      - {id: P8-T3, title: Evaluate Svelte and Astro adapters with capability reports, contracts: [TEST-GATE-001], status: todo, depends_on: [P8-T2], tests: [adapter feasibility fixtures]}
-      - {id: P8-T4, title: Publish framework support matrix and migration guides, contracts: [TEST-GATE-001], status: todo, depends_on: [P8-T3], tests: [documentation and clean-install checks]}
+      - {id: P8-T1, title: Add Vue Vite adapter and fixtures, contracts: [BROWSER-MODE-001, EVIDENCE-TRUST-001, PRIV-MIN-001, VER-TXN-001, PROD-LEAK-001, TEST-GATE-001], status: todo, depends_on: [P7-T9D], tests: [Vue unit integration and Edge E2E]}
+      - {id: P8-T2, title: Add Next.js adapter and server-client evidence boundaries, contracts: [BROWSER-MODE-001, EVIDENCE-TRUST-001, PRIV-MIN-001, VER-TXN-001, PROD-LEAK-001, TEST-GATE-001], status: todo, depends_on: [P8-T1], tests: [Next.js unit integration and Edge E2E]}
+      - {id: P8-T3A, title: Evaluate a Svelte adapter and publish a truthful capability report, contracts: [BROWSER-MODE-001, EVIDENCE-TRUST-001, PRIV-MIN-001, VER-TXN-001, PROD-LEAK-001, TEST-GATE-001], status: todo, depends_on: [P8-T2], tests: [Svelte feasibility unit fixture production-leakage and Edge smoke checks]}
+      - {id: P8-T3B, title: Evaluate an Astro adapter and publish a truthful capability report, contracts: [BROWSER-MODE-001, EVIDENCE-TRUST-001, PRIV-MIN-001, VER-TXN-001, PROD-LEAK-001, TEST-GATE-001], status: todo, depends_on: [P8-T3A], tests: [Astro islands feasibility unit fixture production-leakage and Edge smoke checks]}
+      - {id: P8-T4, title: Publish framework support matrix and migration guides, contracts: [BROWSER-MODE-001, TEST-GATE-001], status: todo, depends_on: [P8-T3B], tests: [documentation and clean-install checks]}

@@ -4,6 +4,32 @@ No implementation tasks have been completed yet.
 
 Each entry must include task ID, date, changed files, commands, test evidence, limitations, and next eligible task.
 
+## Design baseline revision 1.10 — 2026-07-13
+
+本记录仍是开工前文档修订，不是实现或环境迁移完成记录；所有 roadmap task/phase 保持 `todo`。迁移门禁从不可能同时满足的“扁平化但 old/new HEAD 与 raw tracked manifest 相同且 target clean”改为三步：P0-T0A0 只读冻结 Git/device/inode identity、`sourceBaselineHead`、dirty/untracked 与 target readiness；P0-T0A1 仅在 owner 授权 layout commit 后按旧 prefix 归一化内容 hash 迁移，证明 commit parent、clean target、single-writer cutover 并保留只读 rollback；P0-T0A2 再固定 evidence schema 和 exact Node/pnpm。`/mnt/d/vem` 与 `/mnt/d/VEM` 明确按 inode 判定别名，迁移后 canonical root 按 Git top-level 发现。
+
+decision gate 改用稳定 logical key + immutable attempt：旧 verdict/evidence 不可覆盖，adjust 必须增加 remediation 与新 attempt，stop 或放弃 adjust 使 owning phase failed。P0-T12 被拆成 initialization/capability、consumer/confirmation lifecycle、bounded tools/resources；P7 container 与 SSH、四种分发 surface、P8 Svelte 与 Astro 也分别成为独立 failure domain。新增 `CONTAINER-SEC-001`，requirements 规范词覆盖扩展到应当/不应/不可/只允许/仅允许/需要、fail-closed 和 MUST/SHALL，并登记 Security testing own-body。
+
+路线图现为 134 个 task、24 个 contract；下一 eligible task 是唯一无依赖的 P0-T0A0。它只做迁移前只读 readiness，不会创建 `/home/qwzx/src/VEM` 或执行 layout commit。
+
+## Design baseline revision 1.9 — 2026-07-13
+
+本记录是迁移前文档一致性修订，不是实现任务完成记录；所有 roadmap task 仍为 `todo`。canonical execution root 改为 WSL ext4 的 `/home/qwzx/src/VEM`，项目内容直接位于该 Git root；当前 `/mnt/d/VEM` 仅作为 staging/rollback。P0-T0A 先冻结 HEAD、dirty/untracked inventory，并验证历史、tracked manifest/hash、ext4 与无额外 bundle nesting；owner 接受前不删除旧树。Node 主基线更新为 24.x LTS，pnpm exact version 由预检 ADR 决定；direct Edge binary smoke 与 workspace 建立后的 Playwright `msedge` channel 被拆为 P0-T0C/P0-T0G，避免互相冒充。
+
+路线图现在有独立 decision 状态：evaluation task 可以 `status: done` 但 `decision: adjust|stop`；dependent task/phase 只有在显式 `requires_decisions` 为 `continue` 时才可执行。P0-T17B、P0-T9C、P1-T17、P2-T13D、P3-T19、P4-T6C 都使用这一模型。P0 micro-pilot 增加 fresh Codex context per arm、交叉平衡顺序、withheld ground truth 和 one-time/per-task cost 分离；它是个人项目的 engineering smoke，不是统计产品声明。
+
+`TEST-GATE-001` 被明确为通用测试/追踪 contract，而非可执行的单一硬 gate；实现领域规范的任务已改绑 privacy、selection、evidence、revision、lifecycle、verification、fallback、browser 或 remote contract。新增 `REMOTE-SEC-001`，`DATA-LIFE-001` 前移到 P0，P0-T12 交付最小静态诚实 CapabilityReport。requirements heading 使用 exact own-body 规则，roadmap 与 requirements 反向 contract mapping 保持机器可核对一致。路线图从 123 个任务调整为 125 个任务（新增 P0-T0G 与 P2-T13D），contract 从 22 个调整为 23 个。下一 eligible task 仍为 P0-T0A；它首先执行迁移门禁，而不是产品代码。
+
+## Design baseline revision 1.8 — 2026-07-13
+
+本记录是开工前最后可执行性修订，不是实现任务完成记录。项目所有者已选定 Git 顶层 `/mnt/d/VEM` 为 canonical project root，但 DrvFS 代码仓必须通过额外 watcher/HMR/symlink/case/pnpm 门禁，private runtime 则固定放在 WSL ext4。设计文档增加安装 Node 22/Corepack/pnpm、更新 WSL/Edge 和恢复 Windows interop 的命令基线。
+
+路线图从 109 个任务调整为 123 个任务，将过大的 P0 preflight/E2E、P1 upgrade-uninstall、P2 package-pair-upgrade-uninstall、P3 visual-proof/corpus 和 P4 matrix/journey/verdict 拆成独立失败域。新增 `docs/tasks/ATOMIC_TASK_PROMPTS.md`，每个新拆 task 均有背景、目标、本阶段做/不做、约束、成功/失败路径、文件、测试和验收 prompt。当前 123 个 task 与 22 个 contract 的双向映射一致，下一 eligible task 为 P0-T0A。
+
+P0 micro-pilot 改为两层只读路径：P0-T17A 生成版本化 raw records 和 canonical JSON evidence bundle，P0-T17B/Codex 只消费 immutable bundle 并给出 continue/adjust/stop verdict。新增 `CONF-BIND-001`，统一 P0/P1/P2 的确认语义：绑定 immutable selection hash、source anchor/registry/candidate set、最小 action allowlist、TTL 和最多一次原子 reserve/consume；project/document/source/action 变化、并发重放、到期和 restart 均 fail closed。
+
+单人一周承诺被诚实收窄为 P0 proof-of-value/go-no-go prototype，不承诺一周内完成 P1–P8 或 Visual V1。若第 1 天 preflight 仍未通过、第 3 天 selector→source bundle 仍不可重复，或 micro-pilot 出现 wrong attribution，本周进入 stop/adjust，不以削弱安全与测试换取假完工。项目许可证建议 Apache-2.0，但在所有者提交 GitHub `LICENSE`/版权/贡献政策前仍是 private/unlicensed。
+
 ## Design baseline revision 1.7 — 2026-07-12
 
 本记录是开工前设计审查修订，不是实现任务完成记录；所有 roadmap task 仍为 `todo`，下一 eligible task 仍为 P0-T0。本基线把环境预检从 Edge/ACL/双进程检查扩展为 canonical Git worktree、版本化 evidence、固定 Node 22.x/pnpm、package registry/proxy/CA、execution/filesystem profile、文件监听/HMR、真实 `msedge` channel launch、Windows/WSL HTTP/WebSocket、loopback 非暴露、private runtime ACL、双进程 restart 和机器可分类失败。P0-T0 固定产出 preflight ADR、standalone probes 与结构化 evidence；只找到 Edge 可执行文件或只运行 Linux Chromium 不再算 Tier-1 通过。

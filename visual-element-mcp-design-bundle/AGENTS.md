@@ -11,8 +11,10 @@ Build VEM (Visual Element MCP, 可视元素模型上下文协议工具) as an Ed
 3. `docs/requirements.yaml`
 4. `ROADMAP.yaml`
 5. `PLANS.md`
-6. The nearest package-level `AGENTS.md`, if present
-7. `.agents/skills/visual-ui-edit/SKILL.md` only for live VEM page-edit work
+6. `docs/ONE_WEEK_EXECUTION.md` for the owner-selected P0 proof-of-value sequence; its calendar labels are advisory, not deadlines
+7. `docs/tasks/ATOMIC_TASK_PROMPTS.md` for a task split out there
+8. The nearest package-level `AGENTS.md`, if present
+9. `.agents/skills/visual-ui-edit/SKILL.md` only for live VEM page-edit work
 
 `docs/DESIGN.md` is the only complete design source. `VISUAL_ELEMENT_MCP_DESIGN.md` is a compatibility entry only.
 
@@ -21,9 +23,11 @@ Build VEM (Visual Element MCP, 可视元素模型上下文协议工具) as an Ed
 - Work on exactly one eligible `ROADMAP.yaml` task at a time.
 - A task must have one independently observable result. If its implementation would require multiple separately reviewable authority boundaries, persistent-state classes, protocol surfaces, or failure domains, split the roadmap task before coding; do not hide an epic inside one `in_progress` state.
 - Use 1–3 normal workdays as the default task-size warning: exceeding it is not automatically forbidden, but the plan must show why the work still has only one independently reversible result and failure domain; otherwise split it before changing status.
-- A task is eligible only when both its task dependencies and its phase dependencies are satisfied.
+- A task is eligible only when its task dependencies, phase dependencies, and every declared `requires_decisions` verdict are satisfied. `done` means an evaluation task completed; it does not mean that its verdict authorized dependent work.
 - Do not implement an entire phase in one change.
 - Before coding, confirm dependencies, capabilities, security boundaries, affected data lifecycle, and tests.
+- `/mnt/d/vem` is the current DrvFS staging display path; `/mnt/d/VEM` may be the same device/inode and must not be treated as a second copy based on casing. P0-T0A0 performs read-only identity/payload/target readiness inventory. P0-T0A1, only with explicit owner authorization for the layout commit, creates `/home/qwzx/src/VEM` on WSL ext4, verifies prefix-normalized content parity, commits the flattened project-at-root layout with `sourceBaselineHead` as parent, leaves the target clean, cuts over to one writer, and retains staging read-only as rollback. P0-T0A2 then fixes evidence schema and exact Node/pnpm bootstrap. The canonical root is always discovered from Git top-level; the absolute target is this owner's migration profile, not a portable CI invariant.
+- The P0 proof-of-value sequence is the current scope boundary, not a one-week delivery promise. Day/step labels are advisory; P1–P8 remain backlog unless the owner explicitly authorizes later scope after the P0 verdict.
 - Add or update task-specific tests.
 - Run targeted tests immediately after the task.
 - Do not start another task unless the current task passes.
@@ -34,6 +38,7 @@ Build VEM (Visual Element MCP, 可视元素模型上下文协议工具) as an Ed
 
 - Task states: `todo`, `in_progress`, `blocked`, `done`.
 - Phase states: `todo`, `in_progress`, `blocked`, `passed`, `failed`.
+- Decision verdicts: `pending`, `continue`, `adjust`, `stop`. `requires_decisions` references a stable logical decision key, whose `current_attempt` points to an immutable attempt task. A decision task may be `done` with any non-pending verdict; only `continue` satisfies the corresponding gate. `adjust` requires an explicit remediation task plus a new, higher attempt linked by `supersedes_attempt`; `stop`, or an abandoned adjust, fails the owning phase. Never overwrite a prior verdict/evidence to manufacture authorization.
 - A failed test does not make a task `done`; fix it, leave it `in_progress`, or mark `blocked` only with evidence of an external blocker.
 - A phase becomes `passed` only after its gate succeeds.
 
@@ -45,7 +50,7 @@ Build VEM (Visual Element MCP, 可视元素模型上下文协议工具) as an Ed
 - Vite injection is an extension-free-install/degraded path, not a zero-install path; project integration is still required. Edge MV3 (Manifest Version 3, 扩展清单版本 3) extension is the intended daily trusted browser path. Edge CDP (Chrome DevTools Protocol, Chrome 开发者工具协议)/Playwright is optional advanced automation.
 - P0 follows `TOP-P0-001`: Codex starts the MCP STDIO adapter and in-process coordinator; the real Vite process reaches it through user-private runtime discovery and proxies `/__vem/browser`; page ingress is untrusted and source-registry publication uses a separate build-integration capability.
 - P0 starts with `EDGE-PREFLIGHT-001`; failure to prove the canonical Git worktree, pinned Node/pnpm, selected filesystem profile, package access, real Tier-1 Edge launch, Windows/WSL HTTP-WebSocket-HMR path, private runtime ACL, loopback isolation and two-process gate blocks dependent implementation instead of deferring discovery to the final E2E.
-- After the minimum selector, fixture and source registry exist, P0 runs the preregistered 3–5 task `UX-GATE-001` value micro-pilot before topology/verification expansion; a no-value or wrong-attribution verdict pauses dependent investment without being promoted to a release claim.
+- After the minimum selector, fixture and source registry exist, P0 runs the preregistered 3–5 task `UX-GATE-001` engineering micro-pilot before topology/verification expansion. Each arm uses a fresh Codex conversation/context, arm order is counterbalanced, frozen ground truth is withheld from the participant path, and one-time setup cost is reported separately from per-task cost. This small personal-project smoke finds failure modes; it is not a statistical product claim. Only a recorded `continue` verdict authorizes dependent investment.
 - MCP compatibility follows `MCP-COMPAT-001`: negotiate an explicit primary/compat revision, keep the core wait path usable without Tasks, and never mix the 2025 experimental Tasks wire shape with the later Tasks extension.
 - The browser never receives unrestricted filesystem, shell, arbitrary URL, absolute source path, or generic CDP capabilities.
 - MCP (Model Context Protocol, 模型上下文协议) tools remain read/verify/metadata-oriented and do not duplicate Codex filesystem or shell tools.
@@ -56,6 +61,7 @@ Build VEM (Visual Element MCP, 可视元素模型上下文协议工具) as an Ed
 
 - Page Runtime Adapter is untrusted and never receives a token.
 - Selection follows `SEL-PROV-001`: injected-page interaction is page-untrusted, a claim locks a snapshot but is not user authorization, and strict prepared editing requires a user-visible prompt/confirmation binding.
+- Confirmation follows `CONF-BIND-001`: it binds immutable selection and source-candidate hashes to a minimal action allowlist, expires, is consumed at most once by atomic prepare, and keeps identical terminal-state semantics across phases.
 - Content Script independently observes DOM but its input and output are still treated as external/untrusted evidence.
 - Extension Service Worker holds the short-lived token, derives tab/frame/document identity from the sender, and validates actions, requests, size, rate, and sequence.
 - Coordinator validates auth, connection binding, project/browser/document/revision, schemas, quotas, source registry, and semantic conflicts again.
@@ -78,7 +84,7 @@ Build VEM (Visual Element MCP, 可视元素模型上下文协议工具) as an Ed
 - Verification is prepared before source edits with a before Observation and journal barrier, then completed after tests; an edit-after-the-fact observation never substitutes for the before state.
 - Under `VER-TXN-001`, an update is relevant only with coordinator-observed source-registry/Vite-module-graph intersection. Unrelated HMR is ignored, related bounded batches retain match evidence, and missing or competing evidence is ambiguous rather than passed.
 - Every stored artifact has TTL (Time To Live, 生存时间), absolute expiry, quota, ownership, and deletion behavior.
-- Storage classes follow `DATA-LIFE-001`: crash-safe control metadata, bounded audit metadata, memory-first captures and P6 durable artifacts have separate capabilities and restart semantics.
+- Storage classes follow `DATA-LIFE-001` from P0 onward: ephemeral selection/claim/confirmation state, crash-safe control metadata, bounded audit metadata, memory-first captures and P6 durable artifacts have separate capabilities and restart semantics. P0 exposes a minimal static, truthful `CapabilityReport`; the dynamic registry remains a later capability.
 - Active artifacts use leases; startup and periodic sweepers remove expired/orphan data.
 
 ## Fallback invariants
@@ -108,6 +114,7 @@ Build VEM (Visual Element MCP, 可视元素模型上下文协议工具) as an Ed
 - Project and dependency licensing follows `LICENSE-POLICY-001`; do not infer the project owner's license choice, and do not copy AGPL or other review-required code as an implementation shortcut.
 - Public protocol changes require an ADR (Architecture Decision Record, 架构决策记录) and contract tests.
 - Normative cross-document traceability follows `REQ-TRACE-001`; every roadmap task directly declares `contracts`, and `docs/requirements.yaml` must contain the identical reverse mapping. Update both whenever a contract section, task binding or required test category changes.
+- `TEST-GATE-001` is the generic atomic-test and traceability contract, not by itself an executable hard gate. A task may bind only to it when it implements no domain-specific normative behavior; phase commands, dependency state and decision requirements provide the actual execution block.
 - Cross-document invariants use stable contract IDs; keep full normative text in `docs/DESIGN.md`, accepted ADRs, or `docs/specifications/` and validate references instead of copying divergent specifications.
 - Prefer internal modules until an API is stable enough to justify a package.
 - Preserve honest error, stale, ambiguous, degraded, needs-review, confidence, evidence, and warning states.
@@ -119,6 +126,7 @@ Build VEM (Visual Element MCP, 可视元素模型上下文协议工具) as an Ed
 Use repository scripts once created. Expected categories:
 
 - roadmap/schema/contract-ID/internal-link validation
+- decision-task status/verdict and `requires_decisions` validation
 - targeted unit test
 - affected package typecheck and lint
 - integration/contract/security test
@@ -145,6 +153,7 @@ Always finish implementation tasks with:
 Task: <ID>
 Task state: done | blocked | in_progress
 Outcome: passed | blocked | failed
+Decision: n/a | pending | continue | adjust | stop
 Changed files:
 Tests added/updated:
 Commands run:

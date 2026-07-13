@@ -13,6 +13,8 @@ Abbreviations follow `docs/DESIGN.md`; ADR means Architecture Decision Record（
 - Task dependencies:
 - Phase dependencies:
 - Dependency evidence:
+- Required decision verdicts and evidence:
+- If this is a decision task: logical `decision_key`, immutable `decision_attempt`, `supersedes_attempt`, current-attempt pointer, current `decision` (`pending|continue|adjust|stop`) and preregistered calculation rule:
 
 ## Observable goal
 
@@ -21,7 +23,7 @@ One result that can be tested independently.
 ## Relevant design contracts
 
 - `docs/DESIGN.md` sections:
-- Contract IDs from `docs/requirements.yaml` (`REQ-TRACE-001`, `LICENSE-POLICY-001`, `EDGE-PREFLIGHT-001`, `MCP-COMPAT-001`, `PRIV-MIN-001`, `SEL-PROV-001`, `TOP-P0-001`, `VER-TXN-001`, `SEC-PAIR-001`, `OBS-FRESH-001`, `DATA-LIFE-001`, `CAP-RACE-001`, `FALLBACK-POLICY-001`, as applicable):
+- Contract IDs from `docs/requirements.yaml` (`REQ-TRACE-001`, `LICENSE-POLICY-001`, `EDGE-PREFLIGHT-001`, `MCP-COMPAT-001`, `PRIV-MIN-001`, `SEL-PROV-001`, `CONF-BIND-001`, `TOP-P0-001`, `VER-TXN-001`, `SEC-PAIR-001`, `OBS-FRESH-001`, `DATA-LIFE-001`, `CAP-RACE-001`, `FALLBACK-POLICY-001`, `REMOTE-SEC-001`, as applicable):
 - Direct `ROADMAP.yaml` task `contracts` and bidirectional match evidence against `docs/requirements.yaml`:
 - ADRs:
 - Protocol types/tools/resources affected:
@@ -33,7 +35,7 @@ One result that can be tested independently.
 - Transport topology affected:
 - Real process owner, startup command, private runtime discovery, proxy endpoint and restart behavior:
 - EDGE-PREFLIGHT-001 evidence and Tier-1 runner owner/path, if affected:
-- Canonical Git worktree/evidence commit, selected Windows-or-WSL process owner, Node/pnpm exact versions, package registry/proxy/CA, filesystem type and file-watch/HMR evidence, if affected:
+- Staging Git-top-level + device/inode identity (`/mnt/d/vem` and case aliases), `sourceBaselineHead`, dirty/untracked hashes, owner target `/home/qwzx/src/VEM`, prefix-normalized content parity, owner-authorized layout commit parent proof, clean target, single-writer cutover, read-only rollback tree, canonical-root discovery, selected Windows-or-WSL process owner, Node/pnpm/Playwright exact versions, package registry/proxy/CA, filesystem type and file-watch/HMR evidence, if affected:
 
 ## Capability and fallback
 
@@ -46,6 +48,7 @@ One result that can be tested independently.
 
 - Untrusted inputs introduced or consumed:
 - SelectionProvenance, prompt/confirmation binding and whether a claim is being mistaken for user authorization:
+- ConfirmationBinding snapshot/source/candidate-set hashes, action allowlist, integrity provider, TTL, single-use reservation/consumption, invalidation and phase-consistent terminal semantics:
 - Identity derived by each receiving layer:
 - MCP consumer identity, immutable selection claim, TTL/release/conflict behavior:
 - Schema/size/depth/rate/semantic validation:
@@ -103,7 +106,8 @@ One result that can be tested independently.
 - Production leakage, if affected:
 - Golden-task metrics, source top-k, payload, ambiguity correctness and false-positive `passed`, if affected:
 - Preregistered threshold/evidence-plan location, holdout identity, no-VEM comparison and immutable timing boundaries, if affected:
-- If this is P0-T17: 3–5 task micro-pilot identities, direct-search baseline, setup-cost boundary, wrong-attribution stop condition and evidence that later holdouts remain untouched:
+- If this is P0-T17B: 3–5 task identities, fresh Codex context per arm, counterbalanced order, withheld ground truth, direct-search baseline, separate one-time/per-task setup-cost boundary, wrong-attribution stop condition and evidence that later holdouts remain untouched:
+- If this is P0-T17A/B: read-only harness version, canonical JSON schema, immutable input/raw-record hashes, two-arm timing boundary and proof that Codex consumes rather than recomputes the evidence bundle:
 
 ## Commands
 
@@ -121,6 +125,7 @@ One result that can be tested independently.
 - [ ] Required capability and degradation behavior is explicit.
 - [ ] Boundary validation and identity derivation are tested.
 - [ ] Selection provenance, external confirmation and claim-versus-consent semantics are explicit where affected.
+- [ ] Confirmation binds immutable selection/source/action, expires, is atomically consumed at most once, and cannot be replayed across consumer/project/document/revision changes.
 - [ ] Minimum outbound privacy remains present in every P0/P1 summary and compatible output path.
 - [ ] Pairing/permission/capture consent remains user-visible and fail-closed; pairing bootstrap and capture epoch races are covered where affected.
 - [ ] Cross-revision anchor, RevisionContext, pre-edit verification barrier, relevant module intersection, update batching and HMR causality are explicit where affected.
@@ -136,12 +141,15 @@ One result that can be tested independently.
 - [ ] Relevant golden-task metrics are recorded and no false-positive `passed` is accepted.
 - [ ] No unrelated feature or refactor is included.
 - [ ] The task remains within one principal authority/state/protocol failure domain and the expected 1–3 workday size; otherwise it was split before implementation.
+- [ ] `TEST-GATE-001` is not the only binding when this task implements domain-specific normative behavior.
+- [ ] A decision task records a non-pending verdict only after evidence is complete; its verdict/evidence is immutable, `requires_decisions` resolves the logical key's valid current-attempt chain, adjust creates remediation plus a new attempt, and stop/abandoned-adjust fails the owning phase.
 - [ ] Diff was reviewed.
 - [ ] Task is changed to `done` and progress is updated only after passing.
 
 ## Stop conditions
 
 - A task or phase dependency is incomplete.
+- A required decision is missing, pending, or different from the exact verdict required by this task/phase.
 - EDGE-PREFLIGHT-001 is incomplete for a task that depends on Tier-1 Edge/Windows/WSL/private-runtime behavior.
 - The task changes a normative section without a valid `docs/requirements.yaml` contract/task/test mapping.
 - The task's direct `contracts` differ from the reverse mapping in `docs/requirements.yaml`.
