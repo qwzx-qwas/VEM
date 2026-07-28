@@ -1,6 +1,6 @@
 # P0 Proof-of-Value 建议执行序列
 
-> 文件名为兼容保留。“一周”和下表步骤不是期限、工时估算或并行授权；它们只表达依赖友好的执行顺序。Codex 可以缩短编码时间，但不能跳过真实环境、Edge、隔离评估与证据门禁。
+> 本文件描述依赖友好的执行顺序，不是期限、工时估算或并行授权。Codex 可以缩短编码时间，但不能跳过真实环境、Edge、隔离评估与证据门禁。
 
 ## Outcome
 
@@ -14,7 +14,7 @@
 | A1：迁移与单写者切换 | P0-T0A1 → P0-T0A2 | owner-authorized layout commit、prefix-normalized parity、clean target、read-only rollback，以及 evidence schema/Node-pnpm decision | 未授权 commit、parent/parity/clean target/ext4 任一未证实：不切换写入者；已切换后不再写 staging |
 | A2：环境 aggregate | P0-T0B → P0-T0C → P0-T0D → P0-T0E → P0-T0F | registry/watcher、direct Edge、Windows-WSL path、private ACL 与 aggregate preflight verdict | 任一 probe 或 T0F 未通过：只修环境并重跑 evidence |
 | B：正式 Edge 工具链 | P0-T1 → P0-T0G → P0-T3 → P0-T4 | 固定 Node/pnpm/Playwright workspace、真实 `msedge` channel、protocol/privacy/confirmation schema、fixture | frozen install、Playwright Edge channel、schema 或 production fixture build 不通过 |
-| C：selection→source | P0-T15 → P0-T16 → P0-T5 | dev-only intrinsic anchor、revision registry、bounded page-untrusted selection summary | production leak、错误 anchor、隐私字段出站或输出不可重复 |
+| C：selection→source | P0-T15 → P0-T16 → P0-T5 | serve-only intrinsic anchor、私有 revision registry、直接主定位、bounded page-untrusted selection summary | production 参与/泄漏、错误 anchor、把 direct 降格为候选、隐私字段出站或输出不可重复 |
 | D：只读评估通道 | P0-T17A | 两层只读 harness 与 canonical JSON evidence bundle | harness 可写 source、bundle 不确定、ground truth 泄漏或 timing 不一致 |
 | E：价值决策 | P0-T17B | 3–5 task immutable evidence 与显式 `decision` | wrong attribution、later-holdout 污染或 per-task cost 超过预登记边界 |
 
@@ -34,7 +34,7 @@
 
 ## Scope cut
 
-当前首轮明确不做：MV3 extension、pairing/token、screenshot/capture、style/layout/visual verification、durable artifact、remote/CDP、Chrome、framework adapters、public npm/store distribution。协议可以保留 seam，但 P0-T12A 的最小静态 CapabilityReport 必须为这些能力返回 unavailable。
+当前首轮明确不做：MV3 extension、pairing/token、screenshot/capture、style/layout/visual verification、durable artifact、reference import、visual reference binding、custom artifact root、linked external artifact、remote/CDP、Chrome、framework adapters、public npm/store distribution。协议可以保留 seam，但 P0-T12A 的最小静态 CapabilityReport 必须为这些能力返回 unavailable。
 
 ## 环境准备
 
@@ -44,7 +44,7 @@
 
 - P0-T0F 为 done 且 aggregate verdict passed，P0-T0G 真实 `msedge` channel 通过；
 - workspace、fixture、dev transform、registry、selector summary 和只读 harness 的目标测试通过；
-- production build 无 VEM marker/client/endpoint/mapping；
+- production build 不解析或执行 VEM dev transform/client/endpoint/registry，产物无生成 marker/mapping，且只读 gate 证明 baseline build 等价与用户属性保留；
 - 3–5 task plan 在观察结果前登记，两个 arm 隔离，later holdout 未被使用；
 - wrong source attribution 为 0；
 - P0-T17B 为 `status: done` 并记录 `decision`。`continue` 授权 stretch；`adjust/stop` 也是有效、诚实的评估完成，但不授权后续任务。

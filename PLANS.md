@@ -43,15 +43,18 @@ One result that can be tested independently.
 - Expected degraded modes:
 - Fallback policy under test:
 - Security floor that must not be crossed:
+- Optional assurance checks affected, their default-on state, trusted configuration source/scope, explicit user opt-out, CapabilityReport/UI visibility, and limitations when disabled:
+- Proof that no global security-off/trusted-local bypass exists and that disabling an enhancement cannot increase confidence, freshness, permission, confirmation integrity or verification success:
 
 ## Trust and security boundaries
 
 - Untrusted inputs introduced or consumed:
 - SelectionProvenance, prompt/confirmation binding and whether a claim is being mistaken for user authorization:
-- ConfirmationBinding snapshot/source/candidate-set hashes, action allowlist, integrity provider, TTL, single-use reservation/consumption, invalidation and phase-consistent terminal semantics:
+- ConfirmationBinding snapshot plus direct-source-evidence or explicitly degraded candidate-set hashes, action allowlist, integrity provider, TTL, single-use reservation/consumption, invalidation and phase-consistent terminal semantics:
 - Identity derived by each receiving layer:
 - MCP consumer identity, immutable selection claim, TTL/release/conflict behavior:
 - Schema/size/depth/rate/semantic validation:
+- Per-layer checks that remain mandatory even in a user-declared trusted local environment, plus the bounded/cached implementation strategy used instead of bypassing them:
 - Token/permission impact, including scoped-bearer risk or an accepted proof-of-possession ADR:
 - Pairing state, terminal one-time bootstrap code entropy/TTL/atomic consumption, exact origin/Host, optional host permission, CSP, connection epoch, token generation, rotation/revocation and browser-restart impact:
 - Privacy/redaction impact:
@@ -69,7 +72,7 @@ One result that can be tested independently.
 - ProjectRevisionContext/RevisionContext projection, ordering/equality rules and project-instance reset:
 - Cache key and invalidation:
 - Runtime observation namespace/target mutation/viewport epochs, provider integrity, hit revalidation and verification cache bypass:
-- Source-anchor migration across revision, if affected:
+- Current direct source anchor, prepared-run transaction-matched reattachment, target-changed reselection, diagnostic-only alternatives and proof that revision history is not being used as source rollback, if affected:
 - Verification prepare barrier, before Observation, target module/dependency scope, journal cursor, relevant-module intersection, unrelated-update ignore rule, bounded update batch, receipt, replay, ambiguity and complete causality, if affected:
 - Stored artifacts:
 - Storage class (ephemeral browser state, crash-safe control journal, bounded audit metadata, memory-first capture, or P6 durable artifact) and honest restart capability:
@@ -103,8 +106,8 @@ One result that can be tested independently.
 - Edge Stable E2E, if required:
 - Playwright Chromium fast E2E, if useful:
 - Chrome compatibility, if affected:
-- Production leakage, if affected:
-- Golden-task metrics, source top-k, payload, ambiguity correctness and false-positive `passed`, if affected:
+- Production development-plane isolation, serve/build non-participation, module-graph non-resolution, private registry, baseline-build equivalence, read-only leakage and user-attribute preservation, if affected:
+- Golden-task metrics, direct-primary exact, degraded-only source top-k, payload, target-changed reselection, ambiguity correctness and false-positive `passed`, if affected:
 - Preregistered threshold/evidence-plan location, holdout identity, no-VEM comparison and immutable timing boundaries, if affected:
 - If this is P0-T17B: 3–5 task identities, fresh Codex context per arm, counterbalanced order, withheld ground truth, direct-search baseline, separate one-time/per-task setup-cost boundary, wrong-attribution stop condition and evidence that later holdouts remain untouched:
 - If this is P0-T17A/B: read-only harness version, canonical JSON schema, immutable input/raw-record hashes, two-arm timing boundary and proof that Codex consumes rather than recomputes the evidence bundle:
@@ -123,6 +126,7 @@ One result that can be tested independently.
 
 - [ ] Observable behavior is implemented.
 - [ ] Required capability and degradation behavior is explicit.
+- [ ] Security-floor checks cannot be disabled; optional enhanced assurance is default-on, individually user-configurable only from a trusted scope, visible when disabled, and cannot improve confidence, permissions or verification outcomes.
 - [ ] Boundary validation and identity derivation are tested.
 - [ ] Selection provenance, external confirmation and claim-versus-consent semantics are explicit where affected.
 - [ ] Confirmation binds immutable selection/source/action, expires, is atomically consumed at most once, and cannot be replayed across consumer/project/document/revision changes.
@@ -155,6 +159,7 @@ One result that can be tested independently.
 - The task's direct `contracts` differ from the reverse mapping in `docs/requirements.yaml`.
 - A public protocol or architecture decision must change without an ADR.
 - The implementation would silently weaken authentication, transport security, privacy, confidence, or permissions.
+- A trusted-local or performance option would bypass a receiving layer's required validation instead of disabling only a documented enhanced assurance check.
 - Required behavior cannot be tested in the current task scope.
 - An unrelated baseline failure prevents trustworthy verification.
 - Completing the task requires a later-phase capability not exposed through an approved seam.

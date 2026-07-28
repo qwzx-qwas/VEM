@@ -23,9 +23,11 @@ Create a plan for only that task using `PLANS.md`. Explicitly identify:
 - `MCP-COMPAT-001` primary/compat revision, initialization evidence, no-task core path and optional negotiated Tasks adapter;
 - Edge/browser mode and capabilities;
 - fallback/degradation behavior;
+- `FALLBACK-POLICY-001` security-floor versus optional-assurance classification: no global security-off/trusted-local bypass, default-on per-check enhancement preferences set only by trusted project/profile configuration, visible opt-out limitations, and no confidence/permission/verification upgrade when disabled;
 - untrusted inputs and receiving-layer identity derivation;
 - `SEL-PROV-001` provider/interaction/confirmation integrity, prompt binding, claim-versus-user-authorization semantics and strict external-confirmation behavior;
-- `CONF-BIND-001` immutable selection/source/candidate-set hashes, action allowlist, integrity provider, TTL, atomic reserve-consume, one-use replay prevention, invalidation and phase-consistent terminal states;
+- `CONF-BIND-001` immutable selection plus direct-source-evidence or explicitly degraded candidate-set hashes, action allowlist, integrity provider, TTL, atomic reserve-consume, one-use replay prevention, invalidation and phase-consistent terminal states;
+- current direct source identity, prepared-run transaction-matched reattachment, target-changed reselection, diagnostic-only alternatives, and the boundary between revision causality and source undo;
 - `PRIV-MIN-001` minimum P0 outbound field allowlist, private field/URL/error redaction and untrusted prompt-data marking;
 - ProjectRevisionContext/RevisionContext projection, ordering/equality and project-instance reset behavior;
 - MCP consumer identity and immutable selection claim TTL/release/conflicts;
@@ -40,7 +42,7 @@ Create a plan for only that task using `PLANS.md`. Explicitly identify:
 - `OBS-FRESH-001` provider-scoped runtime/target/viewport epochs, revalidation and verification cache bypass;
 - TTL (Time To Live, 生存时间), quota, lease, deletion, and orphan behavior;
 - `DATA-LIFE-001` storage class and honest restart semantics without claiming P6 durable artifact capabilities early;
-- targeted, security, reliability, browser, and production tests.
+- targeted, security, reliability, browser, and production non-participation tests, including module-graph non-resolution, baseline-build equivalence, read-only leakage inspection and user-attribute preservation.
 - golden-task correctness metrics and the zero-false-positive-`passed` gate, when affected.
 - fresh install/upgrade/first connection or pairing/clean uninstall and production residue checks at user-installable milestones.
 - held-out project and no-VEM baseline evidence required by the current milestone stop/go gate; an internal test pass alone does not authorize the next phase.
@@ -52,7 +54,7 @@ Treat `TEST-GATE-001` as the generic atomic-test/traceability contract, not as a
 
 Then implement only the selected task. Do not implement an adjacent phase capability except an interface seam explicitly required by the current task.
 
-Run the available repository roadmap validation (or the documented bootstrap check before P0-T2), targeted tests, affected package typecheck/lint, and the relevant browser/security/lifecycle checks immediately. Never skip, delete, weaken, or broadly rewrite tests to manufacture a pass. Never silently weaken authentication, secure transport, privacy, confidence, permissions, or fallback policy.
+Run the available repository roadmap validation (or the documented bootstrap check before P0-T2), targeted tests, affected package typecheck/lint, and the relevant browser/security/lifecycle checks immediately. Never skip, delete, weaken, or broadly rewrite tests to manufacture a pass. Never silently weaken authentication, secure transport, privacy, confidence, permissions, or fallback policy. A local or user-declared trusted environment never authorizes bypassing a receiving layer's security-floor checks; performance configuration may disable only documented default-on enhancements and must expose the resulting limitations.
 
 If tests pass, set the task to `done` and update `docs/progress.md` with evidence. For a decision task, also calculate and store the preregistered non-pending `decision`; never translate `done` into `continue`, overwrite an old attempt, or move `current_attempt` without first adding the required remediation/new-attempt chain. If an external dependency blocks progress, set `blocked` with evidence. A failed test alone is not permission to mark done or start another task.
 

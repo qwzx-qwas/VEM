@@ -1,0 +1,24 @@
+{
+  "availableBytes": 992654442496,
+  "casefoldSiblingMatchesAtNearest": [],
+  "effectiveGid": 1000,
+  "effectiveUid": 1000,
+  "mount": {
+    "filesystemType": "ext4",
+    "options": "rw,relatime,discard,errors=remount-ro,data=ordered",
+    "source": "/dev/sdd",
+    "target": "/"
+  },
+  "nearestExistingParent": "/home/qwzx",
+  "nearestGid": 1000,
+  "nearestMode": "0750",
+  "nearestSearchable": true,
+  "nearestUid": 1000,
+  "nearestWritable": true,
+  "probeSource": "sandbox-external-read-only-confirmation",
+  "target": "/home/qwzx/src/VEM",
+  "targetExists": false,
+  "targetLexists": false,
+  "targetParent": "/home/qwzx/src",
+  "targetParentExists": false
+}

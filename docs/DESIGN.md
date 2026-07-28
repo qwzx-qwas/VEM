@@ -1,7 +1,7 @@
 # Visual Element MCP for Codex：产品、架构与实施设计
 
-> 文档版本：1.10
-> 日期：2026-07-13
+> 文档版本：1.14
+> 日期：2026-07-23
 > 工作名：Visual Element MCP（VEM，Visual Element Model Context Protocol，可视元素模型上下文协议工具）  
 > 主要读者：项目作者、Codex、实现者与安全审查者  
 > 文档性质：产品需求、技术设计、安全边界、数据生命周期、实施路线与验收标准的统一事实来源
@@ -26,7 +26,7 @@
 
 跨文档不变量使用稳定 contract ID。`docs/requirements.yaml` 是 contract 索引与需求追踪清单，记录每个 contract 的 authoritative section、首次交付阶段、roadmap task 和 required test category；它不复制规范正文。`AGENTS.md`、`PLANS.md`、`ROADMAP.yaml` 和 prompt 只引用 contract ID 与必要的执行摘要，不复制完整规范。
 
-`REQ-TRACE-001` 要求：`docs/requirements.yaml` 登记的全部规范词（包括必须/不得/禁止/不能/应当/不应/不可/只允许/仅允许/需要、fail-closed 与 MUST/SHALL）按 heading own-body 规则检查；新增或移动规范条款时必须同步 contract section。每个 `ROADMAP.yaml` task 还必须直接声明适用的 `contracts`。`TEST-GATE-001` 只是通用的原子测试与追踪 contract，不是一个可单独执行的 shell gate；只有任务确实不实现任何领域规范行为时，才可只声明它，并在任务计划中解释原因。真正阻止后续执行的是未满足的 task/phase dependency、逻辑 decision gate、phase gate 命令或失败状态。`docs/requirements.yaml` 的 `roadmap_tasks` 与 task 的 `contracts` 必须双向一致，不能只维护一侧。P0 bootstrap check 先验证已登记 section、task、test category、双向 contract reference、decision attempt/reference 和 task coverage；P0-T2 起由仓库 validator 检查未知 contract ID、失效内部链接、孤立 roadmap task、依赖环、未被 contract section 覆盖的规范条款、没有直接 contract 绑定的 task、decision attempt 链错误，以及没有 roadmap/test 映射的 contract。CI 检查稳定 contract/section 和显式状态字段，而不是依赖自然语言逐句猜测条款身份。
+`REQ-TRACE-001` 要求：`docs/requirements.yaml` 登记的全部规范词（包括必须/不得/禁止/不能/应当/不应/不可/只允许/仅允许/需要、fail-closed 与 MUST/SHALL）按 heading own-body 规则检查；新增或移动规范条款时必须同步 contract section。每个 `ROADMAP.yaml` task 还必须直接声明适用的 `contracts`。`TEST-GATE-001` 只是通用的原子测试与追踪 contract，不是一个可单独执行的 shell gate；只有任务确实不实现任何领域规范行为时，才可只声明它，并在任务计划中解释原因。真正阻止后续执行的是未满足的 task/phase dependency、逻辑 decision gate、phase gate 命令或失败状态。`docs/requirements.yaml` 的 `roadmap_tasks` 与 task 的 `contracts` 必须双向一致，不能只维护一侧。P0 bootstrap check 先验证已登记 section、task、test category、双向 contract reference、decision attempt/reference 和 task coverage；P0-T2 起由仓库 validator 检查未知 contract ID、失效内部链接、孤立 roadmap task、依赖环、未被 contract section 覆盖的规范条款、没有直接 contract 绑定的 task、decision attempt 链错误，以及没有 roadmap/test 映射的 contract。P0-T2 还要为后续规范拆分提供多文件 `path + stable anchor` authority reference validation；在该能力通过 fixture 前，规范正文继续保留于当前精确 heading 映射，不以批量移动制造无法验证的追踪缺口。CI 检查稳定 contract/source/section 和显式状态字段，而不是依赖自然语言逐句猜测条款身份。
 
 开始实现前依次读取：
 
@@ -35,7 +35,7 @@
 3. `docs/requirements.yaml`：contract、权威 section、roadmap 与测试追踪；
 4. `ROADMAP.yaml`：机器可读任务、依赖和状态；
 5. `PLANS.md`：单个原子任务计划模板；
-6. 当前 P0 proof-of-value scope 期间读取 `docs/ONE_WEEK_EXECUTION.md`；其步骤顺序是建议，不是日历承诺；
+6. 当前 P0 proof-of-value scope 期间读取 `docs/delivery/P0_PROOF_OF_VALUE.md`；其步骤顺序是建议，不是日历承诺；
 7. 若 task 在拆分文档中，读取 `docs/tasks/ATOMIC_TASK_PROMPTS.md` 的对应条目；
 8. 最近的包级 `AGENTS.md`；
 9. 使用 VEM 修改页面时，再读取 `.agents/skills/visual-ui-edit/SKILL.md`。
@@ -202,11 +202,11 @@ P1 起必须提供版本化 CLI 和 Codex MCP 配置生成器；命令名称可�
 
 `continue` 才满足相应逻辑 gate。`adjust` 表示本次评估已诚实完成，但 owning phase 尚未通过：路线图必须先加入明确 remediation task，再加入一个新的 decision attempt task；只有新 task 已存在且 supersedes 链、递增序号和依赖完整后，才更新 `current_attempt`。`stop` 使 owning phase 进入 `failed`，并阻止所有依赖该 phase 的后续工作；不得把 stop task 仅改回 todo 或覆盖 verdict 来继续。若 adjust 后不再安排 remediation/retry，owning phase 同样进入 failed。任何重试都保留之前的 attempt 历史。
 
-例如 P0-T17B 可以合法地处于 `status: done, decision_key: P0-VALUE, decision: stop`：这表示评估执行成功，但 P0 产品路径失败，P0-T7 的 `requires_decisions: {P0-VALUE: continue}` 不满足。它不是“前面 done 所以后面一直执行”；task dependency 只说明评估动作完成，逻辑 decision gate 才说明结果是否授权继续。P1 gate 必须通过独立 pilot task，在至少 3 个未参与实现的代表性 React + Vite 项目上记录安装、首次选择、正确 source candidate、首次编辑保留/撤销和卸载结果，并使用相同任务、固定计时起止点和相同成功定义记录 no-VEM baseline；P2 gate 必须记录 fresh Edge profile 的配对成功、失败、恢复、撤销与卸载 verdict；P3/P4 必须报告独立 holdout，而不只报告用于调参的 fixture。
+例如 P0-T17B 可以合法地处于 `status: done, decision_key: P0-VALUE, decision: stop`：这表示评估执行成功，但 P0 产品路径失败，P0-T7 的 `requires_decisions: {P0-VALUE: continue}` 不满足。它不是“前面 done 所以后面一直执行”；task dependency 只说明评估动作完成，逻辑 decision gate 才说明结果是否授权继续。P1 gate 必须通过独立 pilot task，在至少 3 个未参与实现的代表性 React + Vite 项目上记录安装、首次选择、正确直接主定位或诚实降级、首次编辑保留/撤销和卸载结果，并使用相同任务、固定计时起止点和相同成功定义记录 no-VEM baseline；P2 gate 必须记录 fresh Edge profile 的配对成功、失败、恢复、撤销与卸载 verdict；P3/P4 必须报告独立 holdout，而不只报告用于调参的 fixture。
 
-为避免完成完整 P0/P1 基础设施后才发现核心价值不足，P0 在 source anchor、最小 selector/summary 与 fixture 可用后、coordinator/HMR verification 大量建设前，必须执行一次 `P0 value micro-pilot`。该检查使用预先登记的 3–5 个窄任务，对比“Codex 直接搜索源码”和“selection summary + source candidate”两条路径，只测目标绑定完整性、source top-1/top-3、错误定位数和定位耗时。对个人项目，它是低成本 engineering smoke，不是统计试验：不得产生“更快/更准确”的产品百分比声明。若全部任务没有可观察改善、出现错误 source 自动归因，或每 task 的使用成本明显高于节省的定位时间，后续 topology/verification 投入必须暂停并先调整 selection-to-source 路径。micro-pilot 的任务、起止点、原始结果和继续/调整判据必须在运行前写入版本化 evidence plan；不得复用 P1/P3/P4 holdout 作为调参样本。
+为避免完成完整 P0/P1 基础设施后才发现核心价值不足，P0 在 source anchor、最小 selector/summary 与 fixture 可用后、coordinator/HMR verification 大量建设前，必须执行一次 `P0 value micro-pilot`。该检查使用预先登记的 3–5 个窄任务，对比“Codex 直接搜索源码”和“selection summary + direct primary source/related evidence”两条路径，只测目标绑定完整性、直接主定位正确性、仅在 direct 不可用时的 degraded top-k、错误定位数、人工重新选择数和定位耗时。对个人项目，它是低成本 engineering smoke，不是统计试验：不得产生“更快/更准确”的产品百分比声明。若全部任务没有可观察改善、出现错误 source 自动归因、把 direct mapping 退化成常规候选选择，或每 task 的使用成本明显高于节省的定位时间，后续 topology/verification 投入必须暂停并先调整 selection-to-source 路径。micro-pilot 的任务、起止点、原始结果和继续/调整判据必须在运行前写入版本化 evidence plan；不得复用 P1/P3/P4 holdout 作为调参样本。
 
-每个 pilot 开始前必须把 stop/go threshold 写入版本化的 evidence plan，至少包含 install-to-first-selection p50/p95、首次连接或 pairing 成功率、source top-1/top-3、错误 source/reattach/transaction attribution 数、首次 edit 保留/撤销/人工修正比例、clean-uninstall residue 和 false-positive `passed`。不得在看到结果后降低阈值、替换 holdout 或改变计时边界。3 个项目只用于早期可用性和失败模式发现；任何百分比产品声明必须使用更大的预注册样本或明确标注为 pilot observation。
+每个 pilot 开始前必须把 stop/go threshold 写入版本化的 evidence plan，至少包含 install-to-first-selection p50/p95、首次连接或 pairing 成功率、direct-primary exact、direct unavailable 时的 degraded top-k、错误 source/reattach/transaction attribution 数、`target-changed` 重新选择数、首次 edit 保留/撤销/人工修正比例、clean-uninstall residue 和 false-positive `passed`。不得在看到结果后降低阈值、替换 holdout 或改变计时边界。3 个项目只用于早期可用性和失败模式发现；任何百分比产品声明必须使用更大的预注册样本或明确标注为 pilot observation。
 
 若核心路径不能达到预注册阈值，不能相对“Codex 直接搜索源码”的基线改善定位时间或正确率，或安装/配对失败成为主要阻碍，应先修正产品路径、缩小后续范围或停止该阶段，不得仅凭内部 contract test 进入高级 transport、durable artifact、remote 或多框架建设。DOM 选择必须在用户可见界面中明确绑定到 selection snapshot/claim 或当前 prompt；模糊的全局 active-selection 不算可验证的用户任务绑定。
 
@@ -232,7 +232,7 @@ P0-T17B / Codex
 
 最小 pilot 隔离规则是：两个 arm 分别使用全新的 Codex conversation/context，不把前一 arm 的答案、搜索路径或候选带入后一 arm；同一 task 的 arm 顺序随机或交叉平衡；ground truth 与 evaluator 记录在 trial 完成前不进入 Codex、搜索索引或 bundle 可见字段；两个 arm 使用同一 prompt、fixture commit、工具权限、计时边界和 cold/warm-cache policy。一次性安装/生成 registry 的 setup cost 与每 task 操作成本必须分开报告。3–5 个任务只用于暴露明显失败和决定是否值得继续，不能据此作显著性或普遍效果声明。
 
-Canonical bundle 至少记录每个 task 的 direct-search 与 VEM-assisted 两个 arm、setup cost、locate duration、top-1/top-3 candidates、chosen candidate、ground-truth match、wrong-attribution、operator correction、raw-record hashes 和 continue/adjust/stop 判据。harness 不得执行源码写入、Shell 任务、网络搜索、候选人工调参或 holdout 替换。错误 source 自动归因、两个 arm 计时边界不同、输入 hash 变化或 later holdout 被消费时，verdict 必须 fail closed。
+Canonical bundle 至少记录每个 task 的 direct-search 与 VEM-assisted 两个 arm、setup cost、locate duration、direct primary source/ground-truth match、direct 不可用原因、仅在降级路径出现的 top-1/top-3 candidates 与 chosen candidate、wrong-attribution、target-changed/reselection、operator correction、raw-record hashes 和 continue/adjust/stop 判据。harness 不得执行源码写入、Shell 任务、网络搜索、候选人工调参或 holdout 替换。错误 source 自动归因、把 direct mapping 包装成常规候选、两个 arm 计时边界不同、输入 hash 变化或 later holdout 被消费时，verdict 必须 fail closed。
 
 ## 2.8 项目与依赖许可证 (`LICENSE-POLICY-001`)
 
@@ -246,7 +246,7 @@ P0-T1 在生成 package metadata 前必须记录项目自身许可证或明确�
 
 ## 2.9 P0 建议执行顺序与范围
 
-单人使用 Codex 时，当前 owner-approved scope 是 **P0 proof-of-value / go-no-go prototype**，不是完整 Visual V1。`docs/ONE_WEEK_EXECUTION.md` 的历史文件名为兼容保留，其中 Day/Step 只表达依赖友好的建议顺序，不是硬日历、工时估算或“一周必须完成”的承诺。Codex 可以加快编码，但不能替代真实环境、Edge、隔离 pilot 和证据门禁。当前 scope 只包括：
+单人使用 Codex 时，当前 owner-approved scope 是 **P0 proof-of-value / go-no-go prototype**，不是完整 Visual V1。当前执行序列位于 `docs/delivery/P0_PROOF_OF_VALUE.md`；`docs/ONE_WEEK_EXECUTION.md` 仅为旧链接兼容入口。Step 只表达依赖友好的建议顺序，不是硬日历、工时估算或“一周必须完成”的承诺。Codex 可以加快编码，但不能替代真实环境、Edge、隔离 pilot 和证据门禁。当前 scope 只包括：
 
 1. 完成并保存 execution preflight verdict；
 2. 建立最小 TypeScript workspace、React/Vite fixture 和 protocol schema；
@@ -432,6 +432,8 @@ Edge Add-ons 与 Chrome Web Store 的扩展 ID 可以不同；若未来使用 Na
 
 不得把半个按钮伪造成半段源码。自由区域选择只能吸附到元素或生成 group。
 
+外部截图或参考图同样不能从像素直接产生源码身份。它只有在 10.3.4 的 `VisualReferenceBinding` 中绑定到当前 DOM selection、region 或 page root，并复用 `SourceResolution` 证据后，才具有可解释的源码候选关系；未绑定图片只提供视觉信息。
+
 ## 4.2 DOM 与源码不是双射
 
 一个 JSX 节点可以因 `.map()` 生成多个 DOM 实例；一个 DOM 的外观也可能同时来自组件定义、调用位置、CSS、父布局、主题和浏览器默认样式。因此映射是证据图，不是唯一答案。
@@ -506,9 +508,10 @@ interface RevisionContext extends ProjectRevisionContext {
 - `runtimeNodeId` 只在当前 document 内唯一，可用 WeakMap 分配；
 - `sourceAnchorId` 指向编译期 JSX/TSX 节点；
 - `ReattachFingerprint` 用于 HMR 后重定位；
-- 旧 source registry revision 的 `sourceAnchorId` 只能作为迁移输入，不能被假定在新 revision 中仍然存在；
+- 当前 DOM marker 只有与同一 `sourceRegistryRevision` 的 registry membership 匹配时，才可形成直接 `hostAnchor`；正常路径返回这一主定位，而不是让用户在相似候选中猜选；
+- 旧 source registry revision 的 `sourceAnchorId` 只能作为 prepared verification 的重附着输入，不能被假定在新 revision 中仍然存在，也不提供源码撤销能力；
 - React key 是证据，不保证总能获得；
-- 多个候选得分接近时返回 `ambiguous`，不能任取一个。
+- 事务证据无法唯一证明 successor 时返回 `target-changed/ambiguous` 并要求重新选择，不能按相似度任取一个。
 
 ## 4.5 SourceResolution 是证据集合
 
@@ -528,7 +531,7 @@ interface SourceResolution {
 }
 ```
 
-固定小数 confidence 只能作为可选展示，不应替代 evidence。`usages: []` 不得被解释为“没有其他使用位置”；无法确定时必须返回 `unknown`。
+当前 marker、document 和 registry revision 一致且 registry membership 无冲突时，`hostAnchor` 是当前宿主 JSX 的直接主定位；`usageCandidates`、`styleEvidence` 和 `layoutOwners` 表达其他调用点或影响来源，不能与主定位混成一个常规“候选排行榜”。只有 direct/registry-matched 路径不可用时，compatibility/heuristic 才返回降级候选，并明确要求澄清或 review。固定小数 confidence 只能作为可选展示，不应替代 evidence。`usages: []` 不得被解释为“没有其他使用位置”；无法确定时必须返回 `unknown`。
 
 # 四、总体架构与跨环境传输
 
@@ -784,6 +787,8 @@ interface UntrustedRuntimeEvidence {
 
 ## 6.5 每层校验职责
 
+本节列出的接收边界校验属于安全底线，不提供全局关闭开关。用户声明“本机、单用户或可信项目”只能描述部署假设，不能把页面、content script payload、MCP client 或其他本机进程自动升级为可信主体；这些校验同时防止恶意输入、陈旧状态、串项目和普通实现错误。用户可配置的默认开启增强项及其性能边界统一由 11.2 定义，任何增强项关闭后，各接收层仍必须执行自己的身份、授权、schema/size、隐私和语义校验。
+
 ### Page Runtime → Content Script
 
 - `event.source === window`；
@@ -885,10 +890,27 @@ interface SelectionProvenance {
 
 ### 7.0.1 ConfirmationBinding 协议与状态机 (`CONF-BIND-001`)
 
-ConfirmationBinding 是“用户在受信任会话中确认了哪个不可变目标、哪个源码候选和哪些动作”的有界授权记录。它不是浏览器事实、不是 bearer token、不是 selection claim，也不保存 prompt 正文。P0/P1 的 confirmation integrity 为 `codex-reported-user-confirmation`；P2 可在扩展 UI 直接确认时增加 `extension-ui-confirmed`，但两者使用同一状态机和消费语义。
+ConfirmationBinding 是“用户在受信任会话中确认了哪个不可变目标、哪个直接主定位或降级源码候选，以及哪些动作”的有界授权记录。它不是浏览器事实、不是 bearer token、不是 selection claim，也不保存 prompt 正文。P0/P1 的 confirmation integrity 为 `codex-reported-user-confirmation`；P2 可在扩展 UI 直接确认时增加 `extension-ui-confirmed`，但两者使用同一状态机和消费语义。
 
 ```ts
 type ConfirmedAction = "prepare-source-edit";
+
+type ConfirmedSourceBinding =
+  | {
+      resolutionKind: "direct";
+      sourceAnchorId: string;
+      sourceRegistryRevision: string;
+      normalizedRelativeFileIdentity: string;
+      directEvidenceHash: string;
+    }
+  | {
+      resolutionKind: "degraded-candidate";
+      sourceAnchorId?: string;
+      sourceRegistryRevision: string;
+      normalizedRelativeFileIdentity: string;
+      candidateSetHash: string;
+      chosenCandidateRank: number;
+    };
 
 interface ConfirmationBinding {
   confirmationId: string;
@@ -902,13 +924,7 @@ interface ConfirmationBinding {
   selectionSnapshotHash: string;   // canonical immutable SelectionSnapshot hash
   documentId: string;
   documentGeneration: string;
-  sourceBinding: {
-    sourceAnchorId: string;
-    sourceRegistryRevision: string;
-    normalizedRelativeFileIdentity: string; // coordinator-issued opaque identity
-    candidateSetHash: string;
-    chosenCandidateRank: number;
-  };
+  sourceBinding: ConfirmedSourceBinding; // relative-file identity 由 coordinator 发放
   allowedActions: ConfirmedAction[];
   allowedVerificationSpecHash?: string;
   promptBindingHash: string;        // 受信任会话中展示内容的结构化 hash，不含 prompt 原文
@@ -932,9 +948,9 @@ type ConfirmationBindingState =
   | "cancelled";
 ```
 
-`selectionSnapshotHash` 必须覆盖 project/browser/document identity、target summaries、provenance 和 RevisionContext，使页面替换 active selection、DOM node 或 source claim 后无法沿用原确认。`sourceBinding` 同时锁定 source anchor、registry revision、coordinator 发放的 opaque relative-file identity 和候选集；该 identity 不接受浏览器自报也不向页面暴露路径。候选排名、anchor migration、registry revision 或文件归属变化后必须重新展示并确认。`allowedActions` 按最小授权列出；一次 prepare 只能消费一个 `prepare-source-edit`，不能用同一确认执行第二次编辑。verification complete 不是第二次 ConfirmationBinding 消费；它只能通过该 prepare 产生的 runId、claimId 和 verification spec hash 继承原有边界，不单独扩大编辑权限。
+`selectionSnapshotHash` 必须覆盖 project/browser/document identity、target summaries、provenance 和 RevisionContext，使页面替换 active selection、DOM node 或 source claim 后无法沿用原确认。direct binding 锁定 source anchor、registry revision、coordinator 发放的 opaque relative-file identity 和 registry-matched evidence hash；degraded binding 才额外锁定候选集与 chosen rank。relative-file identity 不接受浏览器自报也不向页面暴露路径。在 prepare 消费确认之前，主定位、降级候选集/排名、registry revision 或文件归属发生变化都必须重新展示并确认。prepare 成功后，由该 run 的相关 `UpdateTransaction` 和当前 registry 共同证明的 `transaction-matched` successor 只允许用于 complete verification，不需要也不能消费第二次 confirmation；它不能授权第二次编辑或扩大文件/action scope。若 successor 无法唯一证明，则 complete 返回 `target-changed/ambiguous`，下一次编辑必须重新选择、展示和确认。`allowedActions` 按最小授权列出；一次 prepare 只能消费一个 `prepare-source-edit`。
 
-`confirmationId` 必须至少具有 128 bit 不可预测随机性。所有 `*Hash` 使用 `hashNamespace` 指定的 canonical JSON + SHA-256；`candidateSetHash` 覆盖有序 candidate identity、rank、confidence band、conflict 和主要 evidence identity，不覆盖已被隐私规则排除的原文。`promptBindingHash` 覆盖实际展示给用户的 target/source/action 结构化摘要，不是对整段 prompt 原文做存档。confirmation TTL 默认 5 分钟、硬上限 15 分钟，不使用 sliding renewal；到期后必须产生新 confirmationId 并重新展示摘要。MCP connection epoch 变化会使旧 binding invalidated，不允许仅凭同一 client session 恢复。
+`confirmationId` 必须至少具有 128 bit 不可预测随机性。所有 `*Hash` 使用 `hashNamespace` 指定的 canonical JSON + SHA-256；`directEvidenceHash` 覆盖 marker、registry membership、document/revision 和主要 conflict identity；只在 degraded binding 中存在的 `candidateSetHash` 覆盖有序 candidate identity、rank、confidence band、conflict 和主要 evidence identity。两者都不覆盖已被隐私规则排除的原文。`promptBindingHash` 覆盖实际展示给用户的 target/source/action 结构化摘要，不是对整段 prompt 原文做存档。confirmation TTL 默认 5 分钟、硬上限 15 分钟，不使用 sliding renewal；到期后必须产生新 confirmationId 并重新展示摘要。MCP connection epoch 变化会使旧 binding invalidated，不允许仅凭同一 client session 恢复。
 
 状态转换：
 
@@ -963,7 +979,7 @@ prepare 必须在 coordinator 内用单个原子事务完成：校验 MCP connec
 统一失败分支：
 
 - snapshot/document 不匹配：`CONFIRMATION_TARGET_CHANGED`，必须重新选择和确认；
-- source anchor/registry/candidate set 不匹配：`CONFIRMATION_SOURCE_CHANGED`，必须重新展示源码候选；
+- prepare 前 source anchor/registry/primary source/candidate set 不匹配：`CONFIRMATION_SOURCE_CHANGED`，必须重新展示当前主定位或降级候选；prepare 后预期 revision 变化由 VerificationRun 的 transaction-matched reattachment 处理，不复用本错误分支；
 - action/spec 越权：`CONFIRMATION_ACTION_NOT_ALLOWED`，不自动扩大 scope；
 - TTL 到期：`CONFIRMATION_EXPIRED`；
 - 已预留/已消费/并发重放：`CONFIRMATION_ALREADY_USED`；
@@ -1376,9 +1392,25 @@ interface CaptureReceipt {
 }
 ```
 
-`vem://` 是 MCP 逻辑 resource URI，不是网页 URL 或操作系统路径。小图片且调用方明确请求时可以直接返回 MCP image content；客户端 resource 支持不足时提供 `vem_get_capture` 兼容工具。
+P6 导入或固定后的通用资源使用同样不泄露物理路径的逻辑引用：
 
-## 10.3 存储等级与 CaptureStore (`DATA-LIFE-001`)
+```json
+{
+  "artifact": {
+    "uri": "vem://artifact/art_789",
+    "kind": "reference-image",
+    "provenance": "user-imported",
+    "mimeType": "image/png",
+    "width": 1440,
+    "height": 900,
+    "sizeBytes": 182304
+  }
+}
+```
+
+`vem://` 是 MCP 逻辑 resource URI，不是网页 URL 或操作系统路径。P3 可以保留 `vem://capture/...` 兼容 URI；P6 的统一 ArtifactStore 使用 `vem://artifact/...`，并由服务端校验 project/session ownership 后解析。小图片且调用方明确请求时可以直接返回 MCP image content；客户端 resource 支持不足时提供 `vem_get_capture`/`vem_get_artifact` 兼容工具。resource link 不代表资源永久存在，读取仍受 capability、TTL、lease 和删除状态约束。
+
+## 10.3 存储等级与 ArtifactStore (`DATA-LIFE-001`)
 
 “durable artifact 到 P6 才交付”不表示此前没有任何持久状态。实现必须区分四个独立等级，CapabilityReport 不得把一个等级的能力外推到另一个：
 
@@ -1389,31 +1421,163 @@ interface CaptureReceipt {
 | bounded audit metadata | P3 | allowlist、pairing/capture/deletion 的非敏感事件摘要 | 明确 opt-out、TTL、owner、manual clear 和 crash semantics |
 | durable artifact store | P6 | 用户显式 pin/reference 的二进制资源 | atomic upload、lease、tombstone、orphan recovery |
 
-P3 的 diagnostics ring 默认仍为 memory-first；若启用 7 天 audit metadata，它必须使用独立的最小 durable metadata store，不能偷偷复用 screenshot store，也不能因此宣称 artifact pin 可用。
+P3 的 diagnostics ring 默认仍为 memory-first；默认开启且允许用户 opt-out 的 7 天 audit metadata 必须使用独立的最小 durable metadata store，不能偷偷复用 screenshot store，也不能因此宣称 artifact pin 可用。用户关闭该增强项后不再写新的 audit metadata，并按显式清理/TTL 规则处理既有记录，但安全校验和即时错误显示保持启用。
 
-P3 只实现同一字段语义的 memory-first ephemeral record，进程退出即删除，不支持 pin 或 crash recovery。以下 durable `CaptureStore`、原子临时上传、tombstone 和 orphan recovery 在 P6 参考图/显式 pin 首次需要跨进程保留时交付；capability report 在此前必须返回 unavailable。
+P3 只实现同一字段语义的 memory-first ephemeral record，进程退出即删除，不支持 pin 或 crash recovery。以下 durable `ArtifactStore`、原子临时上传、tombstone 和 orphan recovery 在 P6 参考图/显式 pin 首次需要跨进程保留时交付；capability report 在此前必须返回 unavailable。
 
 ```ts
-interface CaptureRecord {
-  captureId: string;
-  browserSessionId: string;
-  revision: RevisionContext;
+type ArtifactProvenance =
+  | "edge-capture"
+  | "edge-cdp-capture"
+  | "playwright-capture"
+  | "user-imported";
+
+interface ArtifactRecord {
+  artifactId: string;
+  projectStorageId: string;
+  kind: "capture" | "reference-image";
+  provenance: ArtifactProvenance;
+  storageClass: "ephemeral" | "durable";
   selectionId?: string;
   createdAt: string;
   expiresAt: string;
   absoluteExpiresAt: string;
   mimeType: "image/png" | "image/jpeg";
   sizeBytes: number;
+  width: number;
+  height: number;
+  sourceContentHash?: string;
+  normalizedContentHash: string;
+  displayLabel?: string;
+  storageRef: string;
+}
+
+interface CaptureRecord extends ArtifactRecord {
+  captureId: string;
+  kind: "capture";
+  provenance:
+    | "edge-capture"
+    | "edge-cdp-capture"
+    | "playwright-capture";
+  browserSessionId: string;
+  revision: RevisionContext;
   captureReason: "element-context" | "verification" | "reference" | "page-review";
   consentId: string;
   provider: string;
   sourceBounds: Box;
   maskSummary: string[];
-  storageRef: string;
 }
 ```
 
-storageRef 只在服务端内部可见。resource 读取必须校验 project/session ownership，不通过错误泄露其他 capture 是否存在。
+`captureId` 是现有 capture API 对同一 `artifactId` 的兼容别名，不能生成第二份资源身份。`storageRef`、导入源绝对路径和原始文件名只在受信任本机端可见。`displayLabel` 是有界、可编辑的 UI 标签，不默认发送给 Codex；用户明确发送时仍标记为 untrusted data。resource 读取必须校验 project/session ownership，不能通过错误泄露其他 artifact 是否存在。
+
+`ArtifactRecord.selectionId` 只保留为兼容查询提示，不是持久绑定事实。durable artifact 可能活得比 document-scoped selection 更久，也可能绑定多个元素、区域或 page root；调用方不得根据该字段声称图片与某个源码候选存在当前、唯一或已确认的关系。权威关系由 10.3.4 的 `VisualReferenceBinding` 单独表达。
+
+### 10.3.1 P6 托管存储根
+
+P6 默认使用 Coordinator 所在操作系统的每用户应用数据目录，而不是 project root、runtime directory 或 cache：Windows 使用 `FOLDERID_LocalAppData/VEM/artifacts`（典型路径 `%LOCALAPPDATA%\VEM\artifacts`）；Linux/WSL 使用 `${XDG_DATA_HOME:-$HOME/.local/share}/vem/artifacts`。若 Coordinator 运行在 WSL，默认根位于 WSL 文件系统；不得因为 Edge 运行在 Windows 就静默改用 DrvFS。P3 memory-first capture、P3 bounded audit metadata 和 P6 binary ArtifactStore 仍是不同存储等级，audit store 不得复用 artifact root。
+
+ArtifactStore 在根目录下为每个项目生成随机、稳定且不含原始项目路径的 `projectStorageId`，并在用户私有 metadata 中绑定 canonical project identity。项目目录至少隔离 metadata/index、content-addressed blob、临时写入和 tombstone；物理文件名由服务端生成，不能使用导入文件名或页面提供的文本。跨项目默认不做 blob 去重，避免所有权、quota 和删除语义互相泄漏。
+
+默认根与自定义根都必须具备明确 owner、最小读写权限、字节 quota、同目录临时写入和受测的提交/删除语义。无法证明目标文件系统满足 durable capability 时，P6 持久化返回 `storage-unavailable` 或 `capability unavailable`，不能把短时内存或未经验证的目录冒充 durable store。
+
+### 10.3.2 用户自选存储根与迁移
+
+P6 必须允许用户按 project 选择自定义 artifact root。选择只能来自受信任本机设置、Coordinator CLI/TUI 或经 capability probe 证明可用的原生目录选择 provider；页面 payload、Codex 文本、普通项目配置和浏览器自报路径都不能设置该目录。浏览器 File System Access handle 的权限可能跨会话失效，因此可以用于导入、导出或辅助选址，但不能作为 Coordinator durable store 唯一且未经重验证的持久授权。
+
+自定义根可以位于 project root 外，它是独立于源码写入权限的用户授权边界。Coordinator 必须在接受前执行 canonical realpath、symlink/reparse-point、owner/ACL、设备文件、可写性、同目录临时写入/rename/delete、容量/quota 和持久化能力 probe；后续所有 artifact path 都由服务端在该根下生成并再次约束，不能接受调用方提供的子路径。用户选择 project 内目录时，UI 必须提示 Git、同步和 production artifact 泄漏风险，且不得未经确认自动修改 `.gitignore`。
+
+更换根目录采用可回滚迁移：阻止新 durable 写入或排空相关 lease → 复制到新根临时区 → 校验 record/blob 数量和 hash → 原子切换用户私有配置 → 再按用户确认或保留策略清理旧根。任一步失败都保留旧根为权威位置；新根离线、权限撤销或身份变化时返回 `storage-unavailable`，不得静默回退到默认根形成分裂存储。目录选择是一次显式设置，不要求每次保存资源都重复授权；用户必须能查看当前根、占用、迁移状态并恢复默认位置。
+
+### 10.3.3 用户外部导入参考图
+
+P6 必须提供由用户手势触发的文件选择、拖放或等价受信任 UI，把用户自己的截图/图片作为 `user-imported` reference 注册；用户点击导入即构成本次本地导入授权，不再叠加浏览器 capture consent。外部导入不是 `CaptureProvider`，不执行 active-tab、origin 或 `captureEpoch` 检查；它仍执行 project ownership、文件输入、隐私预览、生命周期和资源读取边界。自动截图与导入资源可以共用 mask/crop 编辑器和 ArtifactStore，但不能互相伪造 provenance。
+
+P6 基线采用 copy-on-import，只接受显式选择的静态 PNG、JPEG、WebP 输入：限制原始字节、解码时间、像素、尺寸、通道和帧数；组合验证扩展名、声明 MIME、文件签名和实际解码结果；应用 orientation，转换到锁定的 sRGB 基线，提供导入前预览与手工 mask/crop，并清除 EXIF/GPS/XMP 等非必要 metadata；最后规范化为 PNG、计算源内容与规范化内容 hash、使用服务端生成名称原子写入 ArtifactStore。具体 soft limit 和 hard limit 由 P6 ADR、benchmark 与 fixture 锁定，产品不得提供移除硬上限的设置。
+
+copy-on-import 成功后不保留原始绝对路径，原文件移动或删除不影响 artifact；原始 basename 只可作为受限本机 UI 建议标签，未经用户明确选择不进入 MCP content、日志或诊断。未固定导入可以使用 ephemeral retention，显式 pin/reference 才进入 durable storage。导入 UI 必须在提交前显示用途、规范化后类型/尺寸、临时或 durable 保留方式以及 mask/crop 结果。
+
+首个 P6 baseline 不支持 SVG、PDF、动画、多媒体、远程 URL、递归目录导入或“只链接外部原文件”。`linked-external-artifact` capability 在独立设计交付前必须报告 unavailable；未来若实现 link mode，必须用私有 canonical identity、内容 hash 和每次读取重验证表达移动、权限撤销和修改，变化时产生新 revision 或 `stale`，不能静默把变化后的外部文件当作原参考图。
+
+### 10.3.4 视觉参考绑定与参考任务生命周期 (`VISUAL-BIND-001`)
+
+参考图的像素只能表达视觉目标，不能自行定位源码。用户导入图片后，若尚未显式绑定到当前 DOM selection、region 或 page root，ArtifactStore 中只有 `ArtifactRecord`，不存在伪造的 `sourceBinding: "unbound"`；此时它是未绑定视觉资料，VEM 不得声称它对应某个源码文件。绑定流程必须从当前页面对象出发：DOM selection/region/page root → immutable `SelectionSnapshot`/target set → `SourceResolution` 的 direct primary source/related evidence，或 direct 不可用时的 degraded candidates → 用户可见绑定确认。region 使用 DOM 几何相交和吸附生成 target set，再沿现有证据图寻找源码关系，不以图像相似度或像素坐标直接推断源码。
+
+```ts
+type VisualReferenceBindingStatus =
+  | "active"
+  | "paused"
+  | "completed"
+  | "cancelled"
+  | "superseded"
+  | "stale"
+  | "expired";
+
+interface VisualReferenceBinding {
+  bindingId: string;
+  artifactId: string;
+  projectStorageId: string;
+  referenceSessionId: string;
+  hashNamespace: "vem-visual-binding-v1-sha256";
+  bindingKind: "selection-bound" | "region-resolved" | "page-root-bound";
+  status: VisualReferenceBindingStatus;
+  selectionId?: string;
+  selectionSnapshotHash: string;
+  targetSetHash: string;
+  boundAtRevision: RevisionContext;
+  sourceBindings: Array<{
+    resolutionKind: "direct" | "degraded-candidate";
+    sourceAnchorId?: string;
+    sourceRegistryRevision: string;
+    normalizedRelativeFileIdentity: string;
+    sourceEvidenceHash: string;
+    candidateSetHash?: string;
+    chosenCandidateRank?: number;
+    confidenceBand: "high" | "medium" | "low" | "unresolved";
+  }>;
+  crop?: {
+    derivedArtifactId: string;
+    cropTransformHash: string;
+  };
+  boundBy: "extension-ui-user-action" | "trusted-local-ui-user-action";
+  createdAt: string;
+  activatedAt: string;
+  guidanceExpiresAt: string;
+  guidanceAbsoluteExpiresAt: string;
+  statusChangedAt: string;
+  supersedesBindingId?: string;
+}
+
+interface VisualBindingEvaluation {
+  bindingId: string;
+  evaluatedAt: string;
+  currentRevision: RevisionContext;
+  status: "current" | "stale" | "target-changed" | "ambiguous" | "unresolved";
+  reattachStatus:
+    | "direct"
+    | "transaction-matched"
+    | "target-changed"
+    | "unresolved";
+  reattachedSelectionId?: string;
+  evidence: string[];
+  conflicts: string[];
+  limitations: string[];
+}
+```
+
+`selectionId` 仍只是同一 document 内的便利索引；跨 revision/重启保留的是有界 hash、opaque identity、直接主定位/降级候选摘要和重新附着所需的最小证据，不持久化 DOM handle、完整 DOM、prompt、原始敏感文本或图片物理路径。绑定在每次进入新一轮 context/prepare 前，必须核对 project identity、artifact 状态、当前 RevisionContext、direct/transaction-matched target reattach、`sourceEvidenceHash` 和适用时的 `candidateSetHash`。不能唯一重新证明目标时返回 `target-changed/ambiguous` 并要求用户重新选择或重新绑定；目标消失时返回 `unresolved`，不得静默沿用旧源码关系或相似 alternative。
+
+Codex 可以提出“把这张图绑定到当前选择”的请求，但 active binding 只能由扩展 UI 或受信任本机 UI 中的明确用户动作创建；页面文本、图片 metadata、普通 prompt 内容或 Codex 自报的用户动作不能直接激活、续期或恢复绑定。
+
+参考任务生命周期与图片存储生命周期必须分开：
+
+- `active` 绑定可以跨越同一 `referenceSessionId` 内多轮“修改 → HMR → 比较 → 继续修改”，这就是参考图的最小有用阶段；页面 revision 变化触发重新评估，不自动把图片变成无关资料。
+- 用户可以随时 pause、resume、complete、cancel 或用新绑定 supersede 旧绑定。pause/cancel/complete 后不得再把该参考图加入新的 Codex context、claim 或 verification prepare；VEM 应请求取消尚可取消的工作，但不能声称能收回已经发送给 Codex 的像素、撤销已经完成的源码修改或抹除模型上下文。
+- `completed`/`cancelled`/`superseded` 只结束指导作用，不自动删除 ArtifactStore 中仍在保留期内的图片；反过来，artifact tombstone/删除必须使所有相关绑定不可读并进入终态。
+- 绑定本身不授予文件写入、直接主定位确认、degraded source candidate 选择或编辑权限。每次真实修改仍需要新鲜 selection claim、`CONF-BIND-001` 的一次性 `ConfirmationBinding` 和 `VER-TXN-001` prepare/complete；`VisualReferenceBinding ≠ ConfirmationBinding ≠ source correctness proof ≠ edit permission ≠ verification passed`。
+- 普通读取、Codex 使用或滑动 TTL 不得无限延长指导或存储期限。用户可以在受信任 UI 中显式续期；续期记录新的用户保留决策和 absolute-expiry generation，不得伪装成后台自动访问造成的续期。
+
+`captureReason: "reference"` 的自动截图和用户导入图在被提升为参考目标时使用同一绑定协议；普通 element-context/verification capture 继续由 `CaptureRecord`/`VerificationRun` 关联，不因存在像素而自动成为长期参考。绑定 metadata 的存储等级不得高于其 artifact：ephemeral artifact 的绑定随 session/artifact 消失，durable artifact 才允许保存最小、可恢复的绑定摘要。
 
 ## 10.4 默认保留策略
 
@@ -1425,14 +1589,17 @@ storageRef 只在服务端内部可见。resource 读取必须校验 project/ses
 | selection summary | project session，最近 100 条 |
 | DOM/style detail | 30 分钟或 revision/document 失效 |
 | 未固定的元素/上下文截图 | 默认仅内存，idle TTL 10 分钟，absolute TTL 30 分钟，session 结束即删除 |
-| 用户显式固定的截图（仅 P6+ durable capability） | idle TTL 30 分钟，absolute TTL 24 小时 |
+| 未固定的用户导入参考图（仅 P6+ import capability） | 默认仅内存，idle TTL 10 分钟，absolute TTL 30 分钟 |
+| active VisualReferenceBinding | 默认持续到当前 reference task 被用户 complete/cancel、被新绑定 supersede 或 guidance expiry；默认 guidance absolute TTL 24 小时，用户可显式续期 |
+| 用户显式固定的截图/导入参考图（仅 P6+ durable capability） | idle TTL 30 分钟，absolute TTL 24 小时；用户可显式建立新的有限保留周期，durable 表示跨进程，不表示永久保留 |
 | active verification 引用截图 | verification 后 10 分钟 grace |
 | build/console error | 500 条或 30 分钟 |
 | info/debug log | 200 条或 10 分钟 |
 | pairing token | coordinator session 且有绝对过期 |
 | allowlist audit metadata | 默认 7 天，可关闭；不得含 title、URL/path、DOM 文本、源码内容或 prompt |
+| artifact root 选择 | 用户私有配置，直到用户迁移、恢复默认或卸载；不写入共享项目配置 |
 
-TTL 与 quota 均可配置，但必须有硬上限。滑动 TTL 不能突破 absolute TTL。
+TTL 与 quota 均可配置，但必须有硬上限。滑动 TTL、resource read 和 Codex 使用不能突破当前 absolute TTL；只有用户在受信任 UI 中明确续期，才可建立新的有限 absolute-expiry generation，并记录新的保留决定。
 
 ## 10.5 删除、lease 和 quota
 
@@ -1446,14 +1613,17 @@ type DeletionReason =
   | "user-requested"
   | "token-revoked"
   | "schema-migration"
+  | "storage-migration"
   | "startup-orphan-cleanup";
 ```
 
-active verification 使用 `ArtifactLease` 防止使用中的 resource 被清理。P3 memory-first 删除流程是检查 lease → 从内存索引移除 → 释放 bytes → 记录可选的非敏感 deletion event；不得声称 tombstone/orphan recovery。P6 durable 删除流程才是检查 lease → tombstone → 从索引移除 → 删除物理对象 → 记录不含敏感内容的 deletion event。
+active verification 或 active reference task 使用 `ArtifactLease` 防止使用中的 resource 被 idle/quota 清理。lease 不能无限突破 absolute expiry；到期前 UI 必须显示剩余时间并允许用户显式续期，到期时先阻止新的 reference context/prepare、把绑定标记 `expired`，再给予正在完成的有界 verification 清理宽限期并删除无其他保留依据的 artifact。P3 memory-first 删除流程是检查 lease → 从内存索引移除 → 释放 bytes → 记录可选的非敏感 deletion event；不得声称 tombstone/orphan recovery。P6 durable 删除流程才是检查 lease → tombstone → 使相关 VisualReferenceBinding 终止并从索引移除 → 删除物理对象 → 记录不含敏感内容的 deletion event。
 
-quota 清理顺序：过期对象 → 未引用旧截图 → 低级日志 → 旧 detail bundle → 未固定 selection。不得删除 active selection、active verification 或认证状态。
+quota 清理顺序：过期且无 active lease 的对象 → 已结束绑定的旧参考图/未引用旧截图 → 低级日志 → 旧 detail bundle → 未固定 selection。不得因 quota 压力直接删除 active reference、active selection、active verification 或认证状态；空间不足且没有可安全清理对象时应拒绝新写入并让用户选择取消、删除或迁移。
 
 P6 durable upload 才允许写入 `.tmp` 并在完成后原子 rename；启动和周期 sweeper 清理 orphan、过期临时文件、失配 metadata。P3 memory-first upload 必须有 cancellation、byte quota 和立即释放，不落入承诺 crash recovery 的磁盘 store。用户从首次保留状态起就必须有“清除当前 session/项目/全部 VEM 数据”的显式操作，具体可清理等级由 CapabilityReport 列出。
+
+清除 VEM artifact 只删除 ArtifactStore 中受管副本，不删除用户导入时的原文件。自定义根迁移或删除必须使用 record/index 驱动的精确目标，不能递归清空用户选择的整个任意目录；目录内出现不属于当前 store version/project ownership 的文件时停止并报告冲突。
 
 对高敏感 capture 可以采用每 session 临时加密 key；删除 key 实现 crypto erasure（密码学擦除），不承诺在 SSD 上通过覆盖实现物理擦除。
 
@@ -1477,9 +1647,22 @@ type FallbackPolicy = "strict" | "balanced" | "compatibility";
 
 不得回退：认证失败→无认证、WSS→公网 WS、revision 不匹配→忽略、截图失败→旧截图冒充当前、权限不足→自动扩大 `<all_urls>`。
 
+`FallbackPolicy` 控制 provider 可用性和证据质量，不是“是否启用安全”的开关。产品不得提供 `security: off`、`trusted-local bypass` 或逐层跳过校验的等价配置；`compatibility` 也必须保留身份派生、认证与授权、schema/size/depth/rate/semantic validation、项目路径约束、最小隐私过滤、防重放、revision/freshness、ConfirmationBinding、capture consent/mask/race、remote transport 和 production non-leakage 等适用于当前动作的安全底线。
+
+为回应可信本机环境中的延迟诉求，P3 CapabilityRegistry 必须提供按 project/browser profile 作用域的“增强保障偏好”。这类偏好由受信任本机配置或扩展 UI 设置，页面 payload 不得设置；每项默认开启、允许用户逐项关闭，但不允许关闭整条安全底线：
+
+| 类别 | 示例 | 可配置边界 | 关闭后的诚实语义 |
+|---|---|---|---|
+| 安全底线 | sender/connection 派生身份、token/project/origin/revision 绑定、输入限制、隐私过滤、路径约束、防重放、单次确认、fresh verification、截图同意与竞态保护 | 不可关闭 | 不存在绕过模式；条件不满足即失败或返回 unavailable |
+| 增强证据交叉验证 | 超出当前动作最低证据要求的额外 source/evidence corroboration | 默认开启，可逐项关闭 | 返回较低 confidence/limitation；不得借此得到更高置信度、自动编辑授权或 `passed` |
+| 只读主动新鲜度复核 | 对不参与授权或 verification 的只读提示提前重新观察，而不是等 TTL/epoch 要求触发 | 默认开启，可逐项关闭 | 可以返回带 age/cache/limitation 的提示；不得用于 prepare、隐私决定或 verification `passed` |
+| 扩展诊断与本地审计元数据 | 更深的非敏感诊断交叉检查、P3 bounded allowlist audit metadata | 默认开启，可逐项关闭 | 能力与审计记录减少并明确显示；安全失败本身仍必须可见，关闭审计不关闭校验 |
+
+具体偏好名称、配置来源、scope、默认值和 wire 表达由 P3-T16 的 ADR 锁定。有效设置必须在用户界面和 CapabilityReport 中可见；关闭增强项只能减少证据或诊断，不能扩大权限、减少必需确认、把 stale/ambiguous 改成 current/exact，或使同一请求更容易得到 `passed`。发布门禁必须同时测试安全底线不可绕过、增强项默认开启、每项显式 opt-out 以及关闭后的 limitation；性能比较应分别报告安全底线与增强项的开销，不能用总开关制造更快结果。
+
 ## 11.3 CapabilityReport
 
-P0-T12A 必须返回一个最小、静态且诚实的报告：只列出 P0 已实现 provider，并把 extension、pairing、capture、durable artifact、remote/CDP 和动态 provider selection 标为 unavailable/limited。P3 可以把它扩展为动态 CapabilityRegistry，但不得回写成“P0 没有 capability report”。P0-T12B 只交付 consumer/claim/confirmation lifecycle，P0-T12C 才交付 bounded source-resolution MCP tools/resources；三者不可互相冒充完成。
+P0-T12A 必须返回一个最小、静态且诚实的报告：只列出 P0 已实现 provider，并把 extension、pairing、capture、durable artifact、reference import、visual reference binding、custom artifact root、linked external artifact、remote/CDP 和动态 provider selection 标为 unavailable/limited。P3 可以把它扩展为动态 CapabilityRegistry，但不得回写成“P0 没有 capability report”。P0-T12B 只交付 consumer/claim/confirmation lifecycle，P0-T12C 才交付 bounded source-resolution MCP tools/resources；三者不可互相冒充完成。
 
 ```ts
 interface CapabilityReport {
@@ -1495,6 +1678,8 @@ interface CapabilityReport {
 ```
 
 工具结果必须记录实际使用 provider 和降级链。stale cache 只能作为提示，不能用于验证 passed。
+
+P3-T16 引入动态策略后，CapabilityReport 还要显示安全底线始终为 enforced、增强保障偏好的有效 scope、哪些默认开启项被用户关闭及其 limitations。P0 的静态报告不提前承诺动态配置；P3-T16 ADR 在不破坏已协商协议兼容性的前提下锁定具体 wire shape。
 
 ---
 
@@ -1519,38 +1704,50 @@ sourceAnchorId = hash(
 )
 ```
 
-它只承诺在明确 source revision 范围内可比较。AST 大改、文件移动或 transform version 变化时可以改变。不能用它代替 runtime identity。
+完整源码身份是 `(sourceRegistryRevision, sourceAnchorId)`。`sourceAnchorId` 只承诺在明确 source revision 范围内可比较；唯一性不表示跨 revision 稳定。AST 大改、文件移动或 transform version 变化时可以改变。不能用它代替 runtime identity，也不能仅凭同一个字符串跨 registry 解释 DOM。
 
-## 12.3 跨 revision anchor reconciliation
+## 12.3 跨 revision 目标重附着
 
-验证发生在源码修改之后，因此旧 selection 不能假定其 anchor 在新 revision 中保持不变。Source Mapping Registry 至少保留当前和前一可验证 revision，并为变化节点产生迁移候选：
+首次定位必须优先使用当前 DOM marker、document identity 和同 revision registry 直接产生单一 `hostAnchor`；“direct”表示映射路径直接且 registry-matched，不把 page-untrusted marker 或选择升级成可信用户手势，仍保留 SelectionProvenance、冲突检查和 confirmation 边界。旧 revision 只用于“prepare 前选择 → 源码编辑 → 相关 HMR → complete verification”的因果重附着；它不是常规 source resolution 输入，也不保存可撤销源码。用户要求反悔时由 Codex 的 diff/版本控制或未来独立的 source-edit transaction 处理，不能把 registry history 描述成 rollback。
 
 ```ts
-interface AnchorMigration {
+interface AnchorReattachment {
   from: SourceAnchorIdentity;
   toRevision: string;
-  candidates: Array<{
-    anchor: SourceAnchorIdentity;
-    confidenceBand: "high" | "medium" | "low";
-    evidence: string[];
-    conflicts: string[];
-  }>;
+  status:
+    | "direct"
+    | "transaction-matched"
+    | "target-changed"
+    | "unresolved";
+  successor?: SourceAnchorIdentity;
+  evidence: string[];
+  conflicts: string[];
+  diagnosticAlternatives?: SourceAnchorIdentity[];
 }
 ```
 
-匹配证据可以包含规范化相对文件、enclosing component、intrinsic tag、静态属性、AST 邻域、祖先 anchor signature 和 source-map location。不得只按新旧行号或最近 DOM 节点匹配。候选接近时返回 `ambiguous`；找不到时返回 `stale/unresolved`，不能把旧 anchor 当作当前事实。
+重附着顺序固定为：
+
+1. 新 DOM 已携带当前 registry 的有效 marker，且 prepared target scope 可直接解析时返回 `direct`；
+2. DOM node/anchor 发生变化时，只有本次 prepared run 的 coordinator-observed `UpdateTransaction` 先证明更新与固定 target module scope 有关，浏览器侧 before target identity/有界 `ReattachFingerprint`/可用 framework key 与 after observation 再唯一重附着运行时目标，并且该新 DOM marker 与当前 registry 直接匹配到 successor source，才返回 `transaction-matched`；
+3. 多个节点只在结构上相似、只有行号邻近、只有 Codex 自报文件或存在竞争 update batch 时，不得选择“最高分候选”，返回 `target-changed`，使 verification 进入 `ambiguous/needs-review` 并要求重新选择；
+4. 当前目标已经消失或证据不足时返回 `unresolved`。
+
+`UpdateTransaction` 只证明更新因果范围，不单独证明模块内节点身份；规范化相对文件、enclosing component、intrinsic tag、静态属性、AST 邻域、祖先 signature 和 source-map location也只能补强或解释，不能单独把相似源码节点升级为 successor。`diagnosticAlternatives` 仅用于解释失败和调试，不进入常规 source-selection UI、不授权编辑、也不能产生 verification `passed`。Source Mapping Registry 只需按 verification/journal retention 保留当前和必要的前一可验证 revision；旧 anchor 不能被当作当前事实。
 
 hash 必须包含算法 namespace，并定义 collision 检测与 transform-version compatibility。开发 marker 还要测试广义 `[data-*]` selector、DOM snapshot、MutationObserver、序列化和未来 SSR/hydration 的影响。
 
 ## 12.4 开发期注入
 
-- Vite plugin 仅在 dev serve 激活；
-- production build 根本不执行 marker transform，而不是构建后盲删所有 `data-vem-*`；
+- VEM 是 Codex/MCP 开发平面的上下文桥，不是应用 runtime；MCP Server、Coordinator、Edge extension 和 source registry 都不得成为用户应用的生产依赖；
+- Vite plugin 使用明确的 serve-only application gate，仅在 dev serve 激活；production build 根本不执行 marker/client/endpoint transform，而不是构建后盲删所有 `data-vem-*`；
+- registry 通过认证 build-integration channel 发布到 Coordinator 内存或用户私有 runtime 目录，不写入 `src/`、`public/`、`dist/` 或生产 module graph；
 - 检测用户已有保留属性并报冲突；
 - 明确 JSX spread 前后顺序；
 - 只处理项目内 `.jsx/.tsx`，跳过 `node_modules`；
 - 保留原始 line/column 和 source revision；
-- `transformIndexHtml` 不可用时提供显式 client import fallback 和 capability probe。
+- Edge extension 路径优先由 isolated content script 观察 DOM，不向应用注入完整 MCP/runtime；无扩展注入模式的 page client 仍只能通过 dev HTML/virtual module/dev-server adapter 提供；
+- `transformIndexHtml` 不可用时优先使用经验证的框架 dev adapter；显式 client import 只有在静态 dev gate、生产 module-graph non-resolution 和产物无残留均被 fixture 证明后才可作为 fallback，否则返回 capability unavailable。
 
 P0 source-anchor ADR 必须锁定并测试一个窄而明确的构建链矩阵，而不是笼统声称支持所有 React + Vite：
 
@@ -1840,7 +2037,11 @@ interface BrowserApplyReceipt {
   revision: RevisionContext;
   viteAfterUpdateObserved: boolean;
   frameworkCommitEvidence?: Evidence<unknown>;
-  targetReattached: boolean;
+  targetReattachStatus:
+    | "direct"
+    | "transaction-matched"
+    | "target-changed"
+    | "unresolved";
   settledBy: "mutation-quiet" | "framework-adapter" | "assertion-poll";
 }
 ```
@@ -1855,7 +2056,7 @@ interface BrowserApplyReceipt {
 4. 多个彼此竞争的相关 batch、full reload 后 scope 无法重建、module graph 不完整或只有 Codex 自报文件而无 coordinator-observed 交集时返回 `ambiguous`；
 5. `reportedChangedFiles` 只能帮助解释候选，不能代替 Vite/module-registry evidence；支持矩阵外无法获得 affected module 时不得自动 passed。
 
-P0 walking skeleton 的最小 settle 为：相关 update batch 的 Vite afterUpdate/full-reload receipt → 两个 animation frame → MutationObserver 静默窗口 → 目标重新定位和断言轮询。字体、动画、caret 和视觉 mask 的完整稳定化在视觉阶段增强。返回值包含最后状态、diagnostics、`UpdateMatchEvidence`、observed batch 和 timeout/cancel 原因。
+P0 walking skeleton 的最小 settle 为：相关 update batch 的 Vite afterUpdate/full-reload receipt → 两个 animation frame → MutationObserver 静默窗口 → 按 12.3 执行 direct/transaction-matched 目标重附着 → 断言轮询。`target-changed/unresolved` 不能继续断言为 passed；前者返回 ambiguous/needs-review 并要求重新选择，后者返回 stale/unresolved。字体、动画、caret 和视觉 mask 的完整稳定化在视觉阶段增强。返回值包含最后状态、diagnostics、`UpdateMatchEvidence`、reattach evidence、observed batch 和 timeout/cancel 原因。
 
 ## 15.2 VerificationSpec
 
@@ -1907,6 +2108,8 @@ interface ObservationDiff {
 - remote mode 必须显式启用 HTTPS/WSS、强认证、过期会话和审计；
 - 不自动打开公网或扫描内网。
 
+“可信本机环境”不改变上述边界的信任等级，也不授权跳过第 6.5 节的逐层校验。性能调节只使用 11.2 定义的默认开启增强保障偏好；不存在关闭认证、授权、隐私、路径、revision/freshness 或输入边界检查的用户模式。
+
 ### 16.1.1 Remote 与 SSH 安全边界 (`REMOTE-SEC-001`)
 
 P7 之前 remote/SSH capability 必须报告 unavailable，配置中出现 remote endpoint 也要明确拒绝，不能静默退回不安全 HTTP/WS、复用任意旧 tunnel 或把 localhost 当成已授权远端。P7 实现时必须由用户显式选择精确 project、host 与 endpoint；规范化后只允许 allowlist 中的 `https:`/`wss:` endpoint，SSH 必须验证 host key。认证需要强凭据、短期会话、最小授权、撤销、过期、速率限制和不含 secret 的审计；DNS 解析、redirect、代理和重连都要重新执行 SSRF/private-network 与 DNS-rebinding 防护。任何 host/project/identity/证书/host-key 不一致都 fail closed，不得把 scoped bearer 或 SSH tunnel 本身描述为用户意图证明。
@@ -1938,27 +2141,36 @@ Edge Extension 默认请求 `activeTab`、`scripting`、必要 messaging/storage
 
 截图属于独立数据类型，不能因为 DOM 字段通过过滤就自动获准。截图遵循 10.1 的 consent、origin allowlist、本地 mask/crop 和 capture audit 规则；无法证明遮罩生效时 fail closed。
 
+用户导入图片不冒充浏览器 capture，也不执行不适用的 active-tab/origin/capture-epoch 检查；文件选择本身只授权所选输入。导入管线仍必须在进入 ArtifactStore 和 MCP resource 前执行 10.3.3 的有界解码、格式验证、metadata 清除、预览与可选 mask/crop，原始路径和未经用户选择的文件名不出站。
+
 ## 16.4 路径安全
 
-任何服务端源码路径：realpath、解析 symlink、验证在 project root、拒绝 `..`/设备文件/外部路径。浏览器只使用 opaque ID。MCP 向 Codex 返回相对路径；需要绝对路径时由受控本地端解析。
+任何服务端源码路径：realpath、解析 symlink、验证在 project root、拒绝 `..`/设备文件/外部路径。P6 artifact path 是唯一独立例外，但只能落在 10.3.1 的托管根或 10.3.2 经用户显式选择和 capability probe 的自定义根内；调用方不能提供内部子路径，迁移/清理也不能越过 store-owned record。浏览器只使用 opaque ID。MCP 向 Codex 返回源码相对路径和 `vem://` resource URI；需要绝对路径时由受控本地端解析，artifact 绝对路径不得返回给页面或 Codex。
 
-## 16.5 生产剥离 (`PROD-LEAK-001`)
+## 16.5 开发平面隔离与生产不参与 (`PROD-LEAK-001`)
 
-自动测试证明：
+`PROD-LEAK-001` 的主策略不是清洗 `dist`，而是让 VEM 只存在于开发平面：Codex 启动本地 MCP Server/Coordinator，Edge extension 独立于应用安装，Vite dev plugin 在 serve 阶段产生 marker 和 registry。MCP 工具可以只读检查生产产物，但不得作为常规流程修改、删除或“修复”用户 `dist`。
+
+自动测试必须证明：
 
 - production bundle 无 VEM client、endpoint、mapping 和生成 marker；
-- plugin 在 build 时不执行 dev transform；
+- plugin 的 dev transform、dev HTML/virtual client、registry publication 和 endpoint 配置在 build 时均不执行或解析；
+- registry 只存在于 Coordinator 内存或用户私有 runtime storage，不进入项目 `src/public/dist`、生产 module graph 或用户配置的 production sourcemap；
 - 用户自己的同名 attribute 不被误删；
-- 安装 VEM 不改变应用生产行为；
+- 同一固定 fixture 在未启用 VEM 与安装/配置 VEM 两种状态下的 production module graph、HTML/JS/CSS/assets 和可观察应用行为等价；不得用构建后删除掩盖 transform 曾参与 production；
 - source map 是否生成仍遵循用户项目配置，但 VEM 不额外暴露调试 map。
 
-该安全属性从引入 dev transform 的同一原子任务开始测试：P0 source-transform task 必须立即证明 build command 不执行 marker/client/endpoint transform，并保护用户已有同名或广义 `data-*` attribute；P0 phase CI task 再对完整 workspace、安装/卸载路径和产物搜索执行发布级 leakage gate。不得在 transform 合入后把第一条 production-safety 测试推迟到阶段末尾。
+产物扫描按 VEM-owned client module ID、endpoint、registry schema、生成 marker value namespace 和 mapping signature 检查，不能把任意 `data-vem-*` 或广义 `data-*` 当成泄漏，否则会与用户属性保留要求冲突。若某 framework adapter 不能证明 serve/build 隔离、显式 import 的静态 dev gate 和 production module-graph non-resolution，则该 adapter 报告 unavailable，不以 post-build stripping 补救。
+
+该安全属性从引入 dev transform 的同一原子任务开始测试：P0 source-transform task 必须立即证明 build command 不执行 marker/client/endpoint/registry transform，并保护用户已有同名或广义 `data-*` attribute；P0 phase CI task再以只读方式检查完整 workspace、安装/卸载路径、生产 module graph、baseline equivalence 和产物 signature。不得在 transform 合入后把第一条 production-safety 测试推迟到阶段末尾。
 
 ## 16.6 用户可见安全与恢复状态
 
 popup/overlay 必须清晰展示当前 project、origin、tab/document、provider 和采集状态。`stale`、`ambiguous`、`degraded`、`needs-review`、token expired、coordinator offline、permission denied 不得只写入日志；用户应看到原因、影响和安全的恢复操作。
 
-用户界面至少提供：重新配对、撤销权限、清除当前 session/项目/全部数据、选择 source candidate、重新捕获和退出选择模式。扩展正在采集截图或敏感 detail 时必须有不可由页面伪造的扩展级指示。默认不上传产品遥测；若未来增加 telemetry，必须独立 opt-in，且不得包含 DOM、截图、源码路径或 token。
+用户界面至少提供：重新配对、撤销权限、清除当前 session/项目/全部数据、查看直接主定位与相关影响来源、在 degraded heuristic 模式下澄清源码、`target-changed` 后重新选择、重新捕获和退出选择模式。直接 registry-matched `hostAnchor` 不得被展示成要求用户猜选的候选列表；重附着 diagnostic alternatives 只解释失败。P6 还必须提供导入参考图、导入前预览/mask/crop、临时或 durable 保留选择、当前 artifact root/占用/迁移状态、自定义目录与恢复默认位置；对每个参考图显示未绑定/active/paused/completed/cancelled/superseded/stale/expired、绑定目标、指导期限与存储期限，并提供 bind、pause、resume、complete、cancel、replace、显式续期和删除操作。取消指导与删除文件必须是两个不同操作，删除前说明只删除 VEM 受管副本。扩展正在采集截图或敏感 detail 时必须有不可由页面伪造的扩展级指示；用户主动文件导入不冒充自动 capture 状态。默认不上传产品遥测；若未来增加 telemetry，必须独立 opt-in，且不得包含 DOM、截图、导入图片、源码/artifact 路径或 token。
+
+P3 动态策略可用后，用户界面还必须显示当前 FallbackPolicy、安全底线为 enforced、增强保障偏好的默认值和显式关闭项，并提供恢复默认值的操作。关闭项必须就近说明造成的 evidence、freshness、diagnostics 或 audit limitation，不能使用“可信模式”文案暗示页面或低信任层已经变可信。
 
 ---
 
@@ -1972,14 +2184,15 @@ popup/overlay 必须清晰展示当前 project、origin、tab/document、provide
 - screenshot 默认元素 2 MB、全页 10 MB；
 - diagnostics 默认每 tab 1 MB/500 条；
 - source transform 冷启动额外开销目标不超过基线中位数 20%，HMR 额外开销 p95 不超过 100 ms；
+- benchmark 要把不可关闭的边界校验与默认开启的增强保障项分别计时；实现应通过编译 schema validator、单次投影/redaction、opaque identity 比较、有界 payload 和安全 cache/revalidation 降低底线开销，而不是跳过接收层校验；
 - benchmark 必须记录硬件、OS、Edge/Node/Vite 版本、fixture 大小、warmup、样本数和 p50/p95；没有这些元数据的数字只算观察值，不算 gate evidence。
 
 ## 16.7 产品效果与正确性指标
 
-从 P0 建立 10–20 个可重复 golden tasks；P3 扩大到至少 50 个并覆盖 wrapper/HOC、barrel export、dynamic import、name collision、list key、shared component、anchor migration、unrelated HMR 和 ambiguous mapping；P4 另保留未参与调参的 holdout 集。阶段 gate 记录：
+从 P0 建立 10–20 个可重复 golden tasks；P3 扩大到至少 50 个并覆盖 wrapper/HOC、barrel export、dynamic import、name collision、list key、shared component、direct/transaction-matched reattachment、target-changed reselection、unrelated HMR 和 ambiguous mapping；P4 另保留未参与调参的 holdout 集。阶段 gate 记录：
 
-- source candidate top-1/top-3 命中率；
-- 用户切换祖先、改选 target 或 source candidate 的比例；
+- direct-primary exact 命中率，以及 direct 不可用时 degraded candidate top-1/top-3 命中率；
+- 用户切换祖先、改选 target、在 degraded 模式澄清 source 或因 `target-changed` 重新选择的比例；
 - selection 到 MCP summary 可用的 p50/p95；
 - ContextRequest 实际字节数和估算 token 数；
 - 首次源码编辑后的客观 verification 通过率；
@@ -1988,7 +2201,7 @@ popup/overlay 必须清晰展示当前 project、origin、tab/document、provide
 - 因证据不足正确返回 `ambiguous`/`needs-review` 的用例通过率。
 - 全新环境从安装到首次成功 selection 的 p50/p95；
 - pairing 首次成功率、失败原因和安全恢复成功率；
-- selection 到用户确认正确 source candidate 的时间，以及相对不使用 VEM 的基线提升；
+- selection 到用户确认正确直接主定位或诚实降级的时间，以及相对不使用 VEM 的基线提升；
 - 首次 edit 被保留、改选、撤销或需要人工修正的比例；
 - clean uninstall 后项目配置、生产构建和用户数据的残留数。
 
@@ -2012,7 +2225,9 @@ popup/overlay 必须清晰展示当前 project、origin、tab/document、provide
 - cache invalidation；
 - runtime/target/viewport observation epoch 与 verification cache bypass；
 - TTL/quota/lease/deletion；
+- VisualReferenceBinding 的非授权绑定、用户控制状态、revision 重评估与指导/存储双生命周期；
 - fallback policy；
+- 安全底线不可关闭、增强保障默认开启/逐项 opt-out、配置 scope 和 limitation reporting；
 - confidence/evidence；
 - path safety。
 
@@ -2025,6 +2240,7 @@ popup/overlay 必须清晰展示当前 project、origin、tab/document、provide
 - Edge extension → coordinator；
 - coordinator → MCP；
 - binary capture upload/resource read；
+- user-imported/automatic reference → immutable target/source candidate binding → pause/resume/cancel/renew；
 - HMR server event → Edge ACK；
 - prepare barrier → early HMR journal replay → complete verification；
 - reconnect、service worker restart、stale document；
@@ -2077,6 +2293,7 @@ popup/overlay 必须清晰展示当前 project、origin、tab/document、provide
 - unauthorized resource ID；
 - production leakage；
 - remote mode fail closed。
+- 拒绝 `security: off`、`trusted-local bypass` 和页面发起的策略变更；关闭增强保障不跳过逐层校验、不扩大权限、不提升 confidence 或产生 verification `passed`。
 
 ### Reliability/Data lifecycle
 
@@ -2090,6 +2307,7 @@ popup/overlay 必须清晰展示当前 project、origin、tab/document、provide
 - orphan cleanup；
 - lease prevents premature deletion；
 - absolute TTL；
+- active reference lease、guidance expiry、显式续期、取消后停止新 context 与 artifact 删除级联失效；
 - quota pressure LRU；
 - manual clear/revoke token。
 
@@ -2197,36 +2415,38 @@ visual-element-mcp/
 推荐阶段：
 
 1. P0：先以 P0-T0A0 只读盘点，再由 P0-T0A1 执行 owner-authorized layout commit 与 single-writer cutover，P0-T0A2 固定 evidence/toolchain，随后完成 bootstrap preflight；建立最小 workspace 后再通过固定 Playwright 的真实 Edge channel gate。在 selector、anchor 和 fixture 可用后运行 3–5 项隔离、预登记 value micro-pilot，只有逻辑 `P0-VALUE` 的 current attempt 为 `continue` 才继续 topology 与 verification 投入；将 transform 与 registry、topology、proxy/build channel、MCP initialization/capability、consumer/confirmation、bounded tools/resources、verification prepare、update matching 和 complete 拆成可独立失败的原子任务，完成真实双进程 Edge Vite 注入式 walking skeleton（P0 reference topology→最小隐私与 selection provenance→选择→anchor→最小 EvidenceGraph/source resolution→value micro-pilot→prepare barrier→相关 HMR batch journal replay→文本验证→生产无泄漏）；
-2. P1：加固注入式 MVP 已有的 bounded context 与最小 EvidenceGraph，并补全 anchor reconciliation、consumer claim、错误/恢复、交互完整度和干净安装/卸载；
+2. P1：加固注入式 MVP 已有的 bounded context 与最小 EvidenceGraph，并补全 direct/transaction-matched target reattachment、target-changed reselection、consumer claim、错误/恢复、交互完整度和干净安装/卸载；
 3. P2：Edge MV3 扩展、分层信任、带一次性 bootstrap code 的 scoped bearer 配对、可复现 sideload 包、Tier-1 Windows/WSL 和本机 transport；container/SSH/remote 留到 P7；
 4. P3：先建立最小隔离 binary lane/回压，再交付真实视觉垂直切片（有界 style/layout、短时 memory-first resource、capture epoch、竞态安全截图、最小 React key claim 和几何验证），随后补全 cache、diagnostics 和 fallback；不为尚未出现的参考图/历史产品面板提前建设 durable artifact；
 5. P4：高级 StyleEvidence、视觉稳定化、主观 review 和 Edge 视觉发布矩阵；
 6. P5：完整 owner/usage、共享影响和多选；
-7. P6：随参考图首次引入 durable artifact/lifecycle，再交付 behavior diagnostics、参考图、page-root/region；
+7. P6：随参考图首次引入每用户 managed ArtifactStore、用户自选根迁移和静态图片 copy-on-import，再交付 durable lifecycle、非授权 VisualReferenceBinding、用户控制的参考任务生命周期、revision 重评估、behavior diagnostics、page-root/region；linked external file 与 remote URL import 继续报告 unavailable；
 8. P7：Edge CDP、remote、Chrome compatibility、商店分发和正式迁移；
 9. P8：多框架评估。
 
-P0 只允许实现 walking skeleton 所需的最小协议、最小 EvidenceGraph、RevisionContext、真实进程 topology、prepare/complete barrier 与安全底线；`PRIV-MIN-001`、`SEL-PROV-001` 和 transform-level `PROD-LEAK-001` 属于这条安全底线，不能因 P3 有更完整 projection 或阶段末有 CI gate 而推迟。完整扩展、高级 transport 和 durable artifact 随首次使用它们的阶段交付，ADR 则随其约束的首次公开决策交付。P1 可以扩展 EvidenceGraph 的 provenance、freshness、conflict 和恢复行为，但不得把 P0 的 source resolution 降格为无证据映射。P3 的首批任务必须先得到短时、默认内存资源、独立 binary lane 和竞态安全 capture 的真实视觉证据；短时资源必须有 ownership、硬 TTL、quota、lease、manual/session clear 和 process-exit deletion，但不承诺跨进程 pin/orphan recovery。durable store、atomic temp upload、tombstone 和 orphan sweeper 到 P6 参考图首次需要持久化时再交付；crash-safe control journal 和 bounded audit metadata 按 `DATA-LIFE-001` 使用独立最小 store，不等于提前提供 durable artifact。开发者可安装产物、配置生成和 clean-install 不能推迟到商店分发阶段。每个后续 phase 先保持上一条路径可运行，再扩展完整度。任何被早期 gate 依赖的 bounded input、evidence、settle、transport 或 production-safety 能力不得推迟到后期 phase。
+P0 只允许实现 walking skeleton 所需的最小协议、最小 EvidenceGraph、RevisionContext、真实进程 topology、prepare/complete barrier 与安全底线；`PRIV-MIN-001`、`SEL-PROV-001` 和 transform-level `PROD-LEAK-001` 属于这条安全底线，不能因 P3 有更完整 projection 或阶段末有 CI gate 而推迟。完整扩展、高级 transport 和 durable artifact 随首次使用它们的阶段交付，ADR 则随其约束的首次公开决策交付。P1 可以扩展 EvidenceGraph 的 provenance、freshness、conflict 和恢复行为，但不得把 P0 的 source resolution 降格为无证据映射。P3 的首批任务必须先得到短时、默认内存资源、独立 binary lane 和竞态安全 capture 的真实视觉证据；短时资源必须有 ownership、硬 TTL、quota、lease、manual/session clear 和 process-exit deletion，但不承诺跨进程 pin/orphan recovery。每用户 managed durable store、静态图片 copy-on-import、自定义根迁移、atomic temp upload、tombstone 和 orphan sweeper 到 P6 参考图首次需要持久化时再交付；crash-safe control journal 和 bounded audit metadata 按 `DATA-LIFE-001` 使用独立最小 store，不等于提前提供 durable artifact。开发者可安装产物、配置生成和 clean-install 不能推迟到商店分发阶段。每个后续 phase 先保持上一条路径可运行，再扩展完整度。任何被早期 gate 依赖的 bounded input、evidence、settle、transport 或 production-safety 能力不得推迟到后期 phase。
 
 ---
 
 # 二十、Codex 页面修改工作流
 
 1. 获取明确 project/browser/document session、服务端派生的 MCP client session 和 CapabilityReport；
-2. 获取 immutable SelectionSnapshot、SelectionProvenance 与 SourceResolution，在用户可见会话中展示目标、provider、confirmation integrity 和主要 source candidate；
-3. 将 selection 显式绑定到当前 prompt/用户确认并 claim；注入模式的 page-untrusted selection 必须先完成外部确认，后续工作流只使用 claim 绑定的 snapshot，不跟随 active-selection；
-4. Codex 可在本地形成 `TaskIntent { primary, secondary }`，但不把分类当作 VEM 权限或协议事实；
-5. 生成显式 ContextRequest，只请求必要 `needs` 和 limits；
-6. 检查 evidence/conflicts/warnings/shared impact；
-7. 阅读最小源码集合；
-8. 制订 VerificationSpec，并调用 `vem_prepare_verification` 原子保存 before Observation 和 barrier；
-9. 修改真实源码；
-10. 运行目标测试、typecheck、lint；
-11. 用 prepared runId 等待或回放 barrier 之后的目标 HMR transaction；
-12. 调用 `vem_complete_verification`，重新定位并执行 VerificationSpec；
-13. 视觉/主观任务返回 capture 和 needs-review；
-14. 审查 diff、共享影响和数据降级；
-15. release claim，报告 changed files、commands、tests、browser evidence 和 limitations。
+2. 获取 immutable SelectionSnapshot、SelectionProvenance 与 SourceResolution，在用户可见会话中展示目标、provider、confirmation integrity、直接主定位与相关影响来源；仅在 direct 不可用时展示明确标记的 degraded candidates；
+3. 若任务使用参考图，先显示图片用途并将它显式绑定到当前 selection/region/page root；未绑定图只提供视觉信息，不声称源码关系。检查 `VisualBindingEvaluation`，只有 active/current 绑定进入本轮 context；
+4. 将 selection 显式绑定到当前 prompt/用户确认并 claim；注入模式的 page-untrusted selection 必须先完成外部确认，后续工作流只使用 claim 绑定的 snapshot，不跟随 active-selection；VisualReferenceBinding 不能替代这一步；
+5. Codex 可在本地形成 `TaskIntent { primary, secondary }`，但不把分类当作 VEM 权限或协议事实；
+6. 生成显式 ContextRequest，只请求必要 `needs` 和 limits；
+7. 检查 evidence/conflicts/warnings/shared impact；
+8. 阅读最小源码集合；
+9. 制订 VerificationSpec，并调用 `vem_prepare_verification` 原子保存 before Observation 和 barrier；
+10. 修改真实源码；
+11. 运行目标测试、typecheck、lint；
+12. 用 prepared runId 等待或回放 barrier 之后的目标 HMR transaction；
+13. 调用 `vem_complete_verification`，按 direct/transaction-matched 规则重新附着并执行 VerificationSpec；`target-changed/unresolved` 时停止验证并要求重新选择，不把相似 alternatives 自动提升为目标；
+14. 视觉/主观任务返回 capture 和 needs-review；同一 reference task 继续迭代前重新评估绑定和 revision；
+15. 审查 diff、共享影响和数据降级；
+16. 用户可继续、pause、complete、cancel 或 replace 参考任务；cancel/complete 后停止新的参考 context，但不自动删除仍在保留期内的图片；
+17. release claim，报告 changed files、commands、tests、browser evidence 和 limitations。
 
 失败处理：
 
@@ -2239,6 +2459,8 @@ P0 只允许实现 walking skeleton 所需的最小协议、最小 EvidenceGraph
 - HMR fail/timeout/多个候选 transaction：读取 diagnostics，并返回 failed/ambiguous；
 - node detached：重定位，仍失败则报告 stale/missing；
 - screenshot expired：重新捕获，不能用旧图冒充；
+- reference paused/cancelled/expired：停止把它加入新的 context/prepare；已经发送的像素或已经完成的修改不能伪称已撤回；
+- reference stale/ambiguous/unresolved：重新附着目标并展示候选；无法重建证据时保持未解析，不根据像素猜源码；
 - subjective visual：`needs-review`，不能谎称 passed。
 
 ---
@@ -2254,7 +2476,10 @@ P0 只允许实现 walking skeleton 所需的最小协议、最小 EvidenceGraph
 | 大 DOM/截图堵塞控制消息 | 控制/数据面分离、二进制流、有界队列和回压 |
 | cache 在代码 revision 未变时返回旧运行时页面 | runtime/target/viewport epoch、短 TTL/revalidation，verification fresh observation，stale 不用于 passed |
 | 截图/日志无限增长 | TTL、absolute TTL、quota、lease、LRU、sweeper、手动清除 |
+| 旧参考图继续影响新任务或取消后仍被发送 | VisualReferenceBinding 按 reference task 显式激活，用户可 pause/complete/cancel/replace；指导期限与文件保留期限分离 |
+| 参考图像素被误当成源码定位或编辑授权 | 先绑定 immutable DOM target 与 SourceResolution；绑定不升级 source confidence，也不替代 ConfirmationBinding/VerificationRun |
 | 回退悄悄降低安全 | strict/balanced/compatibility policy，禁止安全底线回退 |
+| 以“可信本机”关闭逐层校验来换取速度 | 安全底线不可配置；默认开启增强项只允许逐项 opt-out，关闭后显示 limitation 并单独计时 |
 | HMR event 早于页面完成 | browser ACK + DOM settle 状态机 |
 | loop/shared component 误改 | runtime/source identity 分离、React key evidence、sharedImpact unknown |
 | CSS provenance 被高估 | StyleEvidence 分层、limitations、可选 CDP |
@@ -2280,7 +2505,9 @@ P0 只允许实现 walking skeleton 所需的最小协议、最小 EvidenceGraph
 - queue 有回压、消息有幂等、连接可恢复；
 - cache 有 revision invalidation；
 - screenshot/DOM/log 有 TTL、quota、lease 和删除规则；
+- 参考图有用户控制、可取消且可重评估的指导生命周期；指导绑定、编辑授权与文件保留彼此独立；
 - fallback 可见、可配置且不降低安全底线；
+- 安全底线没有全局关闭或 trusted-local 绕过；默认开启的增强保障项可以由用户逐项关闭，且有效设置和能力损失可见；
 - HMR 经过浏览器 ACK；
 - verification 基于明确断言，主观任务需要 review；
 - production build 无 VEM 泄漏；
@@ -2309,14 +2536,14 @@ P0 只允许实现 walking skeleton 所需的最小协议、最小 EvidenceGraph
 16. `activeTab` 跨 origin 导航后权限失效，扩展不会静默扩大 host permission；
 17. password/private selector/跨 origin iframe 在截图上传前已本地遮罩，无法遮罩时拒绝 capture；
 18. 无关文件 HMR revision 不能满足目标更新等待，CSS update、full reload 和 compile error 状态可区分；
-19. JSX 插入兄弟节点后旧 anchor 通过 migration evidence 重定位，候选接近时返回 ambiguous；
+19. JSX 插入兄弟节点后，当前有效 marker 直接定位；anchor 变化时只有 prepared run 的相关 update transaction 能唯一证明 successor 才返回 transaction-matched，竞争或仅相似节点返回 target-changed/ambiguous 并要求重新选择；
 20. 不可变 selection resource 不发 updated notification，可变 active-selection URI 通知后由客户端重新读取；
 21. Service Worker 和 coordinator 异常终止后，只从有界 control-state journal 恢复非敏感状态。
 22. verification 在编辑前 prepare；即使 HMR 在 wait 调用前完成，也只能从 barrier cursor 后回放正确 transaction；无关并发更新返回 ambiguous。
 23. 两个 MCP client 同时读取 selection 时不会串目标；自动编辑使用有 TTL 的 claim，active-selection 变化不影响已 prepared run。
 24. `captureVisibleTab` 的 capture epoch 内任何 tab 激活、导航、document/mask invalidation 事件（包括 A→B→A）都会丢弃截图，动态像素无法遮罩时不上送，并遵守每 window 串行与平台速率上限。
 25. scoped bearer token 的风险、存储、rotation generation、浏览器重启和撤销行为与协议描述一致，不把它冒充 proof-of-possession。
-26. golden tasks 记录 source top-k、payload、首次验证成功率、ambiguous correctness 和 false-positive passed；release gate 的 false-positive passed 为 0。
+26. golden tasks 分别记录 direct-primary exact、仅在 direct 不可用时的 degraded top-k、payload、首次验证成功率、target-changed/ambiguous correctness 和 false-positive passed；release gate 的 false-positive passed 为 0。
 27. P0 E2E 使用真实 Vite 与 MCP OS process，经用户私有 runtime discovery 和 `/__vem/browser` 服务端代理闭环；关闭/restart 任一进程不会复用旧 project instance。
 28. barrier 后只有无关 HMR 时 verification 不会通过；相关与无关更新交错、多次保存和 JS+CSS batch 均保留可解释 match evidence。
 29. P1/P2/P4 分别通过对应开发产物的 clean install、首次连接/配对和 clean uninstall，Visual V1 不依赖 P7 才能被新用户安装。
@@ -2332,10 +2559,14 @@ P0 只允许实现 walking skeleton 所需的最小协议、最小 EvidenceGraph
 39. decision task 可以在 `status: done` 时记录 `adjust/stop`，但所有要求 `continue` 的 task/phase 仍不可执行；logical key/current-attempt/supersedes/ordinal 缺失、未知或不匹配使 validator 和 next-task selector 失败，旧 verdict 不可覆盖。
 40. P0 ephemeral selection/claim/confirmation state 在 session/project restart 与显式 clear 后不可恢复，且最小静态 CapabilityReport 不宣称 P2/P3/P6/P7 能力。
 41. P7 container workflow 固定 image digest、non-root、drop capability、精确 project mount、无 Docker socket/host root/home mount，并在 secret/network/path/cleanup 任一边界不明时 fail closed；container 隔离不替代 VEM trust/privacy contract。
+42. `security: off`、`trusted-local bypass` 或页面发起的策略变更被拒绝；增强保障项默认开启且只能由受信任配置逐项关闭，关闭后 CapabilityReport 显示 limitation，逐层校验仍执行且不会提升 confidence、扩大权限或产生 verification `passed`。
+43. 未绑定用户截图不声称对应源码；绑定参考图记录 selection/target/source-candidate hash 和 revision，页面或源码变化后返回 current/stale/ambiguous/unresolved，不能从像素相似度制造 exact source。
+44. active 参考图可跨同一 reference task 的多轮修改/HMR/比较持续使用；用户 pause/complete/cancel/replace 后不进入新的 context/prepare，且取消指导不自动删图、删除 artifact 会级联终止绑定。
+45. VisualReferenceBinding 不能替代一次性 ConfirmationBinding、selection claim 或 verification prepare；指导 TTL 与 artifact TTL 独立显示，普通读取不续期，只有显式用户动作能建立新的有限保留周期。
 
 # 附录 B：调研与实现参考
 
-以下资料用于学习产品模式、协议或平台能力，不代表可以复制其代码。最近复核日期为 2026-07-13；P0-T2 起 blocking CI 检查仓库内部链接与 requirements section，外部 URL 采用可重试的定期 reference audit 并记录最后成功日期，不能因临时网络故障阻塞每次本地提交。采用具体实现前还必须在 ADR 中记录所参考的 release/tag/commit，避免随网页更新而改变设计依据：
+以下资料用于学习产品模式、协议或平台能力，不代表可以复制其代码。最近复核日期为 2026-07-23；P0-T2 起 blocking CI 检查仓库内部链接与 requirements section，外部 URL 采用可重试的定期 reference audit 并记录最后成功日期，不能因临时网络故障阻塞每次本地提交。采用具体实现前还必须在 ADR 中记录所参考的 release/tag/commit，避免随网页更新而改变设计依据：
 
 - Stagewise 当前产品与 DOM context selection：<https://docs.stagewise.io/>
 - Stagewise repository（AGPL-3.0）：<https://github.com/stagewise-io/stagewise>
@@ -2353,6 +2584,11 @@ P0 只允许实现 walking skeleton 所需的最小协议、最小 EvidenceGraph
 - Chrome `activeTab` 与 `tabs.captureVisibleTab`：<https://developer.chrome.com/docs/extensions/develop/concepts/activeTab>、<https://developer.chrome.com/docs/extensions/reference/api/tabs#method-captureVisibleTab>
 - Chrome extension storage/service workers：<https://developer.chrome.com/docs/extensions/reference/api/storage>、<https://developer.chrome.com/docs/extensions/develop/concepts/service-workers>
 - Chrome Service Worker WebSocket lifecycle：<https://developer.chrome.com/docs/extensions/how-to/web-platform/websockets>
+- Chrome File System Access 的用户手势、目录选择与权限重验证：<https://developer.chrome.com/docs/capabilities/web-apis/file-system-access>
+- XDG per-user data/state/runtime directory：<https://specifications.freedesktop.org/basedir/0.8/>
+- Windows Known Folder `FOLDERID_LocalAppData`：<https://learn.microsoft.com/windows/win32/shell/knownfolderid>
+- OWASP file-upload allowlist、signature、size、generated filename 与非公开存储建议：<https://cheatsheetseries.owasp.org/cheatsheets/File_Upload_Cheat_Sheet.html>
+- Sharp/libvips 输入像素限制与默认 metadata 清除（仅候选依赖，采用前仍需许可证/版本 ADR）：<https://sharp.pixelplumbing.com/api-constructor/>、<https://sharp.pixelplumbing.com/api-output/>
 - MCP tools/resources/cancellation：<https://modelcontextprotocol.io/specification/2025-11-25/server/tools>、<https://modelcontextprotocol.io/specification/2025-11-25/server/resources>、<https://modelcontextprotocol.io/specification/2025-11-25/basic/utilities/cancellation>
 - MCP Tasks 演进与不兼容迁移：<https://modelcontextprotocol.io/seps/2663-tasks-extension>、<https://modelcontextprotocol.io/extensions/tasks/overview>
 - MCP security best practices：<https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices>

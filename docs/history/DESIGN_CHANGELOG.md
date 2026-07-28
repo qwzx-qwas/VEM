@@ -1,8 +1,42 @@
-# Implementation Progress
+# Design Baseline Changelog
 
-No implementation tasks have been completed yet.
+本文件保存 implementation 开始前的设计演进历史。历史条目中的旧 task ID、旧路径和“下一任务”只反映当时状态；当前状态以 `ROADMAP.yaml` 与 `docs/STATUS.md` 为准。
 
-Each entry must include task ID, date, changed files, commands, test evidence, limitations, and next eligible task.
+## Design baseline revision 1.14 — 2026-07-23
+
+源码定位语义收敛为“当前直接主定位优先”。完整源码身份是 `(sourceRegistryRevision, sourceAnchorId)`；当前 DOM marker 与同 revision registry 匹配时直接返回 `hostAnchor`，不把正常路径变成用户候选选择。跨 revision 状态只服务于 prepared verification 的因果重附着，不提供源码 rollback：complete 只接受当前 direct anchor，或由本次 coordinator-observed relevant update transaction、唯一 runtime-target reattachment 和新 DOM marker 的当前 registry match 共同证明的 `transaction-matched` successor；相似节点、竞争 batch 或证据不足返回 `target-changed/ambiguous` 并要求重新选择，diagnostic alternatives 不授权编辑也不能产生 `passed`。
+
+`ConfirmationBinding` 明确区分 prepare 前后的 revision 变化。prepare 前主定位、registry 或 degraded candidate set 变化会使确认失效；prepare 消费后，由该 run 引起并唯一证明的 successor 只继承 complete verification 边界，不需要第二次确认，也不能授权第二次编辑。由此消除了“任何 registry 变化都重新确认”与“编辑后必须沿 prepared run 验证”之间的冲突。
+
+`PROD-LEAK-001` 从容易误解的 post-build stripping 改为开发平面隔离和生产不参与。MCP Server/Coordinator/Edge extension/registry 不进入应用生产依赖，Vite transform/client/endpoint/registry publication 只在 serve 解析；registry 位于 Coordinator 内存或用户私有 runtime storage。CI/MCP 只读检查 production module graph、未启用/已配置 VEM 的 baseline build equivalence 和 VEM-owned signatures，不清洗 `dist`，也不按模糊 `data-*` 名称删除用户属性。ROADMAP、requirements、mastery、delivery、执行模板与验收指标已同步；task/phase/decision 状态及 task/contract 数量不变。
+
+## Design baseline revision 1.13 — 2026-07-23
+
+新增 `VISUAL-BIND-001`，明确参考图像素不能自行定位源码。用户导入图片先只是未绑定视觉资料；只有通过当前 DOM selection、region 或 page root 生成 immutable snapshot/target set，并复用 `SourceResolution` 后，`VisualReferenceBinding` 才记录 selection/target/source-candidate hash、revision、crop 和来源。revision 变化必须重新附着并返回 current/stale/ambiguous/unresolved，不能用像素相似度制造 exact source。
+
+视觉参考绑定、编辑授权和 artifact 保留被拆成三种生命周期。active 绑定可跨同一 reference task 的多轮修改、HMR 和比较；用户可以 pause、resume、complete、cancel、replace 或显式 renew。终止指导会停止新的 Codex context/prepare，但不谎称能收回已发送像素或撤销已有修改，也不自动删除图片；artifact 删除则级联终止绑定。VisualReferenceBinding 始终非授权，不能替代 selection claim、一次性 `ConfirmationBinding`、source correctness proof 或 `VerificationRun`。
+
+现有 P6 ArtifactStore、24 小时 durable 默认、TTL/quota/lease/tombstone/sweeper 继续使用，但 active reference lease、到期提示、有界宽限、显式续期和 no-read-renewal 现已明确。P6-T4 收窄为单 selection 绑定与用户状态机，新增 P6-T14 负责最小 durable binding metadata、region/page-root 重评估及指导/存储到期集成，P6-T9 执行完整 E2E。路线图现为 136 个 task、25 个 contract；所有 task/phase/decision 状态保持不变，当前下一 eligible task 仍为 P0-T0A0。
+
+## Design baseline revision 1.12 — 2026-07-23
+
+P6 `DATA-LIFE-001` 现在明确采用每用户 managed ArtifactStore：Windows 解析 `FOLDERID_LocalAppData`，Linux/WSL 解析 `XDG_DATA_HOME`，且按 Coordinator 实际运行环境选择默认根；P3 memory-first capture、bounded audit metadata 与 P6 binary artifact 继续分库。项目使用随机 `projectStorageId` 和 opaque `vem://artifact/...`，不把 project、导入源或物理 artifact 路径暴露给页面或 Codex。
+
+用户可以通过受信任本机设置或 CLI/TUI 为项目选择自定义 artifact root。新根必须通过 realpath/symlink/ACL/读写/rename/delete/容量与 durability probe，迁移采用 lease drain、临时复制、hash 校验和可回滚原子切换；离线或权限变化不会静默回退成第二个 store。源码路径仍限制在 project root，artifact root 作为显式用户授权的独立边界，不接受页面、prompt 或调用方提供内部子路径。
+
+P6 增加用户手势触发的静态 PNG/JPEG/WebP copy-on-import：有界解码、签名/MIME/实际格式组合验证、orientation/sRGB 规范化、metadata 清除、预览与 mask/crop、来源与内容 hash 后写入 ArtifactStore。手工导入不运行浏览器 active-tab/origin/capture-epoch 检查；自动 capture 仍完整遵守 `CAP-RACE-001`。首个 baseline 明确不支持 SVG/PDF/动画、远程 URL、递归目录或 linked external file，相关 capability 必须诚实返回 unavailable。
+
+路线图修改 P6-T3/P6-T10，并新增原子任务 P6-T13 负责自定义根、probe、迁移和恢复默认；`PRIV-MIN-001`/`DATA-LIFE-001` 的双向 task 与测试映射已同步。路线图现为 135 个 task、24 个 contract；所有 task/phase/decision 状态保持不变，当前下一 eligible task 仍为 P0-T0A0。
+
+## Design baseline revision 1.11 — 2026-07-22
+
+本次评估部分接受“可信环境下允许为性能关闭安全操作”的建议，但拒绝全局 `security: off`、`trusted-local bypass` 和逐层校验跳过。身份派生、认证与授权、schema/size/semantic validation、隐私、路径、防重放、revision/freshness、单次确认、截图安全、远程传输和 production non-leakage 仍是不可配置的安全底线；本机、单用户或可信项目不会把页面和跨进程输入升级为可信。
+
+P3 `FALLBACK-POLICY-001` 现在负责通过 ADR 锁定默认开启、可逐项 opt-out 的增强保障偏好：额外证据交叉验证、非授权性只读主动新鲜度复核、扩展诊断和本地 bounded audit metadata。设置只来自受信任 project/browser-profile 配置，必须在 UI/CapabilityReport 中显示；关闭只能减少证据或诊断，不能提升 confidence/freshness、扩大权限、减少确认或制造 verification `passed`。性能证据分开报告底线与增强项成本。路线图仍为 134 个 task、24 个 contract，所有 task/phase/decision 状态不变。
+
+## Documentation organization update — 2026-07-13
+
+建立 `docs/README.md` 文档地图、`docs/STATUS.md` 当前快照、开放 decision inbox、canonical P0 delivery 文档、独立 checkpoint 规则和 23 个非规范性 mastery blocks。原 `docs/progress.md` 只保留 implementation evidence，本文件接收设计 baseline 历史。`docs/ONE_WEEK_EXECUTION.md` 改为兼容入口，task prompt 不再保存第二份完成状态。规范正文暂不批量搬迁；P0-T2 增加多文件 `path + stable anchor` authority reference validation 后再逐 contract 抽取。
 
 ## Design baseline revision 1.10 — 2026-07-13
 

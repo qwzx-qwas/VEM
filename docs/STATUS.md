@@ -1,0 +1,35 @@
+# Current Project Status
+
+> 人类可读快照。机器可读 task、phase 和 decision 状态以根目录 `ROADMAP.yaml` 为准。
+
+## 当前结论
+
+- 项目处于 design baseline 1.14，P0 implementation 已开始。
+- `P0-T0A0` 已完成只读 migration readiness inventory；证据位于 `docs/test-evidence/P0-T0/20260728T155608+0800/`。
+- 136 个 roadmap task 和 25 个 contract 已登记。
+- `P0-T0A1` 已获得 owner 对 layout commit 与 single-writer cutover 的明确授权，当前为 `in_progress`；完成前不得执行 P0-T0A2。
+- readiness 结果为 `ready`：大小写 staging 路径为同一 device/inode，payload 与 prefix-normalized manifest 已冻结，无 case collision，目标不存在，ext4 容量/owner permission 通过，且目标未被任务修改。
+- 当前 owner-approved 产品范围是 P0 proof-of-value / go-no-go prototype，不是完整 Visual V1。
+- 安全策略边界已确定但尚未实现：没有全局 security-off/trusted-local 绕过；P3 只为默认开启的增强保障项提供逐项用户 opt-out，并保持安全底线始终执行。
+- P6 backlog 已明确：持久资源默认使用每用户托管目录，允许可信本机配置自定义 artifact root，并支持有界、规范化、copy-on-import 的用户参考图；外部文件链接和远程 URL 导入仍未承诺。
+- P6 视觉参考采用独立、非授权的 `VisualReferenceBinding`：未绑定图不声称源码关系，用户控制参考任务的 pause/resume/complete/cancel/replace/renew，指导期限与 artifact 保留期限分离。
+- 源码沟通以当前 direct primary source 为正常路径；prepared verification 只接受 direct/transaction-matched reattachment，无法唯一证明 successor 时要求重新选择，revision history 不冒充源码撤销。
+- `PROD-LEAK-001` 采用 MCP/Coordinator/extension/Vite dev integration 的开发平面隔离与生产不参与；门禁只读检查生产 module graph、baseline build equivalence 和 VEM-owned signatures，不清洗 `dist`。
+
+## 当前写入边界
+
+- 当前 staging display path 是 `/mnt/d/VEM`；大小写别名要按 Git top-level 与 device/inode 判断。
+- owner migration target 是 `/home/qwzx/src/VEM`。
+- `P0-T0A0` 没有创建 `/home/qwzx/src/VEM` 或其父目录；未获得 layout commit 授权前，不把 target migration 描述为已开始或完成。
+- 1.13 视觉参考绑定与双生命周期设计修订新增 P6-T14；本次 1.14 只收敛 revision reattachment、confirmation 和 production non-participation 语义，没有改变任何 roadmap task、phase 或 decision 状态。
+
+## 当前待 owner 决策
+
+见 `docs/decisions/OPEN_DECISIONS.yaml`。其中最早会影响实施的是迁移 layout commit 授权和项目许可证选择。
+
+## 状态与记录分工
+
+- `ROADMAP.yaml`：唯一任务、阶段、decision 状态源。
+- `docs/progress.md`：只保存 implementation task 的完成/阻塞证据。
+- `docs/checkpoints/`：只保存 `in_progress` 任务的可续接位置，不表示完成。
+- `docs/history/DESIGN_CHANGELOG.md`：保存设计 baseline 历史。

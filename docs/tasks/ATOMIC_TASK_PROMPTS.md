@@ -4,6 +4,8 @@
 
 所有 prompt 共用以下规则：只改当前 task；先写/更新测试；不得削弱安全、隐私、证据或测试门禁；外部阻塞要保存证据并标记 blocked；通过后才更新 roadmap/progress；结束时使用 `AGENTS.md` 的报告格式。
 
+若执行因上下文或预算中断，在 `docs/checkpoints/<TASK-ID>.md` 记录最后完成步骤、已有证据和准确下一步。不要在本 prompt 文件下追加“已完成”或局部进度；task/phase/decision 状态仍只写入 `ROADMAP.yaml`，完成或阻塞证据写入 `docs/progress.md`。
+
 ## P0-T0A0 — 只读迁移 readiness inventory
 
 ### Prompt
@@ -179,7 +181,7 @@
 - **本阶段不做**：不做 restart/无关更新负例，不跑 golden corpus，不加入截图/style。
 - **实现约束**：ConfirmationBinding 单次消费；真实 Vite/MCP OS process；fresh before/after observation。
 - **成功路径**：正确 source、正确 transaction、文本 assertion passed，所有 evidence 可解释。
-- **失败路径与边界**：确认、claim、HMR、reattach、test 任一失败返回真实 terminal state。
+- **失败路径与边界**：确认、claim、HMR、direct/transaction-matched reattach、test 任一失败返回真实 terminal state；无法唯一证明 successor 时返回 `target-changed/ambiguous` 并重新选择，不按相似度挑选 alternative。
 - **建议优先查看/修改的文件**：`e2e/`、demo fixture、coordinator/MCP/verification 测试。
 - **测试要求**：Edge Stable channel、two-process、single-use confirmation、production fixture cleanup。
 - **验收标准**：仅一个正向垂直用例通过，不外推 golden 或可靠性结论。
@@ -205,7 +207,7 @@
 
 - **背景**：E2E 能力已证明，现独立评估 10–20 个预登记任务。
 - **目标**：只执行和汇总 P0 golden baseline。
-- **本阶段做**：冻结 corpus/threshold；记录 source top-k、ambiguity correctness、false-positive passed 和原始 hashes。
+- **本阶段做**：冻结 corpus/threshold；记录 direct-primary exact、仅在 direct 不可用时的 degraded top-k、target-changed reselection、ambiguity correctness、false-positive passed 和原始 hashes。
 - **本阶段不做**：不改产品实现/fixture ground truth，不用结果调参，不扩大能力声明。
 - **实现约束**：evidence 与实现 commit 分离；错误 passed 必须为 0。
 - **成功路径**：达到 threshold 并生成可审计 verdict。
@@ -235,12 +237,12 @@
 
 - **背景**：升级路径已独立完成，需证明卸载不会损坏用户项目。
 - **目标**：只实现 clean uninstall 和 production/runtime/data residue 检查。
-- **本阶段做**：移除 VEM 自有配置/依赖/生成物；保留用户内容；清理 runtime/data；执行 production build scan。
+- **本阶段做**：按安装 provenance 移除 VEM 自有配置/依赖/生成物；保留用户内容；清理 runtime/data；执行 production module-graph、baseline equivalence 与 VEM-owned signature 的只读检查。
 - **本阶段不做**：不改变 upgrade/migration，不发布 package。
 - **实现约束**：幂等；仅删除有 provenance 的 VEM 内容；不按模糊名称删除用户 attribute/file。
 - **成功路径**：安装前后用户项目等价，VEM residue 为 0。
 - **失败路径与边界**：所有权不明时停止并报告 manual action，不强删。
-- **建议优先查看/修改的文件**：CLI uninstall、install manifest、production leakage tests。
+- **建议优先查看/修改的文件**：CLI uninstall、install manifest、production non-participation/leakage tests。
 - **测试要求**：double uninstall、modified config、user same-name file、runtime/data cleanup、build scan。
 - **验收标准**：卸载与残留门禁独立通过。
 
@@ -333,6 +335,21 @@
 - **建议优先查看/修改的文件**：`benchmarks/golden-tasks/`、fixtures、evidence plan。
 - **测试要求**：count/category coverage、hash、duplicate detection、holdout separation。
 - **验收标准**：corpus 可供 P3-T19 消费，但无产品效果 verdict。
+
+## P3-T16 — Fallback 与默认开启增强保障偏好
+
+### Prompt
+
+- **背景**：FallbackPolicy 已区分 strict/balanced/compatibility，但不能被实现成 `security: off` 或“可信本机”逐层绕过；性能诉求只允许作用于安全底线之外的增强检查。
+- **目标**：记录 FALLBACK-POLICY-001 ADR，并交付 CapabilityRegistry、fallback 选择和按 project/browser profile 作用域的默认开启增强保障偏好。
+- **本阶段做**：锁定增强项名称、trusted configuration source、scope、默认值、逐项 opt-out、UI/CapabilityReport 表达和 limitation；实现 strict/balanced/compatibility provider 选择。
+- **本阶段不做**：不允许页面修改策略，不增加全局 security-off，不关闭身份/认证/授权/schema/隐私/路径/replay/revision/confirmation/capture/remote/production safety floor，不把增强项关闭解释为更高信任。
+- **实现约束**：关闭增强项只能减少额外交叉验证、只读主动 revalidation、扩展诊断或本地 audit metadata；不得提升 confidence/freshness、扩大权限、减少必需确认或让 verification 更容易 passed。
+- **成功路径**：默认配置启用全部声明的增强项；用户从受信任设置逐项关闭后，CapabilityReport/UI 显示有效 scope 与 limitation，底线测试结果不变。
+- **失败路径与边界**：全局关闭、trusted-local bypass、页面发起配置、未知增强项、scope 串项目或关闭后结果升级均 fail closed。
+- **建议优先查看/修改的文件**：fallback ADR、CapabilityRegistry、trusted config schema、CapabilityReport、扩展设置 UI 与 policy fixtures。
+- **测试要求**：strict/balanced/compatibility、forbidden downgrade、default-on、per-check opt-out、trusted-config-only、scope isolation、visible limitation、no confidence/permission/pass upgrade 和底线持续执行。
+- **验收标准**：一个可审计的能力/保障策略 surface 通过；没有创建绕过安全底线的模式。
 
 ## P4-T6A — Visual V1 Edge 环境矩阵
 

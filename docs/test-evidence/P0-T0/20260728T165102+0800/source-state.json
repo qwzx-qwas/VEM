@@ -1,0 +1,11 @@
+{
+  "capturedAt": "2026-07-28T16:57:17+08:00",
+  "dirtyBinaryDiffSha256": "8059702431a300b8f38ea682142bd37ad2beef208da68b218d4bb71305afaf2f",
+  "gitTopLevel": "/mnt/d/VEM",
+  "projectPrefixRemoved": "visual-element-mcp-design-bundle/",
+  "sourceBaselineHead": "f96f79e545b540cee6d53d5910bb4422d31f6b14",
+  "sourceBranch": "main",
+  "sourceManifestFileCount": 58,
+  "sourceManifestSha256": "8205a7540473d5dc456cd56e3959d678d2bd49eb9e1812be39a3e226aeb30944",
+  "statusPorcelainV1ZSha256": "27f0a070afbcc72510a7f6e287974d602bdcdd21ad13b24590af2bdb17c2d396"
+}

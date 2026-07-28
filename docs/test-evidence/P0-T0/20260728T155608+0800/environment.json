@@ -1,0 +1,78 @@
+{
+  "classification": {
+    "caseCollisions": "pass",
+    "identity": "pass",
+    "overall": "ready",
+    "payloadInventory": "pass",
+    "prefixNormalization": "pass",
+    "targetCapacity": "pass",
+    "targetCollision": "pass",
+    "targetExt4": "pass",
+    "targetNoMutation": "pass",
+    "targetPermission": "pass"
+  },
+  "executionProfile": "WSL read-only inventory; external read-only permission confirmation",
+  "formalSchemaDeferredToTask": "P0-T0A2",
+  "recordedAt": "2026-07-28T16:04:39+08:00",
+  "runId": "20260728T155608+0800",
+  "schemaVersion": "P0-T0A0-bootstrap-readiness-v1",
+  "source": {
+    "aliases": [
+      {
+        "device": 71,
+        "inode": 23362423067008480,
+        "mode": "0777",
+        "path": "/mnt/d/VEM"
+      },
+      {
+        "device": 71,
+        "inode": 23362423067008480,
+        "mode": "0777",
+        "path": "/mnt/d/vem"
+      },
+      {
+        "device": 71,
+        "inode": 18577348462927400,
+        "mode": "0777",
+        "path": "/mnt/d/VEM/visual-element-mcp-design-bundle"
+      },
+      {
+        "device": 71,
+        "inode": 18577348462927400,
+        "mode": "0777",
+        "path": "/mnt/d/vem/visual-element-mcp-design-bundle"
+      }
+    ],
+    "baselineManifestSha256": "48ad64080ec3f442d102f072e897a7dd437dd7d48b90b345ca037b6ce884fe0e",
+    "casefoldCollisionCount": 0,
+    "dirtyBinaryDiffSha256": "955c275e51e6cb39f5a596f2a333b11db4f462f47d06a70c8965f48a902d4cea",
+    "dirtyManifestSha256": "1be172264b2ecb00321c55085b312e0aa5e34f20d7648a4961ad2d9378afd515",
+    "dirtyNameStatusZSha256": "7bf84a1326a9f6219892485db32c767b4f2d363dcb0111f9cedda1dcf70c2baf",
+    "dirtyTrackedFileCount": 9,
+    "exactNormalizedCollisionCount": 0,
+    "gitTopLevel": "/mnt/d/VEM",
+    "payloadFileCountExcludingThisEvidenceRun": 42,
+    "prefixNormalizedPayloadManifestSha256": "ba37ba4a43c8398a3d08afa82ad17d2256e632fc119044f44fd5a13c6f523a5c",
+    "projectPayloadPrefix": "visual-element-mcp-design-bundle/",
+    "sourceBaselineHead": "f96f79e545b540cee6d53d5910bb4422d31f6b14",
+    "stagingFilesystemType": "9p",
+    "statusPorcelainV1ZSha256": "27f0a070afbcc72510a7f6e287974d602bdcdd21ad13b24590af2bdb17c2d396",
+    "trackedFileCount": 12,
+    "untrackedFileCountExcludingThisEvidenceRun": 30,
+    "untrackedManifestSha256": "6fe7f25d89ab1f1c1da00ecc894678e575a36da85413596145493ee0f5557e9f",
+    "untrackedPathListZSha256": "385f662051f65d35854a4270fae6f32ccfe4f2981eb56d7c707db3d68a6fcca4"
+  },
+  "targetReadiness": {
+    "availableBytes": 992603340800,
+    "casefoldSiblingCollisionCount": 0,
+    "filesystemType": "ext4",
+    "nearestExistingParent": "/home/qwzx",
+    "ownerMatchesEffectiveUser": true,
+    "path": "/home/qwzx/src/VEM",
+    "targetAbsent": true,
+    "targetParentAbsent": true,
+    "targetUnchangedByTask": true,
+    "writableAndSearchableOutsideSandbox": true
+  },
+  "taskId": "P0-T0A0"
+}

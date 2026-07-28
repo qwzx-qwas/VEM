@@ -1,0 +1,61 @@
+schema_version: 1
+purpose: Non-authoritative owner decision inbox; accepted technical decisions move to ADRs and execution verdicts remain in ROADMAP.yaml.
+status_values: [open, scheduled, decided, superseded]
+
+decisions:
+  - id: OWNER-MIGRATION-LAYOUT-COMMIT
+    title: Authorize the project-at-root migration layout commit and single-writer cutover
+    status: decided
+    decision_owner: project-owner
+    needed_by_task: P0-T0A1
+    decision: authorized
+    decided_at: 2026-07-28T16:51:02+08:00
+    evidence: Owner explicitly replied "授权执行 P0-T0A1" in the active Codex thread.
+    context_refs:
+      - docs/DESIGN.md
+      - docs/delivery/P0_PROOF_OF_VALUE.md
+    context_sections:
+      - 3.1.1 已选 canonical root、迁移门禁与环境安装基线
+    note: Authorization is limited to the P0-T0A1 project-at-root layout commit and verified single-writer cutover.
+
+  - id: OWNER-PROJECT-LICENSE
+    title: Select project license, copyright holder, contribution policy, and publication boundary
+    status: open
+    decision_owner: project-owner
+    needed_by_task: P0-T1
+    context_refs:
+      - docs/DESIGN.md
+    context_sections:
+      - 2.8 项目与依赖许可证 (LICENSE-POLICY-001)
+    options_not_verdicts:
+      - Apache-2.0 as the current design recommendation
+      - private/unlicensed while publication remains blocked
+
+  - id: TOOLCHAIN-NODE-PNPM
+    title: Accept exact Node and pnpm versions after reproducible preflight evidence
+    status: scheduled
+    decision_owner: project-owner
+    needed_by_task: P0-T0A2
+    context_refs:
+      - docs/DESIGN.md
+    context_sections:
+      - 3.1.1 已选 canonical root、迁移门禁与环境安装基线
+    note: The design prefers Node 24.x LTS; exact versions remain evidence-driven.
+
+  - id: MCP-PRIMARY-COMPAT-REVISION
+    title: Accept primary and compatibility MCP revisions and Tasks negotiation boundary
+    status: scheduled
+    decision_owner: project-owner
+    needed_by_task: P0-T3
+    context_refs:
+      - docs/DESIGN.md
+    context_sections:
+      - 13.1 Protocol package 与 MCP 兼容基线 (MCP-COMPAT-001)
+
+  - id: P0-VALUE
+    title: Continue, adjust, or stop after the preregistered P0 value micro-pilot
+    status: scheduled
+    decision_owner: evidence-gate
+    needed_by_task: P0-T17B
+    authoritative_state_ref: ROADMAP.yaml
+    note: This row is only a discoverability pointer; the immutable attempt and verdict live in ROADMAP.yaml.

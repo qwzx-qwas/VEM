@@ -13,7 +13,7 @@ contracts:
     authoritative_sections: ["0. 文档地位与阅读方式", "17.3 原子任务门禁", "附录 B：调研与实现参考"]
     introduced_phase: P0
     roadmap_tasks: [P0-T2, P0-T10]
-    required_tests: [requirements-schema, normative-section-coverage, contract-reference, roadmap-state, decision-reference-and-verdict, internal-link]
+    required_tests: [requirements-schema, normative-section-coverage, contract-reference, multi-source-authority-reference, roadmap-state, decision-reference-and-verdict, internal-link]
 
   - id: CORE-BOUND-001
     title: VEM and Codex responsibility and capability boundary
@@ -52,17 +52,17 @@ contracts:
 
   - id: REV-ID-001
     title: Project source runtime and document revision identity algebra
-    authoritative_sections: ["4.3 选择类型", "4.4 身份必须拆分", "12.2 sourceAnchorId", "12.3 跨 revision anchor reconciliation", "12.6 HMR revision", "13.2 SelectionSnapshot", "13.3 PageContext"]
+    authoritative_sections: ["4.3 选择类型", "4.4 身份必须拆分", "12.2 sourceAnchorId", "12.3 跨 revision 目标重附着", "12.6 HMR revision", "13.2 SelectionSnapshot", "13.3 PageContext"]
     introduced_phase: P0
     roadmap_tasks: [P0-T3, P0-T15, P0-T16, P1-T5, P1-T6, P1-T8, P1-T12, P2-T10, P5-T1]
-    required_tests: [revision-equality-ordering, project-instance-reset, document-generation, anchor-collision, anchor-migration, page-redaction]
+    required_tests: [revision-equality-ordering, project-instance-reset, document-generation, anchor-collision, direct-current-anchor, relevant-update-plus-runtime-target-plus-current-registry-reattach, target-changed-reselection, no-revision-as-rollback, page-redaction]
 
   - id: EVIDENCE-TRUST-001
     title: Evidence graph provenance conflict and no trust laundering
     authoritative_sections: ["4.1 像素不是源码对象", "4.2 DOM 与源码不是双射", "4.5 SourceResolution 是证据集合", "6.1 威胁模型", "6.4 Page Runtime evidence 不能被认证成事实", "6.5 每层校验职责", "Page Runtime → Content Script", "Content Script → Service Worker", "Vite Build Integration → Coordinator", "6.6 Evidence 模型 (`EVIDENCE-TRUST-001`)", "8.4 StyleEvidence 分层", "12.1 映射等级", "12.5 自定义组件限制"]
     introduced_phase: P0
     roadmap_tasks: [P0-T3, P0-T15, P0-T16, P0-T11, P0-T12B, P0-T12C, P1-T6, P2-T3, P2-T4, P3-T18, P4-T1, P5-T2, P5-T3, P5-T4, P5-T5, P5-T7, P5-T8, P6-T1, P6-T2, P6-T5, P6-T7, P7-T2, P8-T1, P8-T2, P8-T3A, P8-T3B]
-    required_tests: [provenance-edge, registry-membership-not-dom-binding, conflict-priority, candidate-confidence, shared-impact-unknown, malicious-marker-copy]
+    required_tests: [provenance-edge, registry-membership-not-dom-binding, conflict-priority, candidate-confidence, shared-impact-unknown, malicious-marker-copy, no-layer-validation-bypass]
 
   - id: TOP-P0-001
     title: P0 process topology discovery and authority
@@ -90,14 +90,14 @@ contracts:
     authoritative_sections: ["7.0.1 ConfirmationBinding 协议与状态机 (`CONF-BIND-001`)"]
     introduced_phase: P0
     roadmap_tasks: [P0-T3, P0-T12B, P0-T8, P0-T9A, P1-T9, P2-T6]
-    required_tests: [snapshot-hash-binding, source-candidate-binding, action-allowlist, ttl, single-consumption, concurrent-reservation, restart-fail-closed, cross-phase-state-semantics]
+    required_tests: [snapshot-hash-binding, direct-source-evidence-binding, degraded-candidate-binding, action-allowlist, ttl, single-consumption, concurrent-reservation, prepared-successor-no-second-confirmation, target-changed-no-confirmation-reuse, restart-fail-closed, cross-phase-state-semantics]
 
   - id: PRIV-MIN-001
     title: Minimum outbound privacy and untrusted prompt-data floor
     authoritative_sections: ["8.0 最小出站隐私底线 (`PRIV-MIN-001`)", "8.1 不推送全量上下文", "第二阶段：ContextRequest", "8.2 任务意图、上下文和验证分离", "8.3 Context profiles", "16.3 隐私过滤", "16.4 路径安全"]
     introduced_phase: P0
-    roadmap_tasks: [P0-T3, P0-T4, P0-T5, P0-T11, P0-T12C, P1-T7, P1-T11, P2-T3, P2-T4, P3-T2, P3-T3, P4-T2, P6-T1, P6-T2, P6-T5, P8-T1, P8-T2, P8-T3A, P8-T3B]
-    required_tests: [form-value-redaction, private-subtree, url-redaction, bounded-text, prompt-data-marking, error-echo, path-confinement]
+    roadmap_tasks: [P0-T3, P0-T4, P0-T5, P0-T11, P0-T12C, P1-T7, P1-T11, P2-T3, P2-T4, P3-T2, P3-T3, P4-T2, P6-T1, P6-T2, P6-T3, P6-T5, P6-T13, P8-T1, P8-T2, P8-T3A, P8-T3B]
+    required_tests: [form-value-redaction, private-subtree, url-redaction, bounded-text, prompt-data-marking, error-echo, path-confinement, imported-image-metadata-and-path-redaction, trusted-artifact-root-selection]
 
   - id: PIPE-BOUND-001
     title: Bounded control and data planes backpressure and binary isolation
@@ -114,11 +114,18 @@ contracts:
     required_tests: [runtime-mutation-epoch, target-resize-epoch, viewport-scroll-zoom-epoch, provider-namespace-reset, cache-revalidation, verification-cache-bypass]
 
   - id: DATA-LIFE-001
-    title: Explicit storage classes ownership TTL quota lease and deletion
-    authoritative_sections: ["10.2 MCP resource", "10.3 存储等级与 CaptureStore (`DATA-LIFE-001`)", "10.4 默认保留策略", "10.5 删除、lease 和 quota"]
+    title: Explicit storage classes managed and user-selected roots import ownership TTL quota lease and deletion
+    authoritative_sections: ["10.2 MCP resource", "10.3 存储等级与 ArtifactStore (`DATA-LIFE-001`)", "10.3.1 P6 托管存储根", "10.3.2 用户自选存储根与迁移", "10.3.3 用户外部导入参考图", "10.4 默认保留策略", "10.5 删除、lease 和 quota"]
     introduced_phase: P0
-    roadmap_tasks: [P0-T5, P0-T12B, P0-T8, P1-T8, P3-T5, P3-T11, P3-T17, P5-T6, P6-T2, P6-T3, P6-T4, P6-T10, P6-T11, P6-T12]
-    required_tests: [storage-class-capability, ownership, hard-and-absolute-ttl, quota, lease, manual-clear, process-exit, tombstone, orphan-recovery]
+    roadmap_tasks: [P0-T5, P0-T12B, P0-T8, P1-T8, P3-T5, P3-T11, P3-T17, P5-T6, P6-T2, P6-T3, P6-T4, P6-T10, P6-T11, P6-T12, P6-T13, P6-T14]
+    required_tests: [storage-class-capability, ownership, hard-and-absolute-ttl, quota, lease, manual-clear, process-exit, audit-default-on-opt-out-stop-new-writes, tombstone, orphan-recovery, platform-default-artifact-root, audit-artifact-store-separation, custom-root-trusted-selection-and-probe, migration-hash-rollback-and-no-split-store, import-copy-bounded-decode-and-normalization, import-provenance-and-original-independence, opaque-resource-and-path-redaction, linked-external-unavailable, active-reference-lease-and-bounded-grace, explicit-renewal-no-read-renewal, artifact-binding-delete-cascade]
+
+  - id: VISUAL-BIND-001
+    title: Non-authorizing visual reference binding source evidence re-evaluation and user-controlled guidance lifecycle
+    authoritative_sections: ["4.1 像素不是源码对象", "10.3.4 视觉参考绑定与参考任务生命周期 (`VISUAL-BIND-001`)", "10.4 默认保留策略", "10.5 删除、lease 和 quota", "16.6 用户可见安全与恢复状态", "二十、Codex 页面修改工作流"]
+    introduced_phase: P6
+    roadmap_tasks: [P6-T4, P6-T9, P6-T14]
+    required_tests: [unbound-image-visual-only, trusted-ui-user-activation, page-prompt-codex-self-report-refusal, immutable-target-and-primary-or-degraded-source-hash, no-pixel-source-inference, revision-direct-transaction-reattach-current-stale-target-changed-ambiguous-unresolved, non-authorizing-confirmation-separation, active-multi-round-reference-task, user-pause-resume-complete-cancel-supersede, no-new-context-after-terminal-state, guidance-storage-lifecycle-separation, explicit-renewal, artifact-delete-cascade, subjective-no-auto-pass]
 
   - id: CAP-RACE-001
     title: Consented race-safe active-tab capture
@@ -128,18 +135,18 @@ contracts:
     required_tests: [consent, sensitive-page, active-tab-a-b-a, navigation-document-mask-epoch, per-window-serialization, platform-rate, local-mask-crop, dynamic-pixel-refusal]
 
   - id: FALLBACK-POLICY-001
-    title: Visible fail-closed capability and fallback policy
-    authoritative_sections: ["11.1 回退类型", "11.2 FallbackPolicy (`FALLBACK-POLICY-001`)", "11.3 CapabilityReport"]
+    title: Visible fail-closed capability fallback and optional assurance policy
+    authoritative_sections: ["11.1 回退类型", "11.2 FallbackPolicy (`FALLBACK-POLICY-001`)", "11.3 CapabilityReport", "16.1 默认安全边界", "16.6 用户可见安全与恢复状态"]
     introduced_phase: P3
     roadmap_tasks: [P3-T16, P3-T17, P5-T4, P7-T7]
-    required_tests: [strict-balanced-compatibility, forbidden-auth-downgrade, forbidden-stale-pass, provider-chain, visible-limitation]
+    required_tests: [strict-balanced-compatibility, forbidden-auth-downgrade, forbidden-stale-pass, provider-chain, visible-limitation, no-global-security-off, trusted-local-bypass-rejection, enhanced-default-on-explicit-opt-out, trusted-config-only, disabled-enhancement-no-confidence-permission-pass-upgrade]
 
   - id: PROD-LEAK-001
-    title: Development-only transform and production non-leakage
-    authoritative_sections: ["12.4 开发期注入", "16.5 生产剥离 (`PROD-LEAK-001`)"]
+    title: Development-plane isolation production non-participation and non-leakage
+    authoritative_sections: ["12.4 开发期注入", "16.5 开发平面隔离与生产不参与 (`PROD-LEAK-001`)"]
     introduced_phase: P0
     roadmap_tasks: [P0-T15, P0-T10, P1-T7, P1-T15, P1-T18B, P8-T1, P8-T2, P8-T3A, P8-T3B]
-    required_tests: [serve-build-separation, no-client-endpoint-marker-map, user-attribute-preservation, transform-side-effect, uninstall-residue]
+    required_tests: [serve-build-separation, production-module-graph-non-resolution, no-client-endpoint-marker-map, private-registry-no-project-output, baseline-build-equivalence, user-attribute-preservation, readonly-leakage-gate, transform-side-effect, uninstall-residue]
 
   - id: MCP-COMPAT-001
     title: Negotiated MCP revisions task and no-task compatibility
@@ -171,7 +178,7 @@ contracts:
 
   - id: TEST-GATE-001
     title: Layered tests phase commands fixtures and atomic execution
-    authoritative_sections: ["十六、性能预算", "17.1 测试层级", "E2E（End-to-End，端到端测试）", "Security（安全测试）", "17.2 Fixture matrix", "十八、仓库与模块边界", "十九、实施路线原则", "二十一、风险与缓解", "附录 A：关键验收用例"]
+    authoritative_sections: ["十六、性能预算", "17.1 测试层级", "Unit（单元测试）", "E2E（End-to-End，端到端测试）", "Security（安全测试）", "17.2 Fixture matrix", "十八、仓库与模块边界", "十九、实施路线原则", "二十一、风险与缓解", "附录 A：关键验收用例"]
     introduced_phase: P0
     roadmap_tasks: [P0-T1, P0-T2, P0-T10, P1-T14, P5-T9, P6-T9, P7-T9A, P7-T9B, P7-T9C, P7-T9D, P8-T1, P8-T2, P8-T3A, P8-T3B, P8-T4]
-    required_tests: [roadmap-validator, phase-command-presence, decision-gate, fixture-coverage, atomic-dependency, evidence-record]
+    required_tests: [roadmap-validator, phase-command-presence, decision-gate, fixture-coverage, atomic-dependency, evidence-record, security-floor-versus-enhancement-performance-breakdown]

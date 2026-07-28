@@ -1,0 +1,14 @@
+# P0-T0A0 replay commands (all probes are read-only)
+git rev-parse --show-toplevel
+git rev-parse HEAD
+stat -Lc '%d %i %F %a %U %G %n' /mnt/d/VEM /mnt/d/vem
+git status --porcelain=v1 -z --untracked-files=all | sha256sum
+git diff --binary HEAD -- visual-element-mcp-design-bundle | sha256sum
+git ls-files --others --exclude-standard -z | sha256sum
+findmnt -T /mnt/d/VEM -o TARGET,SOURCE,FSTYPE,OPTIONS -n
+findmnt -T /home/qwzx -o TARGET,SOURCE,FSTYPE,OPTIONS -n
+df -B1 /home/qwzx
+python3 /tmp/vem_bootstrap_validate.py <project-root>
+
+# Forbidden in this task
+# mkdir/copy/mv/commit/chmod/install/canonical-writer-cutover
