@@ -7,7 +7,7 @@
 - 项目处于 design baseline 1.14，P0 implementation 已开始。
 - `P0-T0A0` 已完成只读 migration readiness inventory；证据位于 `docs/test-evidence/P0-T0/20260728T155608+0800/`。
 - 136 个 roadmap task 和 25 个 contract 已登记。
-- `P0-T0A1` 已获得 owner 对 layout commit 与 single-writer cutover 的明确授权，当前为 `in_progress`；完成前不得执行 P0-T0A2。
+- `P0-T0A1` 已完成 owner-authorized layout commit 与 single-writer cutover；canonical writer 是 `/home/qwzx/src/VEM`，`/mnt/d/VEM` 仅保留为只读 rollback。下一任务是 `P0-T0A2`。
 - readiness 结果为 `ready`：大小写 staging 路径为同一 device/inode，payload 与 prefix-normalized manifest 已冻结，无 case collision，目标不存在，ext4 容量/owner permission 通过，且目标未被任务修改。
 - 当前 owner-approved 产品范围是 P0 proof-of-value / go-no-go prototype，不是完整 Visual V1。
 - 安全策略边界已确定但尚未实现：没有全局 security-off/trusted-local 绕过；P3 只为默认开启的增强保障项提供逐项用户 opt-out，并保持安全底线始终执行。

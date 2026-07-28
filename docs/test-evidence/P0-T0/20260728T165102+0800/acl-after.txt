@@ -1,0 +1,12 @@
+D:\VEM LAPTOP-OVGKOH94\Lenovo:(OI)(IO)(DENY)(WD,AD)
+       LAPTOP-OVGKOH94\Lenovo:(CI)(DENY)(WD,AD,DC)
+       BUILTIN\Administrators:(I)(F)
+       BUILTIN\Administrators:(I)(OI)(CI)(IO)(F)
+       NT AUTHORITY\SYSTEM:(I)(F)
+       NT AUTHORITY\SYSTEM:(I)(OI)(CI)(IO)(F)
+       NT AUTHORITY\Authenticated Users:(I)(M)
+       NT AUTHORITY\Authenticated Users:(I)(OI)(CI)(IO)(M)
+       BUILTIN\Users:(I)(RX)
+       BUILTIN\Users:(I)(OI)(CI)(IO)(GR,GE)
+
+已成功处理 1 个文件; 处理 0 个文件时失败

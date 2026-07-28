@@ -1,6 +1,7 @@
 {
-  "candidateTarget": "/home/qwzx/src/VEM",
-  "canonicalWriter": "/mnt/d/VEM",
+  "canonicalWriter": "/home/qwzx/src/VEM",
+  "layoutCommit": "5f55a3ff790c8751468e2262e58ef0d5dc72b5c4",
+  "readOnlyRollback": "/mnt/d/VEM",
   "runId": "20260728T165102+0800",
-  "state": "prepared-not-canonical"
+  "state": "canonical-writer"
 }
