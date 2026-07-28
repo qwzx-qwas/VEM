@@ -1,0 +1,50 @@
+{
+  "cleanup": {
+    "classification": "idempotent-owned-cleanup",
+    "firstPass": true,
+    "fixtureRemoved": true,
+    "result": "pass",
+    "runtimeRootPreserved": true,
+    "secondPass": true,
+    "taskDirectoryRemoved": true,
+    "unexpectedEntryCount": 0
+  },
+  "otherSubject": {
+    "classification": "real-nobody-access-denied",
+    "createDenied": true,
+    "observedUid": 65534,
+    "provider": "wsl-root-drop-to-nobody",
+    "readDenied": true,
+    "result": "pass",
+    "traverseDenied": true,
+    "writeDenied": true
+  },
+  "overall": "pass",
+  "recordedAt": "2026-07-28T21:47:43+08:00",
+  "runId": "20260728T213829+0800",
+  "runtime": {
+    "classification": "ext4-owner-private-runtime",
+    "deviceId": 2096,
+    "filesystemType": "ext4",
+    "fixtureMode": "0600",
+    "ownerGid": 1000,
+    "ownerRead": true,
+    "ownerUid": 1000,
+    "ownerWrite": true,
+    "result": "pass",
+    "rootMode": "0700",
+    "rootPreserved": true,
+    "selectionSource": "passwd-home-cache-after-xdg-non-ext4",
+    "taskDirectoryMode": "0700",
+    "xdgCandidateClassification": "xdg-non-ext4-rejected",
+    "xdgCandidateFilesystemType": "tmpfs"
+  },
+  "schemaVersion": "P0-T0E-runtime-acl-profile-v1",
+  "taskId": "P0-T0E",
+  "windowsMount": {
+    "aclEvidenceAccepted": false,
+    "classification": "windows-mount-acl-evidence-rejected",
+    "filesystemType": "9p",
+    "result": "pass"
+  }
+}

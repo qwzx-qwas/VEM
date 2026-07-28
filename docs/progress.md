@@ -86,3 +86,17 @@ Each future entry must include task ID, date, changed files, commands, test evid
 - Security/data-lifecycle verification: the server bound only `127.0.0.1`; the WSL non-loopback address refused the live port; Windows observed the port closed after each generation; strict routes/origin/generation/update checks rejected malformed ingress; no token, cookie, user profile, broad bind, polling fallback, raw DOM/stderr, environment dump or product protocol was retained; WSL server/temp and Windows Edge/profile residue were all zero
 - Known limitations/degradations: an initial bounded diagnostic run correctly exposed DrvFS watch unreliability, so the final probe keeps watch fixtures on canonical ext4 and Windows Edge profiles in Windows temporary storage; this is HMR-style preflight only and does not claim product coordinator, private runtime ACL, Playwright channel or the aggregate P0-T0F verdict
 - Next eligible task: `P0-T0E`
+
+## P0-T0E — Private ext4 runtime ACL
+
+- Date: 2026-07-28
+- State/outcome: `done` / `passed`
+- Decision: n/a
+- Changed files: `ROADMAP.yaml`, `docs/STATUS.md`, `docs/progress.md`, `docs/tasks/ATOMIC_TASK_PROMPTS.md`, `scripts/preflight/runtime_acl_probe.py`, `scripts/preflight/tests/test_runtime_acl_probe.py`, and `docs/test-evidence/P0-T0/20260728T213829+0800/`
+- Commands: dependency-free runtime filesystem/owner/mode probe; WSL self-launch as root followed by immediate `runuser -u nobody`; fixed identity/traverse/read/write/create checks; conservative idempotent cleanup; Python unit/contract/security tests; Draft 2020-12, dependency-free evidence/artifact, bootstrap, residue and SHA-256 verification
+- Test evidence: all 83 preflight tests passed; P0-T0E adds mode-drift, wrong-owner, symlink-component, no-follow cleanup, unexpected stale-file preservation, idempotent cleanup, XDG tmpfs explicit fallback, Windows-mounted XDG hard rejection, other-subject allowed/ambiguous failure, secret rejection and aggregate-consistency cases
+- Edge/browser evidence: not applicable to this ACL-only gate; real Edge binary and Windows/WSL network evidence remain P0-T0C/D
+- Runtime evidence: the selected ext4 root is owner UID/GID 1000 with mode `0700` on device 2096; the task child was `0700`, fixture `0600`, owner read/write passed, and observed `nobody` UID 65534 was denied traverse/read/write/create; current Windows staging filesystem `9p` was explicitly rejected as POSIX ACL evidence
+- Security/data-lifecycle verification: no real token, capability, socket, environment dump, directory listing, unrelated filename or ACL body was retained; root privilege only launched the fixed `nobody` argv checks and performed no write; cleanup deleted only the known regular fixture and empty `.preflight-*` child, succeeded twice, preserved the pre-existing runtime root identity/mode and left zero residue
+- Known limitations/degradations: the real XDG runtime base is owner-private `tmpfs`, so it was visibly rejected for this ext4-specific gate and the passwd-home `.cache/vem` fallback was selected; a `9p`/DrvFS XDG candidate would fail closed rather than fall back; this task does not implement runtime discovery or issue the aggregate P0-T0F verdict
+- Next eligible task: `P0-T0F`

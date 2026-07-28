@@ -1,0 +1,11 @@
+PYTHONDONTWRITEBYTECODE=1 python3 -W error -m unittest -v scripts.preflight.tests.test_runtime_acl_probe
+python3 scripts/preflight/runtime_acl_probe.py --run-id 20260728T213829+0800 --details docs/test-evidence/P0-T0/20260728T213829+0800/runtime-acl-results.json --output docs/test-evidence/P0-T0/20260728T213829+0800/environment.json
+# The real environment exposes an owner-private tmpfs XDG base; the probe records its rejection for this ext4 gate and selects the passwd-derived home-cache fallback. A 9p/DrvFS XDG candidate is a hard failure.
+wsl.exe -u root -- runuser -u nobody -- '<fixed identity and access-denial argv checks>'
+PYTHONDONTWRITEBYTECODE=1 python3 -W error -m unittest discover -s scripts/preflight/tests -v
+python3 scripts/preflight/preflight.py validate --input docs/test-evidence/P0-T0/20260728T213829+0800/environment.json --root .
+python3 -c '<Draft 2020-12 check_schema and validate environment.json>'
+python3 /tmp/vem_bootstrap_validate.py /home/qwzx/src/VEM
+python3 -c '<bounded runtime root identity/mode and task-directory residue query>'
+# Working directory for the next command: docs/test-evidence/P0-T0/20260728T213829+0800
+sha256sum -c SHA256SUMS

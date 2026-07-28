@@ -110,6 +110,8 @@
 
 ### Prompt
 
+> **已完成（2026-07-28）**：已显式拒绝非 ext4 的 XDG tmpfs 候选并选择 owner-derived ext4 runtime fallback，验证 `0700` task directory、`0600` fixture、owner read/write，以及通过 WSL root 降权到 UID 65534 后的 traverse/read/write/create 真实拒绝；Windows `9p` mount 被拒绝作为 ACL evidence，两次保守 cleanup 与现有 runtime 根保留通过，83 项完整 preflight 测试及双重 schema、artifact hash、bootstrap 验证通过。
+
 - **背景**：DrvFS mode bits 不能作为 private discovery 的安全证明。
 - **目标**：只验证 WSL ext4 runtime directory 的 owner/mode/read/write/cleanup 边界。
 - **本阶段做**：选择 `${XDG_RUNTIME_DIR:-$HOME/.cache}/vem`；创建 0700 目录和 0600 fixture；验证 owner、拒绝不匹配主体的策略与 cleanup。

@@ -12,7 +12,8 @@
 - `P0-T0B` 已完成：default-CA registry、隔离 Corepack/pnpm frozen install、ext4 case/symlink/long-path 和 native watcher profile 均通过，证据位于 `docs/test-evidence/P0-T0/20260728T195939+0800/`。
 - `P0-T0C` 已完成：Windows Edge Stable `150.0.4078.99` 经 WSL direct headless smoke 返回预期 DOM sentinel；ExecutionPolicy `Restricted` 未被绕过，企业策略分类为 unmanaged，task-owned profile/process 均零残留；证据位于 `docs/test-evidence/P0-T0/20260728T204048+0800/`。
 - `P0-T0D` 已完成：真实 Windows Edge 经 localhost 到达 WSL Node HTTP/WebSocket，canonical ext4 `fs.watch` update 获得浏览器 ACK/DOM sentinel；同一随机端口完成两个不同 WSL PID/generation 的关闭重启，非 loopback 拒绝且所有资源零残留，证据位于 `docs/test-evidence/P0-T0/20260728T211720+0800/`。
-- 当前下一项为 `P0-T0E`：只验证 ext4 用户私有 runtime owner/mode、其他主体拒绝、清理与 DrvFS ACL evidence 拒绝。
+- `P0-T0E` 已完成：XDG tmpfs 候选被显式拒绝后选择 ext4 `/home/qwzx/.cache/vem`，0700 task directory/0600 fixture 和 owner read/write 通过；WSL root 降权到 UID 65534 后 traverse/read/write/create 全部拒绝，Windows `9p` mount 不被接受为 ACL evidence，现有 runtime 根保持不变且零残留；证据位于 `docs/test-evidence/P0-T0/20260728T213829+0800/`。
+- 当前下一项为 `P0-T0F`：只聚合 P0-T0A0–E 的独立证据、哈希与 runner 信息并给出 bootstrap aggregate verdict。
 - readiness 结果为 `ready`：大小写 staging 路径为同一 device/inode，payload 与 prefix-normalized manifest 已冻结，无 case collision，目标不存在，ext4 容量/owner permission 通过，且目标未被任务修改。
 - 当前 owner-approved 产品范围是 P0 proof-of-value / go-no-go prototype，不是完整 Visual V1。
 - 安全策略边界已确定但尚未实现：没有全局 security-off/trusted-local 绕过；P3 只为默认开启的增强保障项提供逐项用户 opt-out，并保持安全底线始终执行。

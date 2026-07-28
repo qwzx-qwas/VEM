@@ -1,0 +1,190 @@
+{
+  "artifacts": [
+    {
+      "path": "docs/test-evidence/P0-T0/20260728T213829+0800/runtime-acl-results.json",
+      "sha256": "ea05741ad884192e462746458137a3b39832f86c8273e4bb877e52aa2c09fa46"
+    },
+    {
+      "path": "scripts/preflight/runtime_acl_probe.py",
+      "sha256": "a4e288c5591b77312392fc4d7facb8368adbdea74cbc29779e7639d53b621e76"
+    },
+    {
+      "path": "scripts/preflight/evidence.schema.json",
+      "sha256": "e6e3fd509167614a9540974458c909ef31f458dbd460c7e108e139f474a7888b"
+    },
+    {
+      "path": "docs/adr/0001-edge-execution-preflight.md",
+      "sha256": "80b4830ab45557e3d6c679fdee8967654ce8e6fab44031b6820bfc7c5f167482"
+    }
+  ],
+  "checks": [
+    {
+      "classification": "ext4-owner-private-runtime mode=0700/0700/0600",
+      "evidenceRefs": [
+        "artifact:docs/test-evidence/P0-T0/20260728T213829+0800/runtime-acl-results.json"
+      ],
+      "id": "p0-t0e-runtime-owner-mode",
+      "result": "pass"
+    },
+    {
+      "classification": "real-nobody-access-denied uid=65534",
+      "evidenceRefs": [
+        "artifact:docs/test-evidence/P0-T0/20260728T213829+0800/runtime-acl-results.json"
+      ],
+      "id": "p0-t0e-other-subject-refusal",
+      "result": "pass"
+    },
+    {
+      "classification": "windows-mount-acl-evidence-rejected filesystem=9p",
+      "evidenceRefs": [
+        "artifact:docs/test-evidence/P0-T0/20260728T213829+0800/runtime-acl-results.json"
+      ],
+      "id": "p0-t0e-windows-mount-rejection",
+      "result": "pass"
+    },
+    {
+      "classification": "idempotent-owned-cleanup",
+      "evidenceRefs": [
+        "artifact:docs/test-evidence/P0-T0/20260728T213829+0800/runtime-acl-results.json"
+      ],
+      "id": "p0-t0e-cleanup",
+      "result": "pass"
+    }
+  ],
+  "commands": [
+    {
+      "argv": [
+        "node",
+        "--version"
+      ],
+      "exitCode": 0,
+      "id": "node-probe",
+      "result": "pass",
+      "stderrSummary": null,
+      "stdoutSummary": "v24.18.0"
+    },
+    {
+      "argv": [
+        "findmnt",
+        "-n",
+        "-o",
+        "FSTYPE",
+        "-T",
+        "<selected-runtime>"
+      ],
+      "exitCode": 0,
+      "id": "runtime-filesystem-owner-mode",
+      "result": "pass",
+      "stderrSummary": null,
+      "stdoutSummary": "ext4-owner-private-runtime"
+    },
+    {
+      "argv": [
+        "wsl.exe",
+        "-u",
+        "root",
+        "--",
+        "runuser",
+        "-u",
+        "nobody",
+        "--",
+        "id",
+        "-u"
+      ],
+      "exitCode": 0,
+      "id": "other-subject-identity",
+      "result": "pass",
+      "stderrSummary": null,
+      "stdoutSummary": "observed-uid=65534"
+    },
+    {
+      "argv": [
+        "wsl.exe",
+        "-u",
+        "root",
+        "--",
+        "runuser",
+        "-u",
+        "nobody",
+        "--",
+        "<bounded-access-checks>"
+      ],
+      "exitCode": 0,
+      "id": "other-subject-access",
+      "result": "pass",
+      "stderrSummary": null,
+      "stdoutSummary": "real-nobody-access-denied"
+    },
+    {
+      "argv": [
+        "findmnt",
+        "-n",
+        "-o",
+        "FSTYPE",
+        "-T",
+        "<windows-staging>"
+      ],
+      "exitCode": 0,
+      "id": "windows-mount-rejection",
+      "result": "pass",
+      "stderrSummary": null,
+      "stdoutSummary": "filesystem=9p acl-evidence-rejected"
+    },
+    {
+      "argv": [
+        "python3",
+        "scripts/preflight/runtime_acl_probe.py",
+        "<owned-cleanup>"
+      ],
+      "exitCode": 0,
+      "id": "runtime-owned-cleanup",
+      "result": "pass",
+      "stderrSummary": null,
+      "stdoutSummary": "idempotent-owned-cleanup"
+    }
+  ],
+  "contractIds": [
+    "EDGE-PREFLIGHT-001"
+  ],
+  "executionProfile": {
+    "canonicalGitRoot": "/home/qwzx/src/VEM",
+    "filesystemType": "ext4",
+    "name": "WSL ext4 owner-private runtime ACL probe",
+    "projectRoot": ".",
+    "runnerOwner": "qwzx",
+    "tier1BrowserOwner": "Windows Edge Stable; browser not launched for ACL-only gate"
+  },
+  "overall": "pass",
+  "recordedAt": "2026-07-28T21:47:43+08:00",
+  "runId": "20260728T213829+0800",
+  "schemaVersion": "1.0.0",
+  "taskId": "P0-T0E",
+  "tools": {
+    "node": {
+      "exactVersion": "24.18.0",
+      "observedVersion": "24.18.0",
+      "result": "pass",
+      "selectionSource": "https://nodejs.org/en/blog/release/v24.18.0",
+      "versionCommand": [
+        "node",
+        "--version"
+      ]
+    },
+    "pnpm": {
+      "activationCommand": [
+        "corepack",
+        "prepare",
+        "pnpm@10.34.0",
+        "--activate"
+      ],
+      "exactVersion": "10.34.0",
+      "observedVersion": null,
+      "result": "selected",
+      "selectionSource": "https://github.com/pnpm/pnpm/releases/tag/v10.34.0",
+      "versionCommand": [
+        "pnpm",
+        "--version"
+      ]
+    }
+  }
+}
