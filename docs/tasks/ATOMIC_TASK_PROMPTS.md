@@ -93,6 +93,8 @@
 
 ### Prompt
 
+> **已完成（2026-07-28）**：已用两个不同 WSL Node PID 在同一随机 loopback 端口完成关闭/重启，两次均由真实 Windows Edge Stable 经 HTTP + WebSocket 接收 canonical ext4 原生 `fs.watch` 相关 update，返回浏览器 ACK 与 DOM sentinel；非 loopback 连接拒绝、端口关闭和 WSL/Windows 零残留均通过，67 项完整 preflight 测试及双重 schema、artifact hash、bootstrap 验证通过。
+
 - **背景**：Tier-1 需要 Windows Edge 到 WSL 服务的真实跨边界路径。
 - **目标**：只证明两个真实 OS process、HTTP/WS/HMR、loopback 隔离和 restart 行为。
 - **本阶段做**：启动最小 server/watch process；从 Windows/Edge 侧访问；触发修改；观察 WS/HMR；测试 port close/restart/non-loopback refusal。

@@ -1,0 +1,66 @@
+{
+  "cleanup": {
+    "classification": "all-owned-resources-removed",
+    "edgeResidue": 0,
+    "result": "pass",
+    "serverResidue": 0,
+    "tempRemoved": true
+  },
+  "edge": {
+    "classification": "edge-stable-binary",
+    "location": "program-files-x86",
+    "productVersion": "150.0.4078.99",
+    "result": "pass"
+  },
+  "generations": [
+    {
+      "ackObserved": true,
+      "classification": "http-websocket-watch-ack",
+      "domSentinelObserved": true,
+      "edgeExitCode": 0,
+      "edgePid": 24720,
+      "edgeProcessCount": 14,
+      "generation": "generation-1-aed12caf29f4",
+      "nonLoopbackRefused": true,
+      "ordinal": 1,
+      "port": 46335,
+      "portClosed": true,
+      "profileRemoved": true,
+      "result": "pass",
+      "serverExitCode": 0,
+      "serverPid": 36352,
+      "serverReady": true,
+      "update": "update-1-aed12caf29f4",
+      "watchObserved": true,
+      "websocketConnected": true,
+      "windowsPortOpen": true
+    },
+    {
+      "ackObserved": true,
+      "classification": "http-websocket-watch-ack",
+      "domSentinelObserved": true,
+      "edgeExitCode": 0,
+      "edgePid": 40428,
+      "edgeProcessCount": 14,
+      "generation": "generation-2-9bdd5cf51428",
+      "nonLoopbackRefused": true,
+      "ordinal": 2,
+      "port": 46335,
+      "portClosed": true,
+      "profileRemoved": true,
+      "result": "pass",
+      "serverExitCode": 0,
+      "serverPid": 36391,
+      "serverReady": true,
+      "update": "update-2-9bdd5cf51428",
+      "watchObserved": true,
+      "websocketConnected": true,
+      "windowsPortOpen": true
+    }
+  ],
+  "overall": "pass",
+  "recordedAt": "2026-07-28T21:33:14+08:00",
+  "runId": "20260728T211720+0800",
+  "schemaVersion": "P0-T0D-network-profile-v1",
+  "taskId": "P0-T0D"
+}

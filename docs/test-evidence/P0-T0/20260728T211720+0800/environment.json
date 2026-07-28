@@ -1,0 +1,207 @@
+{
+  "artifacts": [
+    {
+      "path": "docs/test-evidence/P0-T0/20260728T211720+0800/network-results.json",
+      "sha256": "d412fcb6c071f43dfe385822bdc5a3c49180864841eda3a91c933cdad0ff227c"
+    },
+    {
+      "path": "scripts/preflight/network_probe.py",
+      "sha256": "bb63b2ef6d4470952bb467420e96d36aaeef75d2bb29c6052f220c6aa45cdc99"
+    },
+    {
+      "path": "scripts/preflight/network_server.mjs",
+      "sha256": "78b9a25c5963b9b3e8c85845589330dafa4e20502b47a2731941742d27e205db"
+    },
+    {
+      "path": "scripts/preflight/evidence.schema.json",
+      "sha256": "e6e3fd509167614a9540974458c909ef31f458dbd460c7e108e139f474a7888b"
+    },
+    {
+      "path": "docs/adr/0001-edge-execution-preflight.md",
+      "sha256": "80b4830ab45557e3d6c679fdee8967654ce8e6fab44031b6820bfc7c5f167482"
+    }
+  ],
+  "checks": [
+    {
+      "classification": "two-wsl-pids=True two-windows-edge-observations=True",
+      "evidenceRefs": [
+        "artifact:docs/test-evidence/P0-T0/20260728T211720+0800/network-results.json"
+      ],
+      "id": "p0-t0d-two-generation-topology",
+      "result": "pass"
+    },
+    {
+      "classification": "edge-http-websocket-native-watch-correlated",
+      "evidenceRefs": [
+        "artifact:docs/test-evidence/P0-T0/20260728T211720+0800/network-results.json"
+      ],
+      "id": "p0-t0d-http-websocket-hmr",
+      "result": "pass"
+    },
+    {
+      "classification": "loopback-only same-port-close-restart-new-generation",
+      "evidenceRefs": [
+        "artifact:docs/test-evidence/P0-T0/20260728T211720+0800/network-results.json"
+      ],
+      "id": "p0-t0d-loopback-port-restart",
+      "result": "pass"
+    },
+    {
+      "classification": "all-owned-resources-removed",
+      "evidenceRefs": [
+        "artifact:docs/test-evidence/P0-T0/20260728T211720+0800/network-results.json"
+      ],
+      "id": "p0-t0d-cleanup",
+      "result": "pass"
+    }
+  ],
+  "commands": [
+    {
+      "argv": [
+        "node",
+        "--version"
+      ],
+      "exitCode": 0,
+      "id": "node-probe",
+      "result": "pass",
+      "stderrSummary": null,
+      "stdoutSummary": "v24.18.0"
+    },
+    {
+      "argv": [
+        "node",
+        "scripts/preflight/network_server.mjs",
+        "--port",
+        "<random-loopback>",
+        "--generation",
+        "<generation-1>",
+        "--watch-file",
+        "<task-temp>",
+        "--timeout-ms",
+        "<bounded>"
+      ],
+      "exitCode": 0,
+      "id": "wsl-server-generation-1",
+      "result": "pass",
+      "stderrSummary": null,
+      "stdoutSummary": "http-websocket-watch-ack"
+    },
+    {
+      "argv": [
+        "msedge.exe",
+        "--headless=new",
+        "--dump-dom",
+        "--user-data-dir=<task-temp>",
+        "http://localhost:<random>/"
+      ],
+      "exitCode": 0,
+      "id": "windows-edge-generation-1",
+      "result": "pass",
+      "stderrSummary": null,
+      "stdoutSummary": "dom-sentinel"
+    },
+    {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "<bounded-localhost-port-probe>"
+      ],
+      "exitCode": 0,
+      "id": "windows-port-close-generation-1",
+      "result": "pass",
+      "stderrSummary": null,
+      "stdoutSummary": "port-closed"
+    },
+    {
+      "argv": [
+        "node",
+        "scripts/preflight/network_server.mjs",
+        "--port",
+        "<random-loopback>",
+        "--generation",
+        "<generation-2>",
+        "--watch-file",
+        "<task-temp>",
+        "--timeout-ms",
+        "<bounded>"
+      ],
+      "exitCode": 0,
+      "id": "wsl-server-generation-2",
+      "result": "pass",
+      "stderrSummary": null,
+      "stdoutSummary": "http-websocket-watch-ack"
+    },
+    {
+      "argv": [
+        "msedge.exe",
+        "--headless=new",
+        "--dump-dom",
+        "--user-data-dir=<task-temp>",
+        "http://localhost:<random>/"
+      ],
+      "exitCode": 0,
+      "id": "windows-edge-generation-2",
+      "result": "pass",
+      "stderrSummary": null,
+      "stdoutSummary": "dom-sentinel"
+    },
+    {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "<bounded-localhost-port-probe>"
+      ],
+      "exitCode": 0,
+      "id": "windows-port-close-generation-2",
+      "result": "pass",
+      "stderrSummary": null,
+      "stdoutSummary": "port-closed"
+    }
+  ],
+  "contractIds": [
+    "EDGE-PREFLIGHT-001"
+  ],
+  "executionProfile": {
+    "canonicalGitRoot": "/home/qwzx/src/VEM",
+    "filesystemType": "ext4",
+    "name": "WSL ext4 Node loopback server plus real Windows Edge Stable",
+    "projectRoot": ".",
+    "runnerOwner": "qwzx",
+    "tier1BrowserOwner": "Windows Edge Stable via WSL localhost forwarding"
+  },
+  "overall": "pass",
+  "recordedAt": "2026-07-28T21:33:14+08:00",
+  "runId": "20260728T211720+0800",
+  "schemaVersion": "1.0.0",
+  "taskId": "P0-T0D",
+  "tools": {
+    "node": {
+      "exactVersion": "24.18.0",
+      "observedVersion": "24.18.0",
+      "result": "pass",
+      "selectionSource": "https://nodejs.org/en/blog/release/v24.18.0",
+      "versionCommand": [
+        "node",
+        "--version"
+      ]
+    },
+    "pnpm": {
+      "activationCommand": [
+        "corepack",
+        "prepare",
+        "pnpm@10.34.0",
+        "--activate"
+      ],
+      "exactVersion": "10.34.0",
+      "observedVersion": null,
+      "result": "selected",
+      "selectionSource": "https://github.com/pnpm/pnpm/releases/tag/v10.34.0",
+      "versionCommand": [
+        "pnpm",
+        "--version"
+      ]
+    }
+  }
+}

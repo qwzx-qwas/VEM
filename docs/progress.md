@@ -73,3 +73,16 @@ Each future entry must include task ID, date, changed files, commands, test evid
 - Security/data-lifecycle verification: effective Windows ExecutionPolicy was `Restricted` and was not bypassed; no `.ps1` adapter, `--no-sandbox`, remote-debugging port, user Edge profile, registry write, arbitrary policy value, raw DOM/stderr, command line, environment dump, cookie, token, or browser data was retained; the Windows residue probe reported zero task-owned process and temp-path residue
 - Known limitations/degradations: enterprise Edge policy is currently classified `unmanaged`; this task proves only direct binary smoke and does not claim Playwright `channel: msedge`, Windows/WSL HTTP-WebSocket-HMR reachability, runtime ACL, or the aggregate P0-T0F verdict
 - Next eligible task: `P0-T0D`
+
+## P0-T0D — Windows/WSL HTTP, WebSocket, watch/HMR and restart path
+
+- Date: 2026-07-28
+- State/outcome: `done` / `passed`
+- Decision: n/a
+- Changed files: `ROADMAP.yaml`, `docs/STATUS.md`, `docs/progress.md`, `docs/tasks/ATOMIC_TASK_PROMPTS.md`, `scripts/preflight/network_server.mjs`, `scripts/preflight/network_probe.py`, `scripts/preflight/tests/test_network_probe.py`, and `docs/test-evidence/P0-T0/20260728T211720+0800/`
+- Commands: dependency-free Node HTTP/WebSocket/native-watch server; Python two-generation orchestrator; fixed-inline read-only Windows port/process queries; two real direct Edge launches; Python unit/integration/contract/security tests; Draft 2020-12, dependency-free evidence/artifact, bootstrap, independent WSL/Windows residue, and SHA-256 verification
+- Test evidence: all 67 preflight tests passed; P0-T0D adds closed profile/event validation, pass-without-evidence rejection, honest null identity on blocked paths, secret rejection, non-loopback and process-residue classification, malformed WebSocket origin rejection, and a real local HTTP/WebSocket/fs.watch/ACK server integration test
+- Edge/browser evidence: Edge Stable `150.0.4078.99` reached WSL localhost on port `46335` in two generations; WSL server PIDs `36352` and `36391` and Windows Edge PIDs `24720` and `40428` were independently observed; both correlated updates produced browser ACK and expected DOM sentinel with Edge/server exit code 0
+- Security/data-lifecycle verification: the server bound only `127.0.0.1`; the WSL non-loopback address refused the live port; Windows observed the port closed after each generation; strict routes/origin/generation/update checks rejected malformed ingress; no token, cookie, user profile, broad bind, polling fallback, raw DOM/stderr, environment dump or product protocol was retained; WSL server/temp and Windows Edge/profile residue were all zero
+- Known limitations/degradations: an initial bounded diagnostic run correctly exposed DrvFS watch unreliability, so the final probe keeps watch fixtures on canonical ext4 and Windows Edge profiles in Windows temporary storage; this is HMR-style preflight only and does not claim product coordinator, private runtime ACL, Playwright channel or the aggregate P0-T0F verdict
+- Next eligible task: `P0-T0E`

@@ -1,0 +1,12 @@
+node --check scripts/preflight/network_server.mjs
+PYTHONDONTWRITEBYTECODE=1 python3 -W error -m unittest -v scripts.preflight.tests.test_network_probe
+python3 scripts/preflight/network_probe.py --run-id 20260728T211720+0800 --details docs/test-evidence/P0-T0/20260728T211720+0800/network-results.json --output docs/test-evidence/P0-T0/20260728T211720+0800/environment.json --timeout-seconds 30
+# The first bounded run classified both DrvFS watch attempts as watch-timeout; the final command uses a canonical-root-adjacent ext4 watch fixture and Windows-temp Edge profiles without changing loopback policy.
+PYTHONDONTWRITEBYTECODE=1 python3 -W error -m unittest discover -s scripts/preflight/tests -v
+python3 scripts/preflight/preflight.py validate --input docs/test-evidence/P0-T0/20260728T211720+0800/environment.json --root .
+python3 -c '<Draft 2020-12 check_schema and validate environment.json>'
+python3 /tmp/vem_bootstrap_validate.py /home/qwzx/src/VEM
+python3 -c '<bounded WSL temp/server residue query>'
+powershell.exe -NoProfile -NonInteractive -Command '<bounded Windows Edge profile/process residue query>'
+# Working directory for the next command: docs/test-evidence/P0-T0/20260728T211720+0800
+sha256sum -c SHA256SUMS
