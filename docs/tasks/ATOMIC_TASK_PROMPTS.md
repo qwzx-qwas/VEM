@@ -76,6 +76,8 @@
 
 ### Prompt
 
+> **已完成（2026-07-28）**：已从 canonical WSL ext4 直接启动真实 Windows Edge Stable `150.0.4078.99`，以独立临时 profile 完成 headless DOM sentinel smoke 并正常退出；在系统 `Restricted` ExecutionPolicy 下未执行 `.ps1` 或使用 bypass，企业策略分类为 unmanaged，进程/profile 零残留，52 项完整 preflight 测试及双重 schema、artifact hash、bootstrap 验证通过。
+
 - **背景**：发现 `msedge.exe` 不等于证明 Edge 可自动化。
 - **目标**：只证明 Windows Edge Stable 二进制可经 WSL interop 真实启动、版本与企业策略状态。
 - **本阶段做**：通过受限 direct headless smoke 或 ADR 等价方式启动 Edge；记录 Windows/Edge 版本、interop、退出与错误类别。

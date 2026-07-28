@@ -1,0 +1,160 @@
+{
+  "artifacts": [
+    {
+      "path": "docs/test-evidence/P0-T0/20260728T204048+0800/edge-results.json",
+      "sha256": "25a74a42bdc23427eeb35146d09ecf5cc728234bf023fe9bf2f68e63bf07e91f"
+    },
+    {
+      "path": "scripts/preflight/edge_probe.py",
+      "sha256": "34bdbd2e4ad02b519c89eb289ecb1bc5bc7eb56a27d6078657eed2ba172eeb23"
+    },
+    {
+      "path": "scripts/preflight/evidence.schema.json",
+      "sha256": "e6e3fd509167614a9540974458c909ef31f458dbd460c7e108e139f474a7888b"
+    },
+    {
+      "path": "docs/adr/0001-edge-execution-preflight.md",
+      "sha256": "80b4830ab45557e3d6c679fdee8967654ce8e6fab44031b6820bfc7c5f167482"
+    }
+  ],
+  "checks": [
+    {
+      "classification": "direct-exe-inline-powershell powershell=5.1.26100.8655 windows=Microsoft Windows NT 10.0.26200.0 scriptPolicy=Restricted",
+      "evidenceRefs": [
+        "artifact:docs/test-evidence/P0-T0/20260728T204048+0800/edge-results.json"
+      ],
+      "id": "p0-t0c-interop",
+      "result": "pass"
+    },
+    {
+      "classification": "edge-stable-binary location=program-files-x86 version=150.0.4078.99",
+      "evidenceRefs": [
+        "artifact:docs/test-evidence/P0-T0/20260728T204048+0800/edge-results.json"
+      ],
+      "id": "p0-t0c-edge-binary",
+      "result": "pass"
+    },
+    {
+      "classification": "unmanaged keys=0 properties=0",
+      "evidenceRefs": [
+        "artifact:docs/test-evidence/P0-T0/20260728T204048+0800/edge-results.json"
+      ],
+      "id": "p0-t0c-policy",
+      "result": "pass"
+    },
+    {
+      "classification": "direct-headless-dump-dom sentinel=True timeout=False",
+      "evidenceRefs": [
+        "artifact:docs/test-evidence/P0-T0/20260728T204048+0800/edge-results.json"
+      ],
+      "id": "p0-t0c-direct-launch",
+      "result": "pass"
+    },
+    {
+      "classification": "clean-exit residual=0 profileRemoved=True",
+      "evidenceRefs": [
+        "artifact:docs/test-evidence/P0-T0/20260728T204048+0800/edge-results.json"
+      ],
+      "id": "p0-t0c-cleanup",
+      "result": "pass"
+    }
+  ],
+  "commands": [
+    {
+      "argv": [
+        "node",
+        "--version"
+      ],
+      "exitCode": 0,
+      "id": "node-probe",
+      "result": "pass",
+      "stderrSummary": null,
+      "stdoutSummary": "v24.18.0"
+    },
+    {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "<bounded-edge-discovery-policy>"
+      ],
+      "exitCode": 0,
+      "id": "windows-edge-policy-discovery",
+      "result": "pass",
+      "stderrSummary": null,
+      "stdoutSummary": "bounded-discovery-produced-classified-result"
+    },
+    {
+      "argv": [
+        "msedge.exe",
+        "--headless=new",
+        "--dump-dom",
+        "--user-data-dir=<task-temp>",
+        "file://<task-temp>"
+      ],
+      "exitCode": 0,
+      "id": "windows-edge-direct-smoke",
+      "result": "pass",
+      "stderrSummary": null,
+      "stdoutSummary": "direct-headless-dump-dom"
+    },
+    {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "<bounded-marker-cleanup>"
+      ],
+      "exitCode": 0,
+      "id": "windows-edge-owned-process-cleanup",
+      "result": "pass",
+      "stderrSummary": null,
+      "stdoutSummary": "clean-exit"
+    }
+  ],
+  "contractIds": [
+    "EDGE-PREFLIGHT-001"
+  ],
+  "executionProfile": {
+    "canonicalGitRoot": "/home/qwzx/src/VEM",
+    "filesystemType": "ext4",
+    "name": "WSL canonical ext4 with direct Windows Edge Stable smoke",
+    "projectRoot": ".",
+    "runnerOwner": "qwzx",
+    "tier1BrowserOwner": "Windows Edge Stable via WSL PowerShell interop"
+  },
+  "overall": "pass",
+  "recordedAt": "2026-07-28T21:11:57+08:00",
+  "runId": "20260728T204048+0800",
+  "schemaVersion": "1.0.0",
+  "taskId": "P0-T0C",
+  "tools": {
+    "node": {
+      "exactVersion": "24.18.0",
+      "observedVersion": "24.18.0",
+      "result": "pass",
+      "selectionSource": "https://nodejs.org/en/blog/release/v24.18.0",
+      "versionCommand": [
+        "node",
+        "--version"
+      ]
+    },
+    "pnpm": {
+      "activationCommand": [
+        "corepack",
+        "prepare",
+        "pnpm@10.34.0",
+        "--activate"
+      ],
+      "exactVersion": "10.34.0",
+      "observedVersion": null,
+      "result": "selected",
+      "selectionSource": "https://github.com/pnpm/pnpm/releases/tag/v10.34.0",
+      "versionCommand": [
+        "pnpm",
+        "--version"
+      ]
+    }
+  }
+}

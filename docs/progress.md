@@ -60,3 +60,16 @@ Each future entry must include task ID, date, changed files, commands, test evid
 - Security/data-lifecycle verification: no global proxy/CA change, project package metadata, registry credential, raw CA, environment dump, response header/cookie, unbounded log, temporary Corepack cache, lockfile, package fixture or node_modules tree was retained; success and blocked paths both clean same-filesystem fixtures
 - Known limitations/degradations: current registry throughput was about 30,395 bytes/second for a bounded 1 MiB sample, so exact Corepack activation uses a 300-second hard timeout; P0-T0B does not claim Edge, cross-OS HMR, private runtime ACL, Playwright channel, or the aggregate P0-T0F verdict
 - Next eligible task: `P0-T0C`
+
+## P0-T0C — Edge Stable direct launch and policy classification
+
+- Date: 2026-07-28
+- State/outcome: `done` / `passed`
+- Decision: n/a
+- Changed files: `ROADMAP.yaml`, `docs/STATUS.md`, `docs/progress.md`, `docs/tasks/ATOMIC_TASK_PROMPTS.md`, `scripts/preflight/edge_probe.py`, `scripts/preflight/tests/test_edge_probe.py`, and `docs/test-evidence/P0-T0/20260728T204048+0800/`
+- Commands: bounded fixed-inline PowerShell discovery/policy and marker-scoped cleanup; direct WSL invocation of the standard Windows `msedge.exe`; Python unit/contract/security tests; Draft 2020-12, dependency-free evidence/artifact, bootstrap, residue, and SHA-256 verification
+- Test evidence: all 52 preflight tests passed, including missing binary, malformed interop, nonzero launch, DOM mismatch, timeout, restrictive and malformed policy, aggregate mismatch, profile/process cleanup, secret rejection, exact command-order, and shared-evidence cases
+- Edge/browser evidence: real Edge Stable `150.0.4078.99` at the standard x86 Program Files path launched with `--headless=new`, an isolated task-owned profile, and a local sentinel page; exit code was 0, the expected DOM sentinel was observed in 116 bounded stdout bytes, and no Playwright or Chromium substitute was used
+- Security/data-lifecycle verification: effective Windows ExecutionPolicy was `Restricted` and was not bypassed; no `.ps1` adapter, `--no-sandbox`, remote-debugging port, user Edge profile, registry write, arbitrary policy value, raw DOM/stderr, command line, environment dump, cookie, token, or browser data was retained; the Windows residue probe reported zero task-owned process and temp-path residue
+- Known limitations/degradations: enterprise Edge policy is currently classified `unmanaged`; this task proves only direct binary smoke and does not claim Playwright `channel: msedge`, Windows/WSL HTTP-WebSocket-HMR reachability, runtime ACL, or the aggregate P0-T0F verdict
+- Next eligible task: `P0-T0D`

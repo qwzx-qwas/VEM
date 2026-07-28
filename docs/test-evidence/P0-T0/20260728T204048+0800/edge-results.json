@@ -1,0 +1,48 @@
+{
+  "adapter": {
+    "binary": {
+      "classification": "edge-stable-binary",
+      "location": "program-files-x86",
+      "productVersion": "150.0.4078.99",
+      "result": "pass"
+    },
+    "cleanup": {
+      "classification": "clean-exit",
+      "profileRemoved": true,
+      "residualAfterCleanup": 0,
+      "residualBeforeCleanup": 0,
+      "result": "pass"
+    },
+    "interop": {
+      "classification": "direct-exe-inline-powershell",
+      "powershellVersion": "5.1.26100.8655",
+      "result": "pass",
+      "scriptExecutionPolicy": "Restricted",
+      "windowsVersion": "Microsoft Windows NT 10.0.26200.0"
+    },
+    "launch": {
+      "classification": "direct-headless-dump-dom",
+      "exitCode": 0,
+      "result": "pass",
+      "sentinelObserved": true,
+      "stderrBytes": 0,
+      "stdoutBytes": 116,
+      "timedOut": false
+    },
+    "overall": "pass",
+    "policy": {
+      "classification": "unmanaged",
+      "keyCount": 0,
+      "propertyCount": 0,
+      "readErrorCount": 0,
+      "relevant": [],
+      "result": "pass"
+    },
+    "schemaVersion": "P0-T0C-edge-adapter-v1"
+  },
+  "overall": "pass",
+  "recordedAt": "2026-07-28T21:11:57+08:00",
+  "runId": "20260728T204048+0800",
+  "schemaVersion": "P0-T0C-profile-v1",
+  "taskId": "P0-T0C"
+}
