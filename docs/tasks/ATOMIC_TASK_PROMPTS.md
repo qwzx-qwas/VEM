@@ -59,6 +59,8 @@
 
 ### Prompt
 
+> **已完成（2026-07-28）**：已在 canonical ext4 上通过 default CA registry、隔离 Corepack/pnpm 10.34.0、临时 lockfile/frozen install、大小写/symlink/长路径及原生 `node:fs.watch` create/modify/rename 探测；36 项测试与双重 schema、artifact hash、bootstrap 验证通过，watcher 30 个事件的 p50 为 0.290 ms、p95 为 0.564 ms，全部临时 fixture 已清理。
+
 - **背景**：项目主开发路径已迁移到 `/home/qwzx/src/VEM`，必须证明 ext4 profile 可支持 pnpm、symlink、watcher 和 HMR；DrvFS 仅为可选兼容记录。
 - **目标**：只验证 package/network/filesystem profile。
 - **本阶段做**：探测 registry/proxy/CA、disk/path/case/symlink、临时 frozen install、文件监听和 HMR 延迟；保存原始结果 hash。

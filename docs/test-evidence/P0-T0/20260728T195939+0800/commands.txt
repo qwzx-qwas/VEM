@@ -1,0 +1,9 @@
+python3 scripts/preflight/profile_probe.py --run-id 20260728T195939+0800 --details docs/test-evidence/P0-T0/20260728T195939+0800/profile-results.json --output docs/test-evidence/P0-T0/20260728T195939+0800/environment.json
+PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s scripts/preflight/tests -v
+python3 scripts/preflight/preflight.py validate --input docs/test-evidence/P0-T0/20260728T195939+0800/environment.json --root .
+python3 -c '<Draft 2020-12 check_schema and validate environment.json>'
+python3 /tmp/vem_bootstrap_validate.py /home/qwzx/src/VEM
+# Working directory for the next command: docs/test-evidence/P0-T0/20260728T195939+0800
+sha256sum -c SHA256SUMS
+# Diagnostics used only to size the bounded package bootstrap timeout; no response headers, cookies, proxy values, or raw logs were persisted.
+# curl range probe: 1,048,576 bytes in 34.497862 seconds (30,395 bytes/second); tarball Content-Range total: 4,582,819 bytes.

@@ -1,0 +1,180 @@
+{
+  "artifacts": [
+    {
+      "path": "docs/test-evidence/P0-T0/20260728T195939+0800/profile-results.json",
+      "sha256": "675a7421a342e9369f142acdfd9481baa79a3936e1c6943e6dbf2306deac81aa"
+    },
+    {
+      "path": "scripts/preflight/profile_probe.py",
+      "sha256": "3461dc66af003a4729d6b3c85dd30f328603ee8d477943a7ba49ef83c0711052"
+    },
+    {
+      "path": "scripts/preflight/watch_probe.mjs",
+      "sha256": "ae6ae9de59b88a6d3e7155229966020eebe6cc6624eac7e1383bf8f71be3d4d0"
+    },
+    {
+      "path": "scripts/preflight/evidence.schema.json",
+      "sha256": "e6e3fd509167614a9540974458c909ef31f458dbd460c7e108e139f474a7888b"
+    },
+    {
+      "path": "docs/adr/0001-edge-execution-preflight.md",
+      "sha256": "80b4830ab45557e3d6c679fdee8967654ce8e6fab44031b6820bfc7c5f167482"
+    }
+  ],
+  "checks": [
+    {
+      "classification": "https-default-ca",
+      "evidenceRefs": [
+        "artifact:docs/test-evidence/P0-T0/20260728T195939+0800/profile-results.json"
+      ],
+      "id": "p0-t0b-registry",
+      "result": "pass"
+    },
+    {
+      "classification": "ext4=ext4 case=True symlink=True longPath=True",
+      "evidenceRefs": [
+        "artifact:docs/test-evidence/P0-T0/20260728T195939+0800/profile-results.json"
+      ],
+      "id": "p0-t0b-filesystem",
+      "result": "pass"
+    },
+    {
+      "classification": "pnpm=10.34.0 frozen=pass",
+      "evidenceRefs": [
+        "artifact:docs/test-evidence/P0-T0/20260728T195939+0800/profile-results.json"
+      ],
+      "id": "p0-t0b-pnpm",
+      "result": "pass"
+    },
+    {
+      "classification": "node:fs.watch polling=false p50=0.29ms p95=0.564ms",
+      "evidenceRefs": [
+        "artifact:docs/test-evidence/P0-T0/20260728T195939+0800/profile-results.json"
+      ],
+      "id": "p0-t0b-watcher",
+      "result": "pass"
+    },
+    {
+      "classification": "temporary same-filesystem fixture removed",
+      "evidenceRefs": [
+        "artifact:docs/test-evidence/P0-T0/20260728T195939+0800/profile-results.json"
+      ],
+      "id": "p0-t0b-cleanup",
+      "result": "pass"
+    },
+    {
+      "classification": "node=24.18.0",
+      "evidenceRefs": [
+        "artifact:docs/test-evidence/P0-T0/20260728T195939+0800/profile-results.json"
+      ],
+      "id": "p0-t0b-node-version",
+      "result": "pass"
+    }
+  ],
+  "commands": [
+    {
+      "argv": [
+        "node",
+        "--version"
+      ],
+      "exitCode": 0,
+      "id": "node-version",
+      "result": "pass",
+      "stderrSummary": null,
+      "stdoutSummary": "24.18.0"
+    },
+    {
+      "argv": [
+        "python3",
+        "urllib",
+        "https://registry.npmjs.org/pnpm/10.34.0"
+      ],
+      "exitCode": 0,
+      "id": "registry-probe",
+      "result": "pass",
+      "stderrSummary": null,
+      "stdoutSummary": "https-default-ca"
+    },
+    {
+      "argv": [
+        "corepack",
+        "pnpm",
+        "--version"
+      ],
+      "exitCode": 0,
+      "id": "pnpm-version",
+      "result": "pass",
+      "stderrSummary": null,
+      "stdoutSummary": "10.34.0"
+    },
+    {
+      "argv": [
+        "corepack",
+        "pnpm",
+        "install",
+        "--frozen-lockfile",
+        "--ignore-scripts"
+      ],
+      "exitCode": 0,
+      "id": "pnpm-frozen-install",
+      "result": "pass",
+      "stderrSummary": null,
+      "stdoutSummary": "pass"
+    },
+    {
+      "argv": [
+        "node",
+        "scripts/preflight/watch_probe.mjs"
+      ],
+      "exitCode": 0,
+      "id": "node-fs-watch",
+      "result": "pass",
+      "stderrSummary": null,
+      "stdoutSummary": "native-watch-events"
+    }
+  ],
+  "contractIds": [
+    "EDGE-PREFLIGHT-001"
+  ],
+  "executionProfile": {
+    "canonicalGitRoot": "/home/qwzx/src/VEM",
+    "filesystemType": "ext4",
+    "name": "WSL Node/pnpm on canonical ext4; Windows Edge deferred",
+    "projectRoot": ".",
+    "runnerOwner": "qwzx",
+    "tier1BrowserOwner": "Windows Edge Stable; not exercised by P0-T0B"
+  },
+  "overall": "pass",
+  "recordedAt": "2026-07-28T20:30:03+08:00",
+  "runId": "20260728T195939+0800",
+  "schemaVersion": "1.0.0",
+  "taskId": "P0-T0B",
+  "tools": {
+    "node": {
+      "exactVersion": "24.18.0",
+      "observedVersion": "24.18.0",
+      "result": "pass",
+      "selectionSource": "https://nodejs.org/en/blog/release/v24.18.0",
+      "versionCommand": [
+        "node",
+        "--version"
+      ]
+    },
+    "pnpm": {
+      "activationCommand": [
+        "corepack",
+        "prepare",
+        "pnpm@10.34.0",
+        "--activate"
+      ],
+      "exactVersion": "10.34.0",
+      "observedVersion": "10.34.0",
+      "result": "pass",
+      "selectionSource": "https://github.com/pnpm/pnpm/releases/tag/v10.34.0",
+      "versionCommand": [
+        "pnpm",
+        "--version"
+      ]
+    }
+  }
+}

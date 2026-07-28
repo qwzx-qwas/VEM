@@ -46,3 +46,17 @@ Each future entry must include task ID, date, changed files, commands, test evid
 - Security/data-lifecycle verification: closed bounded schema rejects duplicate/unknown keys, ranges, version mismatch, result mismatch, depth/size overflow, path traversal, bearer/credential URLs and secret-bearing keys; runner owner is derived from effective UID; no environment dump, package install, registry credential, raw CA, browser profile or product artifact capability was introduced
 - Known limitations/degradations: pnpm activation, `pnpm --version`, registry/proxy/CA, symlink and watcher/HMR execution are deliberately deferred to P0-T0B; this task does not claim the aggregate P0-T0F or Edge automation P0-T0G verdict
 - Next eligible task: `P0-T0B`
+
+## P0-T0B — Registry, ext4, and watcher/HMR profile
+
+- Date: 2026-07-28
+- State/outcome: `done` / `passed`
+- Decision: n/a; consumed the owner-accepted Node `24.18.0`, pnpm `10.34.0`, and exact Corepack activation decision from P0-T0A2
+- Changed files: `ROADMAP.yaml`, `docs/STATUS.md`, `docs/progress.md`, `docs/tasks/ATOMIC_TASK_PROMPTS.md`, `scripts/preflight/profile_probe.py`, `scripts/preflight/watch_probe.mjs`, `scripts/preflight/tests/test_profile_probe.py`, and `docs/test-evidence/P0-T0/20260728T195939+0800/`
+- Commands: bounded Python registry/default-CA probe; isolated temporary `COREPACK_HOME` activation; exact pnpm version, lockfile-only and frozen install commands; ext4 disk/case/symlink/long-path probes; native Node `fs.watch` create/modify/rename probe; Python unit/contract/security tests; Draft 2020-12, dependency-free evidence/artifact, bootstrap, and SHA-256 verification
+- Test evidence: all 36 preflight tests passed; exact Node `24.18.0` and pnpm `10.34.0` passed; temporary `is-number@7.0.0` lockfile and frozen install passed with lockfile SHA-256 `88818e6e51b71df8b8120ce055aeb14e3fdccc193f10d1ba65bc0e3b294ed5fc`; fail-closed DNS/TLS/proxy/timeout, wrong-CA classification, case/symlink/long-path, no-polling, aggregate mismatch, activation short-circuit and timeout-cleanup cases passed
+- Filesystem/watcher evidence: canonical root is ext4 with 992,385,945,600 bytes available; case sensitivity, symlink and long path passed; native `node:fs.watch` observed 10 create, 10 modify and 10 rename events with polling disabled, p50 `0.290 ms` and p95 `0.564 ms`
+- Edge/browser evidence: not applicable; this native watcher result is only filesystem readiness, while direct Edge launch remains P0-T0C and the real Windows/WSL HTTP-WebSocket-HMR path remains P0-T0D
+- Security/data-lifecycle verification: no global proxy/CA change, project package metadata, registry credential, raw CA, environment dump, response header/cookie, unbounded log, temporary Corepack cache, lockfile, package fixture or node_modules tree was retained; success and blocked paths both clean same-filesystem fixtures
+- Known limitations/degradations: current registry throughput was about 30,395 bytes/second for a bounded 1 MiB sample, so exact Corepack activation uses a 300-second hard timeout; P0-T0B does not claim Edge, cross-OS HMR, private runtime ACL, Playwright channel, or the aggregate P0-T0F verdict
+- Next eligible task: `P0-T0C`

@@ -1,0 +1,111 @@
+{
+  "cleanup": "pass",
+  "filesystem": {
+    "availableBytes": 992385945600,
+    "caseSensitive": true,
+    "filesystemType": "ext4",
+    "longPathSupported": true,
+    "result": "pass",
+    "symlinkSupported": true
+  },
+  "overall": "pass",
+  "pnpm": {
+    "activation": {
+      "classification": "pass",
+      "exitCode": 0,
+      "result": "pass"
+    },
+    "dependency": {
+      "expectedVersion": "7.0.0",
+      "name": "is-number",
+      "observedVersion": "7.0.0"
+    },
+    "frozenInstall": {
+      "classification": "pass",
+      "exitCode": 0,
+      "result": "pass"
+    },
+    "lockfile": {
+      "classification": "pass",
+      "exitCode": 0,
+      "result": "pass",
+      "sha256": "88818e6e51b71df8b8120ce055aeb14e3fdccc193f10d1ba65bc0e3b294ed5fc"
+    },
+    "result": "pass",
+    "version": {
+      "classification": "pass",
+      "exitCode": 0,
+      "observed": "10.34.0",
+      "result": "pass"
+    }
+  },
+  "recordedAt": "2026-07-28T20:30:03+08:00",
+  "registry": {
+    "classification": "https-default-ca",
+    "defaultCaFileAvailable": true,
+    "defaultCaPathAvailable": true,
+    "httpStatus": 200,
+    "observedVersion": "10.34.0",
+    "proxy": {
+      "httpConfigured": false,
+      "httpsConfigured": false,
+      "noProxyConfigured": false
+    },
+    "responseBytes": 2695,
+    "responseSha256": "e32df12cfb570c9dca7fd9a0560e9b654d152836ac7131be40d4a83910123f49",
+    "result": "pass"
+  },
+  "runId": "20260728T195939+0800",
+  "schemaVersion": "P0-T0B-profile-v1",
+  "taskId": "P0-T0B",
+  "watcher": {
+    "classification": "native-watch-events",
+    "eventCount": 30,
+    "iterations": 10,
+    "p50Ms": 0.29,
+    "p95Ms": 0.564,
+    "polling": false,
+    "provider": "node:fs.watch",
+    "result": "pass",
+    "samplesMs": {
+      "create": [
+        0.486,
+        0.28,
+        0.252,
+        0.367,
+        0.264,
+        0.304,
+        0.29,
+        0.287,
+        0.249,
+        0.373
+      ],
+      "modify": [
+        0.649,
+        0.545,
+        0.539,
+        0.44,
+        0.411,
+        0.431,
+        0.421,
+        0.484,
+        0.465,
+        0.514
+      ],
+      "rename": [
+        0.564,
+        0.268,
+        0.234,
+        0.273,
+        0.267,
+        0.269,
+        0.236,
+        0.236,
+        0.271,
+        0.272
+      ]
+    },
+    "schemaVersion": "P0-T0B-watch-v1",
+    "timeoutMs": 3000
+  }
+}

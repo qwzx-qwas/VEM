@@ -1,0 +1,42 @@
+test_artifact_hash_mismatch_is_rejected (test_preflight.EvidenceValidationTests.test_artifact_hash_mismatch_is_rejected) ... ok
+test_artifact_path_traversal_is_rejected (test_preflight.EvidenceValidationTests.test_artifact_path_traversal_is_rejected) ... ok
+test_bearer_value_is_rejected_even_under_innocent_key (test_preflight.EvidenceValidationTests.test_bearer_value_is_rejected_even_under_innocent_key) ... ok
+test_camel_case_secret_key_is_rejected (test_preflight.EvidenceValidationTests.test_camel_case_secret_key_is_rejected) ... ok
+test_credential_bearing_url_is_rejected (test_preflight.EvidenceValidationTests.test_credential_bearing_url_is_rejected) ... ok
+test_depth_limit_is_fail_closed (test_preflight.EvidenceValidationTests.test_depth_limit_is_fail_closed) ... ok
+test_duplicate_json_key_is_rejected (test_preflight.EvidenceValidationTests.test_duplicate_json_key_is_rejected) ... ok
+test_non_24_node_baseline_is_rejected (test_preflight.EvidenceValidationTests.test_non_24_node_baseline_is_rejected) ... ok
+test_observed_pass_version_must_equal_exact_selection (test_preflight.EvidenceValidationTests.test_observed_pass_version_must_equal_exact_selection) ... ok
+test_overall_is_derived_from_checks (test_preflight.EvidenceValidationTests.test_overall_is_derived_from_checks) ... ok
+test_pnpm_activation_must_embed_exact_version (test_preflight.EvidenceValidationTests.test_pnpm_activation_must_embed_exact_version) ... ok
+test_pnpm_probe_never_executes_activation_or_version_command (test_preflight.EvidenceValidationTests.test_pnpm_probe_never_executes_activation_or_version_command) ... ok
+test_recorded_at_requires_offset (test_preflight.EvidenceValidationTests.test_recorded_at_requires_offset) ... ok
+test_registered_future_preflight_task_id_is_accepted (test_preflight.EvidenceValidationTests.test_registered_future_preflight_task_id_is_accepted) ... ok
+test_secret_fixture_fails_closed (test_preflight.EvidenceValidationTests.test_secret_fixture_fails_closed) ... ok
+test_unknown_preflight_task_id_is_rejected (test_preflight.EvidenceValidationTests.test_unknown_preflight_task_id_is_rejected) ... ok
+test_unknown_property_is_rejected (test_preflight.EvidenceValidationTests.test_unknown_property_is_rejected) ... ok
+test_valid_fixture_passes (test_preflight.EvidenceValidationTests.test_valid_fixture_passes) ... ok
+test_version_range_fixture_fails_closed (test_preflight.EvidenceValidationTests.test_version_range_fixture_fails_closed) ... ok
+test_schema_is_closed_and_versioned (test_preflight.SchemaDocumentTests.test_schema_is_closed_and_versioned) ... ok
+test_dns_tls_proxy_timeout_are_distinct (test_profile_probe.ClassificationTests.test_dns_tls_proxy_timeout_are_distinct) ... ok
+test_percentiles_use_nearest_rank (test_profile_probe.ClassificationTests.test_percentiles_use_nearest_rank) ... ok
+test_process_failures_are_machine_classified (test_profile_probe.ClassificationTests.test_process_failures_are_machine_classified) ... ok
+test_proxy_credentials_are_never_serialized (test_profile_probe.ClassificationTests.test_proxy_credentials_are_never_serialized) ... ok
+test_activation_timeout_stops_follow_on_package_commands (test_profile_probe.PnpmIsolationTests.test_activation_timeout_stops_follow_on_package_commands) ... ok
+test_blocked_environment_uses_observations_without_rerunning_pnpm (test_profile_probe.PnpmIsolationTests.test_blocked_environment_uses_observations_without_rerunning_pnpm) ... ok
+test_corepack_home_is_merged_without_mutating_caller_environment (test_profile_probe.PnpmIsolationTests.test_corepack_home_is_merged_without_mutating_caller_environment) ... ok
+test_main_cleans_fixture_after_blocked_package_probe (test_profile_probe.PnpmIsolationTests.test_main_cleans_fixture_after_blocked_package_probe) ... ok
+test_component_failure_cannot_keep_overall_pass (test_profile_probe.ProfileValidationTests.test_component_failure_cannot_keep_overall_pass) ... ok
+test_incorrect_percentile_is_rejected (test_profile_probe.ProfileValidationTests.test_incorrect_percentile_is_rejected) ... ok
+test_missing_watcher_category_is_rejected (test_profile_probe.ProfileValidationTests.test_missing_watcher_category_is_rejected) ... ok
+test_polling_watcher_is_forbidden (test_profile_probe.ProfileValidationTests.test_polling_watcher_is_forbidden) ... ok
+test_secret_key_fails_closed (test_profile_probe.ProfileValidationTests.test_secret_key_fails_closed) ... ok
+test_unknown_top_level_key_is_rejected (test_profile_probe.ProfileValidationTests.test_unknown_top_level_key_is_rejected) ... ok
+test_valid_profile_passes (test_profile_probe.ProfileValidationTests.test_valid_profile_passes) ... ok
+test_canonical_ext4_case_symlink_and_long_path (test_profile_probe.RealFilesystemTests.test_canonical_ext4_case_symlink_and_long_path) ... ok
+
+----------------------------------------------------------------------
+Ran 36 tests in 0.052s
+
+OK
+P0_T0B_PROFILE=blocked
