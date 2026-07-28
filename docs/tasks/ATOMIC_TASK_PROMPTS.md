@@ -127,6 +127,8 @@
 
 ### Prompt
 
+> **已完成（2026-07-28）**：已验证 P0-T0A0–E 七个固定 evidence bundle 的完整 SHA manifest、task-specific/shared schema、artifact hash、root/owner/ext4、exact toolchain、时间顺序、layout ancestry 与 roadmap 状态；aggregate verdict 为 `passed`，canonical digest 为 `1f77525e…d710d4ff`，90 项完整 preflight 测试及双重 schema、bootstrap、最终 SHA 验证通过，并以 ADR 0002 明确该摘要不是数字签名且 Playwright gate 仍属 P0-T0G。
+
 - **背景**：P0-T0A0–A2 与 B–E 各自产生独立 evidence，只有本任务可以给出总 verdict。
 - **目标**：记录 ADR、验证所有 hash/字段并给出 passed 或 blocked。
 - **本阶段做**：聚合 A0–A2 与 B–E；校验 commit/root/version/时间/owner；生成人类摘要；固定 runner owner 与 rerun 命令。

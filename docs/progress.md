@@ -100,3 +100,16 @@ Each future entry must include task ID, date, changed files, commands, test evid
 - Security/data-lifecycle verification: no real token, capability, socket, environment dump, directory listing, unrelated filename or ACL body was retained; root privilege only launched the fixed `nobody` argv checks and performed no write; cleanup deleted only the known regular fixture and empty `.preflight-*` child, succeeded twice, preserved the pre-existing runtime root identity/mode and left zero residue
 - Known limitations/degradations: the real XDG runtime base is owner-private `tmpfs`, so it was visibly rejected for this ext4-specific gate and the passwd-home `.cache/vem` fallback was selected; a `9p`/DrvFS XDG candidate would fail closed rather than fall back; this task does not implement runtime discovery or issue the aggregate P0-T0F verdict
 - Next eligible task: `P0-T0F`
+
+## P0-T0F — Bootstrap preflight aggregate verdict
+
+- Date: 2026-07-28
+- State/outcome: `done` / `passed`
+- Decision: n/a; machine aggregate verdict is `passed`
+- Changed files: roadmap/status/progress/prompt, `docs/adr/0002-bootstrap-preflight-verdict.md`, `scripts/preflight/aggregate_probe.py`, its tests, and `docs/test-evidence/P0-T0/20260728T215135+0800/`
+- Commands: fixed-input manifest/artifact/schema aggregator; full Python regression; Draft 2020-12, dependency-free evidence/artifact, bootstrap and SHA-256 validation
+- Test evidence: all 90 preflight tests passed, including missing/tampered/duplicate/traversal/symlink manifest and deterministic/order-sensitive digest cases
+- Edge/browser evidence: consumed immutable P0-T0C/D real Edge and Windows/WSL evidence; no browser rerun; Playwright `channel: msedge` remains P0-T0G
+- Security/data-lifecycle verification: seven required manifests and files rehashed; no owner statements, ACL details, raw logs or secrets copied; canonical digest `1f77525ea06e3a1525cb54c8a3bd401d0753b8384a45970b930a0626d710d4ff` is explicitly not a digital signature
+- Known limitations/degradations: aggregate passed authorizes P0-T1 only; ADR 0001 stayed byte-identical to preserve upstream hashes; P0-T0G remains required before browser-dependent product tasks
+- Next eligible task: `P0-T1`

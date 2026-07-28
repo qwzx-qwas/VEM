@@ -1,0 +1,115 @@
+{
+  "artifacts": [
+    {
+      "path": "docs/test-evidence/P0-T0/20260728T215135+0800/aggregate-results.json",
+      "sha256": "7b719d893efd7c97f15ad131a80553ecec8ee3bd77edccdb19ac5476ed900391"
+    },
+    {
+      "path": "scripts/preflight/aggregate_probe.py",
+      "sha256": "6d181c2b3ceea64672a9c80ee62d8d1b1a3c4cea2dbb84fe11b3cba55d8a02a2"
+    },
+    {
+      "path": "scripts/preflight/evidence.schema.json",
+      "sha256": "e6e3fd509167614a9540974458c909ef31f458dbd460c7e108e139f474a7888b"
+    },
+    {
+      "path": "docs/adr/0002-bootstrap-preflight-verdict.md",
+      "sha256": "b9a65f6ad25a9b00e2e00bbc7889b2f860862593cae3547901dc808509902d7f"
+    }
+  ],
+  "checks": [
+    {
+      "classification": "seven-input-manifests digest=1f77525ea06e3a1525cb54c8a3bd401d0753b8384a45970b930a0626d710d4ff",
+      "evidenceRefs": [
+        "artifact:docs/test-evidence/P0-T0/20260728T215135+0800/aggregate-results.json"
+      ],
+      "id": "p0-t0f-required-inputs",
+      "result": "pass"
+    },
+    {
+      "classification": "canonical-root ext4 owner ancestry status time-order",
+      "evidenceRefs": [
+        "artifact:docs/test-evidence/P0-T0/20260728T215135+0800/aggregate-results.json"
+      ],
+      "id": "p0-t0f-current-consistency",
+      "result": "pass"
+    },
+    {
+      "classification": "passed",
+      "evidenceRefs": [
+        "artifact:docs/test-evidence/P0-T0/20260728T215135+0800/aggregate-results.json"
+      ],
+      "id": "p0-t0f-aggregate-verdict",
+      "result": "pass"
+    }
+  ],
+  "commands": [
+    {
+      "argv": [
+        "node",
+        "--version"
+      ],
+      "exitCode": 0,
+      "id": "node-probe",
+      "result": "pass",
+      "stderrSummary": null,
+      "stdoutSummary": "v24.18.0"
+    },
+    {
+      "argv": [
+        "python3",
+        "scripts/preflight/aggregate_probe.py",
+        "<fixed-input-runs>"
+      ],
+      "exitCode": 0,
+      "id": "aggregate-probe",
+      "result": "pass",
+      "stderrSummary": null,
+      "stdoutSummary": "passed"
+    }
+  ],
+  "contractIds": [
+    "EDGE-PREFLIGHT-001"
+  ],
+  "executionProfile": {
+    "canonicalGitRoot": "/home/qwzx/src/VEM",
+    "filesystemType": "ext4",
+    "name": "Read-only P0 bootstrap evidence aggregator",
+    "projectRoot": ".",
+    "runnerOwner": "qwzx",
+    "tier1BrowserOwner": "Windows Edge Stable evidence consumed from P0-T0C/D"
+  },
+  "overall": "pass",
+  "recordedAt": "2026-07-28T21:58:16+08:00",
+  "runId": "20260728T215135+0800",
+  "schemaVersion": "1.0.0",
+  "taskId": "P0-T0F",
+  "tools": {
+    "node": {
+      "exactVersion": "24.18.0",
+      "observedVersion": "24.18.0",
+      "result": "pass",
+      "selectionSource": "https://nodejs.org/en/blog/release/v24.18.0",
+      "versionCommand": [
+        "node",
+        "--version"
+      ]
+    },
+    "pnpm": {
+      "activationCommand": [
+        "corepack",
+        "prepare",
+        "pnpm@10.34.0",
+        "--activate"
+      ],
+      "exactVersion": "10.34.0",
+      "observedVersion": null,
+      "result": "selected",
+      "selectionSource": "https://github.com/pnpm/pnpm/releases/tag/v10.34.0",
+      "versionCommand": [
+        "pnpm",
+        "--version"
+      ]
+    }
+  }
+}

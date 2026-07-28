@@ -1,0 +1,69 @@
+{
+  "aggregateDigest": "1f77525ea06e3a1525cb54c8a3bd401d0753b8384a45970b930a0626d710d4ff",
+  "current": {
+    "canonicalGitRoot": "/home/qwzx/src/VEM",
+    "filesystemType": "ext4",
+    "head": "3062eece673bc06d946c54800b5a92382614fd38",
+    "inputTasksDone": true,
+    "layoutCommit": "5f55a3ff790c8751468e2262e58ef0d5dc72b5c4",
+    "layoutCommitAncestor": true,
+    "runnerOwner": "qwzx"
+  },
+  "inputs": [
+    {
+      "manifestSha256": "903423adc73cdd7d1ff5639f61fd8e8f9ea223489f4d4703102eb349e56106cd",
+      "recordedAt": "2026-07-28T16:04:39+08:00",
+      "runId": "20260728T155608+0800",
+      "taskId": "P0-T0A0",
+      "verdict": "pass"
+    },
+    {
+      "manifestSha256": "d3e190a0a08b504a9105c7a53985bf4b02e037e744fc557dd5be0b089e76dac8",
+      "recordedAt": "2026-07-28T17:05:47+08:00",
+      "runId": "20260728T165102+0800",
+      "taskId": "P0-T0A1",
+      "verdict": "pass"
+    },
+    {
+      "manifestSha256": "216ab7dd59ce6f5ba5cd5b9277daf9137c3d3709c8b96f9c1861d624c8f1b38d",
+      "recordedAt": "2026-07-28T19:58:09+08:00",
+      "runId": "20260728T194140+0800",
+      "taskId": "P0-T0A2",
+      "verdict": "pass"
+    },
+    {
+      "manifestSha256": "c78f6842983c0181a84a5c5de8f55f2ae5415c24602cfa71be1abde2d957415a",
+      "recordedAt": "2026-07-28T20:30:03+08:00",
+      "runId": "20260728T195939+0800",
+      "taskId": "P0-T0B",
+      "verdict": "pass"
+    },
+    {
+      "manifestSha256": "4e0a1efe3f00fec4ea2133a1fcc7553c46b3500d780ea0cc2d81c71c717610e2",
+      "recordedAt": "2026-07-28T21:11:57+08:00",
+      "runId": "20260728T204048+0800",
+      "taskId": "P0-T0C",
+      "verdict": "pass"
+    },
+    {
+      "manifestSha256": "c355136d3bc96524652c0b590eaa729e0c0710a6cf01ceb4bb3de26abcd0b287",
+      "recordedAt": "2026-07-28T21:33:14+08:00",
+      "runId": "20260728T211720+0800",
+      "taskId": "P0-T0D",
+      "verdict": "pass"
+    },
+    {
+      "manifestSha256": "ab5e2dcbfad3278d3c67550c46d1d502824380fb583671610cbc212c9fa23c65",
+      "recordedAt": "2026-07-28T21:47:43+08:00",
+      "runId": "20260728T213829+0800",
+      "taskId": "P0-T0E",
+      "verdict": "pass"
+    }
+  ],
+  "overall": "passed",
+  "recordedAt": "2026-07-28T21:58:16+08:00",
+  "rerunTasks": [],
+  "runId": "20260728T215135+0800",
+  "schemaVersion": "P0-T0F-aggregate-v1",
+  "taskId": "P0-T0F"
+}
