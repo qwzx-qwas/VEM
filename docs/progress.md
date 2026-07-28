@@ -32,3 +32,17 @@ Each future entry must include task ID, date, changed files, commands, test evid
 - Security/data-lifecycle verification: no stash, discard, source deletion, toolchain install, network probe, or product capability change; staging remains readable and rejects writes; the exact ACL rollback command is retained in migration evidence
 - Known limitations/degradations: the rollback ACL is owner-profile-specific and must be removed with the recorded command before staging can become a writer again; formal preflight schema and Node/pnpm selection remain P0-T0A2
 - Next eligible task: `P0-T0A2`
+
+## P0-T0A2 — Evidence schema and exact Node/pnpm bootstrap
+
+- Date: 2026-07-28
+- State/outcome: `done` / `passed`
+- Decision: project owner accepted Node `24.18.0`, pnpm `10.34.0`, and `corepack prepare pnpm@10.34.0 --activate`; evidence is `docs/test-evidence/P0-T0/20260728T194140+0800/owner-decision.json`
+- Changed files: `ROADMAP.yaml`, `docs/STATUS.md`, `docs/decisions/OPEN_DECISIONS.yaml`, `docs/adr/0001-edge-execution-preflight.md`, `docs/tasks/ATOMIC_TASK_PROMPTS.md`, `scripts/preflight/`, and the evidence run at `docs/test-evidence/P0-T0/20260728T194140+0800/`
+- Commands: dependency-free toolchain probe; Python unit/contract/security tests; Draft 2020-12 cross-validation; bootstrap roadmap/requirements/decision/heading/link validator; artifact and evidence SHA-256 verification
+- Test evidence: 20 targeted tests passed; JSON Schema 2020-12 validation passed; bootstrap validation passed for 9 phases, 136 tasks, 25 contracts and 27 internal links; evidence validator and all evidence checksums passed
+- Toolchain evidence: canonical Git root `/home/qwzx/src/VEM` is ext4; observed Node exactly matches `24.18.0`; Corepack `0.35.0` expresses the owner-accepted exact pnpm activation command without executing registry access in this task
+- Edge/browser evidence: not applicable; Edge direct launch and Playwright channel remain P0-T0C and P0-T0G
+- Security/data-lifecycle verification: closed bounded schema rejects duplicate/unknown keys, ranges, version mismatch, result mismatch, depth/size overflow, path traversal, bearer/credential URLs and secret-bearing keys; runner owner is derived from effective UID; no environment dump, package install, registry credential, raw CA, browser profile or product artifact capability was introduced
+- Known limitations/degradations: pnpm activation, `pnpm --version`, registry/proxy/CA, symlink and watcher/HMR execution are deliberately deferred to P0-T0B; this task does not claim the aggregate P0-T0F or Edge automation P0-T0G verdict
+- Next eligible task: `P0-T0B`

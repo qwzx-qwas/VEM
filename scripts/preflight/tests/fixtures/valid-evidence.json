@@ -1,0 +1,57 @@
+{
+  "schemaVersion": "1.0.0",
+  "taskId": "P0-T0A2",
+  "runId": "20260728T173000+0800",
+  "recordedAt": "2026-07-28T17:30:00+08:00",
+  "contractIds": ["EDGE-PREFLIGHT-001"],
+  "executionProfile": {
+    "name": "test profile",
+    "canonicalGitRoot": "/home/example/src/VEM",
+    "projectRoot": ".",
+    "filesystemType": "ext4",
+    "runnerOwner": "fixture-owner",
+    "tier1BrowserOwner": "Windows Edge Stable deferred"
+  },
+  "commands": [
+    {
+      "id": "node-probe",
+      "argv": ["node", "--version"],
+      "exitCode": 0,
+      "result": "pass",
+      "stdoutSummary": "v24.18.0",
+      "stderrSummary": null
+    }
+  ],
+  "tools": {
+    "node": {
+      "exactVersion": "24.18.0",
+      "observedVersion": "24.18.0",
+      "versionCommand": ["node", "--version"],
+      "selectionSource": "https://nodejs.org/en/blog/release/v24.18.0",
+      "result": "pass"
+    },
+    "pnpm": {
+      "exactVersion": "10.34.0",
+      "observedVersion": null,
+      "versionCommand": ["pnpm", "--version"],
+      "activationCommand": ["corepack", "prepare", "pnpm@10.34.0", "--activate"],
+      "selectionSource": "https://github.com/pnpm/pnpm/releases/tag/v10.34.0",
+      "result": "selected"
+    }
+  },
+  "checks": [
+    {
+      "id": "fixture-check",
+      "result": "pass",
+      "classification": "Fixture is valid.",
+      "evidenceRefs": []
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "scripts/preflight/evidence.schema.json",
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+    }
+  ],
+  "overall": "pass"
+}

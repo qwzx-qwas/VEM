@@ -1,0 +1,7 @@
+python3 /tmp/vem_bootstrap_validate.py /home/qwzx/src/VEM
+PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v scripts.preflight.tests.test_preflight
+python3 -m py_compile scripts/preflight/preflight.py
+python3 scripts/preflight/preflight.py probe-toolchain --node-version 24.18.0 --pnpm-version 10.34.0 --run-id 20260728T194140+0800 --output docs/test-evidence/P0-T0/20260728T194140+0800/environment.json
+python3 scripts/preflight/preflight.py validate --input docs/test-evidence/P0-T0/20260728T194140+0800/environment.json --root .
+# Standard Draft 2020-12 cross-validation uses the already-present Python jsonschema module; no dependency was installed.
+# Deliberately not run in P0-T0A2: corepack prepare, pnpm --version, registry/proxy, watcher/HMR, Edge or Playwright probes.

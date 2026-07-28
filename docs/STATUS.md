@@ -7,7 +7,8 @@
 - 项目处于 design baseline 1.14，P0 implementation 已开始。
 - `P0-T0A0` 已完成只读 migration readiness inventory；证据位于 `docs/test-evidence/P0-T0/20260728T155608+0800/`。
 - 136 个 roadmap task 和 25 个 contract 已登记。
-- `P0-T0A1` 已完成 owner-authorized layout commit 与 single-writer cutover；canonical writer 是 `/home/qwzx/src/VEM`，`/mnt/d/VEM` 仅保留为只读 rollback。下一任务是 `P0-T0A2`。
+- `P0-T0A1` 已完成 owner-authorized layout commit 与 single-writer cutover；canonical writer 是 `/home/qwzx/src/VEM`，`/mnt/d/VEM` 仅保留为只读 rollback。
+- `P0-T0A2` 已完成：bounded evidence schema/validator、Node `24.18.0` 与 pnpm `10.34.0` 的 owner-accepted exact bootstrap decision 及验证证据位于 `docs/test-evidence/P0-T0/20260728T194140+0800/`；下一任务是 `P0-T0B`。
 - readiness 结果为 `ready`：大小写 staging 路径为同一 device/inode，payload 与 prefix-normalized manifest 已冻结，无 case collision，目标不存在，ext4 容量/owner permission 通过，且目标未被任务修改。
 - 当前 owner-approved 产品范围是 P0 proof-of-value / go-no-go prototype，不是完整 Visual V1。
 - 安全策略边界已确定但尚未实现：没有全局 security-off/trusted-local 绕过；P3 只为默认开启的增强保障项提供逐项用户 opt-out，并保持安全底线始终执行。
@@ -20,12 +21,12 @@
 
 - 当前 staging display path 是 `/mnt/d/VEM`；大小写别名要按 Git top-level 与 device/inode 判断。
 - owner migration target 是 `/home/qwzx/src/VEM`。
-- `P0-T0A0` 没有创建 `/home/qwzx/src/VEM` 或其父目录；未获得 layout commit 授权前，不把 target migration 描述为已开始或完成。
+- P0-T0A1 已完成 target migration 与 single-writer cutover；所有后续写入只发生在 canonical target，staging 继续只读保留。
 - 1.13 视觉参考绑定与双生命周期设计修订新增 P6-T14；本次 1.14 只收敛 revision reattachment、confirmation 和 production non-participation 语义，没有改变任何 roadmap task、phase 或 decision 状态。
 
 ## 当前待 owner 决策
 
-见 `docs/decisions/OPEN_DECISIONS.yaml`。其中最早会影响实施的是迁移 layout commit 授权和项目许可证选择。
+见 `docs/decisions/OPEN_DECISIONS.yaml`。迁移与 exact toolchain 决策均已完成；当前最早的剩余 owner 决策是项目许可证选择。
 
 ## 状态与记录分工
 

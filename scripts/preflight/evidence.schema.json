@@ -1,0 +1,137 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://visual-element-mcp.local/schemas/preflight-evidence-1.0.0.json",
+  "title": "Visual Element MCP bounded preflight evidence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "taskId",
+    "runId",
+    "recordedAt",
+    "contractIds",
+    "executionProfile",
+    "commands",
+    "tools",
+    "checks",
+    "artifacts",
+    "overall"
+  ],
+  "properties": {
+    "schemaVersion": {"const": "1.0.0"},
+    "taskId": {"type": "string", "enum": ["P0-T0A2", "P0-T0B", "P0-T0C", "P0-T0D", "P0-T0E", "P0-T0F", "P0-T0G"]},
+    "runId": {"type": "string", "pattern": "^[0-9]{8}T[0-9]{6}[+-][0-9]{4}$"},
+    "recordedAt": {"type": "string", "format": "date-time", "maxLength": 64},
+    "contractIds": {"const": ["EDGE-PREFLIGHT-001"]},
+    "executionProfile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "canonicalGitRoot", "projectRoot", "filesystemType", "runnerOwner", "tier1BrowserOwner"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1, "maxLength": 512},
+        "canonicalGitRoot": {"type": "string", "pattern": "^/", "maxLength": 1024},
+        "projectRoot": {"const": "."},
+        "filesystemType": {"type": "string", "minLength": 1, "maxLength": 32},
+        "runnerOwner": {"type": "string", "minLength": 1, "maxLength": 128},
+        "tier1BrowserOwner": {"type": "string", "minLength": 1, "maxLength": 256}
+      }
+    },
+    "commands": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "items": {"$ref": "#/$defs/command"}
+    },
+    "tools": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["node", "pnpm"],
+      "properties": {
+        "node": {"$ref": "#/$defs/nodeTool"},
+        "pnpm": {"$ref": "#/$defs/pnpmTool"}
+      }
+    },
+    "checks": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 128,
+      "items": {"$ref": "#/$defs/check"}
+    },
+    "artifacts": {
+      "type": "array",
+      "maxItems": 256,
+      "items": {"$ref": "#/$defs/artifact"}
+    },
+    "overall": {"enum": ["pass", "fail", "blocked", "partial"]}
+  },
+  "$defs": {
+    "argv": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "items": {"type": "string", "minLength": 1, "maxLength": 256}
+    },
+    "command": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "argv", "exitCode", "result", "stdoutSummary", "stderrSummary"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1, "maxLength": 96},
+        "argv": {"$ref": "#/$defs/argv"},
+        "exitCode": {"type": ["integer", "null"]},
+        "result": {"enum": ["pass", "fail", "blocked", "not-run"]},
+        "stdoutSummary": {"type": ["string", "null"], "maxLength": 1024},
+        "stderrSummary": {"type": ["string", "null"], "maxLength": 1024}
+      }
+    },
+    "nodeTool": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["exactVersion", "observedVersion", "versionCommand", "selectionSource", "result"],
+      "properties": {
+        "exactVersion": {"type": "string", "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$"},
+        "observedVersion": {"type": ["string", "null"], "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$"},
+        "versionCommand": {"$ref": "#/$defs/argv"},
+        "selectionSource": {"type": "string", "minLength": 1, "maxLength": 1024},
+        "result": {"enum": ["pass", "selected", "fail", "blocked"]}
+      }
+    },
+    "pnpmTool": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["exactVersion", "observedVersion", "versionCommand", "activationCommand", "selectionSource", "result"],
+      "properties": {
+        "exactVersion": {"type": "string", "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$"},
+        "observedVersion": {"type": ["string", "null"], "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$"},
+        "versionCommand": {"$ref": "#/$defs/argv"},
+        "activationCommand": {"$ref": "#/$defs/argv"},
+        "selectionSource": {"type": "string", "minLength": 1, "maxLength": 1024},
+        "result": {"enum": ["pass", "selected", "fail", "blocked"]}
+      }
+    },
+    "check": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "result", "classification", "evidenceRefs"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1, "maxLength": 128},
+        "result": {"enum": ["pass", "fail", "blocked", "not-run"]},
+        "classification": {"type": "string", "minLength": 1, "maxLength": 512},
+        "evidenceRefs": {
+          "type": "array",
+          "maxItems": 32,
+          "items": {"type": "string", "minLength": 1, "maxLength": 256}
+        }
+      }
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1, "maxLength": 512, "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    }
+  }
+}

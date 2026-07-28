@@ -1,0 +1,1 @@
+JSON_SCHEMA_2020_12=passed

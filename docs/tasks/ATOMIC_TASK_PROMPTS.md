@@ -25,6 +25,8 @@
 
 ### Prompt
 
+> **已完成（2026-07-28）**：已创建以 `sourceBaselineHead` 为直接 parent 的 project-at-root layout commit，验证 58 个冻结 payload 的 prefix-normalized 内容一致、target Git root 无嵌套且 clean，并将 `/home/qwzx/src/VEM` 切换为唯一 writer、`/mnt/d/VEM` 保留为可读但拒绝写入的 rollback。
+
 - **背景**：P0-T0A0 已冻结 source baseline/payload 与目标 readiness；扁平化 tracked paths 意味着 old/new HEAD 和 raw tracked manifest 不可能相同。
 - **目标**：创建保留历史与全部 payload 的 project-at-root layout commit，并安全切换唯一写入者。
 - **本阶段做**：在 owner 明确授权后迁移到 ext4 target；以 `sourceBaselineHead` 为 parent 创建 layout commit；验证去除旧 prefix 后的相对路径/content hash、目标 Git top-level、clean worktree 与无额外 nesting；把 staging 标记为只读 rollback，记录 cutover。
@@ -39,6 +41,8 @@
 ## P0-T0A2 — Evidence schema 与 exact Node/pnpm bootstrap
 
 ### Prompt
+
+> **已完成（2026-07-28）**：已交付 dependency-free 的 bounded evidence JSON Schema、机器校验/探测器和 valid/invalid fixtures；owner 接受 Node `24.18.0` 与 pnpm `10.34.0`，20 项目标测试、Draft 2020-12、bootstrap traceability 与 artifact hash 验证全部通过，registry/watcher/Edge probe 仍按边界留给后续任务。
 
 - **背景**：P0-T0A1 已完成迁移/cutover，后续 probes 需要统一结果 schema 与可复现工具链决策。
 - **目标**：只固定 machine-classified evidence schema 和 exact Node/pnpm bootstrap。

@@ -1,0 +1,163 @@
+{
+  "artifacts": [
+    {
+      "path": "scripts/preflight/evidence.schema.json",
+      "sha256": "e6e3fd509167614a9540974458c909ef31f458dbd460c7e108e139f474a7888b"
+    },
+    {
+      "path": "scripts/preflight/preflight.py",
+      "sha256": "1174aeab389fbfca918bb54f9c2ea7dae17d1d9207344bb45009cd4da1eb40f3"
+    },
+    {
+      "path": "docs/adr/0001-edge-execution-preflight.md",
+      "sha256": "80b4830ab45557e3d6c679fdee8967654ce8e6fab44031b6820bfc7c5f167482"
+    }
+  ],
+  "checks": [
+    {
+      "classification": "Git top-level equals the execution directory; all stored artifact paths are root-relative.",
+      "evidenceRefs": [
+        "commands:git-probe"
+      ],
+      "id": "canonical-git-root",
+      "result": "pass"
+    },
+    {
+      "classification": "Canonical project filesystem classified as ext4.",
+      "evidenceRefs": [
+        "commands:findmnt-probe"
+      ],
+      "id": "canonical-ext4-profile",
+      "result": "pass"
+    },
+    {
+      "classification": "Selected and observed Node version must both equal 24.18.0.",
+      "evidenceRefs": [
+        "tools:node",
+        "commands:node-probe"
+      ],
+      "id": "node-24-lts-exact",
+      "result": "pass"
+    },
+    {
+      "classification": "pnpm 10.34.0 is selected exactly; activation/network execution is deferred to P0-T0B.",
+      "evidenceRefs": [
+        "tools:pnpm"
+      ],
+      "id": "pnpm-exact-selection",
+      "result": "pass"
+    },
+    {
+      "classification": "Corepack 0.35.0 can express an exact pnpm activation command without running it here.",
+      "evidenceRefs": [
+        "commands:corepack-probe",
+        "tools:pnpm"
+      ],
+      "id": "corepack-bootstrap-mechanism",
+      "result": "pass"
+    },
+    {
+      "classification": "Only bounded version/path/classification summaries are emitted; no environment dump or raw registry configuration is read.",
+      "evidenceRefs": [
+        "schema:scripts/preflight/evidence.schema.json"
+      ],
+      "id": "secret-redaction",
+      "result": "pass"
+    }
+  ],
+  "commands": [
+    {
+      "argv": [
+        "git",
+        "rev-parse",
+        "--show-toplevel"
+      ],
+      "exitCode": 0,
+      "id": "git-probe",
+      "result": "pass",
+      "stderrSummary": null,
+      "stdoutSummary": "/home/qwzx/src/VEM"
+    },
+    {
+      "argv": [
+        "node",
+        "--version"
+      ],
+      "exitCode": 0,
+      "id": "node-probe",
+      "result": "pass",
+      "stderrSummary": null,
+      "stdoutSummary": "v24.18.0"
+    },
+    {
+      "argv": [
+        "corepack",
+        "--version"
+      ],
+      "exitCode": 0,
+      "id": "corepack-probe",
+      "result": "pass",
+      "stderrSummary": null,
+      "stdoutSummary": "0.35.0"
+    },
+    {
+      "argv": [
+        "findmnt",
+        "-T",
+        "/home/qwzx/src/VEM",
+        "-o",
+        "FSTYPE",
+        "-n"
+      ],
+      "exitCode": 0,
+      "id": "findmnt-probe",
+      "result": "pass",
+      "stderrSummary": null,
+      "stdoutSummary": "ext4"
+    }
+  ],
+  "contractIds": [
+    "EDGE-PREFLIGHT-001"
+  ],
+  "executionProfile": {
+    "canonicalGitRoot": "/home/qwzx/src/VEM",
+    "filesystemType": "ext4",
+    "name": "WSL Node/Vite/MCP on ext4 with Windows Edge Stable deferred to later gates",
+    "projectRoot": ".",
+    "runnerOwner": "qwzx",
+    "tier1BrowserOwner": "Windows Edge Stable; launch evidence deferred to P0-T0C and P0-T0G"
+  },
+  "overall": "pass",
+  "recordedAt": "2026-07-28T19:58:09+08:00",
+  "runId": "20260728T194140+0800",
+  "schemaVersion": "1.0.0",
+  "taskId": "P0-T0A2",
+  "tools": {
+    "node": {
+      "exactVersion": "24.18.0",
+      "observedVersion": "24.18.0",
+      "result": "pass",
+      "selectionSource": "https://nodejs.org/en/blog/release/v24.18.0",
+      "versionCommand": [
+        "node",
+        "--version"
+      ]
+    },
+    "pnpm": {
+      "activationCommand": [
+        "corepack",
+        "prepare",
+        "pnpm@10.34.0",
+        "--activate"
+      ],
+      "exactVersion": "10.34.0",
+      "observedVersion": null,
+      "result": "selected",
+      "selectionSource": "https://github.com/pnpm/pnpm/releases/tag/v10.34.0",
+      "versionCommand": [
+        "pnpm",
+        "--version"
+      ]
+    }
+  }
+}

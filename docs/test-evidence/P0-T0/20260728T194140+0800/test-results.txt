@@ -1,0 +1,25 @@
+test_artifact_hash_mismatch_is_rejected (scripts.preflight.tests.test_preflight.EvidenceValidationTests.test_artifact_hash_mismatch_is_rejected) ... ok
+test_artifact_path_traversal_is_rejected (scripts.preflight.tests.test_preflight.EvidenceValidationTests.test_artifact_path_traversal_is_rejected) ... ok
+test_bearer_value_is_rejected_even_under_innocent_key (scripts.preflight.tests.test_preflight.EvidenceValidationTests.test_bearer_value_is_rejected_even_under_innocent_key) ... ok
+test_camel_case_secret_key_is_rejected (scripts.preflight.tests.test_preflight.EvidenceValidationTests.test_camel_case_secret_key_is_rejected) ... ok
+test_credential_bearing_url_is_rejected (scripts.preflight.tests.test_preflight.EvidenceValidationTests.test_credential_bearing_url_is_rejected) ... ok
+test_depth_limit_is_fail_closed (scripts.preflight.tests.test_preflight.EvidenceValidationTests.test_depth_limit_is_fail_closed) ... ok
+test_duplicate_json_key_is_rejected (scripts.preflight.tests.test_preflight.EvidenceValidationTests.test_duplicate_json_key_is_rejected) ... ok
+test_non_24_node_baseline_is_rejected (scripts.preflight.tests.test_preflight.EvidenceValidationTests.test_non_24_node_baseline_is_rejected) ... ok
+test_observed_pass_version_must_equal_exact_selection (scripts.preflight.tests.test_preflight.EvidenceValidationTests.test_observed_pass_version_must_equal_exact_selection) ... ok
+test_overall_is_derived_from_checks (scripts.preflight.tests.test_preflight.EvidenceValidationTests.test_overall_is_derived_from_checks) ... ok
+test_pnpm_activation_must_embed_exact_version (scripts.preflight.tests.test_preflight.EvidenceValidationTests.test_pnpm_activation_must_embed_exact_version) ... ok
+test_pnpm_probe_never_executes_activation_or_version_command (scripts.preflight.tests.test_preflight.EvidenceValidationTests.test_pnpm_probe_never_executes_activation_or_version_command) ... ok
+test_recorded_at_requires_offset (scripts.preflight.tests.test_preflight.EvidenceValidationTests.test_recorded_at_requires_offset) ... ok
+test_registered_future_preflight_task_id_is_accepted (scripts.preflight.tests.test_preflight.EvidenceValidationTests.test_registered_future_preflight_task_id_is_accepted) ... ok
+test_secret_fixture_fails_closed (scripts.preflight.tests.test_preflight.EvidenceValidationTests.test_secret_fixture_fails_closed) ... ok
+test_unknown_preflight_task_id_is_rejected (scripts.preflight.tests.test_preflight.EvidenceValidationTests.test_unknown_preflight_task_id_is_rejected) ... ok
+test_unknown_property_is_rejected (scripts.preflight.tests.test_preflight.EvidenceValidationTests.test_unknown_property_is_rejected) ... ok
+test_valid_fixture_passes (scripts.preflight.tests.test_preflight.EvidenceValidationTests.test_valid_fixture_passes) ... ok
+test_version_range_fixture_fails_closed (scripts.preflight.tests.test_preflight.EvidenceValidationTests.test_version_range_fixture_fails_closed) ... ok
+test_schema_is_closed_and_versioned (scripts.preflight.tests.test_preflight.SchemaDocumentTests.test_schema_is_closed_and_versioned) ... ok
+
+----------------------------------------------------------------------
+Ran 20 tests in 0.012s
+
+OK
