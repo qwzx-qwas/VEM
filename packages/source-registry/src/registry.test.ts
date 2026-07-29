@@ -92,6 +92,21 @@ describe("revision-scoped publication and direct lookup", () => {
     expect(registry.diagnosticState()).toMatchObject({ retainedRevisionCount: 1 });
   });
 
+  test("rejects an older sequence even when registry content is otherwise idempotent", () => {
+    const registry = new RevisionScopedSourceRegistry(revision.projectInstanceId);
+    expect(registry.publish(publication({
+      revision: { ...revision, coordinatorSequence: 9 },
+    }))).toMatchObject({ ok: true, status: "published" });
+    expect(registry.publish(publication({
+      revision: { ...revision, coordinatorSequence: 8 },
+      publishedAt: "2026-07-29T15:03:32+08:00",
+    }))).toMatchObject({ ok: false, error: { code: "STALE_SEQUENCE" } });
+    expect(registry.diagnosticState()).toMatchObject({
+      currentSourceRegistryRevision: revision.sourceRegistryRevision,
+      retainedRevisionCount: 1,
+    });
+  });
+
   test("rejects same-revision content collision atomically", () => {
     const registry = new RevisionScopedSourceRegistry(revision.projectInstanceId);
     const original = publication();
@@ -247,6 +262,61 @@ describe("fail-closed context, compatibility and bounds", () => {
     });
     expect(registry.publish(oversized)).toMatchObject({ ok: false, error: { code: "PUBLICATION_LIMIT_EXCEEDED" } });
     expect(registry.diagnosticState().retainedRevisionCount).toBe(0);
+  });
+
+  test("rejects non-canonical paths and anchor hashes that do not match record identity", () => {
+    const base = publication();
+    const registry = new RevisionScopedSourceRegistry(revision.projectInstanceId);
+    const baseRecord = recordAt(base, 0);
+    for (const relativeFile of ["./src/App.tsx", "src//App.tsx", "src/./App.tsx", "src/App.tsx/"]) {
+      const invalidPath = publication({
+        snapshot: Object.freeze({
+          ...base.snapshot,
+          records: Object.freeze([{ ...baseRecord, relativeFile }]),
+        }),
+      });
+      expect(registry.publish(invalidPath)).toMatchObject({
+        ok: false,
+        error: { code: "PUBLICATION_INVALID" },
+      });
+      expect(registry.diagnosticState().retainedRevisionCount).toBe(0);
+    }
+
+    const invalidHash = publication({
+      snapshot: Object.freeze({
+        ...base.snapshot,
+        records: Object.freeze([{
+          ...baseRecord,
+          sourceAnchorId: "vem1_00000000000000000000000000000000",
+        }]),
+      }),
+    });
+    expect(registry.publish(invalidHash)).toMatchObject({
+      ok: false,
+      error: { code: "PUBLICATION_INVALID" },
+    });
+    expect(registry.diagnosticState().retainedRevisionCount).toBe(0);
+  });
+
+  test("validates a closed bounded lookup request and returns an immutable result", () => {
+    const input = publication();
+    const registry = new RevisionScopedSourceRegistry(revision.projectInstanceId);
+    expect(registry.publish(input).ok).toBe(true);
+    const sourceAnchorId = recordAt(input, 0).sourceAnchorId;
+    const unknown = { revision, sourceAnchorId, unexpected: true } as never;
+    expect(registry.lookup(unknown)).toMatchObject({ ok: false, error: { code: "LOOKUP_INVALID" } });
+    expect(registry.lookup({ revision, sourceAnchorId: "not-an-anchor" })).toMatchObject({
+      ok: false,
+      error: { code: "LOOKUP_INVALID" },
+    });
+    const result = registry.lookup({ revision, sourceAnchorId });
+    expect(result.ok).toBe(true);
+    expect(Object.isFrozen(result)).toBe(true);
+    if (result.ok) {
+      expect(Object.isFrozen(result.source)).toBe(true);
+      expect(Object.isFrozen(result.candidates)).toBe(true);
+      expect(Object.isFrozen(result.conflicts)).toBe(true);
+    }
   });
 
   test("returns missing-anchor without candidates and resets all state on project restart", () => {

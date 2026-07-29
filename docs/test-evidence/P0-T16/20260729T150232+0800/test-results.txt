@@ -1,0 +1,19 @@
+RESULT=pass
+P0_T16_TARGETED=pass files=1 tests=13
+SOURCE_TESTS=pass files=11 tests=75
+WORKSPACE_TESTS=pass files=3 tests=7
+BUILD=pass
+TYPECHECK=pass
+LINT=pass
+WORKSPACE_CHECK=pass node=24.18.0 pnpm=10.34.0 workspaceProjects=7
+ROADMAP_VALIDATION=pass phases=9 tasks=136 contracts=25 authorityFiles=1
+LICENSE_AUDIT=pass packages=235 vendored=0
+FROZEN_INSTALL=pass packageManager=pnpm@10.34.0
+CLEAN_FROZEN_INSTALL=pass packageManager=pnpm@10.34.0
+DEMO_BUILD=pass vite=8.1.5 transformedModules=23 files=4 bytes=1092834 externalUrls=0 vemOwnedSignatures=0
+BOOTSTRAP_PREFLIGHT_REGRESSION=pass tests=98
+PUBLICATION=pass atomic=true idempotent=true maxRecords=16384 maxBytes=1572864
+LOOKUP=pass currentOnly=true integrity=registry-matched candidates=0
+RETENTION=pass persistence=memory-only retainedRevisions=2 previousLookup=stale
+FORBIDDEN_EXPANSION=none transport source-read persistence browser-ingress MCP HMR candidate reattachment edit-authority
+SANDBOX_NOTE=workspace/license/install/preflight subprocesses were initially blocked by managed sandbox process/network/parent-directory policy; the same bounded commands passed in approved execution without changing assertions

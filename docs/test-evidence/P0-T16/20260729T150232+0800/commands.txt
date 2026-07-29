@@ -1,0 +1,16 @@
+corepack pnpm exec vitest run packages/source-registry/src/registry.test.ts
+corepack pnpm --filter @vem/source-registry typecheck
+corepack pnpm exec eslint packages/source-registry/src
+corepack pnpm test
+corepack pnpm test:workspace
+corepack pnpm build
+corepack pnpm typecheck
+corepack pnpm lint
+corepack pnpm workspace:check
+corepack pnpm roadmap:validate
+corepack pnpm license:check
+corepack pnpm demo:build
+corepack pnpm install --frozen-lockfile
+corepack pnpm test:install
+python3 -m unittest discover -s scripts/preflight/tests -v
+git diff --check

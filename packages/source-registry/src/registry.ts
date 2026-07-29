@@ -15,10 +15,14 @@ import {
 
 const MAX_PUBLICATION_BYTES = 1_572_864;
 const MAX_RECORDS = 16_384;
+const MAX_SOURCE_POSITION = 1_048_576;
 const ID = /^[A-Za-z0-9._:-]{1,128}$/u;
 const ANCHOR_ID = /^vem1_[a-f0-9]{32}$/u;
 const RELATIVE_FILE = /^(?!\/)(?!.*(?:^|\/)\.\.(?:\/|$))[A-Za-z0-9._~/-]{1,512}$/u;
+const COMPONENT = /^[A-Za-z_$][A-Za-z0-9_$]{0,127}$/u;
+const JSX_AST_PATH = /^[A-Za-z0-9_.[\]]{1,2048}$/u;
 const ISO_WITH_OFFSET = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,9})?(?:Z|[+-]\d{2}:\d{2})$/u;
+const EMPTY = Object.freeze([]) as readonly [];
 
 export class RevisionScopedSourceRegistry {
   #projectInstanceId: string;
@@ -45,6 +49,9 @@ export class RevisionScopedSourceRegistry {
       if (current.publicationDigest !== proposed.publicationDigest) {
         return { ok: false, error: registryError("REVISION_COLLISION", current.publication.revision.sourceRegistryRevision) };
       }
+      if (proposed.publication.revision.coordinatorSequence < current.publication.revision.coordinatorSequence) {
+        return { ok: false, error: registryError("STALE_SEQUENCE", current.publication.revision.sourceRegistryRevision) };
+      }
       return publishSuccess("idempotent", current);
     }
     if (current && proposed.publication.revision.coordinatorSequence <= current.publication.revision.coordinatorSequence) {
@@ -57,6 +64,11 @@ export class RevisionScopedSourceRegistry {
 
   lookup(request: LookupRequest): LookupResult {
     const current = this.#current;
+    try {
+      validateLookupRequest(request);
+    } catch {
+      return lookupFailure("LOOKUP_INVALID", current?.publication.revision.sourceRegistryRevision);
+    }
     if (!current) return lookupFailure("REGISTRY_NOT_PUBLISHED");
     const currentRevision = current.publication.revision;
     if (request.revision.projectInstanceId !== this.#projectInstanceId) {
@@ -82,7 +94,7 @@ export class RevisionScopedSourceRegistry {
       line: record.line,
       column: record.column,
     });
-    return {
+    return Object.freeze({
       ok: true,
       status: "direct",
       integrity: "registry-matched",
@@ -99,9 +111,9 @@ export class RevisionScopedSourceRegistry {
       }),
       evidenceHash,
       publicationDigest: current.publicationDigest,
-      candidates: [],
-      conflicts: [],
-    };
+      candidates: EMPTY,
+      conflicts: EMPTY,
+    });
   }
 
   resetProject(projectInstanceId: string): void {
@@ -191,15 +203,28 @@ export function opaqueRelativeFileIdentity(revision: ProjectRevisionContext, rel
   }).slice(0, 32)}`;
 }
 
-function validateRevision(revision: ProjectRevisionContext): void {
-  requireExactKeys(revision, ["projectInstanceId", "coordinatorSequence", "buildRevision", "sourceRegistryRevision"]);
+function validateRevision(
+  revision: ProjectRevisionContext,
+  invalidCode: RegistryErrorCode = "PUBLICATION_INVALID",
+): void {
+  requireExactKeys(
+    revision,
+    ["projectInstanceId", "coordinatorSequence", "buildRevision", "sourceRegistryRevision"],
+    invalidCode,
+  );
   if (!ID.test(revision.projectInstanceId)
     || !ID.test(revision.buildRevision)
     || !ID.test(revision.sourceRegistryRevision)
     || !Number.isSafeInteger(revision.coordinatorSequence)
     || revision.coordinatorSequence < 0) {
-    throw codeError("PUBLICATION_INVALID");
+    throw codeError(invalidCode);
   }
+}
+
+function validateLookupRequest(request: LookupRequest): void {
+  requireExactKeys(request, ["revision", "sourceAnchorId"], "LOOKUP_INVALID");
+  validateRevision(request.revision, "LOOKUP_INVALID");
+  if (!ANCHOR_ID.test(request.sourceAnchorId)) throw codeError("LOOKUP_INVALID");
 }
 
 function validateCompatibility(value: SourceRegistryPublication["transform"]): void {
@@ -232,18 +257,31 @@ function validateRecord(record: SourceAnchorRecord, revision: string): SourceAnc
     || !ANCHOR_ID.test(record.sourceAnchorId)
     || !RELATIVE_FILE.test(record.relativeFile)
     || record.relativeFile.includes("\\")
-    || record.enclosingComponent.length < 1
-    || record.enclosingComponent.length > 128
-    || record.jsxAstPath.length < 1
-    || record.jsxAstPath.length > 2_048
+    || record.relativeFile.split("/").some((segment) => segment.length === 0 || segment === "." || segment === "..")
+    || !COMPONENT.test(record.enclosingComponent)
+    || !JSX_AST_PATH.test(record.jsxAstPath)
     || !/^[a-z][A-Za-z0-9._:-]{0,127}$/u.test(record.intrinsicTag)
     || !Number.isSafeInteger(record.line)
     || record.line < 1
+    || record.line > MAX_SOURCE_POSITION
     || !Number.isSafeInteger(record.column)
-    || record.column < 1) {
+    || record.column < 1
+    || record.column > MAX_SOURCE_POSITION
+    || record.sourceAnchorId !== expectedSourceAnchorId(record)) {
     throw codeError("PUBLICATION_INVALID");
   }
   return Object.freeze({ ...record });
+}
+
+function expectedSourceAnchorId(record: SourceAnchorRecord): string {
+  return `vem1_${sha256({
+    namespace: P0_TRANSFORM_COMPATIBILITY.anchorNamespace,
+    relativeFile: record.relativeFile,
+    enclosingComponent: record.enclosingComponent,
+    jsxAstPath: record.jsxAstPath,
+    intrinsicTag: record.intrinsicTag,
+    transformVersion: record.transformVersion,
+  }).slice(0, 32)}`;
 }
 
 function deepFreezePublication(
@@ -256,11 +294,15 @@ function deepFreezePublication(
   return Object.freeze({ ...input, revision, transform, snapshot });
 }
 
-function requireExactKeys(value: object, keys: readonly string[]): void {
+function requireExactKeys(
+  value: object,
+  keys: readonly string[],
+  invalidCode: RegistryErrorCode = "PUBLICATION_INVALID",
+): void {
   const actual = Object.keys(value).sort();
   const expected = [...keys].sort();
   if (actual.length !== expected.length || actual.some((key, index) => key !== expected[index])) {
-    throw codeError("PUBLICATION_INVALID");
+    throw codeError(invalidCode);
   }
 }
 
@@ -282,6 +324,7 @@ function errorCode(error: unknown): RegistryErrorCode {
 
 const ERROR_MESSAGES: Record<RegistryErrorCode, string> = {
   ANCHOR_NOT_FOUND: "The anchor is not a member of the current source registry.",
+  LOOKUP_INVALID: "The source registry lookup request is invalid.",
   PROJECT_INSTANCE_MISMATCH: "Reset the registry before publishing a different project instance.",
   PUBLICATION_INVALID: "The source registry publication is invalid.",
   PUBLICATION_LIMIT_EXCEEDED: "The source registry publication exceeds its hard limit.",
@@ -303,15 +346,15 @@ function registryError(code: RegistryErrorCode, current?: string): RegistryError
 }
 
 function lookupFailure(code: RegistryErrorCode, current?: string): LookupResult {
-  return { ok: false, status: "error", error: registryError(code, current) };
+  return Object.freeze({ ok: false, status: "error", error: registryError(code, current) });
 }
 
 function publishSuccess(status: "published" | "idempotent", value: ValidatedPublication): PublishResult {
-  return {
+  return Object.freeze({
     ok: true,
     status,
     publicationDigest: value.publicationDigest,
     revision: Object.freeze({ ...value.publication.revision }),
     recordCount: value.records.length,
-  };
+  });
 }

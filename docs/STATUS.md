@@ -21,7 +21,8 @@
 - `P0-T4` 已完成：锁定 React/React DOM `19.2.8`、Vite `8.1.5` 和 plugin-react `6.0.4`，交付 9 类闭合 PRIV-MIN malicious fixture、SSR escaping smoke tests 与真实 production build；证据位于 `docs/test-evidence/P0-T4/20260729T132101+0800/`。
 - `P0-T5` 已完成：接受 ADR 0005，交付始终 page-untrusted 的 injected selector、PRIV-MIN bounded projection、strict external-confirmation limitation 与 memory-only lifecycle；证据位于 `docs/test-evidence/P0-T5/20260729T134026+0800/`。
 - `P0-T15` 已完成：接受 ADR 0006，交付固定 React/Vite/Oxc 矩阵的 serve-only source-anchor transform、bounded private in-memory registry 与 production non-participation 等价门禁；证据位于 `docs/test-evidence/P0-T15/20260729T141939+0800/`。
-- 当前下一项为 `P0-T16`：实现基于 P0 transform output 的 revision-scoped source registry publication 与 lookup prototype。
+- `P0-T16` 已完成：交付 revision-scoped、memory-only、原子幂等的 source registry publication/current-only direct lookup；严格校验完整 ProjectRevisionContext、transform compatibility、规范相对路径、anchor identity hash 与 registry membership，旧 revision 仅保留一代诊断且不可升级为 current；证据位于 `docs/test-evidence/P0-T16/20260729T150232+0800/`。
+- 当前下一项为 `P0-T17A`：实现两层只读 pilot harness 与 canonical JSON evidence-bundle builder。
 - readiness 结果为 `ready`：大小写 staging 路径为同一 device/inode，payload 与 prefix-normalized manifest 已冻结，无 case collision，目标不存在，ext4 容量/owner permission 通过，且目标未被任务修改。
 - 当前 owner-approved 产品范围是 P0 proof-of-value / go-no-go prototype，不是完整 Visual V1。
 - 安全策略边界已确定但尚未实现：没有全局 security-off/trusted-local 绕过；P3 只为默认开启的增强保障项提供逐项用户 opt-out，并保持安全底线始终执行。

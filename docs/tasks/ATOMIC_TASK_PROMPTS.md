@@ -278,6 +278,8 @@
 
 ### Prompt
 
+> **已完成（2026-07-29）**：已交付 private `@vem/source-registry` 内存原型，原子、幂等发布 P0-T15 immutable snapshot，并仅在 project/build/source revision、sequence、transform compatibility、规范相对路径、anchor identity hash 与当前 membership 全部匹配时返回单一 `registry-matched` direct source；旧 revision 仅保留一代诊断且 lookup 明确 stale。13 项目标测试、75 项源码测试、7 项 workspace 测试、build/typecheck/lint、生产无泄漏 build、roadmap/license/frozen install 与 98 项 preflight 全部通过；未加入 transport、MCP、源码读取、候选、重附着或持久化。
+
 - **背景**：P0-T15 已产生 collision-checked transform records，但 registry 仍标记为未发布/不可查询；pilot 前需把 opaque marker 与同 revision registry membership 机械绑定。
 - **目标**：实现内存、revision-scoped、原子 publication/lookup prototype，使当前 marker 只有在 project/build/source registry revision 与 membership 一致时才返回 direct registry-matched host anchor。
 - **本阶段做**：定义闭合 publication/lookup types；消费 P0-T15 immutable snapshot；验证 ProjectRevisionContext、exact transform compatibility、relative source location、record/revision/hash uniqueness；生成 coordinator-side opaque relative-file identity 与 direct evidence hash；保留当前及必要前一 revision 诊断状态。

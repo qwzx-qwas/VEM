@@ -27,6 +27,7 @@ export interface SourceRegistryPublication {
 
 export type RegistryErrorCode =
   | "ANCHOR_NOT_FOUND"
+  | "LOOKUP_INVALID"
   | "PROJECT_INSTANCE_MISMATCH"
   | "PUBLICATION_INVALID"
   | "PUBLICATION_LIMIT_EXCEEDED"
@@ -77,8 +78,8 @@ export type LookupResult =
       source: DirectSourceAnchor;
       evidenceHash: string;
       publicationDigest: string;
-      candidates: [];
-      conflicts: [];
+      candidates: readonly [];
+      conflicts: readonly [];
     }
   | { ok: false; status: "error"; error: RegistryError };
 

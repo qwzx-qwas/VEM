@@ -197,3 +197,17 @@ Each future entry must include task ID, date, changed files, commands, test evid
 - Security/data-lifecycle verification: explicit reserved attributes fail closed in dev while all user data attributes survive production; project realpath, extension/query/virtual/node_modules scope, parser/source/anchor/AST path/project-registry byte bounds, collision and revision checks are enforced; registry is immutable memory-only output with no persistence/publication/lookup; no post-build deletion exists
 - Known limitations/degradations: no registry publication/lookup, source resolution, HMR revision, browser client/HTML/endpoint injection, runtime owner/usage evidence, Coordinator/MCP or compatibility outside the accepted matrix was added; P0-T16 owns publication and lookup
 - Next eligible task: `P0-T16`
+
+## P0-T16 — Revision-scoped source registry publication and lookup prototype
+
+- Date: 2026-07-29
+- State/outcome: `done` / `passed`
+- Decision: n/a
+- Changed files: private `packages/source-registry/`, workspace references/lock metadata, roadmap/status/prompt/progress records, and `docs/test-evidence/P0-T16/20260729T150232+0800/`
+- Commands: targeted P0-T16 Vitest/typecheck/lint; full Vitest; build/typecheck/lint; workspace/roadmap/license checks; real demo production build; frozen and isolated clean frozen install; full Python preflight regression; Git diff/whitespace and evidence SHA checks
+- Test evidence: 13 P0-T16 tests and 62 existing tests passed across 11 source test files; seven workspace tests, build, strict typecheck, lint, 9-phase/136-task/25-contract roadmap validation, 235-package/zero-vendored license audit, frozen/clean install and all 98 preflight tests passed
+- Registry evidence: a real P0-T15 immutable transform snapshot publishes atomically and idempotently under exact compatibility; current membership returns one immutable `registry-matched` direct source with normalized relative location, opaque file identity and evidence hash; one previous revision is diagnostic-only and old lookup is stale
+- Edge/browser verification: no browser rerun was required because this task is an in-memory registry prototype; it preserves the already-passed P0-T0G real Edge channel gate and P0-T15 production non-participation boundary without adding browser ingress
+- Security/data-lifecycle verification: closed publication and lookup inputs reject unknown fields, oversized records, non-canonical/traversing paths, mismatched anchor identity hash, duplicate/colliding anchors, incompatible transform, stale project/build/source/sequence and project restart reuse; state is memory-only and bounded to current plus one previous revision, with no filesystem/source read, persistence, transport, browser, MCP, HMR, candidate or edit-authority implementation
+- Known limitations/degradations: direct lookup is coordinator-side prototype data only and does not prove DOM binding or user authorization; no Coordinator discovery/channel, selection-to-registry ingress, heuristic source candidate, cross-revision successor/reattachment, source content read, MCP surface or crash recovery is claimed
+- Next eligible task: `P0-T17A`
