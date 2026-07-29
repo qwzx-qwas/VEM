@@ -176,23 +176,6 @@
 
 ## P0-T17A — 两层只读 pilot harness
 
-
-## P0-T2 — REQ-TRACE-001 repository validator
-
-### Prompt
-
-
-> **已完成（2026-07-29）**：已交付 requirements schema v4 与 `pnpm roadmap:validate`，支持向后兼容的单文件 heading 和正式 `{path, anchor}` 多文件 authority；11 组 fixtures 覆盖未知 contract、未覆盖规范、缺测试、broken link、孤立映射、环、decision 与状态矛盾。真实 9 phase/136 task/25 contract 仓库验证、19 项 Vitest、98 项 preflight、build/typecheck/lint/license/workspace 与离线 clean install 全部通过。
-- **背景**：bootstrap 目前依赖一次性 inline 检查，且 contract authority 仍隐含使用单一 `design_source + heading`；ROADMAP 已要求可重复的仓库 validator。
-- **目标**：交付本地可运行的 roadmap/requirements validator，机械验证规范覆盖、双向 contract/task 映射、多文件 `path + stable anchor` authority、内部链接、依赖 DAG、decision attempt/verdict 与 task/phase 状态一致性。
-- **本阶段做**：升级 requirements authority schema；实现 validator CLI/core；提供 valid 与 fail-closed fixtures；加入 `pnpm roadmap:validate`。
-- **本阶段不做**：不运行 CI、不移动规范正文、不实现产品协议、浏览器、selector、runtime 或 production leakage gate。
-- **实现约束**：路径必须 root-relative 且不可逃逸；anchor 精确且唯一；heading own-body 规范词覆盖；未知字段/contract/task/decision/status、孤立映射、环与 broken link 均失败。
-- **成功路径**：真实仓库和 valid fixture 通过；每类无效 fixture 返回稳定分类与非零退出；现有 workspace/preflight 回归保持通过。
-- **失败路径与边界**：parse/schema、authority、coverage、mapping、dependency、decision、state 或 link 任一错误阻止完成；validator 不修复输入。
-- **建议优先查看/修改的文件**：`docs/requirements.yaml`、`ROADMAP.yaml`、`scripts/roadmap/`、root package scripts、P0-T2 evidence。
-- **测试要求**：valid、multi-source path/stable anchor、unknown contract、uncovered normative section、missing test map、broken link、orphan task、cycle、decision reference/attempt/verdict、inconsistent task/phase state。
-- **验收标准**：`pnpm roadmap:validate` 可重复通过并覆盖规定的负向 fixtures；只交付 governance validator，不增加产品功能。
 ### Prompt
 
 - **背景**：micro-pilot 发生在 coordinator/MCP 之前，需要可复核的离线证据通道。
@@ -205,6 +188,40 @@
 - **建议优先查看/修改的文件**：`benchmarks/golden-tasks/`、`scripts/pilot/`、protocol schema、`docs/test-evidence/P0-T17/`。
 - **测试要求**：read-only enforcement、canonical JSON、hash tamper、redaction、clock unit、holdout exclusion。
 - **验收标准**：能生成固定 JSON evidence bundle，但不产生产品价值结论。
+
+## P0-T2 — REQ-TRACE-001 repository validator
+
+### Prompt
+
+> **已完成（2026-07-29）**：已交付 requirements schema v4 与 `pnpm roadmap:validate`，支持向后兼容的单文件 heading 和正式 `{path, anchor}` 多文件 authority；11 组 fixtures 覆盖未知 contract、未覆盖规范、缺测试、broken link、孤立映射、环、decision 与状态矛盾。真实 9 phase/136 task/25 contract 仓库验证、19 项 Vitest、98 项 preflight、build/typecheck/lint/license/workspace 与离线 clean install 全部通过。
+
+- **背景**：bootstrap 目前依赖一次性 inline 检查，且 contract authority 仍隐含使用单一 `design_source + heading`；ROADMAP 已要求可重复的仓库 validator。
+- **目标**：交付本地可运行的 roadmap/requirements validator，机械验证规范覆盖、双向 contract/task 映射、多文件 `path + stable anchor` authority、内部链接、依赖 DAG、decision attempt/verdict 与 task/phase 状态一致性。
+- **本阶段做**：升级 requirements authority schema；实现 validator CLI/core；提供 valid 与 fail-closed fixtures；加入 `pnpm roadmap:validate`。
+- **本阶段不做**：不运行 CI、不移动规范正文、不实现产品协议、浏览器、selector、runtime 或 production leakage gate。
+- **实现约束**：路径必须 root-relative 且不可逃逸；anchor 精确且唯一；heading own-body 规范词覆盖；未知字段/contract/task/decision/status、孤立映射、环与 broken link 均失败。
+- **成功路径**：真实仓库和 valid fixture 通过；每类无效 fixture 返回稳定分类与非零退出；现有 workspace/preflight 回归保持通过。
+- **失败路径与边界**：parse/schema、authority、coverage、mapping、dependency、decision、state 或 link 任一错误阻止完成；validator 不修复输入。
+- **建议优先查看/修改的文件**：`docs/requirements.yaml`、`ROADMAP.yaml`、`scripts/roadmap/`、root package scripts、P0-T2 evidence。
+- **测试要求**：valid、multi-source path/stable anchor、unknown contract、uncovered normative section、missing test map、broken link、orphan task、cycle、decision reference/attempt/verdict、inconsistent task/phase state。
+- **验收标准**：`pnpm roadmap:validate` 可重复通过并覆盖规定的负向 fixtures；只交付 governance validator，不增加产品功能。
+
+## P0-T3 — MCP compatibility 与最小协议基线
+
+### Prompt
+
+> **已完成（2026-07-29）**：已由 owner 接受 ADR 0004，锁定 primary MCP `2025-06-18`、compat `2025-03-26`/`2025-11-25`、`@modelcontextprotocol/sdk@1.30.0` 与 P0 no-Tasks 边界；交付严格 TypeScript/闭合 Draft 2020-12 schema、RevisionContext、单次 ConfirmationBinding、PRIV-MIN、VemError、最小 EvidenceGraph、真实 Codex 初始化矩阵及兼容性测试。31 项 Vitest、7 项 workspace、98 项 preflight、build/typecheck/lint/license/roadmap 与离线 frozen install 全部通过，未宣称 runtime capability。
+
+- **背景**：P0-T0G 已通过真实 Edge channel gate；当前需在产品实现前冻结 P0 walking skeleton 的协议、revision、evidence、privacy 与 confirmation 语义。
+- **目标**：记录 primary/compat MCP revision 与 Tasks negotiation 决策，并交付 strict TypeScript types、closed JSON Schema、compatibility matrix 和 contract tests。
+- **本阶段做**：锁定 production MCP SDK；记录 Codex client initialization 证据；定义 ProjectRevisionContext/RevisionContext、ConfirmationBinding、PRIV-MIN bounded summary、VemError、minimum EvidenceGraph 与 task/no-task negotiation envelope。
+- **本阶段不做**：不启动 MCP server/coordinator，不实现 selector、Vite transform、claim storage、confirmation lifecycle、source resolver、wait journal 或产品工具 handler。
+- **实现约束**：运行时只使用明确协商 revision；核心闭环不依赖 Tasks；experimental Tasks 与 extension wire shape 不混用；所有外部 schema closed 且有 size/depth/array bound；冲突优先于 confidence；输出默认去敏。
+- **成功路径**：ADR/decision、types/schema/matrix 一致；primary/compat/no-task/optional-task、revision identity、direct/degraded confirmation、privacy、error、EvidenceGraph 与 schema bounds fixtures 全部通过。
+- **失败路径与边界**：缺 owner decision、初始化证据不足、SDK/revision 漂移、unknown property、oversize、stale identity、trust laundering、隐私泄漏或 task capability 假设均阻止完成。
+- **建议优先查看/修改的文件**：`docs/adr/`、`docs/decisions/OPEN_DECISIONS.yaml`、`packages/protocol/`、P0-T3 evidence、workspace lockfile/notices。
+- **测试要求**：ADR lint、contract IDs、primary/compat initialization、no-task、optional-task negotiation refusal、revision equality/reset、confirmation direct/degraded、schema size/depth、privacy output、EvidenceGraph conflict 与 VemError compatibility。
+- **验收标准**：P0-T3 协议规格可被后续 P0-T12A/B/C 实现消费，但本阶段不宣称任何 runtime capability。
 
 ## P0-T17B — 3–5 task value micro-pilot
 

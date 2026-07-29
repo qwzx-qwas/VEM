@@ -1,0 +1,40 @@
+{
+  "schemaVersion": "P0-T3-mcp-compatibility-v1",
+  "reviewedAt": "2026-07-29",
+  "sdk": {
+    "package": "@modelcontextprotocol/sdk",
+    "version": "1.30.0",
+    "latestSupportedRevision": "2025-11-25"
+  },
+  "client": {
+    "name": "codex-mcp-client",
+    "version": "0.144.5",
+    "requestedRevision": "2025-06-18",
+    "capabilityKeys": ["elicitation"],
+    "taskCapabilityAdvertised": false
+  },
+  "primaryRevision": "2025-06-18",
+  "compatibleRevisions": ["2025-03-26", "2025-11-25"],
+  "p0TaskMode": "none",
+  "taskBoundary": {
+    "corePathRequiresTasks": false,
+    "experimental20251125Enabled": false,
+    "extensionTasksEnabled": false,
+    "rule": "A later adapter may expose exactly one negotiated task vocabulary; experimental and extension wire shapes never mix."
+  },
+  "evidence": [
+    "docs/test-evidence/P0-T3/20260729T120836+0800/codex-primary.jsonl",
+    "docs/test-evidence/P0-T3/20260729T120836+0800/codex-compat-2025-03-26.jsonl",
+    "docs/test-evidence/P0-T3/20260729T120836+0800/codex-compat-2025-11-25.jsonl"
+  ],
+  "sources": [
+    "https://developers.openai.com/codex/codex-manual.md",
+    "https://modelcontextprotocol.io/docs/learn/versioning",
+    "https://github.com/modelcontextprotocol/typescript-sdk/releases/tag/1.30.0"
+  ],
+  "upgradeTriggers": [
+    "The supported Codex client initializes with a different revision or task capability.",
+    "A stable SDK release changes the default supported revision set.",
+    "The project chooses to implement a tested Tasks adapter in P1."
+  ]
+}

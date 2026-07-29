@@ -1,0 +1,30 @@
+{
+  "name": "@vem/protocol",
+  "version": "0.0.0-private",
+  "private": true,
+  "description": "Closed P0 protocol contracts for Visual Element MCP",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./schema": "./schemas/protocol.schema.json"
+  },
+  "files": ["dist", "schemas", "compatibility-matrix.json"],
+  "scripts": {
+    "build": "tsc -b --pretty false",
+    "typecheck": "tsc -b --pretty false",
+    "schema:generate": "pnpm run build && node scripts/generate-schema.mjs --write",
+    "schema:check": "pnpm run build && node scripts/generate-schema.mjs --check"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.30.0",
+    "zod": "4.4.3"
+  },
+  "devDependencies": {
+    "@types/node": "24.13.3",
+    "ajv": "8.17.1"
+  }
+}

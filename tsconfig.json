@@ -1,6 +1,7 @@
 {
   "files": [],
   "references": [
-    { "path": "./packages/workspace-smoke" }
+    { "path": "./packages/workspace-smoke" },
+    { "path": "./packages/protocol" }
   ]
 }

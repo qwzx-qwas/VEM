@@ -1,0 +1,14 @@
+{
+  "accepted": true,
+  "acceptedAt": "2026-07-29T13:06:23+08:00",
+  "compatibilityRevisions": [
+    "2025-03-26",
+    "2025-11-25"
+  ],
+  "decisionOwner": "project-owner",
+  "ownerStatement": "接受",
+  "p0TaskMode": "none",
+  "primaryRevision": "2025-06-18",
+  "sdk": "@modelcontextprotocol/sdk@1.30.0",
+  "taskId": "P0-T3"
+}

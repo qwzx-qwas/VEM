@@ -1,0 +1,13 @@
+RESULT=pass
+PROTOCOL_SCHEMA_GENERATE=pass
+PROTOCOL_SCHEMA_CHECK=pass
+BUILD=pass
+VITEST=pass files=6 tests=31
+LINT=pass
+TYPECHECK=pass
+ROADMAP_VALIDATION=pass phases=9 tasks=136 contracts=25 authorityFiles=1
+WORKSPACE_CHECK=pass node=24.18.0 pnpm=10.34.0
+WORKSPACE_TESTS=pass
+LICENSE_AUDIT=pass packages=217 vendored=0
+CLEAN_FROZEN_INSTALL=pass packageManager=pnpm@10.34.0
+BOOTSTRAP_PREFLIGHT_REGRESSION=pass tests=98

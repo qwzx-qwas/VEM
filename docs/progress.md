@@ -149,3 +149,15 @@ Each future entry must include task ID, date, changed files, commands, test evid
 - Security/data-lifecycle verification: validator is read-only, confines paths to the repository, requires exact unique anchors and emits bounded error codes; it stores no source body, environment dump or credentials
 - Known limitations/degradations: existing authority strings remain supported relative to `design_source`; future extracted sections should use explicit `{path, anchor}` entries; CI wiring remains P0-T10
 - Next eligible task: `P0-T3` by roadmap order; P0-T4 is also eligible but must not run concurrently
+
+## P0-T3 — MCP compatibility and minimum protocol baseline
+
+- Date: 2026-07-29
+- State/outcome: `done` / `passed`
+- Decision: project owner explicitly accepted primary `2025-06-18`, compatibility revisions `2025-03-26` and `2025-11-25`, exact `@modelcontextprotocol/sdk@1.30.0`, P0 Tasks mode `none`, and the no-mixed-task-vocabulary boundary; evidence is `docs/test-evidence/P0-T3/20260729T120836+0800/owner-decision.json`
+- Changed files: ADR 0004, decision/roadmap/status/prompt/progress records, exact workspace lock/notices, `packages/protocol/`, bounded handshake probe/tests, workspace package verification, and `docs/test-evidence/P0-T3/20260729T120836+0800/`
+- Commands: three ephemeral read-only Codex MCP initialization probes; deterministic protocol schema generate/check; build, Vitest, workspace tests, lint, typecheck, roadmap/workspace/license gates; offline clean frozen install; complete bootstrap preflight regression; evidence SHA-256 verification
+- Test evidence: Codex MCP client `0.144.5` requested `2025-06-18`, advertised only `elicitation` and no Tasks, and accepted all three server-selected revisions; 31 Vitest and 7 workspace tests passed; closed Draft 2020-12 schema cross-validation, build, lint, typecheck, roadmap validation for 9 phases/136 tasks/25 contracts, 217-package license audit, offline frozen install and 98 preflight tests passed
+- Security/data-lifecycle verification: strict contracts bind project/session/connection epoch, claim, selection/document/source identity, prompt hash, trusted reporter, 15-minute maximum TTL and one consumption; EvidenceGraph retains per-edge provenance and conflict-first semantics; origin/path/query/form/credential output is bounded or rejected; handshake evidence is a six-field allowlist with no prompt, environment, authorization, page text or source path
+- Known limitations/degradations: this task defines protocol contracts only and does not start an MCP server, advertise tools/resources/Tasks, implement coordinator state, confirmation lifecycle, claims, source resolution, wait journal or product runtime capability; those remain P0-T12A/B/C
+- Next eligible task: `P0-T4` by roadmap order

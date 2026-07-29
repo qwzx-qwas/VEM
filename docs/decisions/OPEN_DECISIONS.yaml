@@ -62,13 +62,26 @@ decisions:
 
   - id: MCP-PRIMARY-COMPAT-REVISION
     title: Accept primary and compatibility MCP revisions and Tasks negotiation boundary
-    status: scheduled
+    status: decided
     decision_owner: project-owner
     needed_by_task: P0-T3
+    decision:
+      primary_revision: 2025-06-18
+      compatibility_revisions: [2025-03-26, 2025-11-25]
+      sdk: "@modelcontextprotocol/sdk@1.30.0"
+      p0_task_mode: none
+      task_boundary: Experimental 2025-11-25 Tasks and later extension Tasks remain disabled and must never be mixed in one wire adapter.
+      revision_rule: Each session uses only its explicitly negotiated revision; latest is rejected.
+    decided_at: 2026-07-29T13:06:23+08:00
+    owner_statement: 接受
+    evidence_ref: docs/test-evidence/P0-T3/20260729T120836+0800/summary.md
+    owner_decision_evidence_ref: docs/test-evidence/P0-T3/20260729T120836+0800/owner-decision.json
     context_refs:
       - docs/DESIGN.md
+      - docs/adr/0004-mcp-protocol-compatibility.md
     context_sections:
       - 13.1 Protocol package 与 MCP 兼容基线 (MCP-COMPAT-001)
+    note: Owner accepted the evidence-backed proposal after Codex 0.144.5 initialization passed all three revisions; runtime implementation remains deferred to P0-T12A/B/C.
 
   - id: P0-VALUE
     title: Continue, adjust, or stop after the preregistered P0 value micro-pilot

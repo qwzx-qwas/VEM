@@ -1,5 +1,5 @@
 import { execFileSync } from "node:child_process";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { resolve } from "node:path";
 
 const EXPECTED_NODE = "24.18.0";
@@ -8,14 +8,21 @@ const EXPECTED_LICENSE = "Apache-2.0";
 
 export function verifyWorkspace(root, observedNode, observedPnpm) {
   const rootPackage = JSON.parse(readFileSync(resolve(root, "package.json"), "utf8"));
-  const childPackage = JSON.parse(readFileSync(resolve(root, "packages/workspace-smoke/package.json"), "utf8"));
+  const packageFiles = readdirSync(resolve(root, "packages"), { withFileTypes: true })
+    .filter((entry) => entry.isDirectory() && existsSync(resolve(root, "packages", entry.name, "package.json")))
+    .map((entry) => `packages/${entry.name}/package.json`)
+    .sort();
+  const packages = [
+    ["package.json", rootPackage],
+    ...packageFiles.map((path) => [path, JSON.parse(readFileSync(resolve(root, path), "utf8"))]),
+  ];
   const tsconfig = JSON.parse(readFileSync(resolve(root, "tsconfig.base.json"), "utf8"));
   const errors = [];
   if (observedNode !== EXPECTED_NODE) errors.push(`Node must be ${EXPECTED_NODE}; observed ${observedNode}`);
   if (observedPnpm !== EXPECTED_PNPM) errors.push(`pnpm must be ${EXPECTED_PNPM}; observed ${observedPnpm}`);
   if (rootPackage.packageManager !== `pnpm@${EXPECTED_PNPM}`) errors.push("packageManager does not pin the accepted pnpm version");
   if (rootPackage.engines?.node !== `=${EXPECTED_NODE}`) errors.push("engines.node does not pin the accepted Node version");
-  for (const [name, metadata] of [["package.json", rootPackage], ["packages/workspace-smoke/package.json", childPackage]]) {
+  for (const [name, metadata] of packages) {
     if (metadata.private !== true) errors.push(`${name} must be private`);
     if (metadata.license !== EXPECTED_LICENSE) errors.push(`${name} must declare ${EXPECTED_LICENSE}`);
   }

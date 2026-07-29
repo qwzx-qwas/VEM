@@ -17,7 +17,8 @@
 - `P0-T1` 已完成：private pnpm/TypeScript workspace 固定 Node `24.18.0`、pnpm `10.34.0`、TypeScript `6.0.3`、Vitest `4.1.10` 与 ESLint `10.8.0`；clean offline frozen install、8 项 workspace/license 测试、build/typecheck/lint、130 个依赖记录与 vendored-asset 门禁均通过，证据位于 `docs/test-evidence/P0-T1/20260729T103857+0800/`。
 - `P0-T0G` 已完成：锁定 Playwright `1.62.0`，以校验官方哈希的任务专用 Windows Node `24.18.0` 通过真实 `channel: msedge` 驱动 Edge Stable `150.0.4078.105`；headed/headless、unmanaged policy 分类、独立 profile 与进程/临时目录清理全部通过，证据位于 `docs/test-evidence/P0-T0/20260729T110955+0800/`。
 - `P0-T2` 已完成：新增 schema v4、`pnpm roadmap:validate` 与 11 组 valid/fail-closed fixtures，机械验证多文件 authority、规范覆盖、双向映射、内部链接、依赖 DAG、decision 与状态一致性；证据位于 `docs/test-evidence/P0-T2/20260729T115639+0800/`。
-- 当前下一项为 `P0-T3`：记录 MCP-COMPAT-001 baseline protocol ADR 与最小 schema；P0-T4 也已满足依赖，但按 roadmap 顺序不并行执行。
+- `P0-T3` 已完成：owner 接受 ADR 0004，锁定 Codex 实测 primary `2025-06-18`、compat `2025-03-26`/`2025-11-25`、SDK `1.30.0` 与 P0 no-Tasks 边界；严格协议 schema、RevisionContext、ConfirmationBinding、PRIV-MIN、VemError 和最小 EvidenceGraph 已通过完整门禁，证据位于 `docs/test-evidence/P0-T3/20260729T120836+0800/`。
+- 当前下一项为 `P0-T4`：创建 React + Vite + TypeScript demo 及隐私、prompt-injection 和 malicious-input fixtures。
 - readiness 结果为 `ready`：大小写 staging 路径为同一 device/inode，payload 与 prefix-normalized manifest 已冻结，无 case collision，目标不存在，ext4 容量/owner permission 通过，且目标未被任务修改。
 - 当前 owner-approved 产品范围是 P0 proof-of-value / go-no-go prototype，不是完整 Visual V1。
 - 安全策略边界已确定但尚未实现：没有全局 security-off/trusted-local 绕过；P3 只为默认开启的增强保障项提供逐项用户 opt-out，并保持安全底线始终执行。
@@ -35,7 +36,7 @@
 
 ## 当前待 owner 决策
 
-见 `docs/decisions/OPEN_DECISIONS.yaml`。迁移、exact toolchain 与 Apache-2.0 项目许可证记录均已完成；MCP primary/compat revision 仍按 P0-T3 的时点待决。
+见 `docs/decisions/OPEN_DECISIONS.yaml`。迁移、exact toolchain、Apache-2.0 项目许可证和 MCP primary/compat revision 均已决定；下一项 owner/evidence decision 是 P0-T17B 的 `P0-VALUE`。
 
 ## 状态与记录分工
 
