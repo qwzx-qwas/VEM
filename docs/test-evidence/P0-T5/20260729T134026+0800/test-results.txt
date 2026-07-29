@@ -1,0 +1,18 @@
+RESULT=pass
+DEMO_BUILD=pass vite=8.1.5 transformedModules=23 files=4 bytes=1092648 externalUrls=0
+SOURCE_TESTS=pass files=8 tests=50 p0T5Tests=13
+WORKSPACE_TESTS=pass files=3 tests=7
+BUILD=pass
+LINT=pass
+TYPECHECK=pass
+WORKSPACE_CHECK=pass node=24.18.0 pnpm=10.34.0 workspaceProjects=5
+ROADMAP_VALIDATION=pass phases=9 tasks=136 contracts=25 authorityFiles=1
+LICENSE_AUDIT=pass packages=231 vendored=0
+FROZEN_INSTALL=pass packageManager=pnpm@10.34.0
+CLEAN_FROZEN_INSTALL=pass packageManager=pnpm@10.34.0
+BOOTSTRAP_PREFLIGHT_REGRESSION=pass tests=98
+SELECTION_INTEGRITY=page-untrusted externalConfirmationRequired=true
+FORM_CURRENT_VALUE_READ=none
+PERSISTENT_SELECTION_STORAGE=none
+EXTERNAL_DEMO_URLS=none
+LATER_RUNTIME_CAPABILITY=none

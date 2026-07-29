@@ -8,5 +8,8 @@
     "tsBuildInfoFile": "dist-types/.tsbuildinfo",
     "types": ["node", "vite/client"]
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "vite.config.ts"]
+  "include": ["src/**/*.ts", "src/**/*.tsx", "vite.config.ts"],
+  "references": [
+    { "path": "../injected-selector" }
+  ]
 }

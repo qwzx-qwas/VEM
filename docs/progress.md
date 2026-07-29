@@ -173,3 +173,15 @@ Each future entry must include task ID, date, changed files, commands, test evid
 - Security/data-lifecycle verification: nine stable closed categories contain only `VEM_FIXTURE` fake credentials; private form values, private subtrees, sensitive path/query/fragment/title, prompt injection, Unicode controls, secret diagnostics, raw error and unknown nested runtime payload are present; injection renders as escaped text and no external request-bearing element exists
 - Known limitations/degradations: this is intentionally unsafe page data for downstream rejection tests, not a privacy filter; no selector, projection, proxy, MCP, marker transform, source registry, browser automation or production leakage claim was added
 - Next eligible task: `P0-T5` by roadmap order; `P0-T15` also has dependencies satisfied but tasks remain atomic
+
+## P0-T5 — Injected selector, PRIV-MIN projection and ephemeral lifecycle
+
+- Date: 2026-07-29
+- State/outcome: `done` / `passed`
+- Decision: ADR 0005 accepts injected-page selection as permanently `page-untrusted`; `event.isTrusted`, same-origin, overlay state and nonce cannot improve integrity, and strict edit policy always requires external confirmation
+- Changed files: ADR 0005, private `packages/injected-selector/`, React/Vite fixture wiring, exact test dependency lock/notices, workspace build references, roadmap/status/prompt/progress records and `docs/test-evidence/P0-T5/20260729T134026+0800/`
+- Commands: exact frozen install; license regeneration/audit; real selector/demo production build; DOM/privacy/lifecycle Vitest; workspace/build/lint/typecheck/roadmap gates; offline clean frozen install; full preflight regression; Git whitespace and evidence SHA checks
+- Test evidence: 13 new selector tests and 37 existing tests passed; pointer hover is frame-coalesced; the real demo transformed 23 modules into four local files totaling 1,092,648 bytes including sourcemap with zero external URL; seven workspace tests, 231-package/zero-vendored license audit, frozen/offline install and 98 preflight tests passed
+- Security/data-lifecycle verification: overlay/private/hidden/metadata/zero-area targets fail closed; form values are never read; sensitive text, raw URL path/query/fragment and control/bidi characters are removed or rejected; summaries are immutable, explicitly untrusted and byte-bounded; Map/WeakMap/WeakRef state clears on page/document/project/detach/stop/explicit lifecycle events with no durable storage
+- Known limitations/degradations: injected selection cannot prove user intent or authorize editing; no extension/CDP identity, screenshot, source anchor/registry, proxy/coordinator/MCP, claim, ConfirmationBinding consumption, Vite injection transform or persistence was added
+- Next eligible task: `P0-T15`

@@ -1,0 +1,13 @@
+pnpm install --frozen-lockfile
+pnpm license:generate
+pnpm license:check
+pnpm demo:build
+pnpm test
+pnpm test:workspace
+pnpm build
+pnpm lint
+pnpm typecheck
+pnpm workspace:check
+pnpm roadmap:validate
+pnpm test:install
+PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s scripts/preflight/tests -v

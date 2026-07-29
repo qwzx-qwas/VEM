@@ -240,6 +240,23 @@
 - **测试要求**：demo build、private input/textarea/select/password、`data-vem-private` 与用户 private selector、URL path/query/fragment、prompt-data escaping、long Unicode/control text、secret/error echo、closed manifest smoke tests。
 - **验收标准**：fixture-only demo 可被 P0-T5/P0-T15 复用且全部门禁通过；本阶段不声称任何隐私过滤或产品 runtime capability。
 
+## P0-T5 — Injected selector、PRIV-MIN projection 与 ephemeral lifecycle
+
+### Prompt
+
+> **已完成（2026-07-29）**：已接受 ADR 0005 并交付 `@vem/injected-selector`：pointer-free closed-shadow overlay、合并 hover/click/Escape、private/hidden/tool target 拒绝、不可变有界 PRIV-MIN summary、始终 page-untrusted provenance、严格 external-confirmation-required 与 memory-only 全生命周期清理；React/Vite fixture 已接入。50 项源测试、7 项 workspace、真实 23-module/4-file/1,092,648-byte/0-external-URL build、231-package license、98 项 preflight、build/typecheck/lint/roadmap 与 frozen install 全部通过，未宣称源码定位、MCP、持久化或编辑授权。
+
+- **背景**：恶意 React/Vite fixture 已可构建，当前需交付 P0 第一条真实 injected-page selection，同时保持页面环境和交互声明始终不可信。
+- **目标**：记录 injected-browser/SEL-PROV ADR，并实现最小 selector overlay、page-untrusted SelectionSummary、PRIV-MIN allowlist projection、strict external-confirmation limitation 与 memory-only lifecycle。
+- **本阶段做**：提供 injected-page capability report；实现 hover/click/Escape、overlay-owned filtering、private target refusal、bounded/redacted summary、untrusted prompt-data 标记、内存 selection store 及 document/project/pagehide/explicit clear。
+- **本阶段不做**：不实现 source anchor/registry、proxy/coordinator/MCP、claim/ConfirmationBinding 消费、Vite injection plugin、扩展/CDP、截图、持久化或真实 prepared edit。
+- **实现约束**：`event.isTrusted`、同源、overlay 与 nonce 均不得提升 integrity；不读取表单 current value；`data-vem-private`/用户 private selector 整棵拒绝；URL 仅 origin + redacted path；文本去 control/限长并标记 untrusted；严格编辑始终返回 external-confirmation-required。
+- **成功路径**：真实 DOM fixture 可启动/停止 selector、hover overlay、点击产生 immutable bounded summary；普通按钮可选，私有/不可见/工具节点拒绝；所有生命周期 clear 后 handle/snapshot 不可恢复。
+- **失败路径与边界**：敏感值/query/fragment/raw path/error echo 泄漏、trust laundering、未知 selector、oversize summary、stale project/document 或 cleanup 残留均阻止完成。
+- **建议优先查看/修改的文件**：`packages/injected-selector/`、`packages/demo-fixture/`、ADR、P0-T5 evidence。
+- **测试要求**：ADR/contract IDs、capability boundary、target/overlay/filter、page-untrusted provenance、strict external confirmation、form/private/URL/Unicode/prompt/error projection、summary bound、pagehide/document/project/explicit clear。
+- **验收标准**：P0-T5 提供可供后续 transform/pilot 使用的最小 injected selector，但不宣称受信任用户手势、源码定位、MCP 或修改授权。
+
 ## P0-T17B — 3–5 task value micro-pilot
 
 ### Prompt

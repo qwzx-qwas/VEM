@@ -1,0 +1,26 @@
+{
+  "name": "@vem/injected-selector",
+  "version": "0.0.0-private",
+  "private": true,
+  "description": "Minimum page-untrusted injected selector and privacy projection",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc -b --pretty false",
+    "typecheck": "tsc -b --pretty false"
+  },
+  "dependencies": {
+    "@vem/protocol": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "24.13.3",
+    "happy-dom": "20.11.1"
+  }
+}
