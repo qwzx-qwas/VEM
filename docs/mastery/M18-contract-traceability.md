@@ -12,9 +12,9 @@
 
 ## 核心内容
 
-当前 schema v3 登记 25 个稳定 contract。每个 contract 给出 authoritative sections、introduced phase、roadmap tasks 和 required tests。每个 roadmap task 也直接声明 `contracts`，两侧集合保持一致。
+当前 schema v4 登记 25 个稳定 contract。每个 contract 给出 authority、introduced phase、roadmap tasks 和 required tests。authority 支持向后兼容的单文件 heading，并正式验证多文件 `path + stable anchor`。每个 roadmap task 也直接声明 `contracts`，两侧集合保持一致。
 
-覆盖规则目前依赖 `docs/DESIGN.md` 的精确 heading own-body：含规范词的 section 要被至少一个 contract 覆盖。P0-T2 将实现 validator，检查未知 contract、孤立 task、依赖环、decision attempt、失效链接和双向映射。
+覆盖规则按精确 heading own-body 检查：含规范词的 section 要被至少一个 contract 覆盖。P0-T2 已实现 validator，检查未知 contract、孤立 task、依赖环、decision attempt、失效链接和双向映射。
 
 本轮没有移动规范正文，因为单一 `design_source + exact heading` 尚不适合多文件拆分。未来先升级为 `path + stable anchor`，再逐个抽取 contract。
 

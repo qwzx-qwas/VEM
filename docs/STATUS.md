@@ -16,7 +16,8 @@
 - `P0-T0F` 已完成：固定聚合 P0-T0A0–E 七个 immutable evidence bundle，manifest/artifact、root/owner/ext4、版本、时间、layout ancestry 与 roadmap 状态全部通过；bootstrap aggregate verdict 为 `passed`，canonical digest 为 `1f77525ea06e3a1525cb54c8a3bd401d0753b8384a45970b930a0626d710d4ff`，证据位于 `docs/test-evidence/P0-T0/20260728T215135+0800/`。
 - `P0-T1` 已完成：private pnpm/TypeScript workspace 固定 Node `24.18.0`、pnpm `10.34.0`、TypeScript `6.0.3`、Vitest `4.1.10` 与 ESLint `10.8.0`；clean offline frozen install、8 项 workspace/license 测试、build/typecheck/lint、130 个依赖记录与 vendored-asset 门禁均通过，证据位于 `docs/test-evidence/P0-T1/20260729T103857+0800/`。
 - `P0-T0G` 已完成：锁定 Playwright `1.62.0`，以校验官方哈希的任务专用 Windows Node `24.18.0` 通过真实 `channel: msedge` 驱动 Edge Stable `150.0.4078.105`；headed/headless、unmanaged policy 分类、独立 profile 与进程/临时目录清理全部通过，证据位于 `docs/test-evidence/P0-T0/20260729T110955+0800/`。
-- 当前下一项为 `P0-T2`：实现 REQ-TRACE-001 roadmap/requirements/contract/link/decision-dependency validator；P0-T3/P0-T4 也已满足 task dependency，但按 roadmap 顺序不并行执行。
+- `P0-T2` 已完成：新增 schema v4、`pnpm roadmap:validate` 与 11 组 valid/fail-closed fixtures，机械验证多文件 authority、规范覆盖、双向映射、内部链接、依赖 DAG、decision 与状态一致性；证据位于 `docs/test-evidence/P0-T2/20260729T115639+0800/`。
+- 当前下一项为 `P0-T3`：记录 MCP-COMPAT-001 baseline protocol ADR 与最小 schema；P0-T4 也已满足依赖，但按 roadmap 顺序不并行执行。
 - readiness 结果为 `ready`：大小写 staging 路径为同一 device/inode，payload 与 prefix-normalized manifest 已冻结，无 case collision，目标不存在，ext4 容量/owner permission 通过，且目标未被任务修改。
 - 当前 owner-approved 产品范围是 P0 proof-of-value / go-no-go prototype，不是完整 Visual V1。
 - 安全策略边界已确定但尚未实现：没有全局 security-off/trusted-local 绕过；P3 只为默认开启的增强保障项提供逐项用户 opt-out，并保持安全底线始终执行。

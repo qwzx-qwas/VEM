@@ -1,0 +1,11 @@
+corepack pnpm add --save-dev --save-exact yaml@2.9.0
+corepack pnpm roadmap:validate
+corepack pnpm test
+corepack pnpm build
+corepack pnpm typecheck
+corepack pnpm lint
+corepack pnpm license:check
+corepack pnpm workspace:check
+corepack pnpm test:install
+PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s scripts/preflight/tests -p 'test_*.py'
+git diff --check

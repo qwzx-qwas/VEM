@@ -176,6 +176,23 @@
 
 ## P0-T17A — 两层只读 pilot harness
 
+
+## P0-T2 — REQ-TRACE-001 repository validator
+
+### Prompt
+
+
+> **已完成（2026-07-29）**：已交付 requirements schema v4 与 `pnpm roadmap:validate`，支持向后兼容的单文件 heading 和正式 `{path, anchor}` 多文件 authority；11 组 fixtures 覆盖未知 contract、未覆盖规范、缺测试、broken link、孤立映射、环、decision 与状态矛盾。真实 9 phase/136 task/25 contract 仓库验证、19 项 Vitest、98 项 preflight、build/typecheck/lint/license/workspace 与离线 clean install 全部通过。
+- **背景**：bootstrap 目前依赖一次性 inline 检查，且 contract authority 仍隐含使用单一 `design_source + heading`；ROADMAP 已要求可重复的仓库 validator。
+- **目标**：交付本地可运行的 roadmap/requirements validator，机械验证规范覆盖、双向 contract/task 映射、多文件 `path + stable anchor` authority、内部链接、依赖 DAG、decision attempt/verdict 与 task/phase 状态一致性。
+- **本阶段做**：升级 requirements authority schema；实现 validator CLI/core；提供 valid 与 fail-closed fixtures；加入 `pnpm roadmap:validate`。
+- **本阶段不做**：不运行 CI、不移动规范正文、不实现产品协议、浏览器、selector、runtime 或 production leakage gate。
+- **实现约束**：路径必须 root-relative 且不可逃逸；anchor 精确且唯一；heading own-body 规范词覆盖；未知字段/contract/task/decision/status、孤立映射、环与 broken link 均失败。
+- **成功路径**：真实仓库和 valid fixture 通过；每类无效 fixture 返回稳定分类与非零退出；现有 workspace/preflight 回归保持通过。
+- **失败路径与边界**：parse/schema、authority、coverage、mapping、dependency、decision、state 或 link 任一错误阻止完成；validator 不修复输入。
+- **建议优先查看/修改的文件**：`docs/requirements.yaml`、`ROADMAP.yaml`、`scripts/roadmap/`、root package scripts、P0-T2 evidence。
+- **测试要求**：valid、multi-source path/stable anchor、unknown contract、uncovered normative section、missing test map、broken link、orphan task、cycle、decision reference/attempt/verdict、inconsistent task/phase state。
+- **验收标准**：`pnpm roadmap:validate` 可重复通过并覆盖规定的负向 fixtures；只交付 governance validator，不增加产品功能。
 ### Prompt
 
 - **背景**：micro-pilot 发生在 coordinator/MCP 之前，需要可复核的离线证据通道。

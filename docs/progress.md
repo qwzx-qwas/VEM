@@ -138,3 +138,14 @@ Each future entry must include task ID, date, changed files, commands, test evid
 - Security/data-lifecycle verification: the user's Edge profile was never used; Playwright's default `--no-sandbox` was removed; ExecutionPolicy remained `Restricted` without bypass; policy was classified unmanaged; runner output was one bounded redacted JSON line; task profiles, matching Edge processes, staged modules, portable Node ZIP/extraction and interrupted WSL download were removed with zero residue
 - Known limitations/degradations: the portable Windows Node runner is a gate harness only and does not change the WSL Node/Vite/MCP product topology; no selector, protocol, extension, source resolution, runtime discovery, screenshot or other product capability was added
 - Next eligible task: `P0-T2` by roadmap order; P0-T3 and P0-T4 dependencies are also satisfied but tasks must remain atomic
+
+## P0-T2 — REQ-TRACE-001 repository validator
+
+- Date: 2026-07-29
+- State/outcome: `done` / `passed`
+- Changed files: requirements schema metadata, exact YAML dependency/notices, `scripts/roadmap/`, package command, roadmap/status/prompt/mastery/progress and `docs/test-evidence/P0-T2/20260729T115639+0800/`
+- Commands: `pnpm roadmap:validate`, Vitest, build/typecheck/lint, license/workspace/offline install, Python preflight regression and Git whitespace check
+- Test evidence: 11 REQ-TRACE fixtures and 19 total Vitest tests passed; live validation passed for 9 phases, 136 tasks and 25 contracts; 98 preflight tests and all workspace gates passed
+- Security/data-lifecycle verification: validator is read-only, confines paths to the repository, requires exact unique anchors and emits bounded error codes; it stores no source body, environment dump or credentials
+- Known limitations/degradations: existing authority strings remain supported relative to `design_source`; future extracted sections should use explicit `{path, anchor}` entries; CI wiring remains P0-T10
+- Next eligible task: `P0-T3` by roadmap order; P0-T4 is also eligible but must not run concurrently

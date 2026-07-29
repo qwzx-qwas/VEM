@@ -1,6 +1,9 @@
-schema_version: 3
+schema_version: 4
 design_source: docs/DESIGN.md
 coverage_policy:
+  authority_reference: path-stable-anchor-v1
+  legacy_string_authority_base: design_source
+  internal_link_sources: [docs/README.md, docs/DESIGN.md]
   normative_terms: [必须, 不得, 禁止, 不能, 应当, 不应, 不可, 只允许, 仅允许, 需要, fail closed, fail-closed, MUST, SHALL]
   unit: heading_own_body
   heading_match: exact_markdown_heading_text_without_hash_prefix
