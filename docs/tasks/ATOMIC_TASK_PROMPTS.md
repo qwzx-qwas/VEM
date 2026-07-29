@@ -223,6 +223,23 @@
 - **测试要求**：ADR lint、contract IDs、primary/compat initialization、no-task、optional-task negotiation refusal、revision equality/reset、confirmation direct/degraded、schema size/depth、privacy output、EvidenceGraph conflict 与 VemError compatibility。
 - **验收标准**：P0-T3 协议规格可被后续 P0-T12A/B/C 实现消费，但本阶段不宣称任何 runtime capability。
 
+## P0-T4 — React/Vite 隐私与恶意输入 fixture
+
+### Prompt
+
+> **已完成（2026-07-29）**：已锁定 React/React DOM `19.2.8`、Vite `8.1.5` 与 plugin-react `6.0.4`，交付 private React/Vite demo、9 类闭合 malicious fixture、表单/private subtree/敏感 URL 与 title/prompt injection/Unicode-control/假 secret/error echo/unknown payload；React SSR 证明注入 HTML 被转义，真实 Vite build 为 17 modules/4 files/1,053,984 bytes 且无外部请求。37 项源测试、7 项 workspace、98 项 preflight、build/typecheck/lint/license/roadmap 与离线 frozen install 全部通过，未实现或宣称任何产品 runtime。
+
+- **背景**：协议的 PRIV-MIN 基线已冻结，但 selector/proxy/MCP 实现前还缺一个可构建、可重复的真实 React + Vite 恶意输入场景。
+- **目标**：交付固定版本的 React/Vite/TypeScript demo，覆盖私有表单、private subtree、URL secret、prompt injection、超长 Unicode/control character、secret-shaped diagnostics 与错误回显语料。
+- **本阶段做**：建立 private demo workspace package；将恶意内容作为显式 untrusted fixture data 渲染；提供闭合 fixture manifest、SSR smoke tests 和真实 Vite production build。
+- **本阶段不做**：不实现 selector、隐私投影、proxy、MCP、Vite marker transform、source registry、浏览器自动化或 production leakage verdict。
+- **实现约束**：所有 secret 均为显式假值；不访问外部网络；prompt injection 只作为 React 文本节点；fixture ID/category 稳定；表单当前值、query/fragment、原始敏感 path/title、private subtree 和错误回显必须真实存在于 fixture，供后续 fail-closed 测试消费。
+- **成功路径**：React SSR 可枚举全部预登记 fixture；恶意 HTML 被转义；Vite build 成功；fixture manifest 与页面结构一致。
+- **失败路径与边界**：缺任一 PRIV-MIN 类别、使用真实 credential、执行注入内容、外部请求、unknown fixture category、未闭合 manifest 或 demo build 失败均阻止完成。
+- **建议优先查看/修改的文件**：`packages/demo-fixture/`、workspace/tsconfig、root demo scripts、P0-T4 evidence。
+- **测试要求**：demo build、private input/textarea/select/password、`data-vem-private` 与用户 private selector、URL path/query/fragment、prompt-data escaping、long Unicode/control text、secret/error echo、closed manifest smoke tests。
+- **验收标准**：fixture-only demo 可被 P0-T5/P0-T15 复用且全部门禁通过；本阶段不声称任何隐私过滤或产品 runtime capability。
+
 ## P0-T17B — 3–5 task value micro-pilot
 
 ### Prompt

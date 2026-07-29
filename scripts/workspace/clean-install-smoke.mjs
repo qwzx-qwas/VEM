@@ -5,7 +5,7 @@ import { basename, join, resolve, sep } from "node:path";
 
 const sourceRoot = process.cwd();
 const temporaryRoot = mkdtempSync(join(tmpdir(), "vem-p0-t1-clean-install-"));
-const excludedNames = new Set([".git", "coverage", "dist", "node_modules"]);
+const excludedNames = new Set([".git", "coverage", "dist", "dist-types", "node_modules"]);
 
 function shouldCopy(source) {
   const relative = source.slice(sourceRoot.length).split(sep).filter(Boolean);

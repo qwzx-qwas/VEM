@@ -161,3 +161,15 @@ Each future entry must include task ID, date, changed files, commands, test evid
 - Security/data-lifecycle verification: strict contracts bind project/session/connection epoch, claim, selection/document/source identity, prompt hash, trusted reporter, 15-minute maximum TTL and one consumption; EvidenceGraph retains per-edge provenance and conflict-first semantics; origin/path/query/form/credential output is bounded or rejected; handshake evidence is a six-field allowlist with no prompt, environment, authorization, page text or source path
 - Known limitations/degradations: this task defines protocol contracts only and does not start an MCP server, advertise tools/resources/Tasks, implement coordinator state, confirmation lifecycle, claims, source resolution, wait journal or product runtime capability; those remain P0-T12A/B/C
 - Next eligible task: `P0-T4` by roadmap order
+
+## P0-T4 — React/Vite privacy and malicious-input fixture
+
+- Date: 2026-07-29
+- State/outcome: `done` / `passed`
+- Decision: n/a; exact current dependencies are React/React DOM `19.2.8`, Vite `8.1.5`, plugin-react `6.0.4`, `@types/react@19.2.17` and `@types/react-dom@19.2.3`
+- Changed files: private `packages/demo-fixture/`, exact workspace lock/notices, root demo/test/build-output wiring, roadmap/status/prompt/progress records and `docs/test-evidence/P0-T4/20260729T132101+0800/`
+- Commands: exact registry version queries; lockfile-only and frozen install; license regeneration/audit; real Vite build and bounded artifact verification; SSR/manifest Vitest; workspace/build/lint/typecheck/roadmap gates; offline clean frozen install; full preflight regression; evidence SHA verification
+- Test evidence: Vite transformed 17 modules and emitted four local files totaling 1,053,984 bytes including sourcemap under hard 1.5 MB/12-file caps; six new fixture tests and 31 existing tests passed; seven workspace tests, 224-package/zero-vendored license audit, offline install and 98 preflight tests passed
+- Security/data-lifecycle verification: nine stable closed categories contain only `VEM_FIXTURE` fake credentials; private form values, private subtrees, sensitive path/query/fragment/title, prompt injection, Unicode controls, secret diagnostics, raw error and unknown nested runtime payload are present; injection renders as escaped text and no external request-bearing element exists
+- Known limitations/degradations: this is intentionally unsafe page data for downstream rejection tests, not a privacy filter; no selector, projection, proxy, MCP, marker transform, source registry, browser automation or production leakage claim was added
+- Next eligible task: `P0-T5` by roadmap order; `P0-T15` also has dependencies satisfied but tasks remain atomic

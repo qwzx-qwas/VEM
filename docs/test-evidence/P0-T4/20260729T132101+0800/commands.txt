@@ -1,0 +1,16 @@
+pnpm view react version --json
+pnpm view react-dom version --json
+pnpm view vite version --json
+pnpm view @vitejs/plugin-react version --json
+pnpm view @types/react version --json
+pnpm view @types/react-dom version --json
+pnpm install --lockfile-only
+pnpm install --frozen-lockfile
+pnpm license:generate
+pnpm license:check
+pnpm demo:build
+pnpm test
+pnpm test:workspace
+pnpm build && pnpm lint && pnpm typecheck
+pnpm workspace:check && pnpm roadmap:validate
+pnpm test:install && PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s scripts/preflight/tests -v

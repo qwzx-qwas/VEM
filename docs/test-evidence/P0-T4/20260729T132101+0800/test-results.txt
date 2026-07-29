@@ -1,0 +1,15 @@
+RESULT=pass
+DEMO_BUILD=pass vite=8.1.5 transformedModules=17 files=4 bytes=1053984 externalUrls=0
+SOURCE_TESTS=pass files=7 tests=37 p0T4Tests=6
+WORKSPACE_TESTS=pass files=3 tests=7
+BUILD=pass
+LINT=pass
+TYPECHECK=pass
+WORKSPACE_CHECK=pass node=24.18.0 pnpm=10.34.0 packages=3
+ROADMAP_VALIDATION=pass phases=9 tasks=136 contracts=25 authorityFiles=1
+LICENSE_AUDIT=pass packages=224 vendored=0
+CLEAN_FROZEN_INSTALL=pass packageManager=pnpm@10.34.0
+BOOTSTRAP_PREFLIGHT_REGRESSION=pass tests=98
+PROMPT_INJECTION_EXECUTION=none rendering=escaped-react-text
+EXTERNAL_FIXTURE_REQUESTS=none
+PRODUCT_RUNTIME_CAPABILITY=none
