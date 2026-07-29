@@ -1,0 +1,9 @@
+Reading additional input from stdin...
+2026-07-29T09:22:56.292788Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back
+2026-07-29T09:22:56.317193Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back
+2026-07-29T09:22:56.337331Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back
+2026-07-29T09:22:56.353873Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back
+2026-07-29T09:22:56.360799Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back
+2026-07-29T09:22:56.368598Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back
+2026-07-29T09:23:14.086440Z ERROR codex_models_manager::manager: failed to renew cache TTL: missing field `supports_reasoning_summaries` at line 86 column 5
+2026-07-29T09:23:17.348376Z  WARN codex_file_watcher: failed to unwatch /home/qwzx/.codex/skills/.system: No watch was found. about ["/home/qwzx/.codex/skills/.system"]

@@ -1,0 +1,2 @@
+{"type":"item.completed","item":{"id":"item-message","type":"agent_message","text":"bounded progress message"}}
+{"type":"item.completed","item":{"id":"item-message","type":"agent_message","text":"{\"relativeFile\":\"packages/demo-fixture/src/App.tsx\",\"line\":37,\"sourceAnchorId\":null}"}}

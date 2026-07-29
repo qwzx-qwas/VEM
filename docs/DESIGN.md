@@ -234,6 +234,34 @@ P0-T17B / Codex
 
 Canonical bundle 至少记录每个 task 的 direct-search 与 VEM-assisted 两个 arm、setup cost、locate duration、direct primary source/ground-truth match、direct 不可用原因、仅在降级路径出现的 top-1/top-3 candidates 与 chosen candidate、wrong-attribution、target-changed/reselection、operator correction、raw-record hashes 和 continue/adjust/stop 判据。harness 不得执行源码写入、Shell 任务、网络搜索、候选人工调参或 holdout 替换。错误 source 自动归因、把 direct mapping 包装成常规候选、两个 arm 计时边界不同、输入 hash 变化或 later holdout 被消费时，verdict 必须 fail closed。
 
+### 2.7.2 Owner-authorized independent recovery research (`R0-RECOVERY-001`)
+
+P0 的 terminal `stop`、P0 failed 状态、attempt chain 和原始 evidence 必须保持不可覆盖；恢复研究不得把 P0-T17D 改回 pending/todo、追加 P0-VALUE attempt、满足 P0-T7 的 `requires_decisions`，也不得使 P1–P8 的 phase dependency 视为通过。Owner 可以在 P0 verdict 后显式授权一个拓扑独立的 R0 research phase，但该授权只允许修复评估可观测性并重新回答“是否值得提出新的独立研究路线”，不授权原 P0/P1 产品实现。
+
+R0 必须声明 `recovery_of_failed_phase: P0`、空 phase dependency、owner authorization reference 和 `independent-research-no-product-unlock` scope。ROADMAP validator 必须证明被恢复 phase 仍为 failed、R0 task 不成为任何既有 phase/task 的 dependency、R0 decision key 与 P0-VALUE attempt chain 分离，并且 `R0-RECOVERY` 明确 `does_not_supersede: P0-VALUE`。在另一次 owner-authorized normative change 前，任何 phase 都不得依赖 R0，任何 R0 verdict 都不能升级 P0/P1 状态。
+
+R0 的第一轮只允许四个原子结果：固定 recovery charter；实现有界 timing ledger；冻结 recovery-only task/evidence plan；执行一次新的 decision attempt。任务与证据仍遵循 fresh Codex context、counterbalance、相同 prompt/fixture/tool/sandbox/cache policy、withheld evaluator ground truth、later product holdout exclusion、separate setup cost 和 immutable raw hashes。恢复 task bank 必须独立标记为 recovery-only，不能冒充 P1/P3/P4 holdout，也不能与 P0 attempt 1/2 合并平均。
+
+Timing ledger 必须由 trusted outer runner 使用 monotonic nanoseconds 标记 process spawn/exit、stdout/stderr receipt、thread/turn/item event receipt 和最终 structured response receipt；所有 run 使用同一 instrumentation path，保留原始 event 顺序与 ledger hash。Receipt timestamp 只能界定 runner-observed transport/model/command 区间，不能冒充服务端生成时间、模型 compute time 或 shell 内部执行时间；缺少 receipt、倒序、重复 terminal event、clock domain 变化或 instrumentation hash 变化必须 fail closed。
+
+R0 decision 必须预登记 correctness、wrong attribution、capsule integrity、event-ledger completeness、pairwise cost 和 no-benefit stop conditions。`continue` 只表示 evidence 足以向 owner 提出一个新的独立 research implementation phase；它不自动创建该 phase，也不授权 P0-T7/P1。`adjust` 仍要求显式 remediation 和新的 immutable R0 attempt；`stop` 使 R0 failed。每批外部模型调用在发送任何 fixture/prompt/context 前仍需要独立明确 owner authorization。
+
+当前 owner-authorized 执行序列和 scope boundary 见 [`docs/delivery/R0_RECOVERY_RESEARCH.md`](delivery/R0_RECOVERY_RESEARCH.md)。
+
+### 2.7.3 Owner-authorized runner remediation after R0 stop (`R1-RUNNER-REMEDIATION-001`)
+
+R0-T4 的 `stop`、R0 failed、P0-T17D 的 `stop`、P0 failed 及两条 immutable evidence chain 都不得覆盖。Owner 可以另行授权拓扑独立的 R1 runner-remediation research phase；该授权只允许修复多 agent-message 分类、失败路径 evidence sealing，并冻结新的 recovery-only preregistration，不授权新的外部模型调用或产品实现。
+
+R1 必须声明 `recovery_of_failed_phase: R0`、空 phase dependency、owner authorization reference 与 `independent-research-no-product-unlock` scope。`R1-RECOVERY` 必须以 `does_not_supersede: R0-RECOVERY` 和 `also_does_not_supersede: [P0-VALUE]` 同时固定两条 terminal decision chain；任何既有 phase/task 不得依赖 R1。
+
+Runner 不得把每个 `item.completed/agent_message` 都升级为 final structured response。所有 JSONL line 先作为普通 receipt event 记录；stdout/进程收束后，只能从有界候选中选出唯一、最后且通过冻结 response schema 的 final response，再调用一次 `recordStructuredResponse`。零个有效候选、多个相互冲突的有效候选、倒序/重复终态或 instrumentation drift 都必须 fail closed。
+
+失败路径必须在抛错前保存有界 raw stdout/stderr、process terminal observation、ledger prefix 或显式 protocol-failure receipt、错误码与 hash manifest；不得再次出现只保留 stack、没有可重放 raw/ledger 的状态。失败证据与正常结果使用新 evidence root，不能写入或改动 R0-T4 evidence。
+
+R1 只允许四个原子结果：固定独立 remediation charter；修复并测试 runner/ledger failure sealing；冻结新的 recovery-only preregistration；在新的、绑定该 hash 的 owner authorization 后执行 decision attempt。外部调用授权必须发生在新预注册冻结以后。
+
+当前 owner-authorized 执行序列见 [`docs/delivery/R1_RUNNER_REMEDIATION.md`](delivery/R1_RUNNER_REMEDIATION.md)。
+
 ## 2.8 项目与依赖许可证 (`LICENSE-POLICY-001`)
 
 P0-T1 在生成 package metadata 前必须记录项目自身许可证或明确的 private/unlicensed 状态、版权主体、贡献接收方式和发布边界；设计文档不能替项目所有者默认选择 MIT、Apache-2.0、AGPL 或商业许可。若许可证决定尚未获得项目所有者确认，允许完成不发布的 workspace scaffold，但 public package、复制第三方代码或分发 extension 的工作保持 blocked。

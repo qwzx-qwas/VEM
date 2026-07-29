@@ -6,7 +6,7 @@
 
 - 项目处于 design baseline 1.14，P0 implementation 已开始。
 - `P0-T0A0` 已完成只读 migration readiness inventory；证据位于 `docs/test-evidence/P0-T0/20260728T155608+0800/`。
-- 136 个 roadmap task 和 25 个 contract 已登记。
+- 148 个 roadmap task、11 个 phase 和 27 个 contract 已登记。
 - `P0-T0A1` 已完成 owner-authorized layout commit 与 single-writer cutover；canonical writer 是 `/home/qwzx/src/VEM`，`/mnt/d/VEM` 仅保留为只读 rollback。
 - `P0-T0A2` 已完成：bounded evidence schema/validator、Node `24.18.0` 与 pnpm `10.34.0` 的 owner-accepted exact bootstrap decision 及验证证据位于 `docs/test-evidence/P0-T0/20260728T194140+0800/`。
 - `P0-T0B` 已完成：default-CA registry、隔离 Corepack/pnpm frozen install、ext4 case/symlink/long-path 和 native watcher profile 均通过，证据位于 `docs/test-evidence/P0-T0/20260728T195939+0800/`。
@@ -22,7 +22,15 @@
 - `P0-T5` 已完成：接受 ADR 0005，交付始终 page-untrusted 的 injected selector、PRIV-MIN bounded projection、strict external-confirmation limitation 与 memory-only lifecycle；证据位于 `docs/test-evidence/P0-T5/20260729T134026+0800/`。
 - `P0-T15` 已完成：接受 ADR 0006，交付固定 React/Vite/Oxc 矩阵的 serve-only source-anchor transform、bounded private in-memory registry 与 production non-participation 等价门禁；证据位于 `docs/test-evidence/P0-T15/20260729T141939+0800/`。
 - `P0-T16` 已完成：交付 revision-scoped、memory-only、原子幂等的 source registry publication/current-only direct lookup；严格校验完整 ProjectRevisionContext、transform compatibility、规范相对路径、anchor identity hash 与 registry membership，旧 revision 仅保留一代诊断且不可升级为 current；证据位于 `docs/test-evidence/P0-T16/20260729T150232+0800/`。
-- 当前下一项为 `P0-T17A`：实现两层只读 pilot harness 与 canonical JSON evidence-bundle builder。
+- `P0-T17A` 已完成：交付版本化两层只读 pilot harness、独立 canonical evidence-bundle builder、闭合 Draft 2020-12 schema、全量输入/原始记录 hash、统一计时边界、ground-truth 隔离、later-holdout exclusion 与路径/文本去敏；证据位于 `docs/test-evidence/P0-T17/20260729T164018+0800/`。
+- `P0-T17B` attempt 1 已完成并如实记录 `P0-VALUE=adjust`：预登记的 5-task/10-arm 运行得到 10/10 正确定位、5/5 VEM direct-primary match、0 wrong attribution/reselection/correction，但 VEM 仅 2/5 配对更快且中位定位时间约 39.21 秒，高于 direct 的约 30.37 秒，未满足事前成本门槛；canonical bundle 哈希为 `d7eaabf23afd3456c7adbd4cf9f1abd6c381c69149d7650b5ac9b361c642f65e`。
+- `P0-T17C` 已完成 participant capsule/equal-base-context remediation：5 对 task capsule 的 base-context hash 相同，唯一允许差异是 VEM arm 的 `vem-context.json`；10 次真实 Bubblewrap filesystem probe 与 10 次 capsule 内 Codex binary probe 证明 repository/home/rules/skills/ground truth/holdout 不可见，capsule cleanup 零残留，证据位于 `docs/test-evidence/P0-T17C/20260729T173959+0800/`。
+- `P0-T17D` immutable attempt 2 已完成并记录 `P0-VALUE=stop`：经 owner 明确授权的第二批 10 次外部 arm 全部退出 0、使用 10 个 fresh thread，得到 10/10 正确定位、5/5 VEM direct-primary match 与 0 wrong attribution；但 VEM 仅 2/5 配对更快，direct/VEM 中位时间分别约 41.99/44.21 秒，未满足三个预登记成本条件。预登记的 fail-closed capsule audit 另将 7/10 run 判为 `CAPSULE_COMMAND_PATH_ESCAPE`，因此 immutable verdict 为 `stop`；canonical bundle 哈希为 `80b08ac28f248addc1b1f1af13bc6f4678e5d63836e6a55ad8ca5cbd700c508d`。
+- P0 phase 已按 decision model 设为 `failed`：attempt 2 的 `stop` 不可用后验解释覆盖，P0-T7 及其依赖链不再 eligible，当前 owner-approved P0 proof-of-value scope 到此停止。
+- `P0-T17E` 已完成 terminal-stop 后允许的阻断点修复：bound legacy capsule/runner 哈希与全部 attempt 2 evidence 未变；独立 v2 auditor 区分 command paths、结构化 path-line output 与普通源码/JSON 数据，对 10/10 raw streams 通过，同时真实 capsule 外路径及 rule/skill marker 负例继续 fail closed。active replay 哈希为 `48f3c70db5c471e2b1b94d1c18730f0a60e51b730182ec5ade4b89a563b789d7`；本任务未重跑 pilot、未改变 `stop/failed`、未解锁 P0-T7/P1。
+- `P0-T17F` 已完成剩余 timing 阻断点的只读取证：10 run/5 pair 的 monotonic duration 与 canonical verdict 精确一致；VEM/direct 分别执行 9/11 个 command、两边各有 1 个已恢复的非零 command，VEM 仍仅 2/5 pair 更快，第二 arm 仅 3/5 更快。raw event 无逐事件 timestamp，因此不能把总耗时归因给 shell、cache 或模型阶段；active report 哈希为 `664d8e49e0fdb573944aadc14b0affbcfae1fa0f3cc2db4c7104dc8f9eac5afc`，terminal state 不变。
+- Owner 已授权绑定 frozen hash `57fb4b9b…f37359` 的 R0-T4 外部批次。冻结 runner 在首个 arm 尝试第二次登记 structured response，`TrustedReceiptLedger` 以 `RECEIPT_LEDGER_RESPONSE_DUPLICATE` fail closed；事前 `event-ledger-integrity-failed` stop 条件触发后，剩余 9 次调用未执行。R0-T4 attempt 1 已记录 `R0-RECOVERY=stop`，R0 phase 为 `failed`；失败发生在 sealed-write 前，因此没有完整 raw/ledger/correctness/cost metrics。P0-T17D `stop`、P0 `failed`、P0-T7/P1 锁定与零产品解锁边界不变。
+- 独立 R1 runner remediation 已完成并记录 `R1-RECOVERY=stop`：冻结 batch 的首个 direct arm 成功；配对 VEM arm 退出 0，但产生错误的 `line:1/null` 与正确的 `line:7/direct anchor` 两个不同 schema-valid agent message。修复后的 recorder 在 stream close 后判定 `STRUCTURED_RESPONSE_CONFLICT`，完整封存 raw/terminal/ledger/failure/hash evidence 后停止剩余 8 次调用。R1 phase 为 `failed`；这证明 failure sealing 修复生效，但不提供完整成本或产品价值结论。`R0-RECOVERY=stop`、`P0-VALUE=stop`、P0/R0 failed 与零产品解锁边界均保持不变。
 - readiness 结果为 `ready`：大小写 staging 路径为同一 device/inode，payload 与 prefix-normalized manifest 已冻结，无 case collision，目标不存在，ext4 容量/owner permission 通过，且目标未被任务修改。
 - 当前 owner-approved 产品范围是 P0 proof-of-value / go-no-go prototype，不是完整 Visual V1。
 - 安全策略边界已确定但尚未实现：没有全局 security-off/trusted-local 绕过；P3 只为默认开启的增强保障项提供逐项用户 opt-out，并保持安全底线始终执行。
@@ -38,9 +46,9 @@
 - P0-T0A1 已完成 target migration 与 single-writer cutover；所有后续写入只发生在 canonical target，staging 继续只读保留。
 - 1.13 视觉参考绑定与双生命周期设计修订新增 P6-T14；本次 1.14 只收敛 revision reattachment、confirmation 和 production non-participation 语义，没有改变任何 roadmap task、phase 或 decision 状态。
 
-## 当前待 owner 决策
+## 当前决策状态
 
-见 `docs/decisions/OPEN_DECISIONS.yaml`。迁移、exact toolchain、Apache-2.0 项目许可证和 MCP primary/compat revision 均已决定；下一项 owner/evidence decision 是 P0-T17B 的 `P0-VALUE`。
+见 `docs/decisions/OPEN_DECISIONS.yaml`。迁移、exact toolchain、Apache-2.0 项目许可证、MCP primary/compat revision 与独立 R0/R1 scope 均已决定；`P0-VALUE`、`R0-RECOVERY` 与 `R1-RECOVERY` 均保持各自不可覆盖的 terminal `stop`。
 
 ## 状态与记录分工
 

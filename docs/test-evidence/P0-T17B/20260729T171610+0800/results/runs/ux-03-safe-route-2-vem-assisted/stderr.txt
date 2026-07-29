@@ -1,0 +1,10 @@
+Reading additional input from stdin...
+2026-07-29T09:23:18.914033Z ERROR codex_models_manager::cache: failed to load models cache: missing field `supports_reasoning_summaries` at line 86 column 5
+2026-07-29T09:23:23.028310Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back
+2026-07-29T09:23:23.036431Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back
+2026-07-29T09:23:23.044303Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back
+2026-07-29T09:23:23.051859Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back
+2026-07-29T09:23:23.059765Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back
+2026-07-29T09:23:23.070016Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back
+2026-07-29T09:23:24.010951Z  WARN codex_core_plugins::manager: failed to load recommended plugins error=failed to parse remote plugin catalog response from https://chatgpt.com/backend-api/ps/plugins/suggested: EOF while parsing a value at line 1 column 0
+2026-07-29T09:23:49.098675Z  WARN codex_file_watcher: failed to unwatch /home/qwzx/.codex/skills/.system: No watch was found. about ["/home/qwzx/.codex/skills/.system"]

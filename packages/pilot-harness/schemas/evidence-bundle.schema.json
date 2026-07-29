@@ -1,0 +1,216 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://vem.local/schemas/p0-t17a/evidence-bundle-v1",
+  "title": "P0-T17A canonical pilot evidence bundle",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "pilotPlanVersion",
+    "harnessVersion",
+    "hashNamespace",
+    "taskManifestVersion",
+    "taskManifestHash",
+    "timingBoundary",
+    "timingBoundaryHash",
+    "setupCostBoundary",
+    "laterHoldoutExclusionHash",
+    "taskCount",
+    "tasks",
+    "limitations"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "P0-T17A-canonical-evidence-bundle-v1" },
+    "pilotPlanVersion": { "$ref": "#/$defs/id" },
+    "harnessVersion": { "const": "1.0.0" },
+    "hashNamespace": { "const": "vem-pilot-v1-sha256" },
+    "taskManifestVersion": { "$ref": "#/$defs/id" },
+    "taskManifestHash": { "$ref": "#/$defs/sha256" },
+    "timingBoundary": { "$ref": "#/$defs/timingBoundary" },
+    "timingBoundaryHash": { "$ref": "#/$defs/sha256" },
+    "setupCostBoundary": { "$ref": "#/$defs/setupCostBoundary" },
+    "laterHoldoutExclusionHash": { "$ref": "#/$defs/sha256" },
+    "taskCount": { "type": "integer", "minimum": 3, "maximum": 5 },
+    "tasks": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 5,
+      "items": { "$ref": "#/$defs/taskEvidence" }
+    },
+    "limitations": {
+      "const": [
+        "ENGINEERING_SMOKE_ONLY",
+        "NO_STATISTICAL_PRODUCT_CLAIM",
+        "NO_P0_VALUE_VERDICT"
+      ]
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "gitCommit": {
+      "type": "string",
+      "pattern": "^(?:[a-f0-9]{40}|[a-f0-9]{64})$"
+    },
+    "nanoseconds": {
+      "type": "string",
+      "pattern": "^(?:0|[1-9][0-9]{0,19})$"
+    },
+    "timingBoundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["clock", "unit", "startEvent", "endEvent", "cachePolicy"],
+      "properties": {
+        "clock": { "const": "monotonic" },
+        "unit": { "const": "nanoseconds" },
+        "startEvent": { "const": "prompt-displayed" },
+        "endEvent": { "const": "source-located" },
+        "cachePolicy": { "enum": ["cold", "warm"] }
+      }
+    },
+    "setupCostBoundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["separatelyReported", "includes", "excludes"],
+      "properties": {
+        "separatelyReported": { "const": true },
+        "includes": { "const": "fixture-and-registry-setup-only" },
+        "excludes": { "const": "per-task-location-time" }
+      }
+    },
+    "rawRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schemaVersion",
+        "pilotPlanVersion",
+        "harnessVersion",
+        "hashNamespace",
+        "taskManifestHash",
+        "taskId",
+        "arm",
+        "armOrder",
+        "fixtureCommit",
+        "sourceRegistryRevision",
+        "selectionSnapshotHash",
+        "timingBoundaryHash",
+        "groundTruthHash",
+        "selectionInputHash",
+        "sourceRegistryInputHash",
+        "trialInputHash",
+        "setupDurationNs",
+        "locateDurationNs",
+        "locatedSourceIdentityHash",
+        "directPrimaryAvailable",
+        "directPrimaryMatch",
+        "directUnavailableReason",
+        "degradedTop1Match",
+        "degradedTop3Match",
+        "chosenCandidateRank",
+        "wrongAttribution",
+        "targetChanged",
+        "reselectionCount",
+        "operatorCorrection"
+      ],
+      "properties": {
+        "schemaVersion": { "const": "P0-T17A-raw-record-v1" },
+        "pilotPlanVersion": { "$ref": "#/$defs/id" },
+        "harnessVersion": { "const": "1.0.0" },
+        "hashNamespace": { "const": "vem-pilot-v1-sha256" },
+        "taskManifestHash": { "$ref": "#/$defs/sha256" },
+        "taskId": { "$ref": "#/$defs/id" },
+        "arm": { "enum": ["direct-search", "vem-assisted"] },
+        "armOrder": { "enum": [1, 2] },
+        "fixtureCommit": { "$ref": "#/$defs/gitCommit" },
+        "sourceRegistryRevision": { "$ref": "#/$defs/id" },
+        "selectionSnapshotHash": { "$ref": "#/$defs/sha256" },
+        "timingBoundaryHash": { "$ref": "#/$defs/sha256" },
+        "groundTruthHash": { "$ref": "#/$defs/sha256" },
+        "selectionInputHash": { "$ref": "#/$defs/sha256" },
+        "sourceRegistryInputHash": { "$ref": "#/$defs/sha256" },
+        "trialInputHash": { "$ref": "#/$defs/sha256" },
+        "setupDurationNs": { "$ref": "#/$defs/nanoseconds" },
+        "locateDurationNs": { "$ref": "#/$defs/nanoseconds" },
+        "locatedSourceIdentityHash": {
+          "anyOf": [{ "$ref": "#/$defs/sha256" }, { "type": "null" }]
+        },
+        "directPrimaryAvailable": { "type": ["boolean", "null"] },
+        "directPrimaryMatch": { "type": ["boolean", "null"] },
+        "directUnavailableReason": {
+          "anyOf": [{ "$ref": "#/$defs/id" }, { "type": "null" }]
+        },
+        "degradedTop1Match": { "type": ["boolean", "null"] },
+        "degradedTop3Match": { "type": ["boolean", "null"] },
+        "chosenCandidateRank": {
+          "anyOf": [
+            { "type": "integer", "minimum": 1, "maximum": 3 },
+            { "type": "null" }
+          ]
+        },
+        "wrongAttribution": { "type": "boolean" },
+        "targetChanged": { "type": "boolean" },
+        "reselectionCount": { "type": "integer", "minimum": 0, "maximum": 10 },
+        "operatorCorrection": { "type": "boolean" }
+      }
+    },
+    "taskEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "taskId",
+        "promptHash",
+        "fixtureCommit",
+        "sourceRegistryRevision",
+        "selectionSnapshotHash",
+        "groundTruthHash",
+        "selectionInputHash",
+        "sourceRegistryInputHash",
+        "trialInputHash",
+        "armOrder",
+        "rawRecords"
+      ],
+      "properties": {
+        "taskId": { "$ref": "#/$defs/id" },
+        "promptHash": { "$ref": "#/$defs/sha256" },
+        "fixtureCommit": { "$ref": "#/$defs/gitCommit" },
+        "sourceRegistryRevision": { "$ref": "#/$defs/id" },
+        "selectionSnapshotHash": { "$ref": "#/$defs/sha256" },
+        "groundTruthHash": { "$ref": "#/$defs/sha256" },
+        "selectionInputHash": { "$ref": "#/$defs/sha256" },
+        "sourceRegistryInputHash": { "$ref": "#/$defs/sha256" },
+        "trialInputHash": { "$ref": "#/$defs/sha256" },
+        "armOrder": {
+          "type": "array",
+          "prefixItems": [
+            { "enum": ["direct-search", "vem-assisted"] },
+            { "enum": ["direct-search", "vem-assisted"] }
+          ],
+          "items": false,
+          "minItems": 2,
+          "maxItems": 2,
+          "uniqueItems": true
+        },
+        "rawRecords": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["rawRecordHash", "record"],
+            "properties": {
+              "rawRecordHash": { "$ref": "#/$defs/sha256" },
+              "record": { "$ref": "#/$defs/rawRecord" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

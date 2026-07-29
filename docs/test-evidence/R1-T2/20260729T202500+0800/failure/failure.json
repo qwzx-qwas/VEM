@@ -1,0 +1,1 @@
+{"failureCodes":["STRUCTURED_RESPONSE_CONFLICT"],"ledgerEvidencePersisted":true,"outcome":"failed","process":{"exitCode":0,"launchFailed":false,"signal":null},"rawEvidencePersisted":true,"runId":"r1-t2-failure-probe","schemaVersion":"R1-T2-sealed-failure-v1"}

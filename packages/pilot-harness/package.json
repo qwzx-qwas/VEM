@@ -1,0 +1,29 @@
+{
+  "name": "@vem/pilot-harness",
+  "version": "0.0.0-private",
+  "private": true,
+  "description": "Versioned read-only P0 value-pilot evidence harness",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./schemas/evidence-bundle.schema.json": "./schemas/evidence-bundle.schema.json"
+  },
+  "files": ["dist", "schemas"],
+  "scripts": {
+    "build": "tsc -b --pretty false",
+    "typecheck": "tsc -b --pretty false",
+    "test": "vitest run src/harness.test.ts src/receipt-ledger.test.ts"
+  },
+  "dependencies": {
+    "@vem/injected-selector": "workspace:*",
+    "@vem/source-registry": "workspace:*",
+    "ajv": "8.17.1"
+  },
+  "devDependencies": {
+    "@types/node": "24.13.3"
+  }
+}

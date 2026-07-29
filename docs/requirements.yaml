@@ -29,8 +29,22 @@ contracts:
     title: Preregistered product evidence and user-visible task binding
     authoritative_sections: ["2.4 成功标准", "2.5 交付里程碑", "2.6 安装、升级与卸载是产品能力", "2.7 产品证据与 stop/go gate (`UX-GATE-001`)", "2.7.1 P0 value micro-pilot 两层只读 harness", "2.9 P0 建议执行顺序与范围", "16.7 产品效果与正确性指标"]
     introduced_phase: P0
-    roadmap_tasks: [P0-T17A, P0-T17B, P0-T9C, P1-T16, P1-T18A, P1-T18B, P1-T17, P2-T13A, P2-T13B, P2-T13C, P2-T13D, P3-T8B, P3-T19, P4-T6A, P4-T6B, P4-T6C, P7-T9A, P7-T9B, P7-T9C, P7-T9D]
+    roadmap_tasks: [P0-T17A, P0-T17B, P0-T17C, P0-T17D, P0-T17E, P0-T17F, P0-T9C, P1-T16, P1-T18A, P1-T18B, P1-T17, P2-T13A, P2-T13B, P2-T13C, P2-T13D, P3-T8B, P3-T19, P4-T6A, P4-T6B, P4-T6C, P7-T9A, P7-T9B, P7-T9C, P7-T9D]
     required_tests: [early-value-micro-pilot, evidence-plan-immutability, no-vem-baseline, holdout-separation, install-first-selection, edit-disposition, clean-uninstall, zero-false-positive-pass]
+
+  - id: R0-RECOVERY-001
+    title: Owner-authorized independent recovery research after terminal stop
+    authoritative_sections: ["2.7.2 Owner-authorized independent recovery research (`R0-RECOVERY-001`)"]
+    introduced_phase: R0
+    roadmap_tasks: [R0-T1, R0-T2, R0-T3, R0-T4]
+    required_tests: [terminal-stop-immutability, independent-phase-boundary, owner-authorization-reference, separate-decision-chain, timing-ledger-integrity, recovery-only-corpus, later-holdout-exclusion, no-product-unlock]
+
+  - id: R1-RUNNER-REMEDIATION-001
+    title: Owner-authorized independent runner remediation after R0 stop
+    authoritative_sections: ["2.7.3 Owner-authorized runner remediation after R0 stop (`R1-RUNNER-REMEDIATION-001`)"]
+    introduced_phase: R1
+    roadmap_tasks: [R1-T1, R1-T2, R1-T3, R1-T4]
+    required_tests: [r0-and-p0-stop-immutability, independent-phase-boundary, multi-agent-message-classification, unique-schema-valid-final-response, failure-evidence-sealing, new-instrumentation-hash, separate-external-authorization, no-product-unlock]
 
   - id: LICENSE-POLICY-001
     title: Project license decision and third-party dependency policy

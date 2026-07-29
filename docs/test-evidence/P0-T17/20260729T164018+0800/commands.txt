@@ -1,0 +1,17 @@
+pnpm roadmap:validate
+pnpm install --lockfile-only --offline
+pnpm install --offline
+pnpm --filter @vem/pilot-harness test
+pnpm --filter @vem/pilot-harness typecheck
+pnpm exec eslint packages/pilot-harness
+pnpm test
+pnpm build
+pnpm typecheck
+pnpm lint
+pnpm workspace:check
+pnpm license:generate
+pnpm license:check
+pnpm test:install
+pnpm demo:build
+python3 -m unittest discover -s scripts/preflight/tests -p 'test_*.py'
+git diff --check

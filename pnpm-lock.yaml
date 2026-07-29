@@ -77,6 +77,22 @@ importers:
         specifier: 20.11.1
         version: 20.11.1
 
+  packages/pilot-harness:
+    dependencies:
+      '@vem/injected-selector':
+        specifier: workspace:*
+        version: link:../injected-selector
+      '@vem/source-registry':
+        specifier: workspace:*
+        version: link:../source-registry
+      ajv:
+        specifier: 8.17.1
+        version: 8.17.1
+    devDependencies:
+      '@types/node':
+        specifier: 24.13.3
+        version: 24.13.3
+
   packages/protocol:
     dependencies:
       '@modelcontextprotocol/sdk':

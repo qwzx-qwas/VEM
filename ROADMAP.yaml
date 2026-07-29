@@ -39,8 +39,10 @@ execution_policy:
   task_prompt_source: docs/tasks/ATOMIC_TASK_PROMPTS.md
 
 decisions:
-  P0-VALUE: {phase: P0, current_attempt: P0-T17B}
+  P0-VALUE: {phase: P0, current_attempt: P0-T17D}
   P0-GOLDEN: {phase: P0, current_attempt: P0-T9C}
+  R0-RECOVERY: {phase: R0, current_attempt: R0-T4, scope: independent-research, does_not_supersede: P0-VALUE}
+  R1-RECOVERY: {phase: R1, current_attempt: R1-T4, scope: independent-research, does_not_supersede: R0-RECOVERY, also_does_not_supersede: [P0-VALUE]}
   P1-INJECTED: {phase: P1, current_attempt: P1-T17}
   P2-TRUSTED: {phase: P2, current_attempt: P2-T13D}
   P3-VISUAL: {phase: P3, current_attempt: P3-T19}
@@ -49,7 +51,7 @@ decisions:
 phases:
   - id: P0
     title: Edge Vite-injected walking skeleton and minimum contracts
-    status: in_progress
+    status: failed
     depends_on: []
     gate:
       commands: ["pnpm edge:preflight:verify", "pnpm install --frozen-lockfile", "pnpm roadmap:validate", "pnpm build", "pnpm typecheck", "pnpm test"]
@@ -83,9 +85,13 @@ phases:
       - {id: P0-T5, title: Record SEL-PROV-001 injected-browser ADR and add minimum selector overlay PRIV-MIN-001 projection bounded summary external-confirmation limitation and ephemeral lifecycle, contracts: [BROWSER-MODE-001, SEL-PROV-001, PRIV-MIN-001, DATA-LIFE-001], status: done, depends_on: [P0-T3, P0-T4], tests: [ADR lint target overlay page-untrusted provenance strict-confirmation private-field redaction prompt-data summary-bound session-expiry project-restart-clear tests]}
       - {id: P0-T15, title: Record source-anchor and PROD-LEAK-001 ADR then implement the serve-only intrinsic-JSX transform and private registry output for the pinned Vite React matrix, contracts: [REV-ID-001, EVIDENCE-TRUST-001, PROD-LEAK-001], status: done, depends_on: [P0-T3, P0-T4], tests: [ADR lint plugin-order sourcemap Fast-Refresh reserved-attribute build-nonexecution production-module-graph private-registry baseline-equivalence readonly-leakage and user-attribute tests]}
       - {id: P0-T16, title: Implement revision-scoped source registry publication and lookup prototype over the P0 transform output, contracts: [REV-ID-001, EVIDENCE-TRUST-001], status: done, depends_on: [P0-T15], tests: [registry revision collision relative-location transform-compatibility and stale-anchor tests]}
-      - {id: P0-T17A, title: Implement versioned read-only pilot harness and canonical JSON evidence-bundle builder, contracts: [UX-GATE-001], status: todo, depends_on: [P0-T5, P0-T16], tests: [read-only enforcement canonical-JSON schema input-hash timing-boundary path-redaction and later-holdout-exclusion checks]}
-      - {id: P0-T17B, title: Execute preregistered three-to-five-task UX-GATE-001 value micro-pilot from immutable evidence bundles, contracts: [UX-GATE-001], status: todo, decision_key: P0-VALUE, decision_attempt: 1, supersedes_attempt: null, decision: pending, depends_on: [P0-T17A], tests: [evidence-plan immutability isolated-Codex-context counterbalanced-arm-order withheld-ground-truth task-timing direct-primary-exact degraded-top-k wrong-attribution reselection separate-setup-cost raw-hash and continue-adjust-stop verdict checks]}
-      - {id: P0-T7, title: Record TOP-P0-001 topology ADR and implement MCP-owned coordinator private runtime discovery project-instance ownership and restart semantics, contracts: [TOP-P0-001], status: todo, depends_on: [P0-T17B], requires_decisions: {P0-VALUE: continue}, tests: [real-process discovery ACL owner restart stale-instance and ambiguity tests]}
+      - {id: P0-T17A, title: Implement versioned read-only pilot harness and canonical JSON evidence-bundle builder, contracts: [UX-GATE-001], status: done, depends_on: [P0-T5, P0-T16], tests: [read-only enforcement canonical-JSON schema input-hash timing-boundary path-redaction and later-holdout-exclusion checks]}
+      - {id: P0-T17B, title: Execute preregistered three-to-five-task UX-GATE-001 value micro-pilot from immutable evidence bundles, contracts: [UX-GATE-001], status: done, decision_key: P0-VALUE, decision_attempt: 1, supersedes_attempt: null, decision: adjust, depends_on: [P0-T17A], tests: [evidence-plan immutability isolated-Codex-context counterbalanced-arm-order withheld-ground-truth task-timing direct-primary-exact degraded-top-k wrong-attribution reselection separate-setup-cost raw-hash and continue-adjust-stop verdict checks]}
+      - {id: P0-T17C, title: Remediate the P0 value-pilot participant capsule and equal-base-context boundary after attempt-one timing overhead, contracts: [UX-GATE-001], status: done, depends_on: [P0-T17B], tests: [outside-repository participant capsule no-repository-rule-or-skill-leak equal-base-context intended-vem-context-only-difference command-path audit ground-truth-and-holdout isolation and fail-closed escape checks]}
+      - {id: P0-T17D, title: Execute preregistered P0-VALUE attempt two after participant-capsule remediation without consuming later holdouts, contracts: [UX-GATE-001], status: done, decision_key: P0-VALUE, decision_attempt: 2, supersedes_attempt: P0-T17B, decision: stop, depends_on: [P0-T17C], tests: [attempt-one-evidence-immutability new-plan immutability fresh-isolated-Codex-context counterbalanced-arm-order equal-base-context withheld-ground-truth task-timing direct-primary-exact wrong-attribution separate-setup-cost raw-hash later-holdout-untouched and continue-adjust-stop verdict checks]}
+      - {id: P0-T17E, title: Preserve the terminal P0-VALUE stop while remediating capsule audit false positives with a versioned post-hoc replay, contracts: [UX-GATE-001], status: done, depends_on: [P0-T17D], tests: [attempt-two-evidence-immutability legacy-auditor-preservation command-path structured-output route-and-JSX false-positive rejection forbidden-marker actual-escape fail-closed replay-hash and no-verdict-or-phase-reopen checks]}
+      - {id: P0-T17F, title: Preserve the terminal P0-VALUE stop while producing bounded post-hoc timing forensics from immutable attempt-two events, contracts: [UX-GATE-001], status: done, depends_on: [P0-T17E], tests: [attempt-two-and-audit-evidence-immutability exact-duration-recomputation canonical-metric-agreement command-and-token-accounting order-stratified-pair-summary missing-event-timestamp limitation no-causal-or-statistical-claim evidence-hash and no-verdict-or-phase-reopen checks]}
+      - {id: P0-T7, title: Record TOP-P0-001 topology ADR and implement MCP-owned coordinator private runtime discovery project-instance ownership and restart semantics, contracts: [TOP-P0-001], status: todo, depends_on: [P0-T17D], requires_decisions: {P0-VALUE: continue}, tests: [real-process discovery ACL owner restart stale-instance and ambiguity tests]}
       - {id: P0-T11, title: Add Vite same-origin browser proxy with separate untrusted page ingress and authenticated build-integration registry channel, contracts: [EVIDENCE-TRUST-001, TOP-P0-001, PRIV-MIN-001], status: todo, depends_on: [P0-T7], tests: [proxy routing ingress schema size privacy build-capability source-registry privilege and reconnect tests]}
       - {id: P0-T12A, title: Add MCP initialization revision negotiation no-task compatibility and minimum static truthful CapabilityReport, contracts: [CORE-BOUND-001, TOP-P0-001, MCP-COMPAT-001], status: todo, depends_on: [P0-T11], tests: [MCP primary-compat initialization no-task truthful-static-capability unavailable-later-capabilities compatible-text and cancellation tests]}
       - {id: P0-T12B, title: Add server-derived single-consumer identity immutable selection claim and ConfirmationBinding lifecycle, contracts: [EVIDENCE-TRUST-001, TOP-P0-001, SEL-PROV-001, CONF-BIND-001, DATA-LIFE-001], status: todo, depends_on: [P0-T12A], tests: [consumer-identity claim snapshot-binding direct-source-evidence degraded-candidate confirmation TTL one-use conflict disconnect restart-clear and terminal-state tests]}
@@ -97,6 +103,48 @@ phases:
       - {id: P0-T9B, title: Add project-instance restart stale-session and unrelated-update negative Edge E2E, contracts: [EDGE-PREFLIGHT-001, TOP-P0-001, VER-TXN-001], status: todo, depends_on: [P0-T9A], tests: [project-instance restart stale confirmation unrelated-update and ambiguity Edge E2E]}
       - {id: P0-T9C, title: Execute preregistered 10-to-20-task P0 golden evidence verdict, contracts: [UX-GATE-001], status: todo, decision_key: P0-GOLDEN, decision_attempt: 1, supersedes_attempt: null, decision: pending, depends_on: [P0-T9B], tests: [direct-primary exact degraded-top-k target-changed ambiguity zero-false-positive-passed and continue-adjust-stop golden baseline]}
       - {id: P0-T10, title: Add CI baseline roadmap validation and read-only production non-participation leakage gate, contracts: [REQ-TRACE-001, PROD-LEAK-001, TEST-GATE-001], status: todo, depends_on: [P0-T2, P0-T9C], tests: [local CI command production module-graph non-resolution baseline-build-equivalence leakage signature and user-attribute preservation tests]}
+
+  - id: R0
+    title: Owner-authorized independent recovery research after terminal P0 stop
+    status: failed
+    depends_on: []
+    recovery_of_failed_phase: P0
+    authorization_ref: docs/decisions/OPEN_DECISIONS.yaml
+    scope_boundary: independent-research-no-product-unlock
+    gate:
+      commands: ["pnpm roadmap:validate", "pnpm build", "pnpm typecheck", "pnpm lint", "pnpm test"]
+      requires_decisions: {R0-RECOVERY: continue}
+      done_when:
+        - P0-T17D stop evidence and P0 failed remain immutable while the validator proves R0 cannot unlock any existing product phase or task.
+        - A trusted monotonic receipt ledger distinguishes runner-observed process event and final-response boundaries without claiming model-server or shell-internal timing.
+        - A preregistered recovery-only task set uses fresh isolated contexts counterbalance equal base context withheld ground truth and later product holdout exclusion.
+        - R0-T4 records an immutable continue adjust or stop verdict; continue authorizes only an owner-reviewed proposal for a separate research implementation phase.
+    tasks:
+      - {id: R0-T1, title: Record the owner-authorized terminal-stop recovery charter and mechanically enforce its independent no-product-unlock boundary, contracts: [R0-RECOVERY-001], status: done, depends_on: [P0-T17F], tests: [failed-P0 preservation empty-phase-dependency owner-authorization-reference separate-decision-key no-existing-phase-or-task-dependency and continue-does-not-satisfy-P0 checks]}
+      - {id: R0-T2, title: Implement a versioned trusted-runner monotonic event-receipt timing ledger with bounded canonical evidence, contracts: [R0-RECOVERY-001], status: done, depends_on: [R0-T1], tests: [process event receipt final-response monotonic-order clock-domain schema size raw-hash cancellation and missing-duplicate-terminal fail-closed checks]}
+      - {id: R0-T3, title: Freeze a recovery-only task bank capsule instrumentation and preregistered evidence plan without consuming product holdouts, contracts: [R0-RECOVERY-001], status: done, depends_on: [R0-T2], tests: [fresh-task identity equal-base-context treatment-only-difference counterbalance threshold instrumentation-hash later-holdout-exclusion and pre-result immutability checks]}
+      - {id: R0-T4, title: Execute the owner-authorized recovery-only micro-pilot and record the independent R0-RECOVERY verdict, contracts: [R0-RECOVERY-001], status: done, decision_key: R0-RECOVERY, decision_attempt: 1, supersedes_attempt: null, decision: stop, depends_on: [R0-T3], tests: [fresh-context raw-and-ledger-hash correctness wrong-attribution capsule-integrity pairwise-cost no-benefit-stop and continue-adjust-stop verdict checks]}
+
+  - id: R1
+    title: Owner-authorized independent runner remediation after terminal R0 stop
+    status: failed
+    depends_on: []
+    recovery_of_failed_phase: R0
+    authorization_ref: docs/decisions/OPEN_DECISIONS.yaml
+    scope_boundary: independent-research-no-product-unlock
+    gate:
+      commands: ["pnpm roadmap:validate", "pnpm build", "pnpm typecheck", "pnpm lint", "pnpm test"]
+      requires_decisions: {R1-RECOVERY: continue}
+      done_when:
+        - R0-T4 stop R0 failed P0-T17D stop and P0 failed remain immutable with zero product unlock edges.
+        - Multi-agent-message JSONL is classified without duplicate structured-response receipt and exactly one schema-valid final response is selected after stream close.
+        - Every protocol failure seals bounded raw streams terminal observation ledger evidence error metadata and hashes before returning.
+        - R1-T3 freezes new runner instrumentation task capsule threshold and external-authorization bindings before any R1 external model call.
+    tasks:
+      - {id: R1-T1, title: Record the owner-authorized independent R1 runner-remediation charter and mechanically preserve both R0 and P0 terminal stop chains, contracts: [R1-RUNNER-REMEDIATION-001], status: done, depends_on: [], tests: [failed-R0-and-P0 preservation empty-phase-and-task-dependency dual-decision-non-supersession authorization-reference no-existing-phase-or-task-dependency and no-product-unlock checks]}
+      - {id: R1-T2, title: Fix multi-agent-message final-response classification and seal bounded raw terminal and ledger failure evidence before errors return, contracts: [R1-RUNNER-REMEDIATION-001], status: done, depends_on: [R1-T1], tests: [ordinary-event receipt single-last-schema-valid response zero-valid conflicting-valid response duplicate-prevention terminal-before-throw raw-stderr-ledger-prefix hash-manifest bounds and cancellation checks]}
+      - {id: R1-T3, title: Freeze a new recovery-only runner capsule instrumentation threshold and evidence preregistration without external calls, contracts: [R1-RUNNER-REMEDIATION-001], status: done, depends_on: [R1-T2], tests: [new-runner-hash fresh-task identity equal-base-context counterbalance threshold product-holdout-exclusion failure-sealing binding pre-result immutability and external-authorization-false checks]}
+      - {id: R1-T4, title: Execute a separately owner-authorized R1 recovery batch and record the independent R1-RECOVERY verdict, contracts: [R1-RUNNER-REMEDIATION-001], status: done, decision_key: R1-RECOVERY, decision_attempt: 1, supersedes_attempt: null, decision: stop, depends_on: [R1-T3], tests: [fresh-context raw-and-ledger-hash correctness wrong-attribution capsule-integrity pairwise-cost failure-evidence and continue-adjust-stop verdict checks]}
 
   - id: P1
     title: Harden the Edge Vite-injected MVP

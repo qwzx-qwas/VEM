@@ -131,7 +131,98 @@ describe("REQ-TRACE-001 validator", () => {
     code("decision-verdict");
   });
 
+  test("accepts an owner-authorized recovery phase without reopening the failed phase", () => {
+    addRecoveryPhase();
+    expect(validate()).toEqual({
+      phases: 2,
+      tasks: 3,
+      contracts: 1,
+      authorityFiles: 2,
+    });
+  });
+
+  test("rejects recovery from a non-failed phase or through a phase dependency", () => {
+    addRecoveryPhase();
+    roadmap.phases[0].status = "in_progress";
+    code("recovery-boundary");
+    roadmap.phases[0].status = "failed";
+    roadmap.phases[1].depends_on = ["P0"];
+    code("recovery-boundary");
+  });
+
+  test("rejects recovery decision drift and dependency leakage into existing work", () => {
+    addRecoveryPhase();
+    roadmap.decisions.RECOVERY.does_not_supersede = "RECOVERY";
+    code("recovery-boundary");
+    roadmap.decisions.RECOVERY.does_not_supersede = "P0-VALUE";
+    roadmap.phases.push({
+      id: "P1",
+      status: "todo",
+      depends_on: ["R0"],
+      tasks: [],
+    });
+    code("recovery-boundary");
+  });
+
+  test("accepts additional terminal decision exclusions and rejects non-terminal drift", () => {
+    addRecoveryPhase();
+    const p0Task = roadmap.phases[0].tasks[0];
+    roadmap.decisions.RECOVERY.also_does_not_supersede = ["P0-VALUE"];
+    expect(validate()).toMatchObject({ phases: 2, tasks: 3 });
+    p0Task.decision = "adjust";
+    code("recovery-boundary");
+  });
+
   test("YAML serializer fixtures remain deterministic", () => {
     expect(stringify(requirements)).toBe(stringify(requirements));
   });
 });
+
+function addRecoveryPhase() {
+  write("docs/decisions.yaml", "owner: authorized\n");
+  const p0Task = roadmap.phases[0].tasks[0];
+  Object.assign(p0Task, {
+    status: "done",
+    decision_key: "P0-VALUE",
+    decision_attempt: 1,
+    supersedes_attempt: null,
+    decision: "stop",
+  });
+  roadmap.phases[0].status = "failed";
+  const charter = {
+    id: "R0-T1",
+    status: "in_progress",
+    contracts: ["C-1"],
+    depends_on: ["P0-T1"],
+    tests: ["recovery-charter"],
+  };
+  const verdict = {
+    id: "R0-T2",
+    status: "todo",
+    contracts: ["C-1"],
+    depends_on: ["R0-T1"],
+    tests: ["recovery-verdict"],
+    decision_key: "RECOVERY",
+    decision_attempt: 1,
+    supersedes_attempt: null,
+    decision: "pending",
+  };
+  roadmap.phases.push({
+    id: "R0",
+    status: "in_progress",
+    depends_on: [],
+    recovery_of_failed_phase: "P0",
+    authorization_ref: "docs/decisions.yaml",
+    scope_boundary: "independent-research-no-product-unlock",
+    gate: { requires_decisions: { RECOVERY: "continue" } },
+    tasks: [charter, verdict],
+  });
+  roadmap.decisions["P0-VALUE"] = { phase: "P0", current_attempt: "P0-T1" };
+  roadmap.decisions.RECOVERY = {
+    phase: "R0",
+    current_attempt: "R0-T2",
+    scope: "independent-research",
+    does_not_supersede: "P0-VALUE",
+  };
+  requirements.contracts[0].roadmap_tasks.push("R0-T1", "R0-T2");
+}

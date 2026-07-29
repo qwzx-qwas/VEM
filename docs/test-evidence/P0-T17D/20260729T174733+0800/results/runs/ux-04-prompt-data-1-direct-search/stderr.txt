@@ -1,0 +1,5 @@
+Reading additional input from stdin...
+2026-07-29T09:58:50.097546Z ERROR codex_models_manager::manager: failed to refresh available models: timeout waiting for child process to exit
+2026-07-29T09:58:50.167918Z ERROR codex_models_manager::manager: failed to refresh available models: timeout waiting for child process to exit
+2026-07-29T09:59:18.030069Z  WARN codex_core_plugins::manager: failed to warm remote plugin catalog cache error=failed to parse remote plugin catalog response from https://chatgpt.com/backend-api/ps/plugins/list: EOF while parsing a value at line 1 column 0
+2026-07-29T09:59:35.203459Z  WARN codex_file_watcher: failed to unwatch /codex-home/skills/.system: No watch was found. about ["/codex-home/skills/.system"]

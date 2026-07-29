@@ -118,6 +118,29 @@ export function validateModel(root, roadmap, requirements) {
   visitGraph(taskIds, (id) => byTask.get(id).depends_on ?? [], "dependency-cycle");
   visitGraph(phaseIds, (id) => phases.find((phase) => phase.id === id).depends_on ?? [], "phase-cycle");
 
+  const recoveryPhases = phases.filter((phase) => phase.recovery_of_failed_phase !== undefined);
+  for (const phase of recoveryPhases) {
+    if (typeof phase.recovery_of_failed_phase !== "string"
+      || phases.find((item) => item.id === phase.recovery_of_failed_phase)?.status !== "failed"
+      || (phase.depends_on ?? []).length !== 0
+      || phase.scope_boundary !== "independent-research-no-product-unlock"
+      || typeof phase.authorization_ref !== "string") {
+      fail("recovery-boundary", `${phase.id} recovery declaration invalid`);
+    }
+    safePath(root, phase.authorization_ref, "recovery-boundary");
+    const recoveryTaskIds = new Set(tasks
+      .filter((task) => task.phaseId === phase.id)
+      .map((task) => task.id));
+    if (phases.some((candidate) => (
+      candidate.id !== phase.id && (candidate.depends_on ?? []).includes(phase.id)
+    )) || tasks.some((task) => (
+      task.phaseId !== phase.id
+      && (task.depends_on ?? []).some((dependency) => recoveryTaskIds.has(dependency))
+    ))) {
+      fail("recovery-boundary", `${phase.id} leaks into an existing product dependency`);
+    }
+  }
+
   for (const phase of phases) {
     if (!roadmap.status_values.phase.includes(phase.status)) fail("roadmap-state", `${phase.id}: ${phase.status}`);
     if (["in_progress", "passed"].includes(phase.status)) for (const dep of phase.depends_on ?? []) if (phases.find((item) => item.id === dep)?.status !== "passed") fail("roadmap-state", `${phase.id} requires passed ${dep}`);
@@ -152,9 +175,13 @@ export function validateModel(root, roadmap, requirements) {
   }
 
   const decisions = object(roadmap.decisions, "decision-reference", "decisions");
-  for (const [key, descriptor] of Object.entries(decisions)) {
+  for (const [key, rawDescriptor] of Object.entries(decisions)) {
+    const descriptor = object(rawDescriptor, "decision-reference", key);
     const attempts = tasks.filter((task) => task.decision_key === key).sort((a, b) => a.decision_attempt - b.decision_attempt);
     if (!attempts.length || descriptor.current_attempt !== attempts.at(-1).id) fail("decision-reference", `${key} current attempt mismatch`);
+    if (attempts.some((task) => task.phaseId !== descriptor.phase)) {
+      fail("decision-reference", `${key} phase mismatch`);
+    }
     attempts.forEach((task, index) => {
       if (task.decision_attempt !== index + 1) fail("decision-attempt", `${task.id} attempt sequence`);
       if ((index ? attempts[index - 1].id : null) !== task.supersedes_attempt) fail("decision-attempt", `${task.id} supersedes mismatch`);
@@ -162,8 +189,49 @@ export function validateModel(root, roadmap, requirements) {
       if (task.status === "done" && task.decision === "pending") fail("decision-verdict", `${task.id} done pending`);
       if (task.status !== "done" && task.decision !== "pending") fail("decision-verdict", `${task.id} verdict before done`);
     });
+    const recoveryPhase = recoveryPhases.find((phase) => phase.id === descriptor.phase);
+    if (recoveryPhase !== undefined) {
+      const excludedDecision = decisions[descriptor.does_not_supersede];
+      const excludedAttempt = excludedDecision === undefined
+        ? undefined
+        : byTask.get(excludedDecision.current_attempt);
+      const additionalExcludedKeys = descriptor.also_does_not_supersede ?? [];
+      if (descriptor.scope !== "independent-research"
+        || typeof descriptor.does_not_supersede !== "string"
+        || excludedDecision === undefined
+        || excludedDecision.phase !== recoveryPhase.recovery_of_failed_phase
+        || excludedAttempt?.decision !== "stop"
+        || !Array.isArray(additionalExcludedKeys)
+        || additionalExcludedKeys.some((excludedKey) => {
+          const additionalDecision = decisions[excludedKey];
+          const additionalAttempt = additionalDecision === undefined
+            ? undefined
+            : byTask.get(additionalDecision.current_attempt);
+          return typeof excludedKey !== "string"
+            || excludedKey === key
+            || additionalDecision === undefined
+            || phases.find((phase) => phase.id === additionalDecision.phase)?.status !== "failed"
+            || additionalAttempt?.decision !== "stop";
+        })
+        || new Set(additionalExcludedKeys).size !== additionalExcludedKeys.length
+        || recoveryPhase.gate?.requires_decisions?.[key] !== "continue"
+        || Object.keys(recoveryPhase.gate.requires_decisions).length !== 1) {
+        fail("recovery-boundary", `${key} recovery decision isolation invalid`);
+      }
+    }
   }
-  for (const task of tasks) for (const key of Object.keys(task.requires_decisions ?? {})) if (!(key in decisions)) fail("decision-reference", `${task.id}: ${key}`);
+  for (const task of tasks) {
+    for (const [key, verdict] of Object.entries(task.requires_decisions ?? {})) {
+      if (!(key in decisions)) fail("decision-reference", `${task.id}: ${key}`);
+      if (verdict !== "continue") fail("decision-reference", `${task.id}: ${key} requires unsupported ${verdict}`);
+    }
+  }
+  for (const phase of phases) {
+    for (const [key, verdict] of Object.entries(phase.gate?.requires_decisions ?? {})) {
+      if (!(key in decisions)) fail("decision-reference", `${phase.id}: ${key}`);
+      if (verdict !== "continue") fail("decision-reference", `${phase.id}: ${key} requires unsupported ${verdict}`);
+    }
+  }
   validateLinks(root, strings(policy.internal_link_sources, "requirements-schema", "internal_link_sources"));
   return { phases: phases.length, tasks: tasks.length, contracts: contracts.length, authorityFiles: authorityPaths.size };
 }
