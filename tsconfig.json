@@ -5,6 +5,7 @@
     { "path": "./packages/protocol" },
     { "path": "./packages/injected-selector" },
     { "path": "./packages/vite-plugin" },
+    { "path": "./packages/source-registry" },
     { "path": "./packages/demo-fixture" }
   ]
 }

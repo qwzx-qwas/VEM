@@ -274,6 +274,21 @@
 - **测试要求**：ADR/matrix、intrinsic/custom/spread/reserved attribute、deterministic hash/collision、component/AST path/location、sourcemap chain、automatic/classic/Fast Refresh、scope skip、serve/build separation、private registry、module-graph/baseline equivalence、readonly leakage 与 user-attribute preservation。
 - **验收标准**：P0-T15 只交付固定矩阵内的 dev source-transform 与 private registry output，并机械证明 production non-participation；不宣称 registry publication、source lookup、browser injection 或 MCP 能力。
 
+## P0-T16 — Revision-scoped source registry publication 与 lookup prototype
+
+### Prompt
+
+- **背景**：P0-T15 已产生 collision-checked transform records，但 registry 仍标记为未发布/不可查询；pilot 前需把 opaque marker 与同 revision registry membership 机械绑定。
+- **目标**：实现内存、revision-scoped、原子 publication/lookup prototype，使当前 marker 只有在 project/build/source registry revision 与 membership 一致时才返回 direct registry-matched host anchor。
+- **本阶段做**：定义闭合 publication/lookup types；消费 P0-T15 immutable snapshot；验证 ProjectRevisionContext、exact transform compatibility、relative source location、record/revision/hash uniqueness；生成 coordinator-side opaque relative-file identity 与 direct evidence hash；保留当前及必要前一 revision 诊断状态。
+- **本阶段不做**：不实现 Coordinator transport/discovery、browser ingress、MCP tools/resources、源码读取、heuristic candidate、跨 revision successor/reattachment、HMR transaction、持久化或页面路径暴露。
+- **实现约束**：build/source registry revision 仅相等比较；project restart 不跨实例排序；同 revision 不同内容为 collision；publication 原子且幂等；旧 revision lookup 始终 stale，前一 revision 只供诊断；相同 anchor string 不得跨 registry 解释；relative path 必须 POSIX/project-relative/no traversal；不从页面输入派生文件 identity。
+- **成功路径**：兼容 publication 成功且重复 publish 幂等；当前完整 ProjectRevisionContext + anchor membership 返回单一 direct result、原始相对位置、opaque file identity、registry-matched evidence hash；新 revision 发布后旧 lookup 明确 stale。
+- **失败路径与边界**：revision/context mismatch、同 revision digest collision、duplicate anchor/path traversal、unsupported transform、oversize publication、missing anchor、stale project/revision/sequence 或 previous-revision lookup 被升级为 current 均 fail closed。
+- **建议优先查看/修改的文件**：`packages/source-registry/`、`packages/vite-plugin/` types、P0-T16 evidence、workspace references。
+- **测试要求**：valid/idempotent publication、revision collision、project reset、source/build/sequence stale、relative location/file identity、transform compatibility、duplicate/missing anchor、previous retention/no lookup、atomic failure、closed bounds 与 no persistence/transport。
+- **验收标准**：P0-T16 交付可供只读 pilot harness 使用的当前 revision direct membership lookup，不宣称跨 revision reattachment、Coordinator/MCP transport、源码内容读取或修改授权。
+
 ## P0-T17B — 3–5 task value micro-pilot
 
 ### Prompt

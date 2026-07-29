@@ -93,6 +93,19 @@ importers:
         specifier: 8.17.1
         version: 8.17.1
 
+  packages/source-registry:
+    dependencies:
+      '@vem/protocol':
+        specifier: workspace:*
+        version: link:../protocol
+      '@vem/vite-plugin':
+        specifier: workspace:*
+        version: link:../vite-plugin
+    devDependencies:
+      '@types/node':
+        specifier: 24.13.3
+        version: 24.13.3
+
   packages/vite-plugin:
     dependencies:
       magic-string:

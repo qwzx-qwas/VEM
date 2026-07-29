@@ -1,0 +1,26 @@
+{
+  "name": "@vem/source-registry",
+  "version": "0.0.0-private",
+  "private": true,
+  "description": "Revision-scoped in-memory source registry publication and lookup prototype",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc -b --pretty false",
+    "typecheck": "tsc -b --pretty false"
+  },
+  "dependencies": {
+    "@vem/protocol": "workspace:*",
+    "@vem/vite-plugin": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "24.13.3"
+  }
+}

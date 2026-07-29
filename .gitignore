@@ -1,6 +1,52 @@
+# Dependencies
 node_modules/
+.pnpm-store/
+
+# Build outputs
 dist/
 dist-types/
-coverage/
+build/
 *.tsbuildinfo
-.pnpm-store/
+
+# Test and browser artifacts
+coverage/
+.nyc_output/
+test-results/
+playwright-report/
+blob-report/
+
+# Tool caches
+.cache/
+.eslintcache
+.vite/
+.turbo/
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Local environment
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+# Temporary files
+.tmp/
+temp/
+*.tmp
+*.swp
+*~
+
+# OS metadata
+.DS_Store
+Thumbs.db
+
+# IDE-local state
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
