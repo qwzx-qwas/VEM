@@ -6,7 +6,7 @@
 
 - 项目处于 design baseline 1.14，P0 implementation 已开始。
 - `P0-T0A0` 已完成只读 migration readiness inventory；证据位于 `docs/test-evidence/P0-T0/20260728T155608+0800/`。
-- 148 个 roadmap task、11 个 phase 和 27 个 contract 已登记。
+- 152 个 roadmap task、12 个 phase 和 28 个 contract 已登记。
 - `P0-T0A1` 已完成 owner-authorized layout commit 与 single-writer cutover；canonical writer 是 `/home/qwzx/src/VEM`，`/mnt/d/VEM` 仅保留为只读 rollback。
 - `P0-T0A2` 已完成：bounded evidence schema/validator、Node `24.18.0` 与 pnpm `10.34.0` 的 owner-accepted exact bootstrap decision 及验证证据位于 `docs/test-evidence/P0-T0/20260728T194140+0800/`。
 - `P0-T0B` 已完成：default-CA registry、隔离 Corepack/pnpm frozen install、ext4 case/symlink/long-path 和 native watcher profile 均通过，证据位于 `docs/test-evidence/P0-T0/20260728T195939+0800/`。
@@ -31,6 +31,9 @@
 - `P0-T17F` 已完成剩余 timing 阻断点的只读取证：10 run/5 pair 的 monotonic duration 与 canonical verdict 精确一致；VEM/direct 分别执行 9/11 个 command、两边各有 1 个已恢复的非零 command，VEM 仍仅 2/5 pair 更快，第二 arm 仅 3/5 更快。raw event 无逐事件 timestamp，因此不能把总耗时归因给 shell、cache 或模型阶段；active report 哈希为 `664d8e49e0fdb573944aadc14b0affbcfae1fa0f3cc2db4c7104dc8f9eac5afc`，terminal state 不变。
 - Owner 已授权绑定 frozen hash `57fb4b9b…f37359` 的 R0-T4 外部批次。冻结 runner 在首个 arm 尝试第二次登记 structured response，`TrustedReceiptLedger` 以 `RECEIPT_LEDGER_RESPONSE_DUPLICATE` fail closed；事前 `event-ledger-integrity-failed` stop 条件触发后，剩余 9 次调用未执行。R0-T4 attempt 1 已记录 `R0-RECOVERY=stop`，R0 phase 为 `failed`；失败发生在 sealed-write 前，因此没有完整 raw/ledger/correctness/cost metrics。P0-T17D `stop`、P0 `failed`、P0-T7/P1 锁定与零产品解锁边界不变。
 - 独立 R1 runner remediation 已完成并记录 `R1-RECOVERY=stop`：冻结 batch 的首个 direct arm 成功；配对 VEM arm 退出 0，但产生错误的 `line:1/null` 与正确的 `line:7/direct anchor` 两个不同 schema-valid agent message。修复后的 recorder 在 stream close 后判定 `STRUCTURED_RESPONSE_CONFLICT`，完整封存 raw/terminal/ledger/failure/hash evidence 后停止剩余 8 次调用。R1 phase 为 `failed`；这证明 failure sealing 修复生效，但不提供完整成本或产品价值结论。`R0-RECOVERY=stop`、`P0-VALUE=stop`、P0/R0 failed 与零产品解锁边界均保持不变。
+- `R2-T1` 已完成独立 final-output remediation charter：R2 对 R1/R0/P0 三条 terminal stop chain 均声明 non-supersession，phase/task dependency 为空且没有既有产品依赖边；proof hash 为 `46e7522676d366c5b93f2e32b6c682fabb76c5d3fa790a37a60eb6692171c25d`。R2 只授权本地 runner 修复和新预注册，外部调用仍未授权。
+- `R2-T2` 已完成 final-output authority 修复：`--output-last-message` 的 runner-owned bounded file 是唯一 structured response，JSONL 只作审计；最后消息一致性、缺失/无效/不一致/超限/symlink 与 failure sealing 已覆盖。Bubblewrap 的 `/work` 仍只读，输出目录仅有一个 0600 file bind 可写；instrumentation hash 为 `235e7c8433787ef838c1f30d492e3ef24cb62ebd6ebf26bd43ca9cd559c0f8ab`，外部调用为 0。
+- `R2-T3` 已完成新预注册：5 个 fresh recovery-only task、10 个 counterbalanced arm 和 8 个 runtime source binding 冻结于 hash `dddd48ade2a92b2e12ec7600c9cdc0bd65eee6d47023d01d70b8bd71b47c273a`，instrumentation hash 为 `09e237ddec722207ee3b2e22c714ca5631700ff7393877a66fdd75d04c46b8a0`；30 次本地隔离探针全部通过，`externalExecutionAuthorized=false`，R2-T4 等待单独授权。
 - readiness 结果为 `ready`：大小写 staging 路径为同一 device/inode，payload 与 prefix-normalized manifest 已冻结，无 case collision，目标不存在，ext4 容量/owner permission 通过，且目标未被任务修改。
 - 当前 owner-approved 产品范围是 P0 proof-of-value / go-no-go prototype，不是完整 Visual V1。
 - 安全策略边界已确定但尚未实现：没有全局 security-off/trusted-local 绕过；P3 只为默认开启的增强保障项提供逐项用户 opt-out，并保持安全底线始终执行。
@@ -48,7 +51,7 @@
 
 ## 当前决策状态
 
-见 `docs/decisions/OPEN_DECISIONS.yaml`。迁移、exact toolchain、Apache-2.0 项目许可证、MCP primary/compat revision 与独立 R0/R1 scope 均已决定；`P0-VALUE`、`R0-RECOVERY` 与 `R1-RECOVERY` 均保持各自不可覆盖的 terminal `stop`。
+见 `docs/decisions/OPEN_DECISIONS.yaml`。迁移、exact toolchain、Apache-2.0 项目许可证、MCP primary/compat revision 与独立 R0/R1/R2 scope 均已决定；`P0-VALUE`、`R0-RECOVERY` 与 `R1-RECOVERY` 均保持各自不可覆盖的 terminal `stop`，`R2-RECOVERY` 仍 pending。
 
 ## 状态与记录分工
 

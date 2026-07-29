@@ -179,3 +179,32 @@ decisions:
     evidence_ref: docs/test-evidence/R1-T4/20260729T213524+0800/results/verdict.json
     authoritative_state_ref: ROADMAP.yaml
     note: The direct arm completed correctly. The paired VEM arm emitted two different schema-valid agent messages, so the preregistered conflict rule failed closed after sealing raw, terminal, ledger, failure and hash evidence; the remaining eight calls were not executed. This decision does not supersede R0-RECOVERY or P0-VALUE and cannot authorize product work.
+
+  - id: OWNER-R2-FINAL-OUTPUT-REMEDIATION
+    title: Authorize independent R2 final-output authority remediation without overwriting R1 R0 or P0 stop
+    status: decided
+    decision_owner: project-owner
+    needed_by_task: R2-T1
+    decision: authorized
+    decided_at: 2026-07-29T22:25:00+08:00
+    evidence: Owner explicitly stated "对暴露的问题进行修正" in the active Codex thread.
+    context_refs:
+      - docs/DESIGN.md
+      - docs/delivery/R2_FINAL_OUTPUT_REMEDIATION.md
+      - ROADMAP.yaml
+    context_sections:
+      - 2.7.4 Owner-authorized final-output authority remediation after R1 stop (R2-FINAL-OUTPUT-001)
+    note: Authorization covers the independent R2 charter, authoritative final-output runner remediation, tests and new preregistration only. It does not authorize an R2 external model call or product work.
+
+  - id: OWNER-R2-T4-EXTERNAL-BATCH
+    title: Authorize the frozen R2-T4 final-output remediation external batch
+    status: open
+    decision_owner: project-owner
+    needed_by_task: R2-T4
+    requested_preregistration_hash: dddd48ade2a92b2e12ec7600c9cdc0bd65eee6d47023d01d70b8bd71b47c273a
+    requested_run_count: 10
+    context_refs:
+      - docs/test-evidence/R2-T3/20260729T225128+0800/PREREGISTRATION.json
+      - docs/test-evidence/R2-T3/20260729T225128+0800/PREREGISTRATION.sha256
+      - scripts/pilot/r2-t4.mjs
+    note: No external payload may be sent until the owner explicitly authorizes exactly this preregistration hash and run count. Any authorization remains recovery-only and cannot modify R1-RECOVERY, R0-RECOVERY, P0-VALUE or unlock product work.

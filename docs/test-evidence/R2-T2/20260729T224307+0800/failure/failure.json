@@ -1,0 +1,1 @@
+{"evidenceSealed":true,"failureCodes":["AUTHORITATIVE_RESPONSE_AUDIT_MISMATCH"],"finalResponseEvidencePersisted":true,"ledgerEvidencePersisted":true,"outcome":"failed","process":{"exitCode":0,"launchFailed":false,"signal":null},"rawEvidencePersisted":true,"runId":"r2-t2-failure","schemaVersion":"R2-T2-sealed-failure-v1","successfulResponseComplete":false}

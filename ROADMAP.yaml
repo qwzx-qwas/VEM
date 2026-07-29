@@ -43,6 +43,7 @@ decisions:
   P0-GOLDEN: {phase: P0, current_attempt: P0-T9C}
   R0-RECOVERY: {phase: R0, current_attempt: R0-T4, scope: independent-research, does_not_supersede: P0-VALUE}
   R1-RECOVERY: {phase: R1, current_attempt: R1-T4, scope: independent-research, does_not_supersede: R0-RECOVERY, also_does_not_supersede: [P0-VALUE]}
+  R2-RECOVERY: {phase: R2, current_attempt: R2-T4, scope: independent-research, does_not_supersede: R1-RECOVERY, also_does_not_supersede: [R0-RECOVERY, P0-VALUE]}
   P1-INJECTED: {phase: P1, current_attempt: P1-T17}
   P2-TRUSTED: {phase: P2, current_attempt: P2-T13D}
   P3-VISUAL: {phase: P3, current_attempt: P3-T19}
@@ -145,6 +146,28 @@ phases:
       - {id: R1-T2, title: Fix multi-agent-message final-response classification and seal bounded raw terminal and ledger failure evidence before errors return, contracts: [R1-RUNNER-REMEDIATION-001], status: done, depends_on: [R1-T1], tests: [ordinary-event receipt single-last-schema-valid response zero-valid conflicting-valid response duplicate-prevention terminal-before-throw raw-stderr-ledger-prefix hash-manifest bounds and cancellation checks]}
       - {id: R1-T3, title: Freeze a new recovery-only runner capsule instrumentation threshold and evidence preregistration without external calls, contracts: [R1-RUNNER-REMEDIATION-001], status: done, depends_on: [R1-T2], tests: [new-runner-hash fresh-task identity equal-base-context counterbalance threshold product-holdout-exclusion failure-sealing binding pre-result immutability and external-authorization-false checks]}
       - {id: R1-T4, title: Execute a separately owner-authorized R1 recovery batch and record the independent R1-RECOVERY verdict, contracts: [R1-RUNNER-REMEDIATION-001], status: done, decision_key: R1-RECOVERY, decision_attempt: 1, supersedes_attempt: null, decision: stop, depends_on: [R1-T3], tests: [fresh-context raw-and-ledger-hash correctness wrong-attribution capsule-integrity pairwise-cost failure-evidence and continue-adjust-stop verdict checks]}
+
+  - id: R2
+    title: Owner-authorized independent final-output authority remediation after terminal R1 stop
+    status: in_progress
+    depends_on: []
+    recovery_of_failed_phase: R1
+    authorization_ref: docs/decisions/OPEN_DECISIONS.yaml
+    scope_boundary: independent-research-no-product-unlock
+    gate:
+      commands: ["pnpm roadmap:validate", "pnpm build", "pnpm typecheck", "pnpm lint", "pnpm test"]
+      requires_decisions: {R2-RECOVERY: continue}
+      done_when:
+        - R1-T4 R0-T4 and P0-T17D stop verdicts and all three failed phases remain immutable with zero product unlock edges.
+        - Codex output-last-message is the sole authoritative structured response while JSONL remains an audit stream and consistency witness.
+        - The read-only participant workspace gains no write access and only one runner-owned bounded output file is writable in the capsule.
+        - Protocol response failures are separated from evaluator wrong-attribution and every terminal path seals raw final terminal ledger error and hash evidence.
+        - R2-T3 freezes new runner instrumentation tasks threshold and external-authorization bindings before any R2 external model call.
+    tasks:
+      - {id: R2-T1, title: Record the owner-authorized independent R2 final-output remediation charter and mechanically preserve P0 R0 and R1 terminal stop chains, contracts: [R2-FINAL-OUTPUT-001], status: done, depends_on: [], tests: [failed-P0-R0-R1 preservation empty-phase-and-task-dependency triple-decision-non-supersession authorization-reference no-existing-phase-or-task-dependency and no-product-unlock checks]}
+      - {id: R2-T2, title: Make output-last-message the authoritative final response through a single-file capsule write boundary and separate protocol from attribution failures, contracts: [R2-FINAL-OUTPUT-001], status: done, depends_on: [R2-T1], tests: [multiple-agent-message authoritative-final-file last-agent-consistency missing-invalid-mismatch-size-symlink single-file-write-boundary failure-classification sealing bounds and cancellation checks]}
+      - {id: R2-T3, title: Freeze a new final-output recovery-only capsule instrumentation threshold and evidence preregistration without external calls, contracts: [R2-FINAL-OUTPUT-001], status: done, depends_on: [R2-T2], tests: [new-runner-hash fresh-task identity equal-base-context counterbalance threshold product-holdout-exclusion final-file-binding pre-result-immutability and external-authorization-false checks]}
+      - {id: R2-T4, title: Execute a separately owner-authorized R2 recovery batch and record the independent R2-RECOVERY verdict, contracts: [R2-FINAL-OUTPUT-001], status: todo, decision_key: R2-RECOVERY, decision_attempt: 1, supersedes_attempt: null, decision: pending, depends_on: [R2-T3], tests: [fresh-context final-file-and-jsonl-consistency raw-ledger-hash correctness wrong-attribution capsule-integrity pairwise-cost failure-evidence and continue-adjust-stop verdict checks]}
 
   - id: P1
     title: Harden the Edge Vite-injected MVP

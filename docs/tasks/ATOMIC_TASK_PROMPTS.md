@@ -492,6 +492,59 @@
 
 > **已完成（2026-07-29）**：Owner 授权、preregistration digest 和全部 source bindings 通过后开始冻结 batch。首个 direct arm 成功、定位与 capsule audit 均正确；配对 VEM arm 退出 0，但依次产生两个不同的 schema-valid 响应（错误的 `line:1/sourceAnchorId:null` 与正确的 `line:7/direct anchor`），修复后的 recorder 在 stream close 后按预登记规则判定 `STRUCTURED_RESPONSE_CONFLICT`，没有事后挑选结果。两个 run 的 raw stdout/stderr、terminal、ledger、run/failure metadata 和 SHA manifests 全部封存并验证通过，随后 batch fail closed，剩余 8 次未执行。19 项 R1 定向测试、155 项全仓 Vitest、build/typecheck/lint、roadmap/workspace/license、clean frozen install、production demo 和 98 项 preflight 全部通过。Immutable verdict 为 `R1-RECOVERY=stop`，R1 phase 为 `failed`；R0/P0 stop 与零产品解锁边界不变。证据位于 `docs/test-evidence/R1-T4/20260729T213524+0800/`，verdict hash 为 `a0a9556a63d68fcbe769da96f140e54d1d966421d0c3bad1cbffca1f24ab9baa`。
 
+## R2-T1 — Independent final-output remediation charter
+
+### Prompt
+
+- **背景**：R1-T4 因 JSONL 中两个 schema-valid agent-message 触发 immutable stop；R1/R0/P0 均 failed/stop。
+- **目标**：新增不覆盖三条 stop chain 的独立 R2，并机械证明零产品解锁。
+- **本阶段做**：新增 R2-FINAL-OUTPUT-001、独立 decision、owner authorization、R2-T1–T4 原子链与 validator triple-non-supersession checks。
+- **本阶段不做**：不改 R1/R0/P0 evidence/verdict，不修 runner，不冻结新 plan，不执行外部调用。
+- **实现约束**：R2 phase 与 R2-T1 均 `depends_on: []`，只按 immutable evidence/hash 读取 failed R1；同时固定不 supersede R1/R0/P0 decision。
+- **测试要求**：failed R1/R0/P0、empty deps、triple decision isolation、authorization、dependency leakage、contract reverse mapping。
+- **验收标准**：章程与全仓门禁通过后 `done`，仅 R2-T2 eligible。
+
+> **已完成（2026-07-29）**：已新增 `R2-FINAL-OUTPUT-001`、独立 R2/R2-RECOVERY chain 与 owner authorization record；R2 phase 和 R2-T1 均为空 dependency，只读取 failed R1 的 immutable terminal state。Validator 机械要求 `does_not_supersede: R1-RECOVERY` 与 `also_does_not_supersede: [R0-RECOVERY, P0-VALUE]`，并继续拒绝既有 phase/task 对 R2 的依赖。17 项定向测试、157 项全仓 Vitest、build/typecheck/lint 与 12-phase/152-task/28-contract roadmap 全部通过；charter proof hash 为 `46e7522676d366c5b93f2e32b6c682fabb76c5d3fa790a37a60eb6692171c25d`，product unlock count 为 0，未执行外部调用。下一项仅为 R2-T2。
+
+## R2-T2 — Authoritative final-output file 与 single-file capsule bind
+
+### Prompt
+
+- **背景**：R1 runner 把 JSONL 中所有 schema-valid agent-message 当作 final candidates，但 JSONL 是事件审计流。
+- **目标**：以 `--output-last-message` 文件作为唯一 final response，并保持 participant workspace 只读。
+- **本阶段做**：新 R2 capsule/recorder、runner-owned 0600 single-file bind、final file size/schema/symlink checks、last agent-message consistency、协议/attribution 分类与 failure sealing。
+- **本阶段不做**：不修改 frozen R1 source/evidence，不执行外部 Codex arm，不冻结下一批。
+- **实现约束**：JSONL 只作 audit；早期 agent-message 不竞争 final；missing/invalid/mismatch fail closed；未选择响应时 wrong-attribution 必须为 false。
+- **测试要求**：early wrong/later correct、authoritative file、missing/invalid/mismatch/oversize/symlink、single writable file、raw/final/ledger/error/hash sealing、cancel。
+- **验收标准**：定向及全仓门禁通过后 `done`，使 R2-T3 eligible。
+
+> **已完成（2026-07-29）**：已新增独立 R2 capsule/recorder，Codex invocation 同时保留 `--json` 审计流并用 `--output-last-message /run/vem/final-response.json` 提供唯一权威响应；runner 在进程与 streams 收束后执行 regular-file/no-symlink/size/schema 检查，并与最后 agent-message 做 canonical 一致性校验，早期错误的 schema-valid message 不再参与竞争。Bubblewrap 继续以 `/work:ro` 挂载 participant workspace，输出目录只读覆盖后仅叠加一个 runner-owned 0600 可写文件；workspace 和 sibling write probes 均拒绝。缺失、空、无效、不一致、超限、symlink、stream cancellation 均先封存 raw/final observation/terminal/ledger/error/SHA evidence；未选择响应时 `wrongAttribution=false`，`evidenceSealed` 与 `successfulResponseComplete` 分离。12 项定向测试、169 项全仓 Vitest、build/typecheck/lint 与 roadmap 全部通过；instrumentation hash 为 `235e7c8433787ef838c1f30d492e3ef24cb62ebd6ebf26bd43ca9cd559c0f8ab`，proof hash 为 `0dcae05aec4d39e37089039354a1c6fa1085387a364a7ae00effa7ac365ecbd8`，未执行外部模型调用。下一项仅为 R2-T3。
+
+## R2-T3 — Final-output recovery preregistration
+
+### Prompt
+
+- **背景**：R2-T2 提供明确 final-output authority 与最小 capsule 写入边界。
+- **目标**：冻结新 runner/capsule/task/threshold hashes，保持 recovery-only corpus 与 product holdout 分离。
+- **本阶段做**：生成新 preregistration、counterbalance、equal base context、final-file contract、failure evidence contract 与 external authorization gate。
+- **本阶段不做**：不执行外部 arm、不复用 R1 hash、不授权产品工作。
+- **实现约束**：新 instrumentation hash 必须不同于 R1；`externalExecutionAuthorized=false`；ground truth evaluator-only。
+- **测试要求**：source bindings、fresh hash、task/capsule equality、holdout exclusion、final-file mutation、authorization false、local probes。
+- **验收标准**：冻结并通过 probes 后 `done`；R2-T4 等待单独 owner authorization。
+
+> **已完成（2026-07-29）**：已冻结 5 个全新 R2 final-output-remediation-only task、10 个 counterbalanced arms、equal base context 与仅 `vem-context.json` 的 treatment difference；P0/R0/R1 task ID、prompt hash 和 P1/P3/P4 product holdout 均排除。未来 R2-T4 runner、权威 final-file recorder、single-file capsule、v2 auditor、evaluator 与 canonical runtime 绑定 8 个 source hashes；协议失败独立归类为 `protocol-response-integrity-failed`，没有 selected response 时不制造 wrong attribution。10 次 filesystem、10 次 capsule 内 `codex --version` 和 10 次 final-output single-file probes 全部通过；4 项 R2-T3 定向测试、173 项全仓 Vitest、build/typecheck/lint、roadmap/workspace/license、clean frozen install、production demo 与 98 项 preflight 回归通过。预注册 hash 为 `dddd48ade2a92b2e12ec7600c9cdc0bd65eee6d47023d01d70b8bd71b47c273a`，instrumentation hash 为 `09e237ddec722207ee3b2e22c714ca5631700ff7393877a66fdd75d04c46b8a0`；`externalExecutionAuthorized=false`，未执行任何外部 arm。R2-T4 仅在 owner 单独绑定该完整 hash 和 10 次 run 后 eligible。
+
+## R2-T4 — Separately authorized final-output recovery verdict
+
+### Prompt
+
+- **背景**：R2-T3 已冻结新的 runner/instrumentation plan。
+- **目标**：在单独 owner authorization 后执行 paired arms 并记录 `R2-RECOVERY` verdict。
+- **本阶段做**：fresh contexts、final-file/JSONL consistency、raw/ledger/error evidence、correctness、capsule integrity 与 cost verdict。
+- **本阶段不做**：不覆盖 R1/R0/P0、不自动解锁或创建产品 phase。
+- **实现约束**：任何 prereg/source/capsule/holdout/final-file/failure-sealing drift fail closed。
+- **验收标准**：immutable verdict；continue 也仅允许提出新的独立研究路线。
+
 ## P0-T9A — Walking-skeleton 正向 Edge E2E
 
 ### Prompt

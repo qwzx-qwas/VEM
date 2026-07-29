@@ -262,6 +262,22 @@ R1 只允许四个原子结果：固定独立 remediation charter；修复并测
 
 当前 owner-authorized 执行序列见 [`docs/delivery/R1_RUNNER_REMEDIATION.md`](delivery/R1_RUNNER_REMEDIATION.md)。
 
+### 2.7.4 Owner-authorized final-output authority remediation after R1 stop (`R2-FINAL-OUTPUT-001`)
+
+R1-T4 的 `stop`、R1 failed、R0-T4/P0-T17D 的 `stop`、R0/P0 failed 及三条 immutable evidence chain 都不得覆盖。Owner 可以另行授权拓扑独立的 R2 final-output remediation research phase；该授权只允许修复 Codex non-interactive final response 的权威通道、capsule 最小写入边界、协议失败分类，并冻结新的 recovery-only preregistration，不授权新的外部模型调用或产品实现。
+
+R2 必须声明 `recovery_of_failed_phase: R1`、空 phase dependency、owner authorization reference 与 `independent-research-no-product-unlock` scope。`R2-RECOVERY` 必须以 `does_not_supersede: R1-RECOVERY` 和 `also_does_not_supersede: [R0-RECOVERY, P0-VALUE]` 固定全部 terminal decision chain；任何既有 phase/task 不得依赖 R2。
+
+Runner 必须把 Codex `--output-last-message` 写入的 runner-owned bounded file 作为唯一 authoritative final response。`--json` JSONL 只保留为完整审计事件流：早期 `item.completed/agent_message` 是诊断 receipt，不因自身通过 response schema 而与 final file 竞争。进程和 stdout/stderr 全部收束后，runner 只能读取一次该文件，执行大小、regular-file、无 symlink、schema 与 canonical response 检查，并要求它与终止前最后一个 agent-message 一致；缺失、空、超限、无效、与最后 agent-message 不一致、倒序/重复终态或 instrumentation drift 必须 fail closed。
+
+Capsule 不得把 participant workspace 改为可写。Outer runner 必须预创建 `0700` control root 内的单个 `0600` output file，并只把该文件以读写 bind 暴露到 capsule 内固定的非 workspace 路径；页面、prompt、参与模型和 fixture 都不能选择宿主路径或扩大写入范围。进程退出后该文件必须复制并 hash-seal 到 task evidence，再随 capsule control root 清理。
+
+协议/runner integrity failure 必须与 evaluator attribution 分离。缺失或冲突的 authoritative response 使用专用 protocol failure code，不能在没有已选择响应时同时计为 `wrong-attribution`；`evidenceSealed` 只描述 raw/final/terminal/ledger/error/hash 可重放性，不能冒充 `successfulResponseComplete`。
+
+R2 只允许四个原子结果：固定独立 remediation charter；实现并测试 authoritative final-output file、最小 capsule bind 和失败分类；冻结新的 recovery-only preregistration；在新的、绑定该 hash 的 owner authorization 后执行 decision attempt。外部调用授权必须发生在新预注册冻结以后。
+
+当前 owner-authorized 执行序列见 [`docs/delivery/R2_FINAL_OUTPUT_REMEDIATION.md`](delivery/R2_FINAL_OUTPUT_REMEDIATION.md)。
+
 ## 2.8 项目与依赖许可证 (`LICENSE-POLICY-001`)
 
 P0-T1 在生成 package metadata 前必须记录项目自身许可证或明确的 private/unlicensed 状态、版权主体、贡献接收方式和发布边界；设计文档不能替项目所有者默认选择 MIT、Apache-2.0、AGPL 或商业许可。若许可证决定尚未获得项目所有者确认，允许完成不发布的 workspace scaffold，但 public package、复制第三方代码或分发 extension 的工作保持 blocked。

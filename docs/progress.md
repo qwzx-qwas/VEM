@@ -419,3 +419,49 @@ Each future entry must include task ID, date, changed files, commands, test evid
 - Security/data-lifecycle verification: both processes ran inside the frozen read-only capsule with fresh thread IDs; ground truth, prior task prompts and product holdout remained outside participant context; per-run and aggregate hashes passed
 - Known limitations/degradations: only 2 of 10 processes ran, so no five-pair cost comparison or product-benefit claim exists; the stop is a conflicting-final-response protocol verdict
 - Next eligible task: none; R1, R0 and P0 are failed, and no product task is unlocked
+
+## R2-T1 — Independent final-output remediation charter
+
+- Date: 2026-07-29
+- State/outcome: `done` / `passed`
+- Decision: n/a; `R2-RECOVERY` remains pending while `R1-RECOVERY=stop`, `R0-RECOVERY=stop` and `P0-VALUE=stop` remain terminal
+- Changed files: R2 normative contract, independent phase/decision/task chain, owner decision, delivery plan, four prompts, triple-terminal charter proof/tests, task/status/progress metadata and `docs/test-evidence/R2-T1/20260729T223351+0800/`
+- Charter result: R2 phase and charter task have empty dependencies, recover failed R1 by immutable terminal state only, cannot become an existing phase/task dependency, and explicitly do not supersede R1, R0 or P0 decision chains
+- Commands: 17 targeted validator/charter tests; roadmap validation; charter generator and SHA-256; build/typecheck/lint; 157-test full Vitest gate outside the sandbox because its local Node child-process probes are denied with EPERM inside the sandbox
+- Test evidence: 157 total Vitest tests across 28 files passed; roadmap validates 12 phases, 152 tasks and 28 contracts; proof hash is `46e7522676d366c5b93f2e32b6c682fabb76c5d3fa790a37a60eb6692171c25d`
+- Edge/browser verification: not applicable; governance and validation only
+- Security/data-lifecycle verification: no external call, participant data, auth, ground truth, holdout or product runtime change; product unlock count is zero
+- Known limitations/degradations: R2-T1 provides only authority and isolation; it does not repair the runner or authorize an experiment
+- Next eligible task: `R2-T2`
+
+## R2-T2 — Authoritative final-output file and single-file capsule bind
+
+- Date: 2026-07-29
+- State/outcome: `done` / `passed`
+- Decision: n/a; `R2-RECOVERY` remains pending and all prior stop verdicts remain terminal
+- Changed files: new R2 capsule invocation/output mount, authoritative final-response recorder/classifier, 12 tests, local proof generator, roadmap/status/prompt/progress metadata and `docs/test-evidence/R2-T2/20260729T224307+0800/`; frozen R1 sources/evidence were not modified
+- Runner result: JSONL agent messages are audit receipts only; the bounded runner-owned `--output-last-message` file is read once after process/stream close, validated and required to equal the last agent-message before selection. The reproduced early-wrong/later-correct stream selects line 7 without a conflict.
+- Capsule result: `/work` remains read-only; a read-only output directory is overlaid with exactly one writable mode-0600 final-response file at `/run/vem/final-response.json`; workspace and sibling writes fail while the authoritative file write succeeds
+- Failure/classification result: missing, empty, invalid, mismatched, oversized and symlink outputs plus stream cancellation fail closed and seal raw/final observation/terminal/ledger/error/hash evidence; protocol failure with no selected response records `wrongAttribution=false`, while an actually selected incorrect response remains wrong attribution
+- Commands: 12 targeted local-process/Bubblewrap/proof tests; roadmap validation; build/typecheck/lint; 169-test full Vitest gate outside the sandbox; proof generator and SHA256SUMS verification
+- Test evidence: 169 total Vitest tests across 31 files passed; roadmap validates 12 phases, 152 tasks and 28 contracts; instrumentation/proof hashes are `235e7c8433787ef838c1f30d492e3ef24cb62ebd6ebf26bd43ca9cd559c0f8ab` / `0dcae05aec4d39e37089039354a1c6fa1085387a364a7ae00effa7ac365ecbd8`
+- Edge/browser verification: not applicable; only local synthetic processes and Bubblewrap probes ran
+- Security/data-lifecycle verification: one runner-owned 0700 control root and 0600 file are used, no participant-selected host path exists, raw/final/error evidence is bounded and hash-sealed, capsule cleanup removes the control file, and no external model/auth/ground-truth/holdout/product state was consumed
+- Known limitations/degradations: this task proves the runner authority boundary locally; it does not freeze or authorize a new experiment
+- Next eligible task: `R2-T3`
+
+## R2-T3 — Final-output recovery-only preregistration
+
+- Date: 2026-07-29
+- State/outcome: `done` / `passed`
+- Decision: n/a; `R2-RECOVERY` remains pending and all P0/R0/R1 stop verdicts remain immutable
+- Changed files: fresh R2 recovery plan/fixture, hash-bound future R2-T4 runner, preregistration generator, 4 preregistration/authorization/verdict/mutation tests, open owner-authorization record, delivery/task/status/progress metadata and `docs/test-evidence/R2-T3/20260729T225128+0800/`
+- Preregistration result: 5 fresh final-output-remediation-only tasks and 10 counterbalanced arms are frozen under hash `dddd48ade2a92b2e12ec7600c9cdc0bd65eee6d47023d01d70b8bd71b47c273a`; 8 runtime sources are bound under instrumentation hash `09e237ddec722207ee3b2e22c714ca5631700ff7393877a66fdd75d04c46b8a0`, distinct from R1
+- Authority/failure contract: `--output-last-message` runner file is authoritative, JSONL is audit-only, `/work` is read-only with one writable final file, final file must be bounded/schema-valid/canonically consistent with the last agent-message, and protocol failures are separate from actual wrong attribution while every path seals evidence before return
+- Isolation result: 10 filesystem, 10 capsule-local `codex --version` and 10 final-output single-file probes passed; every task pair has the same base context and only the VEM arm receives `vem-context.json`
+- Commands: 4 targeted R2-T3 tests; preregistration generator; independent preregistration/source-binding verification; full Vitest/build/typecheck/lint/roadmap; workspace/license; isolated clean frozen install; production demo; 98 preflight tests
+- Test evidence: 173 total Vitest tests across 32 files passed; roadmap validates 12 phases, 152 tasks and 28 contracts; exact Node 24.18.0/pnpm 10.34.0, 235-package/zero-vendored license audit, clean install, production non-leakage and all local probes passed
+- Edge/browser verification: not applicable; synthetic source-location fixture and local capsule/version/output probes only, with no browser or external model execution
+- Security/data-lifecycle verification: evaluator ground truth remains under `private/` and absent from participant paths; all prior tasks/prompts and product holdouts are excluded; repository/home/rules/skills remain absent; the only new capsule write is the runner-owned bounded final file and capsule cleanup removes it
+- Known limitations/degradations: this is a five-task recovery engineering smoke, not a product holdout or statistical claim; receipt timing still cannot expose provider/model/shell-internal time; R2 cannot supersede prior stops or unlock product work
+- Next eligible task: none until the owner explicitly authorizes exactly 10 R2-T4 calls bound to preregistration hash `dddd48ade2a92b2e12ec7600c9cdc0bd65eee6d47023d01d70b8bd71b47c273a`

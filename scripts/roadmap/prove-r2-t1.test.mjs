@@ -3,27 +3,28 @@ import { join, resolve } from "node:path";
 import { describe, expect, test } from "vitest";
 import { parseYaml, validateRepository } from "./validator-core.mjs";
 import {
-  assertR1CharterModel,
-  buildR1CharterProof,
-} from "./prove-r1-t1.mjs";
+  assertR2CharterModel,
+  buildR2CharterProof,
+} from "./prove-r2-t1.mjs";
 
 const REPO_ROOT = resolve(import.meta.dirname, "../..");
 
-describe("R1-T1 independent runner-remediation charter", () => {
-  test("preserves both terminal stop chains with zero product unlocks", () => {
-    expect(buildR1CharterProof(REPO_ROOT)).toMatchObject({
-      taskId: "R1-T1",
+describe("R2-T1 independent final-output remediation charter", () => {
+  test("preserves all three terminal stop chains with zero product unlocks", () => {
+    expect(buildR2CharterProof(REPO_ROOT)).toMatchObject({
+      taskId: "R2-T1",
       outcome: "passed",
       preservedTerminalStates: [
         { phase: "P0", status: "failed", verdict: "stop" },
         { phase: "R0", status: "failed", verdict: "stop" },
+        { phase: "R1", status: "failed", verdict: "stop" },
       ],
-      r1Boundary: {
-        phase: "R1",
-        status: "failed",
+      r2Boundary: {
+        phase: "R2",
+        status: "in_progress",
         phaseDependencies: [],
-        doesNotSupersede: "R0-RECOVERY",
-        alsoDoesNotSupersede: ["P0-VALUE"],
+        doesNotSupersede: "R1-RECOVERY",
+        alsoDoesNotSupersede: ["R0-RECOVERY", "P0-VALUE"],
         productUnlockCount: 0,
         externalExecutionAuthorized: false,
       },
@@ -31,7 +32,7 @@ describe("R1-T1 independent runner-remediation charter", () => {
     });
   });
 
-  test("fails if either terminal chain is removed from non-supersession", () => {
+  test("fails if any terminal chain is removed from non-supersession", () => {
     const roadmap = parseYaml(
       readFileSync(join(REPO_ROOT, "ROADMAP.yaml"), "utf8"),
       "ROADMAP.yaml",
@@ -40,11 +41,11 @@ describe("R1-T1 independent runner-remediation charter", () => {
       readFileSync(join(REPO_ROOT, "docs/decisions/OPEN_DECISIONS.yaml"), "utf8"),
       "OPEN_DECISIONS.yaml",
     );
-    roadmap.decisions["R1-RECOVERY"].also_does_not_supersede = [];
-    expect(() => assertR1CharterModel({
+    roadmap.decisions["R2-RECOVERY"].also_does_not_supersede = ["R0-RECOVERY"];
+    expect(() => assertR2CharterModel({
       roadmap,
       decisionInbox,
       validation: validateRepository(REPO_ROOT),
-    })).toThrowError("R1_T1_CHARTER_PROOF_FAILED");
+    })).toThrowError("R2_T1_CHARTER_PROOF_FAILED");
   });
 });
