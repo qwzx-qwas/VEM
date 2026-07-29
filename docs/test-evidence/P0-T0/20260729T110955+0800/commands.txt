@@ -1,0 +1,18 @@
+corepack pnpm add --save-dev --save-exact @playwright/test@1.62.0
+corepack pnpm license:generate
+PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s scripts/preflight/tests -p 'test_*.py' -v
+python3 scripts/preflight/playwright_probe.py --run-id 20260729T110955+0800 '<checksum-verified Windows Node 24.18.0 task directory and evidence outputs>'
+python3 scripts/preflight/preflight.py validate --input docs/test-evidence/P0-T0/20260729T110955+0800/environment.json --root .
+python3 '<inline P0-T0G profile validator>'
+python3 '<inline Draft 2020-12 JSON Schema validator>'
+corepack pnpm test
+corepack pnpm build
+corepack pnpm typecheck
+corepack pnpm lint
+corepack pnpm license:check
+corepack pnpm workspace:check
+corepack pnpm test:install
+powershell.exe '<bounded task-owned Edge/profile/toolchain residue query>'
+powershell.exe '<exact task-owned portable Node cleanup>'
+python3 '<inline roadmap/requirements/dependency/prompt bootstrap validator>'
+git diff --check

@@ -1,0 +1,73 @@
+{
+  "cleanup": {
+    "classification": "clean-exit",
+    "profilesRemoved": true,
+    "residualAfterCleanup": 0,
+    "residualBeforeCleanup": 0,
+    "result": "pass",
+    "stagingRemoved": true
+  },
+  "discovery": {
+    "binary": {
+      "classification": "edge-stable-binary",
+      "location": "program-files-x86",
+      "productVersion": "150.0.4078.105",
+      "result": "pass"
+    },
+    "interop": {
+      "classification": "direct-exe-inline-powershell",
+      "powershellVersion": "5.1.26100.8655",
+      "result": "pass",
+      "scriptExecutionPolicy": "Restricted",
+      "windowsVersion": "Microsoft Windows NT 10.0.26200.0"
+    },
+    "policy": {
+      "classification": "unmanaged",
+      "keyCount": 0,
+      "propertyCount": 0,
+      "readErrorCount": 0,
+      "relevant": [],
+      "result": "pass"
+    }
+  },
+  "modes": [
+    {
+      "browserVersion": "150.0.4078.105",
+      "channel": "msedge",
+      "classification": "msedge-channel-sentinel",
+      "mode": "headless",
+      "nodeVersion": "24.18.0",
+      "playwrightVersion": "1.62.0",
+      "result": "pass",
+      "sandboxBypassRemoved": true,
+      "schemaVersion": "P0-T0G-windows-runner-v1",
+      "sentinelObserved": true
+    },
+    {
+      "browserVersion": "150.0.4078.105",
+      "channel": "msedge",
+      "classification": "msedge-channel-sentinel",
+      "mode": "headed",
+      "nodeVersion": "24.18.0",
+      "playwrightVersion": "1.62.0",
+      "result": "pass",
+      "sandboxBypassRemoved": true,
+      "schemaVersion": "P0-T0G-windows-runner-v1",
+      "sentinelObserved": true
+    }
+  ],
+  "overall": "pass",
+  "recordedAt": "2026-07-29T11:42:38+08:00",
+  "runId": "20260729T110955+0800",
+  "schemaVersion": "P0-T0G-playwright-profile-v1",
+  "taskId": "P0-T0G",
+  "toolchain": {
+    "channel": "msedge",
+    "nodeVersion": "24.18.0",
+    "officialChecksumVerified": true,
+    "packageLicense": "Apache-2.0",
+    "playwrightVersion": "1.62.0",
+    "portableNodeSha256": "0ae68406b42d7725661da979b1403ec9926da205c6770827f33aac9d8f26e821",
+    "result": "pass"
+  }
+}

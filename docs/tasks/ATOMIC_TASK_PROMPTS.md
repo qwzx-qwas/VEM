@@ -161,6 +161,8 @@
 
 ### Prompt
 
+> **已完成（2026-07-29）**：已锁定 Playwright `1.62.0`，通过校验官方哈希的任务专用 Windows Node `24.18.0` 以真实 `channel: msedge` 完成 Edge Stable `150.0.4078.105` 的 headed/headless sentinel 门禁；独立 profile、unmanaged policy 分类、sandbox 参数与进程/临时目录清理均验证通过，98 项 preflight、8 项 Vitest、build/typecheck/lint、license、workspace、离线 frozen install 与双重 schema 回归全部通过，且未增加产品功能。
+
 - **背景**：P0-T0C 只证明 direct Edge binary smoke；P0-T1 已建立可固定依赖的 workspace。
 - **目标**：只固定 Playwright exact version，并证明真实 Windows Edge Stable `channel: msedge` 的 headed/headless 自动化门禁。
 - **本阶段做**：安装/锁定 Playwright；使用临时独立 profile 运行最小 headed/headless fixture；记录 Windows/Edge/Playwright version、channel、policy classification、cleanup 与 evidence hash。

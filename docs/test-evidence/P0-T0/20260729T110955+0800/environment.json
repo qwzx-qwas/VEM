@@ -1,0 +1,198 @@
+{
+  "artifacts": [
+    {
+      "path": "scripts/preflight/evidence.schema.json",
+      "sha256": "e6e3fd509167614a9540974458c909ef31f458dbd460c7e108e139f474a7888b"
+    },
+    {
+      "path": "scripts/preflight/preflight.py",
+      "sha256": "1174aeab389fbfca918bb54f9c2ea7dae17d1d9207344bb45009cd4da1eb40f3"
+    },
+    {
+      "path": "scripts/preflight/playwright_probe.py",
+      "sha256": "c6c86a03d4a60a77a35fe3c3e05f536948bf61e52b7031e8da90f8d6529e7514"
+    },
+    {
+      "path": "scripts/preflight/playwright_windows_runner.mjs",
+      "sha256": "50b40058eae172f69845840693e1debad581ba58abb109bf70ca2203ae1c8783"
+    },
+    {
+      "path": "docs/adr/0003-playwright-msedge-channel-gate.md",
+      "sha256": "b2b830cad9c7b1344fba721f13d6948448a98fa7310e5b84136a378821e92121"
+    },
+    {
+      "path": "package.json",
+      "sha256": "865435a90cae790acd1ee45d8ec039118399142f2aa3406d32b5f545e7581a17"
+    },
+    {
+      "path": "pnpm-lock.yaml",
+      "sha256": "7031ea001a3d213344c51f490b6b5c90039eda507a8063068649d03338e6bfef"
+    },
+    {
+      "path": "docs/test-evidence/P0-T0/20260729T110955+0800/playwright-results.json",
+      "sha256": "214a334851855d97912817c9699e650a8ce49bd0bbffa1373d10ec990ce87872"
+    }
+  ],
+  "checks": [
+    {
+      "classification": "Playwright 1.62.0 and Windows portable Node 24.18.0 are exact and checksum-verified.",
+      "evidenceRefs": [
+        "artifact:docs/test-evidence/P0-T0/20260729T110955+0800/playwright-results.json",
+        "package:pnpm-lock.yaml"
+      ],
+      "id": "playwright-exact-version",
+      "result": "pass"
+    },
+    {
+      "classification": "The system Edge Stable binary is resolved by the msedge launch profile; no bundled Chromium is accepted.",
+      "evidenceRefs": [
+        "artifact:docs/test-evidence/P0-T0/20260729T110955+0800/playwright-results.json"
+      ],
+      "id": "edge-stable-msedge-channel",
+      "result": "pass"
+    },
+    {
+      "classification": "unmanaged",
+      "evidenceRefs": [
+        "artifact:docs/test-evidence/P0-T0/20260729T110955+0800/playwright-results.json"
+      ],
+      "id": "enterprise-policy-classification",
+      "result": "pass"
+    },
+    {
+      "classification": "Real Edge headless mode returned the bounded sentinel through Playwright.",
+      "evidenceRefs": [
+        "artifact:docs/test-evidence/P0-T0/20260729T110955+0800/playwright-results.json"
+      ],
+      "id": "playwright-headless",
+      "result": "pass"
+    },
+    {
+      "classification": "Real Edge headed mode returned the bounded sentinel through Playwright.",
+      "evidenceRefs": [
+        "artifact:docs/test-evidence/P0-T0/20260729T110955+0800/playwright-results.json"
+      ],
+      "id": "playwright-headed",
+      "result": "pass"
+    },
+    {
+      "classification": "clean-exit",
+      "evidenceRefs": [
+        "artifact:docs/test-evidence/P0-T0/20260729T110955+0800/playwright-results.json"
+      ],
+      "id": "playwright-profile-process-cleanup",
+      "result": "pass"
+    }
+  ],
+  "commands": [
+    {
+      "argv": [
+        "node.exe",
+        "--version"
+      ],
+      "exitCode": 0,
+      "id": "windows-portable-node-version",
+      "result": "pass",
+      "stderrSummary": null,
+      "stdoutSummary": "node-24.18.0"
+    },
+    {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "<bounded-edge-discovery-policy>"
+      ],
+      "exitCode": 0,
+      "id": "windows-edge-policy-discovery",
+      "result": "pass",
+      "stderrSummary": null,
+      "stdoutSummary": "bounded-discovery-produced-classified-result"
+    },
+    {
+      "argv": [
+        "node.exe",
+        "<runner>",
+        "headless",
+        "<task-profile>"
+      ],
+      "exitCode": 0,
+      "id": "playwright-msedge-headless",
+      "result": "pass",
+      "stderrSummary": null,
+      "stdoutSummary": "msedge-channel-sentinel"
+    },
+    {
+      "argv": [
+        "node.exe",
+        "<runner>",
+        "headed",
+        "<task-profile>"
+      ],
+      "exitCode": 0,
+      "id": "playwright-msedge-headed",
+      "result": "pass",
+      "stderrSummary": null,
+      "stdoutSummary": "msedge-channel-sentinel"
+    },
+    {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "<bounded-marker-cleanup>"
+      ],
+      "exitCode": 0,
+      "id": "windows-edge-owned-process-cleanup",
+      "result": "pass",
+      "stderrSummary": null,
+      "stdoutSummary": "clean-exit"
+    }
+  ],
+  "contractIds": [
+    "EDGE-PREFLIGHT-001"
+  ],
+  "executionProfile": {
+    "canonicalGitRoot": "/home/qwzx/src/VEM",
+    "filesystemType": "ext4",
+    "name": "WSL ext4 project with checksum-verified task-local Windows Node Playwright runner and Windows Edge Stable",
+    "projectRoot": ".",
+    "runnerOwner": "qwzx",
+    "tier1BrowserOwner": "Windows Edge Stable through Playwright channel msedge"
+  },
+  "overall": "pass",
+  "recordedAt": "2026-07-29T11:42:38+08:00",
+  "runId": "20260729T110955+0800",
+  "schemaVersion": "1.0.0",
+  "taskId": "P0-T0G",
+  "tools": {
+    "node": {
+      "exactVersion": "24.18.0",
+      "observedVersion": "24.18.0",
+      "result": "pass",
+      "selectionSource": "https://nodejs.org/dist/v24.18.0/SHASUMS256.txt",
+      "versionCommand": [
+        "node.exe",
+        "--version"
+      ]
+    },
+    "pnpm": {
+      "activationCommand": [
+        "corepack",
+        "prepare",
+        "pnpm@10.34.0",
+        "--activate"
+      ],
+      "exactVersion": "10.34.0",
+      "observedVersion": "10.34.0",
+      "result": "pass",
+      "selectionSource": "docs/adr/0001-edge-execution-preflight.md",
+      "versionCommand": [
+        "corepack",
+        "pnpm",
+        "--version"
+      ]
+    }
+  }
+}

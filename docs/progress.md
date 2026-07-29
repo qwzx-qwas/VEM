@@ -126,3 +126,15 @@ Each future entry must include task ID, date, changed files, commands, test evid
 - Security/data-lifecycle verification: all packages are private and dev-only; unknown/AGPL/forbidden/unreviewed licenses and unregistered/hash-mismatched/symlinked vendored assets fail closed; no product persistent state, browser profile, token, runtime discovery, production dependency, vendored code, font, icon, image or generated asset was introduced; clean-install writes only a bounded random `/tmp/vem-p0-t1-clean-install-*` fixture and removes it
 - Known limitations/degradations: two `lightningcss` packages are MPL-2.0 transitive development tooling with a lockfile-scoped review that must be revisited for any distribution; public package/extension/store distribution remains unauthorized; Playwright and Edge automation remain P0-T0G
 - Next eligible task: `P0-T0G` by roadmap order; `P0-T2` also has its task dependency satisfied but must not run concurrently
+
+## P0-T0G — Playwright Windows Edge Stable channel gate
+
+- Date: 2026-07-29
+- State/outcome: `done` / `passed`
+- Decision: ADR 0003 accepts exact Playwright `1.62.0`, real `channel: msedge`, required headed/headless modes, and a checksum-verified task-local Windows Node `24.18.0` harness; the failed direct WSL pipe seam is explicitly not accepted
+- Changed files: exact workspace lockfile/notices, ADR 0003, Playwright Windows runner/probe/tests, roadmap/status/prompt/progress records, and `docs/test-evidence/P0-T0/20260729T110955+0800/`
+- Commands: exact pnpm dependency lock; official portable Node SHA-256 verification; real headed/headless Windows Edge launch; shared and Draft 2020-12 schema validation; full Python/TypeScript/workspace/license/offline-install regressions; Windows and WSL residue verification
+- Test evidence: Edge Stable `150.0.4078.105` passed both modes with the same discovered browser version and bounded sentinel; all 98 preflight tests, 8 Vitest tests, build, strict typecheck, ESLint, 133-package license audit, workspace check, offline clean frozen install and both schema validators passed
+- Security/data-lifecycle verification: the user's Edge profile was never used; Playwright's default `--no-sandbox` was removed; ExecutionPolicy remained `Restricted` without bypass; policy was classified unmanaged; runner output was one bounded redacted JSON line; task profiles, matching Edge processes, staged modules, portable Node ZIP/extraction and interrupted WSL download were removed with zero residue
+- Known limitations/degradations: the portable Windows Node runner is a gate harness only and does not change the WSL Node/Vite/MCP product topology; no selector, protocol, extension, source resolution, runtime discovery, screenshot or other product capability was added
+- Next eligible task: `P0-T2` by roadmap order; P0-T3 and P0-T4 dependencies are also satisfied but tasks must remain atomic
