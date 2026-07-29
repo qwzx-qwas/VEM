@@ -21,7 +21,7 @@ describe("R2-T1 independent final-output remediation charter", () => {
       ],
       r2Boundary: {
         phase: "R2",
-        status: "in_progress",
+        status: "failed",
         phaseDependencies: [],
         doesNotSupersede: "R1-RECOVERY",
         alsoDoesNotSupersede: ["R0-RECOVERY", "P0-VALUE"],
@@ -42,6 +42,24 @@ describe("R2-T1 independent final-output remediation charter", () => {
       "OPEN_DECISIONS.yaml",
     );
     roadmap.decisions["R2-RECOVERY"].also_does_not_supersede = ["R0-RECOVERY"];
+    expect(() => assertR2CharterModel({
+      roadmap,
+      decisionInbox,
+      validation: validateRepository(REPO_ROOT),
+    })).toThrowError("R2_T1_CHARTER_PROOF_FAILED");
+  });
+
+  test("requires the immutable R2 stop attempt when the phase is failed", () => {
+    const roadmap = parseYaml(
+      readFileSync(join(REPO_ROOT, "ROADMAP.yaml"), "utf8"),
+      "ROADMAP.yaml",
+    );
+    const decisionInbox = parseYaml(
+      readFileSync(join(REPO_ROOT, "docs/decisions/OPEN_DECISIONS.yaml"), "utf8"),
+      "OPEN_DECISIONS.yaml",
+    );
+    roadmap.phases.find((phase) => phase.id === "R2")
+      .tasks.find((task) => task.id === "R2-T4").decision = "continue";
     expect(() => assertR2CharterModel({
       roadmap,
       decisionInbox,

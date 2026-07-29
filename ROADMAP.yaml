@@ -149,7 +149,7 @@ phases:
 
   - id: R2
     title: Owner-authorized independent final-output authority remediation after terminal R1 stop
-    status: in_progress
+    status: failed
     depends_on: []
     recovery_of_failed_phase: R1
     authorization_ref: docs/decisions/OPEN_DECISIONS.yaml
@@ -167,7 +167,7 @@ phases:
       - {id: R2-T1, title: Record the owner-authorized independent R2 final-output remediation charter and mechanically preserve P0 R0 and R1 terminal stop chains, contracts: [R2-FINAL-OUTPUT-001], status: done, depends_on: [], tests: [failed-P0-R0-R1 preservation empty-phase-and-task-dependency triple-decision-non-supersession authorization-reference no-existing-phase-or-task-dependency and no-product-unlock checks]}
       - {id: R2-T2, title: Make output-last-message the authoritative final response through a single-file capsule write boundary and separate protocol from attribution failures, contracts: [R2-FINAL-OUTPUT-001], status: done, depends_on: [R2-T1], tests: [multiple-agent-message authoritative-final-file last-agent-consistency missing-invalid-mismatch-size-symlink single-file-write-boundary failure-classification sealing bounds and cancellation checks]}
       - {id: R2-T3, title: Freeze a new final-output recovery-only capsule instrumentation threshold and evidence preregistration without external calls, contracts: [R2-FINAL-OUTPUT-001], status: done, depends_on: [R2-T2], tests: [new-runner-hash fresh-task identity equal-base-context counterbalance threshold product-holdout-exclusion final-file-binding pre-result-immutability and external-authorization-false checks]}
-      - {id: R2-T4, title: Execute a separately owner-authorized R2 recovery batch and record the independent R2-RECOVERY verdict, contracts: [R2-FINAL-OUTPUT-001], status: todo, decision_key: R2-RECOVERY, decision_attempt: 1, supersedes_attempt: null, decision: pending, depends_on: [R2-T3], tests: [fresh-context final-file-and-jsonl-consistency raw-ledger-hash correctness wrong-attribution capsule-integrity pairwise-cost failure-evidence and continue-adjust-stop verdict checks]}
+      - {id: R2-T4, title: Execute a separately owner-authorized R2 recovery batch and record the independent R2-RECOVERY verdict, contracts: [R2-FINAL-OUTPUT-001], status: done, decision_key: R2-RECOVERY, decision_attempt: 1, supersedes_attempt: null, decision: stop, depends_on: [R2-T3], tests: [fresh-context final-file-and-jsonl-consistency raw-ledger-hash correctness wrong-attribution capsule-integrity pairwise-cost failure-evidence and continue-adjust-stop verdict checks]}
 
   - id: P1
     title: Harden the Edge Vite-injected MVP

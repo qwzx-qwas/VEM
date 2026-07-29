@@ -1,0 +1,1 @@
+{"line":11,"relativeFile":"packages/demo-fixture/src/App.tsx","sourceAnchorId":"vem1_9770189214d90e934e2ae8beb390b2b3"}

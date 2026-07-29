@@ -545,6 +545,8 @@
 - **实现约束**：任何 prereg/source/capsule/holdout/final-file/failure-sealing drift fail closed。
 - **验收标准**：immutable verdict；continue 也仅允许提出新的独立研究路线。
 
+> **已完成（2026-07-29）**：Owner 授权、完整 preregistration digest、8 个 frozen source bindings 和 15 项 capsule/recorder/preregistration 门禁通过后启动批次。前 8 个 run 全部通过；第 9 个 direct arm 同样退出 0，权威 final file 与最后 JSONL agent message 一致且定位正确，但其命令事件包含 frozen v2 auditor 禁止的 `AGENTS.md` marker，触发 `CAPSULE_AUDIT_V2_ESCAPE`。异常在 frozen runner 中未捕获，因而审计失败证据没有在返回前封存；批次 fail closed，剩余第 10 次未执行。无外部重试的 post-abort sealer 只读取并哈希封存现有证据，不修改任何 frozen binding。最终 9/9 定位正确、9 个 fresh unique threads、0 protocol failure、0 wrong attribution；immutable verdict 为 `R2-RECOVERY=stop`，stop reasons 为 `capsule-integrity-failed` 与 `failure-evidence-not-sealed-before-return`，9/10 incomplete batch 同时记为 adjust reason 但不覆盖 stop。44 项定向测试、180 项全仓 Vitest、build/typecheck/lint、roadmap/workspace/license、clean frozen install、production demo 与 98 项 preflight 全部通过。R2 phase 为 `failed`，R1/R0/P0 stops 与零产品解锁边界不变。证据位于 `docs/test-evidence/R2-T4/20260729T230343+0800/`，verdict hash 为 `ada1fb7e4c4ae202060a5e98e00dafedecfd4862803c61bab1970d7e30d681e1`。
+
 ## P0-T9A — Walking-skeleton 正向 Edge E2E
 
 ### Prompt

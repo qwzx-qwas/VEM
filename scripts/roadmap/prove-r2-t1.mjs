@@ -37,6 +37,11 @@ export function assertR2CharterModel({ roadmap, decisionInbox, validation }) {
     return { phase, attempt: phase?.tasks.find((task) => task.id === taskId) };
   });
   const r2 = roadmap.phases.find((phase) => phase.id === "R2");
+  const r2Attempt = r2?.tasks.find((task) => task.id === "R2-T4");
+  const r2StatusValid = r2?.status === "in_progress"
+    || (r2?.status === "failed"
+      && r2Attempt?.status === "done"
+      && r2Attempt.decision === "stop");
   const owner = decisionInbox.decisions.find(
     (decision) => decision.id === "OWNER-R2-FINAL-OUTPUT-REMEDIATION",
   );
@@ -46,7 +51,7 @@ export function assertR2CharterModel({ roadmap, decisionInbox, validation }) {
   if (terminal.some(({ phase, attempt }) => (
     phase?.status !== "failed" || attempt?.decision !== "stop"
   ))
-    || r2?.status !== "in_progress"
+    || !r2StatusValid
     || r2.recovery_of_failed_phase !== "R1"
     || r2.scope_boundary !== "independent-research-no-product-unlock"
     || r2.authorization_ref !== "docs/decisions/OPEN_DECISIONS.yaml"

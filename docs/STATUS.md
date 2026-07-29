@@ -34,6 +34,7 @@
 - `R2-T1` 已完成独立 final-output remediation charter：R2 对 R1/R0/P0 三条 terminal stop chain 均声明 non-supersession，phase/task dependency 为空且没有既有产品依赖边；proof hash 为 `46e7522676d366c5b93f2e32b6c682fabb76c5d3fa790a37a60eb6692171c25d`。R2 只授权本地 runner 修复和新预注册，外部调用仍未授权。
 - `R2-T2` 已完成 final-output authority 修复：`--output-last-message` 的 runner-owned bounded file 是唯一 structured response，JSONL 只作审计；最后消息一致性、缺失/无效/不一致/超限/symlink 与 failure sealing 已覆盖。Bubblewrap 的 `/work` 仍只读，输出目录仅有一个 0600 file bind 可写；instrumentation hash 为 `235e7c8433787ef838c1f30d492e3ef24cb62ebd6ebf26bd43ca9cd559c0f8ab`，外部调用为 0。
 - `R2-T3` 已完成新预注册：5 个 fresh recovery-only task、10 个 counterbalanced arm 和 8 个 runtime source binding 冻结于 hash `dddd48ade2a92b2e12ec7600c9cdc0bd65eee6d47023d01d70b8bd71b47c273a`，instrumentation hash 为 `09e237ddec722207ee3b2e22c714ca5631700ff7393877a66fdd75d04c46b8a0`；30 次本地隔离探针全部通过，`externalExecutionAuthorized=false`，R2-T4 等待单独授权。
+- `R2-T4` 已完成并记录 `R2-RECOVERY=stop`：9 个 fresh process 均退出 0、权威 final file 与最后 JSONL agent message 一致、定位正确，且 0 protocol failure / 0 wrong attribution；第 9 个 run 的命令事件包含 frozen v2 auditor 禁止的 `AGENTS.md` marker，触发 `CAPSULE_AUDIT_V2_ESCAPE`，异常在 frozen runner 返回前未封存审计失败证据。批次按预登记规则停止，第 10 次未执行；无外部重试的 post-abort sealer 仅封存既有证据。R2 phase 为 `failed`，R1/R0/P0 stops 与零产品解锁边界不变。
 - readiness 结果为 `ready`：大小写 staging 路径为同一 device/inode，payload 与 prefix-normalized manifest 已冻结，无 case collision，目标不存在，ext4 容量/owner permission 通过，且目标未被任务修改。
 - 当前 owner-approved 产品范围是 P0 proof-of-value / go-no-go prototype，不是完整 Visual V1。
 - 安全策略边界已确定但尚未实现：没有全局 security-off/trusted-local 绕过；P3 只为默认开启的增强保障项提供逐项用户 opt-out，并保持安全底线始终执行。
@@ -51,7 +52,7 @@
 
 ## 当前决策状态
 
-见 `docs/decisions/OPEN_DECISIONS.yaml`。迁移、exact toolchain、Apache-2.0 项目许可证、MCP primary/compat revision 与独立 R0/R1/R2 scope 均已决定；`P0-VALUE`、`R0-RECOVERY` 与 `R1-RECOVERY` 均保持各自不可覆盖的 terminal `stop`，`R2-RECOVERY` 仍 pending。
+见 `docs/decisions/OPEN_DECISIONS.yaml`。迁移、exact toolchain、Apache-2.0 项目许可证、MCP primary/compat revision 与独立 R0/R1/R2 scope 均已决定；`P0-VALUE`、`R0-RECOVERY`、`R1-RECOVERY` 与 `R2-RECOVERY` 均保持各自不可覆盖的 terminal `stop`。
 
 ## 状态与记录分工
 
