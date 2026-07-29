@@ -1,0 +1,32 @@
+{
+  "name": "visual-element-mcp",
+  "version": "0.0.0-private",
+  "private": true,
+  "description": "Edge-first, local-first visual element context bridge for Codex",
+  "license": "Apache-2.0",
+  "type": "module",
+  "packageManager": "pnpm@10.34.0",
+  "engines": {
+    "node": "=24.18.0",
+    "pnpm": "=10.34.0"
+  },
+  "scripts": {
+    "build": "tsc -b --pretty false",
+    "typecheck": "tsc -b --pretty false",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "test:workspace": "vitest run packages/workspace-smoke scripts/workspace scripts/license",
+    "test:install": "node scripts/workspace/clean-install-smoke.mjs",
+    "workspace:check": "node scripts/workspace/verify-workspace.mjs",
+    "license:check": "node scripts/license/audit.mjs --check",
+    "license:generate": "node scripts/license/audit.mjs --write"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@types/node": "24.13.3",
+    "eslint": "10.8.0",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.65.0",
+    "vitest": "4.1.10"
+  }
+}

@@ -140,6 +140,23 @@
 - **测试要求**：missing/stale/tampered evidence、mixed verdict、redaction、rerun reproducibility。
 - **验收标准**：只有本任务 passed 后 P0-T1 eligible。
 
+## P0-T1 — pnpm TypeScript workspace 与许可证基线
+
+### Prompt
+
+> **已完成（2026-07-29）**：已建立 private pnpm monorepo，精确固定 Node `24.18.0`、pnpm `10.34.0`、TypeScript `6.0.3`、Vitest `4.1.10` 与 ESLint `10.8.0`；加入 strict TS smoke package、offline clean frozen-install、package/license policy、130 条 transitive notices 和未登记 vendored asset 的 fail-closed 检查。8 项测试、build/typecheck/lint、完整 license/provenance audit 与既有 90 项 preflight 回归均通过；未引入 Playwright、浏览器或产品能力。
+
+- **背景**：P0-T0F aggregate preflight 已通过，允许建立 exact-version workspace，但 Playwright channel 与产品实现仍分别受 P0-T0G 和后续 task 约束。
+- **目标**：创建 private pnpm TypeScript monorepo，并锁定 strict TypeScript、Vitest、ESLint 与 LICENSE-POLICY-001 基线。
+- **本阶段做**：固定 Node/pnpm 与开发依赖；生成 lockfile；添加 workspace smoke；记录 Apache-2.0 项目元数据、依赖分类、完整第三方 notices 和 vendored asset provenance gate。
+- **本阶段不做**：不安装 Playwright，不启动 Edge，不实现 protocol、selector、Vite transform 或产品 runtime，不授权 public distribution。
+- **实现约束**：只能使用 P0-T0A2 已接受的 Node/pnpm；所有 package 保持 private；未知、forbidden 或未经显式审查的依赖许可证 fail closed；asset 必须有 source/license/hash provenance。
+- **成功路径**：clean frozen install、workspace smoke、build、strict typecheck、lint、license/notices/provenance 与 bootstrap traceability 全部通过。
+- **失败路径与边界**：toolchain 漂移、stale notices、review-required/forbidden license、未登记 asset 或任何测试失败时保持 incomplete，不开始 P0-T0G。
+- **建议优先查看/修改的文件**：root workspace metadata、`packages/workspace-smoke/`、`scripts/workspace/`、`scripts/license/`、`docs/dependency-policy.json`、`THIRD_PARTY_NOTICES.md`。
+- **测试要求**：workspace smoke、offline clean frozen install、exact Node/pnpm、package license metadata、dependency policy、third-party notices、vendored asset provenance、build/typecheck/lint。
+- **验收标准**：P0-T1 独立通过；只授权下一原子任务 P0-T0G 或 P0-T2，不声明 Edge automation 或产品 capability。
+
 ## P0-T0G — Playwright `msedge` 正式 channel gate
 
 ### Prompt

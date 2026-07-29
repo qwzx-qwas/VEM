@@ -113,3 +113,16 @@ Each future entry must include task ID, date, changed files, commands, test evid
 - Security/data-lifecycle verification: seven required manifests and files rehashed; no owner statements, ACL details, raw logs or secrets copied; canonical digest `1f77525ea06e3a1525cb54c8a3bd401d0753b8384a45970b930a0626d710d4ff` is explicitly not a digital signature
 - Known limitations/degradations: aggregate passed authorizes P0-T1 only; ADR 0001 stayed byte-identical to preserve upstream hashes; P0-T0G remains required before browser-dependent product tasks
 - Next eligible task: `P0-T1`
+
+## P0-T1 — pnpm TypeScript workspace and license-policy baseline
+
+- Date: 2026-07-29
+- State/outcome: `done` / `passed`
+- Decision: existing owner-authored Apache-2.0 `LICENSE` and owner answer are recorded without guessing a legal name; contribution baseline is Apache-2.0 §5 and publication remains limited to private P0 proof-of-value
+- Changed files: exact root workspace metadata/lockfile, strict TS/Vitest/ESLint config, `packages/workspace-smoke/`, `scripts/workspace/`, `scripts/license/`, dependency/vendored policy, generated `THIRD_PARTY_NOTICES.md`, roadmap/status/decision/prompt records, and `docs/test-evidence/P0-T1/20260729T103857+0800/`
+- Commands: exact Corepack pnpm lockfile generation and frozen install; offline clean-install smoke; workspace check; Vitest; TypeScript build/typecheck; ESLint; pnpm full-graph license scan; deterministic notices/provenance audit; Python preflight regression and bootstrap roadmap/contract check; immutable evidence SHA verification
+- Test evidence: clean offline frozen install passed with no fixture residue; 8 Vitest tests passed; build, strict typecheck and lint passed; all 130 package/version records classified (97 MIT, 15 Apache-2.0, 7 ISC, 6 BSD-2-Clause, 2 BSD-3-Clause, 2 reviewed MPL-2.0 and 1 BlueOak-1.0.0); notices matched lockfile hash; zero vendored assets; all 90 existing preflight tests and bootstrap 9-phase/136-task/25-contract checks passed
+- Edge/browser evidence: not applicable; P0-T1 installs no Playwright and does not claim `channel: msedge`; P0-T0G remains the next browser gate
+- Security/data-lifecycle verification: all packages are private and dev-only; unknown/AGPL/forbidden/unreviewed licenses and unregistered/hash-mismatched/symlinked vendored assets fail closed; no product persistent state, browser profile, token, runtime discovery, production dependency, vendored code, font, icon, image or generated asset was introduced; clean-install writes only a bounded random `/tmp/vem-p0-t1-clean-install-*` fixture and removes it
+- Known limitations/degradations: two `lightningcss` packages are MPL-2.0 transitive development tooling with a lockfile-scoped review that must be revisited for any distribution; public package/extension/store distribution remains unauthorized; Playwright and Edge automation remain P0-T0G
+- Next eligible task: `P0-T0G` by roadmap order; `P0-T2` also has its task dependency satisfied but must not run concurrently

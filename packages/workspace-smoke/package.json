@@ -1,0 +1,19 @@
+{
+  "name": "@vem/workspace-smoke",
+  "version": "0.0.0-private",
+  "private": true,
+  "description": "P0-T1 workspace and strict TypeScript smoke package",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc -b --pretty false",
+    "typecheck": "tsc -b --pretty false"
+  }
+}

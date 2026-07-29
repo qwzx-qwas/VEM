@@ -1,0 +1,20 @@
+corepack pnpm --version
+corepack pnpm install --lockfile-only
+corepack pnpm install --frozen-lockfile
+corepack pnpm license:generate
+corepack pnpm workspace:check
+corepack pnpm test:workspace
+corepack pnpm build
+corepack pnpm typecheck
+corepack pnpm lint
+corepack pnpm license:check
+corepack pnpm test:install
+corepack pnpm test
+PYTHONDONTWRITEBYTECODE=1 python3 -W error -m unittest discover -s scripts/preflight/tests -v
+python3 '<inline bootstrap roadmap/requirements/dependency/contract/decision validator>'
+sha256sum -c SHA256SUMS
+git diff --check
+
+The first build correctly failed because the initial shared lib omitted standard DOM declarations
+required by Vitest/Vite types. The first lint correctly found missing Node standard globals and one
+pre-existing preflight cleanup rule. Both configurations were narrowed, then the full suite passed.

@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "scanRoots": [
+    "vendor",
+    "assets/vendor",
+    "packages"
+  ],
+  "assets": []
+}

@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "project": {
+    "spdxLicense": "Apache-2.0",
+    "licenseFile": "LICENSE",
+    "ownerEvidence": [
+      "git commit 91db4b1d25437bea3cc1d886f777fd6b2904fd9a",
+      "docs/mastery/M04-evidence-license-p0-scope.md owner answer: 已经有license"
+    ],
+    "copyrightHolder": "qwzx-qwas (repository owner identity; no legal-name assertion)",
+    "contributionPolicy": "Apache-2.0 section 5; no separate CLA is asserted",
+    "publicationBoundary": "Private P0 proof-of-value only; public package, extension, and store publication remain unauthorized"
+  },
+  "dependencies": {
+    "allowed": [
+      "0BSD",
+      "Apache-2.0",
+      "BlueOak-1.0.0",
+      "BSD-2-Clause",
+      "BSD-3-Clause",
+      "CC0-1.0",
+      "ISC",
+      "MIT",
+      "Python-2.0",
+      "Unlicense"
+    ],
+    "reviewRequired": [
+      "EPL-2.0",
+      "GPL-2.0-only",
+      "GPL-3.0-only",
+      "LGPL-2.1-only",
+      "LGPL-3.0-only",
+      "MPL-2.0"
+    ],
+    "forbiddenOrRelicenseNeeded": [
+      "AGPL-3.0-only",
+      "AGPL-3.0-or-later",
+      "BUSL-1.1",
+      "SSPL-1.0"
+    ],
+    "unknownLicenseAction": "fail",
+    "approvedReviews": [
+      {
+        "license": "MPL-2.0",
+        "packages": [
+          "lightningcss@1.33.0",
+          "lightningcss-linux-x64-gnu@1.33.0"
+        ],
+        "scope": "development-only transitive tooling; no source copy or product redistribution in P0-T1",
+        "rationale": "MPL-2.0 file-level obligations remain isolated in upstream packages; revisit on every lockfile or distribution change"
+      }
+    ]
+  },
+  "reviewTriggers": [
+    "every pnpm-lock.yaml change",
+    "every release or tag",
+    "every vendored code or asset change"
+  ]
+}

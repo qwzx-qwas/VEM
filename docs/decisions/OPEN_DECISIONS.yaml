@@ -20,16 +20,25 @@ decisions:
 
   - id: OWNER-PROJECT-LICENSE
     title: Select project license, copyright holder, contribution policy, and publication boundary
-    status: open
+    status: decided
     decision_owner: project-owner
     needed_by_task: P0-T1
+    decision:
+      license: Apache-2.0
+      copyright_holder: qwzx-qwas repository owner identity; no legal-name assertion
+      contribution_policy: Apache-2.0 section 5; no separate CLA asserted
+      publication_boundary: Private P0 proof-of-value; no public package extension or store publication authorized
+    decided_at: 2026-07-29T11:00:39+08:00
+    evidence:
+      - Owner-authored commit 91db4b1d25437bea3cc1d886f777fd6b2904fd9a added LICENSE with message add Apache License 2.0.
+      - Owner answer in docs/mastery/M04-evidence-license-p0-scope.md states 已经有license.
     context_refs:
       - docs/DESIGN.md
+      - docs/dependency-policy.json
+      - docs/mastery/M04-evidence-license-p0-scope.md
     context_sections:
       - 2.8 项目与依赖许可证 (LICENSE-POLICY-001)
-    options_not_verdicts:
-      - Apache-2.0 as the current design recommendation
-      - private/unlicensed while publication remains blocked
+    note: This records existing owner evidence without guessing a legal name or authorizing public distribution; every lockfile or distribution change requires renewed dependency review.
 
   - id: TOOLCHAIN-NODE-PNPM
     title: Accept exact Node and pnpm versions after reproducible preflight evidence
