@@ -257,6 +257,23 @@
 - **测试要求**：ADR/contract IDs、capability boundary、target/overlay/filter、page-untrusted provenance、strict external confirmation、form/private/URL/Unicode/prompt/error projection、summary bound、pagehide/document/project/explicit clear。
 - **验收标准**：P0-T5 提供可供后续 transform/pilot 使用的最小 injected selector，但不宣称受信任用户手势、源码定位、MCP 或修改授权。
 
+## P0-T15 — Serve-only intrinsic JSX source anchor 与生产不参与
+
+### Prompt
+
+> **已完成（2026-07-29）**：已接受 ADR 0006 并交付 `@vem/vite-plugin`：固定 React 19/Vite 8/Oxc 矩阵、serve-only/pre intrinsic JSX transform、spread 后 opaque `vem1_` anchor、高精度 sourcemap、Fast Refresh、collision/revision/1 MiB private memory registry 门禁；production 配置前后 module graph/字节/source map/SSR 行为等价且用户同名/广义 data 属性保留。62 项源测试、7 项 workspace、真实 23-module/4-file/1,092,834-byte build、0 VEM-owned signature、235-package license、98 项 preflight 与全部 workspace gate 通过，未实现 publication、lookup、client、endpoint、Coordinator 或 MCP。
+
+- **背景**：P0 已有恶意 React/Vite fixture 和 page-untrusted selector，但尚无可验证的 host source anchor；任何 dev marker 必须在引入的同一阶段证明生产构建完全不参与。
+- **目标**：接受 source-anchor/PROD-LEAK ADR，并为固定 React 19 + Vite 8 Oxc 矩阵交付 serve-only intrinsic JSX transform、opaque anchor 与 private in-memory registry output。
+- **本阶段做**：锁定 Node/Vite/React/plugin/parser/transform matrix；只处理项目内 `.jsx/.tsx` intrinsic JSX；定义 namespaced hash、AST path、component/location/revision registry record；检测保留属性冲突；返回高精度 sourcemap；将插件以 `apply: serve` 接入 demo。
+- **本阶段不做**：不发布 registry 到 Coordinator，不实现 lookup/source resolution、runtime owner/usage、HMR revision、client/endpoint/HTML injection、MCP、production scanner CI 或跨框架支持。
+- **实现约束**：VEM transform 必须在 React transform 前执行；generated marker 位于 spreads 之后且用户显式保留属性 fail closed；自定义组件不注入；跳过 node_modules/虚拟模块/项目外路径；build hook、registry publication、client 与 endpoint 在 production build 中不执行或解析；不写 `src/public/dist`。
+- **成功路径**：automatic/classic JSX、nested component/AST path、spread、Fast Refresh 与 sourcemap fixture 产生确定且 collision-checked anchor；同一 production fixture 在未启用与配置 VEM 两种状态下 module graph/HTML/JS/CSS/assets/行为字节等价，用户广义及同名属性保留。
+- **失败路径与边界**：保留属性冲突、parser error、无 sourcemap、插件顺序错误、项目外/已转换输入、hash collision、production transform/resolve/publication、产物 signature、registry 项目落盘或 baseline drift 均阻止完成或返回明确 limitation。
+- **建议优先查看/修改的文件**：`packages/vite-plugin/`、`packages/demo-fixture/`、source-anchor ADR、P0-T15 evidence、workspace lock/notices。
+- **测试要求**：ADR/matrix、intrinsic/custom/spread/reserved attribute、deterministic hash/collision、component/AST path/location、sourcemap chain、automatic/classic/Fast Refresh、scope skip、serve/build separation、private registry、module-graph/baseline equivalence、readonly leakage 与 user-attribute preservation。
+- **验收标准**：P0-T15 只交付固定矩阵内的 dev source-transform 与 private registry output，并机械证明 production non-participation；不宣称 registry publication、source lookup、browser injection 或 MCP 能力。
+
 ## P0-T17B — 3–5 task value micro-pilot
 
 ### Prompt

@@ -185,3 +185,15 @@ Each future entry must include task ID, date, changed files, commands, test evid
 - Security/data-lifecycle verification: overlay/private/hidden/metadata/zero-area targets fail closed; form values are never read; sensitive text, raw URL path/query/fragment and control/bidi characters are removed or rejected; summaries are immutable, explicitly untrusted and byte-bounded; Map/WeakMap/WeakRef state clears on page/document/project/detach/stop/explicit lifecycle events with no durable storage
 - Known limitations/degradations: injected selection cannot prove user intent or authorize editing; no extension/CDP identity, screenshot, source anchor/registry, proxy/coordinator/MCP, claim, ConfirmationBinding consumption, Vite injection transform or persistence was added
 - Next eligible task: `P0-T15`
+
+## P0-T15 — Serve-only intrinsic JSX source anchors and production non-participation
+
+- Date: 2026-07-29
+- State/outcome: `done` / `passed`
+- Decision: ADR 0006 accepts only the exact Node 24.18.0, Vite 8.1.5, React/DOM 19.2.8, plugin-react 6.0.4, TypeScript 6.0.3, oxc-parser 0.142.0 and MagicString 1.1.0 matrix; source identity is registry-revision scoped and VEM never participates in production application runtime
+- Changed files: ADR 0006, private `packages/vite-plugin/`, demo plugin/production fixtures and verifier, exact dependency lock/notices, workspace references, roadmap/status/prompt/progress records and `docs/test-evidence/P0-T15/20260729T141939+0800/`
+- Commands: exact registry version/license queries and frozen install; Oxc/MagicString direct transform probe; real Vite dev/Fast Refresh transform; paired production output equivalence build; real demo leakage build; Vitest/workspace/build/type/lint/roadmap/license gates; offline clean frozen install; full preflight regression; evidence SHA checks
+- Test evidence: 12 new source-anchor/production tests and 50 existing tests passed; demo transform produced 42 deterministic anchors with chained source maps; paired production outputs were byte/module-graph/source-map/behavior equivalent; real build emitted four files/1,092,834 bytes with zero VEM-owned signature; seven workspace tests, 235-package/zero-vendored license audit, frozen/offline install and 98 preflight tests passed
+- Security/data-lifecycle verification: explicit reserved attributes fail closed in dev while all user data attributes survive production; project realpath, extension/query/virtual/node_modules scope, parser/source/anchor/AST path/project-registry byte bounds, collision and revision checks are enforced; registry is immutable memory-only output with no persistence/publication/lookup; no post-build deletion exists
+- Known limitations/degradations: no registry publication/lookup, source resolution, HMR revision, browser client/HTML/endpoint injection, runtime owner/usage evidence, Coordinator/MCP or compatibility outside the accepted matrix was added; P0-T16 owns publication and lookup
+- Next eligible task: `P0-T16`

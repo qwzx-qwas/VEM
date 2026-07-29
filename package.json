@@ -17,7 +17,7 @@
     "test": "vitest run --exclude '**/dist/**' --exclude '**/dist-types/**'",
     "test:workspace": "vitest run --exclude '**/dist/**' --exclude '**/dist-types/**' packages/workspace-smoke scripts/workspace scripts/license",
     "test:install": "node scripts/workspace/clean-install-smoke.mjs",
-    "demo:build": "pnpm --filter @vem/injected-selector build && pnpm --filter @vem/demo-fixture build",
+    "demo:build": "pnpm --filter @vem/vite-plugin build && pnpm --filter @vem/injected-selector build && pnpm --filter @vem/demo-fixture build",
     "workspace:check": "node scripts/workspace/verify-workspace.mjs",
     "roadmap:validate": "node scripts/roadmap/validate.mjs",
     "license:check": "node scripts/license/audit.mjs --check",

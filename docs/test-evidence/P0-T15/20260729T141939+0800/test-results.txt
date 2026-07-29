@@ -1,0 +1,20 @@
+RESULT=pass
+SUPPORTED_MATRIX=node-24.18.0 vite-8.1.5 react-19.2.8 react-dom-19.2.8 plugin-react-6.0.4 typescript-6.0.3 oxc-parser-0.142.0 magic-string-1.1.0
+SOURCE_TESTS=pass files=10 tests=62 p0T15Tests=12
+DEV_TRANSFORM=pass demoAnchors=42 transformedBytes=6524 sourceMapBytes=23120 fastRefresh=true
+PRIVATE_REGISTRY=pass persistence=memory-only publication=not-implemented lookup=not-implemented maxBytes=1048576
+PRODUCTION_BASELINE_EQUIVALENCE=pass bytes=true moduleGraph=true sourceMaps=true ssrBehavior=true userAttributes=true
+DEMO_BUILD=pass vite=8.1.5 transformedModules=23 files=4 bytes=1092834 externalUrls=0 vemOwnedSignatures=0
+WORKSPACE_TESTS=pass files=3 tests=7
+BUILD=pass
+TYPECHECK=pass
+LINT=pass
+WORKSPACE_CHECK=pass node=24.18.0 pnpm=10.34.0 workspaceProjects=6
+ROADMAP_VALIDATION=pass phases=9 tasks=136 contracts=25 authorityFiles=1
+LICENSE_AUDIT=pass packages=235 vendored=0
+FROZEN_INSTALL=pass packageManager=pnpm@10.34.0
+CLEAN_FROZEN_INSTALL=pass packageManager=pnpm@10.34.0
+BOOTSTRAP_PREFLIGHT_REGRESSION=pass tests=98
+PRODUCTION_POST_BUILD_STRIPPING=none
+REGISTRY_PROJECT_OUTPUT=none
+LATER_RUNTIME_CAPABILITY=none

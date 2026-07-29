@@ -4,6 +4,7 @@
     { "path": "./packages/workspace-smoke" },
     { "path": "./packages/protocol" },
     { "path": "./packages/injected-selector" },
+    { "path": "./packages/vite-plugin" },
     { "path": "./packages/demo-fixture" }
   ]
 }

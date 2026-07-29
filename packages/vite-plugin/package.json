@@ -1,0 +1,30 @@
+{
+  "name": "@vem/vite-plugin",
+  "version": "0.0.0-private",
+  "private": true,
+  "description": "Serve-only intrinsic JSX source anchor transform",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc -b --pretty false",
+    "typecheck": "tsc -b --pretty false"
+  },
+  "dependencies": {
+    "magic-string": "1.1.0",
+    "oxc-parser": "0.142.0"
+  },
+  "peerDependencies": {
+    "vite": "8.1.5"
+  },
+  "devDependencies": {
+    "@types/node": "24.13.3",
+    "vite": "8.1.5"
+  }
+}

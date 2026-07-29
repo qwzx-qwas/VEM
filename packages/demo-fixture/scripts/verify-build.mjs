@@ -18,12 +18,23 @@ const indexPath = resolve(outputRoot, "index.html");
 const index = readFileSync(indexPath, "utf8");
 const totalBytes = files.reduce((sum, path) => sum + statSync(path).size, 0);
 const relativeFiles = files.map((path) => path.slice(outputRoot.length + 1).replaceAll("\\", "/")).sort();
+const outputText = files
+  .filter((path) => /\.(?:css|html|js|map)$/u.test(path))
+  .map((path) => readFileSync(path, "utf8"))
+  .join("\n");
+const vemOwnedSignatures = [
+  /\bvem1_[a-f0-9]{32}\b/u,
+  /P0-T15-(?:source|private)-registry-v1/u,
+  /(?:vem:source-anchor|@vem\/vite-plugin|p0-t15-demo-dev|\/@vem)/u,
+];
+
 
 if (!relativeFiles.includes("index.html")) throw new Error("DEMO_BUILD_INDEX_MISSING");
 if (!relativeFiles.some((path) => /^assets\/index-[A-Za-z0-9_-]+\.js$/u.test(path))) {
   throw new Error("DEMO_BUILD_SCRIPT_MISSING");
 }
 if (/\b(?:https?:)?\/\//iu.test(index)) throw new Error("DEMO_BUILD_EXTERNAL_URL");
+if (vemOwnedSignatures.some((signature) => signature.test(outputText))) throw new Error("DEMO_BUILD_VEM_LEAKAGE");
 if (totalBytes > 1_500_000) throw new Error("DEMO_BUILD_SIZE_EXCEEDED");
 if (files.length > 12) throw new Error("DEMO_BUILD_FILE_COUNT_EXCEEDED");
 
@@ -33,5 +44,6 @@ console.log(
     `files=${files.length}`,
     `bytes=${totalBytes}`,
     "externalUrls=0",
+    "vemOwnedSignatures=0",
   ].join(" "),
 );

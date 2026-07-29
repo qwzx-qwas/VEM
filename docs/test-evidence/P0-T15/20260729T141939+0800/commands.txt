@@ -1,0 +1,17 @@
+pnpm view oxc-parser version license --json
+pnpm view magic-string version license --json
+pnpm install --lockfile-only
+pnpm install --frozen-lockfile
+pnpm license:generate
+pnpm license:check
+pnpm demo:build
+pnpm test
+pnpm test:workspace
+pnpm build
+pnpm typecheck
+pnpm lint
+pnpm workspace:check
+pnpm roadmap:validate
+pnpm test:install
+PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s scripts/preflight/tests -v
+node deterministic transform probe for packages/demo-fixture/src/App.tsx
