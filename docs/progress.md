@@ -533,3 +533,20 @@ Each future entry must include task ID, date, changed files, commands, test evid
 - Security/data-lifecycle verification: all four terminal verdict files and all five prior preregistration roots were revalidated by known hashes; ground truth, audit content needles and product holdouts remain outside participant capsules; current no-model permission preflight is mandatory before any future external arm; `externalExecutionAuthorized=false`, product unlock count is zero and external model calls are zero
 - Known limitations/degradations: network denial is bound by the strict permission profile but is not claimed as a runtime network probe; Linux `/proc/self/environ` remains readable only with a fixed non-sensitive environment and any `/proc` command/output evidence fails audit; this 5-task smoke cannot support a statistical product claim
 - Next eligible task: none without explicit owner authorization for `R3-T4`, exact preregistration hash `8b886d443c576540f6b3b2d90e06abfd95d57955f696680dd998b748d4ffdd5b`, and exactly 10 external runs
+
+## R3-T4 — Separately authorized capsule-audit containment verdict
+
+- Date: 2026-07-30
+- State/outcome: `done` / `failed`
+- Decision: `R3-RECOVERY=stop`; R3 phase is `failed`, while `R2-RECOVERY=stop`, `R1-RECOVERY=stop`, `R0-RECOVERY=stop` and `P0-VALUE=stop` remain independently terminal
+- Changed files: destination/data-bound owner authorization, one-run raw/final/ledger/evaluation evidence, aggregate verdict/hash evidence, ROADMAP decision/phase/task state and decision/status/delivery/prompt/progress records
+- Execution result: the exact R3-T3 preregistration and all 10 runtime source bindings passed, as did the current no-model permission preflight. The first direct arm acquired one fresh unique thread, but repeated external request timeouts ended in `turn.failed`, an empty authoritative final response, missing `turn.completed` and process exit code 1.
+- Stop behavior: `protocol-response-integrity-failed` is a preregistered stop condition, so the batch stopped after 1/10 processes and the remaining nine external calls were not executed. `external-run-did-not-produce-ten-fresh-complete-processes` is also recorded as an adjust reason but cannot override stop.
+- Integrity result: the v3 capsule audit passed with no warnings or failures; permission profile/auth boundary, ground-truth evaluator, recorder evidence, outer manifests and exception/failure sealing all passed. No wrong attribution occurred and no participant-visible ground truth, prior task or product holdout was consumed.
+- Evidence: `docs/test-evidence/R3-T4/20260730T133111-0800/`; canonical verdict hash is `7a3e5b6bf94067e4681258982690afe911c51dc3da0e6cc4af66d069d537d95b`, authorization hash is `5858c3a5e4595cff03fd4980732afbc99299003bdf00ac6c8db3d5e720eda1ac`, and all result/batch/run SHA manifests verify.
+- Commands: exact preregistration/source/authorization verification; 27 pre-run runner/plan/finalizer tests and 31 terminal-state targeted tests; one external fresh-context process before frozen batch stop; result/batch/run SHA verification; full Vitest/build/typecheck/lint/roadmap gates
+- Test evidence: 42 Vitest files and 240 tests passed; roadmap validates 13 phases, 156 tasks and 29 contracts; build, typecheck, lint, frozen preregistration re-verification, secret/symlink/ignore and Git whitespace checks passed
+- Edge/browser verification: not applicable; no browser or frontend behavior changed
+- Security/data-lifecycle verification: only the explicitly authorized frozen participant capsule was available to the external model; the participant workspace was read-only with one runner-owned final-response file, auth was unreadable to generated commands, and private evaluator inputs remained outside the capsule
+- Known limitations/degradations: only one direct arm ran, so there is no paired correctness or cost comparison and no statistical/product-value claim; the external service request timed out despite retries; R3 cannot supersede prior stops or unlock product work
+- Next eligible task: none; R3, R2, R1, R0 and P0 are failed, and no product task is unlocked

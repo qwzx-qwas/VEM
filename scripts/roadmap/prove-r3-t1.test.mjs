@@ -22,7 +22,7 @@ describe("R3-T1 independent capsule-audit containment charter", () => {
       ],
       r3Boundary: {
         phase: "R3",
-        status: "in_progress",
+        status: "failed",
         taskStatus: "done",
         phaseDependencies: [],
         taskDependencies: [],
@@ -59,6 +59,17 @@ describe("R3-T1 independent capsule-audit containment charter", () => {
     roadmap.phases.find((phase) => phase.id === "P1").depends_on = ["P0"];
     roadmap.phases.find((phase) => phase.id === "P1").tasks[0]
       .depends_on = ["R3-T1"];
+    expect(() => assertR3CharterModel({
+      roadmap,
+      decisionInbox,
+      validation: validateRepository(REPO_ROOT),
+    })).toThrowError("R3_T1_CHARTER_PROOF_FAILED");
+  });
+
+  test("requires the immutable R3 stop attempt when the phase is failed", () => {
+    const { roadmap, decisionInbox } = model();
+    roadmap.phases.find((phase) => phase.id === "R3")
+      .tasks.find((task) => task.id === "R3-T4").decision = "continue";
     expect(() => assertR3CharterModel({
       roadmap,
       decisionInbox,

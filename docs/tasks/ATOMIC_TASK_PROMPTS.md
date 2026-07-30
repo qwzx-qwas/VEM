@@ -600,6 +600,8 @@
 - **实现约束**：任何 prereg/source/capsule/holdout/audit/failure-sealing drift fail closed。
 - **验收标准**：immutable verdict；continue 也仅允许提出新的独立研究路线。
 
+> **已完成（2026-07-30）**：Owner 先绑定完整 preregistration hash 和 10 次上限，再明确授权向 OpenAI Codex `gpt-5.6-sol` 发送冻结 participant capsule 数据。冻结 hash、10 项 source binding、当前 permission preflight 与 27 项 runner/封存测试通过后启动批次；首个 direct arm 获得 fresh thread ID，但外部请求连续重连后 `request timed out`，未产生 `turn.completed` 或权威 final response，进程退出 1。v3 capsule audit、permission/auth boundary、ground-truth evaluator、recorder/outer hash 与失败证据封存均通过；预登记的 `protocol-response-integrity-failed` 要求立即 stop，剩余 9 次未执行。immutable verdict 为 `R3-RECOVERY=stop`，incomplete batch 同时记录 adjust reason 但不覆盖 stop；R3 phase 为 `failed`，R2/R1/R0/P0 stops 与零产品解锁边界不变。证据位于 `docs/test-evidence/R3-T4/20260730T133111-0800/`，canonical verdict hash 为 `7a3e5b6bf94067e4681258982690afe911c51dc3da0e6cc4af66d069d537d95b`。
+
 ## P0-T9A — Walking-skeleton 正向 Edge E2E
 
 ### Prompt

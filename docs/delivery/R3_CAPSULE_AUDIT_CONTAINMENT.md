@@ -35,10 +35,13 @@
 - Trigger: marker-only `AGENTS.md` lookup in command events, followed by an unhandled audit exception
 - R3 may replay this evidence read-only but must not edit, reinterpret or supersede the R2 verdict.
 
-## Current frozen boundary
+## Terminal result
 
-- R3-T1, R3-T2 and R3-T3 are complete.
+- R3-T1 through R3-T4 are complete; `R3-RECOVERY=stop` and the R3 phase is `failed`.
 - R3-T3 preregistration root: `docs/test-evidence/R3-T3/20260730T114932+0800/`
 - Full preregistration hash: `8b886d443c576540f6b3b2d90e06abfd95d57955f696680dd998b748d4ffdd5b`
-- Planned external run count: 10
-- `externalExecutionAuthorized=false`; R3-T4 remains blocked on a separate exact-hash owner authorization.
+- Authorized external run count: 10; one process ran and the remaining nine were not executed after the frozen stop condition.
+- R3-T4 evidence root: `docs/test-evidence/R3-T4/20260730T133111-0800/`
+- The first direct arm received a fresh thread but timed out after repeated reconnects, leaving the authoritative final response empty and no `turn.completed`; `protocol-response-integrity-failed` therefore required stop.
+- Capsule audit, permission/auth boundary, evaluator integrity and all failure/hash sealing passed. Canonical verdict hash: `7a3e5b6bf94067e4681258982690afe911c51dc3da0e6cc4af66d069d537d95b`.
+- R3 does not supersede R2, R1, R0 or P0 and unlocks no product work.

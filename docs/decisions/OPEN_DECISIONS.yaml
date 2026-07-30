@@ -242,14 +242,28 @@ decisions:
 
   - id: OWNER-R3-T4-EXTERNAL-BATCH
     title: Authorize the frozen R3-T4 capsule-audit containment external batch
-    status: open
+    status: decided
     decision_owner: project-owner
     needed_by_task: R3-T4
-    decision: pending
+    decision: authorized
+    decided_at: 2026-07-30T13:31:11+08:00
+    evidence: Owner explicitly authorized sending the frozen participant capsule data to the OpenAI Codex service using gpt-5.6-sol for at most 10 R3-T4 external experiments bound to the full preregistration hash in the active Codex thread.
+    evidence_ref: docs/test-evidence/R3-T4/OWNER_AUTHORIZATION_20260730.json
     requested_preregistration_hash: 8b886d443c576540f6b3b2d90e06abfd95d57955f696680dd998b748d4ffdd5b
     requested_run_count: 10
     context_refs:
       - docs/test-evidence/R3-T3/20260730T114932+0800/PREREGISTRATION.json
       - docs/test-evidence/R3-T3/20260730T114932+0800/PREREGISTRATION.sha256
       - scripts/pilot/r3-t4.mjs
-    note: R3-T4 remains ineligible until the owner explicitly authorizes exactly 10 external processes bound to the full frozen hash. Any authorization cannot modify R2-RECOVERY, R1-RECOVERY, R0-RECOVERY, P0-VALUE or unlock product work.
+    note: Authorization bound at most 10 external processes to the frozen preregistration and explicitly covered the OpenAI Codex destination, gpt-5.6-sol model and participant capsule data boundary. It cannot modify R2-RECOVERY, R1-RECOVERY, R0-RECOVERY, P0-VALUE or unlock product work.
+
+  - id: R3-RECOVERY
+    title: Continue, adjust, or stop the independent R3 capsule-audit containment route
+    status: decided
+    decision_owner: evidence-gate
+    needed_by_task: R3-T4
+    decision: stop
+    decided_at: 2026-07-30T13:50:18+08:00
+    evidence_ref: docs/test-evidence/R3-T4/20260730T133111-0800/results/verdict.json
+    authoritative_state_ref: ROADMAP.yaml
+    note: The first fresh direct process acquired a unique thread but repeated external request timeouts ended in turn.failed, an empty authoritative final response, no turn.completed and exit code 1. Capsule audit, permission/auth boundary, evaluator integrity and failure/hash sealing all passed, but the preregistered protocol-response-integrity-failed condition requires stop. The remaining nine calls were not executed. This decision does not supersede R2-RECOVERY, R1-RECOVERY, R0-RECOVERY or P0-VALUE and cannot unlock product work.

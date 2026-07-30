@@ -39,6 +39,11 @@ export function assertR3CharterModel({ roadmap, decisionInbox, validation }) {
   });
   const r3 = roadmap.phases.find((phase) => phase.id === "R3");
   const charter = r3?.tasks.find((task) => task.id === "R3-T1");
+  const r3Attempt = r3?.tasks.find((task) => task.id === "R3-T4");
+  const r3StatusValid = r3?.status === "in_progress"
+    || (r3?.status === "failed"
+      && r3Attempt?.status === "done"
+      && r3Attempt.decision === "stop");
   const owner = decisionInbox.decisions.find(
     (decision) => decision.id === "OWNER-R3-CAPSULE-AUDIT-CONTAINMENT",
   );
@@ -50,7 +55,7 @@ export function assertR3CharterModel({ roadmap, decisionInbox, validation }) {
       || attempt?.status !== "done"
       || attempt.decision !== "stop"
   ))
-    || r3?.status !== "in_progress"
+    || !r3StatusValid
     || !["in_progress", "done"].includes(charter?.status)
     || (charter?.depends_on ?? []).length !== 0
     || r3.recovery_of_failed_phase !== "R2"

@@ -172,7 +172,7 @@ phases:
 
   - id: R3
     title: Owner-authorized independent capsule-audit containment remediation after terminal R2 stop
-    status: in_progress
+    status: failed
     depends_on: []
     recovery_of_failed_phase: R2
     authorization_ref: docs/decisions/OPEN_DECISIONS.yaml
@@ -189,7 +189,7 @@ phases:
       - {id: R3-T1, title: Record the owner-authorized independent R3 capsule-audit containment charter and mechanically preserve four terminal stop chains, contracts: [R3-CAPSULE-AUDIT-CONTAINMENT-001], status: done, depends_on: [], tests: [failed-P0-R0-R1-R2 preservation empty-phase-and-task-dependency four-decision-non-supersession authorization-reference no-existing-phase-or-task-dependency and no-product-unlock checks]}
       - {id: R3-T2, title: Distinguish marker mention from observed capsule escape and seal every audit evaluator and aggregate exception before returning, contracts: [R3-CAPSULE-AUDIT-CONTAINMENT-001], status: done, depends_on: [R3-T1], tests: [marker-only-warning safe-work-search forbidden-path-and-content real-escape symlink and stderr rejection audit-evaluator-hash-aggregate exception sealing structured-batch-stop bounds and cancellation checks]}
       - {id: R3-T3, title: Freeze a new capsule-audit-containment recovery-only task runner threshold and evidence preregistration without external calls, contracts: [R3-CAPSULE-AUDIT-CONTAINMENT-001], status: done, depends_on: [R3-T2], tests: [new-auditor-and-runner-hash fresh-task identity equal-base-context counterbalance threshold product-holdout-exclusion failure-sealing binding pre-result immutability and external-authorization-false checks]}
-      - {id: R3-T4, title: Execute a separately owner-authorized R3 containment batch and record the independent R3-RECOVERY verdict, contracts: [R3-CAPSULE-AUDIT-CONTAINMENT-001], status: todo, decision_key: R3-RECOVERY, decision_attempt: 1, supersedes_attempt: null, decision: pending, depends_on: [R3-T3], tests: [fresh-context final-file-jsonl-and-audit consistency raw-ledger-hash correctness wrong-attribution capsule-integrity pairwise-cost failure-evidence and continue-adjust-stop verdict checks]}
+      - {id: R3-T4, title: Execute a separately owner-authorized R3 containment batch and record the independent R3-RECOVERY verdict, contracts: [R3-CAPSULE-AUDIT-CONTAINMENT-001], status: done, decision_key: R3-RECOVERY, decision_attempt: 1, supersedes_attempt: null, decision: stop, depends_on: [R3-T3], tests: [fresh-context final-file-jsonl-and-audit consistency raw-ledger-hash correctness wrong-attribution capsule-integrity pairwise-cost failure-evidence and continue-adjust-stop verdict checks]}
 
   - id: P1
     title: Harden the Edge Vite-injected MVP
