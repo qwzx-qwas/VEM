@@ -105,6 +105,18 @@ export function validateModel(root, roadmap, requirements) {
   const taskIds = new Set(unique(tasks.map((task) => task.id), "orphan-task", "task ids"));
   const byTask = new Map(tasks.map((task) => [task.id, task]));
   const byContract = new Map(contracts.map((contract) => [contract.id, contract]));
+  const taskReachesDependency = (fromTaskId, targetTaskId) => {
+    const seen = new Set();
+    const pending = [...(byTask.get(fromTaskId)?.depends_on ?? [])];
+    while (pending.length) {
+      const candidate = pending.pop();
+      if (candidate === targetTaskId) return true;
+      if (seen.has(candidate)) continue;
+      seen.add(candidate);
+      pending.push(...(byTask.get(candidate)?.depends_on ?? []));
+    }
+    return false;
+  };
 
   for (const task of tasks) {
     const bindings = unique(strings(task.contracts, "contract-reference", `${task.id}.contracts`), "contract-reference", `${task.id}.contracts`);
@@ -218,6 +230,32 @@ export function validateModel(root, roadmap, requirements) {
       if (!roadmap.status_values.decision.includes(task.decision)) fail("decision-verdict", `${task.id} invalid verdict`);
       if (task.status === "done" && task.decision === "pending") fail("decision-verdict", `${task.id} done pending`);
       if (task.status !== "done" && task.decision !== "pending") fail("decision-verdict", `${task.id} verdict before done`);
+    });
+    attempts.forEach((task, index) => {
+      if (task.decision !== "adjust") return;
+      const nextAttempt = attempts[index + 1];
+      const owningPhase = phases.find((phase) => phase.id === descriptor.phase);
+      if (nextAttempt === undefined) {
+        if (owningPhase?.status !== "failed") {
+          fail(
+            "decision-adjust",
+            `${task.id} adjust requires remediation and a new attempt`,
+          );
+        }
+        return;
+      }
+      const remediationExists = tasks.some((candidate) => (
+        candidate.phaseId === descriptor.phase
+          && candidate.decision_key === undefined
+          && taskReachesDependency(candidate.id, task.id)
+          && taskReachesDependency(nextAttempt.id, candidate.id)
+      ));
+      if (!remediationExists) {
+        fail(
+          "decision-adjust",
+          `${task.id} adjust has no remediation task before ${nextAttempt.id}`,
+        );
+      }
     });
     const recoveryPhase = recoveryPhases.find((phase) => phase.id === descriptor.phase);
     if (recoveryPhase !== undefined) {

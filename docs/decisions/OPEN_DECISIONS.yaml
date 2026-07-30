@@ -381,12 +381,58 @@ decisions:
     note: Authorization covers the independent R6 charter, explicit fixed outer-environment contract, shared invocation validation, zero-model compatibility preflight, tests and a new no-call preregistration only. It does not authorize an R6 external model call, reuse R5-T4 authorization, alter R5/R4 or prior decisions, or unlock product work.
 
   - id: OWNER-R6-T4-EXTERNAL-BATCH
-    title: Decide whether to authorize the frozen R6-T4 invocation-compatible external batch
-    status: open
+    title: Authorize the frozen R6-T4 invocation-compatible external batch
+    status: decided
     decision_owner: project-owner
     needed_by_task: R6-T4
+    decision: authorized
+    decided_at: 2026-07-30T17:09:58+08:00
+    evidence: Owner required commit and push first, then explicitly authorized the exact frozen R6-T4 destination, model, preregistration, participant data scope, outer environment, successful-arm target, process cap, deadline, termination windows, signals and retry boundary in the active Codex thread.
+    evidence_ref: docs/test-evidence/R6-T4/OWNER_AUTHORIZATION_20260730.json
+    requested_preregistration_hash: 935c7b8c8880d6439238096b99c3ada3338a7c4c94fec192a7d4c8806f9610c9
+    requested_destination: OpenAI Codex service
+    requested_model: gpt-5.6-sol
+    requested_data_scope_hash: e89a0a77f6f2ef099f4f68a1838f39574a1caf2747dccf95494d91d7e3153d10
+    requested_outer_environment_hash: cf24c3c5e349e230a9c04223dceb4854bd377915e21f46d830134b085bc3579d
+    requested_successful_arm_count: 10
+    requested_max_process_attempts: 20
+    requested_termination_policy:
+      deadline_ms: 120000
+      graceful_window_ms: 5000
+      force_observation_window_ms: 5000
+      graceful_signal: SIGTERM
+      force_signal: SIGKILL
+      max_retries_per_arm: 1
+      retryable_only_after: sealed-observed-provider-timeout-before-response
+      runner_wall_clock_termination_retryable: false
     context_refs:
       - docs/test-evidence/R6-T3/20260730T165800-0800/PREREGISTRATION.json
       - docs/test-evidence/R6-T3/20260730T165800-0800/PREREGISTRATION.sha256
       - scripts/pilot/r6-t4.mjs
-    note: A future authorization must bind OpenAI Codex service, gpt-5.6-sol, preregistration 935c7b8c8880d6439238096b99c3ada3338a7c4c94fec192a7d4c8806f9610c9, data scope e89a0a77f6f2ef099f4f68a1838f39574a1caf2747dccf95494d91d7e3153d10, outer env cf24c3c5e349e230a9c04223dceb4854bd377915e21f46d830134b085bc3579d, ten successful arms, at most twenty processes, 120000 ms deadline, two 5000 ms termination windows, SIGTERM then SIGKILL, provider-timeout-only one-retry and runner-deadline-no-retry. No R6 external call is currently authorized.
+    note: Commit 07ff373 was pushed before execution. Authorization validation passed with canonical hash c2f53593214107adeb810172a65072ce91d03d41f664d5d85fbf58c8321d7d74. One external process was started; it reached the frozen runner deadline without an observed provider terminal and was sealed as non-retryable runner-wall-clock termination. No retry or second process was authorized by that outcome, and this authorization cannot bind any changed deadline, source, preregistration or attempt two.
+
+  - id: R6-RECOVERY
+    title: Continue, adjust, or stop the independent R6 invocation-compatible route
+    status: open
+    decision_owner: evidence-gate
+    needed_by_task: R6-T7
+    decision: pending
+    current_attempt: R6-T7
+    prior_attempts:
+      - task: R6-T4
+        decision: adjust
+        decided_at: 2026-07-30T17:12:55+08:00
+        evidence_ref: docs/test-evidence/R6-T4/20260730T171100-0800/results/verdict.json
+    authoritative_state_ref: ROADMAP.yaml
+    note: Attempt one is immutable adjust because the sole process hit the 120000 ms runner deadline before any provider turn.failed, turn.completed or authoritative final response. The process group terminated and all evidence was sealed, so this is not a blocker or retryable provider timeout. The current attempt remains pending and cannot run until R6-T5 remediation and R6-T6 preregistration complete and R6-T7 receives a new exact external authorization.
+
+  - id: OWNER-R6-T5-DEADLINE-HORIZON-REMEDIATION
+    title: Decide whether to authorize local-only R6 deadline-horizon remediation after attempt-one adjust
+    status: open
+    decision_owner: project-owner
+    needed_by_task: R6-T5
+    context_refs:
+      - docs/test-evidence/R6-T4/20260730T171100-0800/results/verdict.json
+      - docs/test-evidence/R6-T4/20260730T171100-0800/runs/r6-invocation-01-env-heading-direct-search-attempt-1/receipt-ledger.json
+      - docs/tasks/ATOMIC_TASK_PROMPTS.md
+    note: A future authorization may cover local-only replay, bounded retry-horizon/deadline policy remediation, tests and a new no-call preregistration. It must not authorize a provider/model call, reuse the R6-T4 authorization, overwrite attempt-one evidence, or unlock product work.

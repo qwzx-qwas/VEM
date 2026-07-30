@@ -765,6 +765,41 @@
 - **实现约束**：任何 prereg/source/env/capsule/holdout/deadline/budget/failure-sealing drift fail closed；旧 R5-T4 authorization 无效。
 - **验收标准**：immutable verdict；continue 也仅允许提出新的独立研究路线。
 
+> **已完成（2026-07-30）**：Owner 先要求并确认提交 `07ff373` 已推送至 `origin/agent/complete-p0-r1-stages`，随后以完整 preregistration/data-scope/outer-env/termination/process 边界授权 R6-T4；authorization hash 为 `c2f53593214107adeb810172a65072ce91d03d41f664d5d85fbf58c8321d7d74`。Frozen source、preflight 与授权验证通过后启动首个 direct arm；进程取得 fresh thread 并留下重连进度，但在 `120000ms` outer deadline 前没有 provider `turn.failed`、`turn.completed` 或权威 final response。Runner 按冻结策略发送 `SIGTERM`、证明 process group 已清空，并在返回前封存 raw stdout/stderr、empty final observation、ledger、boundary、termination、failure 与双层 SHA evidence；failure codes 为 `R5_FINAL_RESPONSE_EMPTY` / `R5_WALL_CLOCK_DEADLINE`。该分类是明确不可重试的 runner deadline，不是可重试 provider timeout，因此没有启动 retry 或第二个进程。结果位于 `docs/test-evidence/R6-T4/20260730T171100-0800/`，1 个 process attempt、0/10 successful arms，verdict hash `ec823dada3f0da0c442672ce966ca2f6da29446e37066ffe6bb328a02a031388`，如实记录 `R6-RECOVERY` attempt 1 为 `adjust`；R5 stop、R4 blocked/pending、此前 stop chain 与零产品解锁边界不变。
+
+## R6-T5 — Provider retry-horizon / outer-deadline remediation
+
+### Prompt
+
+- **背景**：R6-T4 attempt 1 在 120000ms runner deadline 前只观察到重连进度，按冻结规则以 `adjust` 终止且不可重试。
+- **目标**：只使用 immutable R6-T4 evidence，建立 bounded Codex provider retry horizon 与 trusted outer deadline 的显式兼容契约。
+- **本阶段做**：重放 receipt ledger/timestamps、区分 provider terminal 与 runner termination、定义有界 deadline margin、保留 process-tree/grace/signal/budget/failure sealing，并增加零模型 synthetic tests。
+- **本阶段不做**：不执行 provider/model call，不修改或覆盖 R6-T4 evidence/verdict，不冻结 attempt-two batch，不授权产品工作。
+- **实现约束**：不能把重连文本等同于 provider timeout；任何新 deadline 必须有限、可 hash、从 spawn 起 monotonic，且 runner termination 仍不可在原授权下 retry。
+- **验收标准**：独立 owner 授权后，本地 remediation 和目标测试通过；下一项仅为 R6-T6。
+
+## R6-T6 — Attempt-two preregistration
+
+### Prompt
+
+- **背景**：R6-T5 将给出经测试的 retry-horizon/deadline compatibility contract。
+- **目标**：冻结新的 attempt-two runner/source/policy/task/data/evidence plan。
+- **本阶段做**：新 source/policy hashes、fresh recovery-only task bank、equal-base capsules、counterbalance、bounded deadline/grace/signal/process budget、attempt-one evidence binding 和 external authorization gate。
+- **本阶段不做**：不执行外部 arm，不复用 R6-T4 authorization，不覆盖 attempt 1，不消费产品 holdout。
+- **实现约束**：`externalExecutionAuthorized=false`；attempt 1 evidence/hash immutable；任何 policy/source/data drift fail closed。
+- **验收标准**：新预注册与本地 probes 通过后 `done`；R6-T7 等待绑定全部新边界的单独授权。
+
+## R6-T7 — Separately authorized attempt-two verdict
+
+### Prompt
+
+- **背景**：R6-T4 attempt 1 为 immutable `adjust`，R6-T6 将冻结 remediation 后的 attempt-two plan。
+- **目标**：仅在新的精确 owner authorization 后执行 bounded attempt-two arms，并记录 `R6-RECOVERY` 当前 verdict。
+- **本阶段做**：fresh contexts、provider-terminal/runner-deadline separation、process-tree/retry/final-file/JSONL/audit consistency、attempt/batch evidence 与 pairwise verdict。
+- **本阶段不做**：不覆盖 R6-T4 或此前 R5/R4/R3/R2/R1/R0/P0 evidence/decision，不自动解锁产品 phase。
+- **实现约束**：`decision_attempt: 2`、`supersedes_attempt: R6-T4`；只有 sealed observed provider timeout 可按新 policy 重试，runner termination 不可冒充 provider terminal。
+- **验收标准**：immutable attempt-two verdict；只有 `continue` 满足 R6 gate，且也只允许提出新的独立研究路线。
+
 ## P0-T9A — Walking-skeleton 正向 Edge E2E
 
 ### Prompt

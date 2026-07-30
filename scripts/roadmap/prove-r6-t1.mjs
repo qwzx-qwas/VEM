@@ -46,6 +46,10 @@ export function assertR6CharterModel({ roadmap, decisionInbox, validation }) {
   const r6 = roadmap.phases.find((phase) => phase.id === "R6");
   const charter = r6?.tasks.find((task) => task.id === "R6-T1");
   const verdict = r6?.tasks.find((task) => task.id === "R6-T4");
+  const r6Decision = roadmap.decisions["R6-RECOVERY"];
+  const currentAttempt = r6?.tasks.find(
+    (task) => task.id === r6Decision?.current_attempt,
+  );
   const owner = decisionInbox.decisions.find(
     (decision) => decision.id === "OWNER-R6-PRESPAWN-INVOCATION-REMEDIATION",
   );
@@ -65,18 +69,26 @@ export function assertR6CharterModel({ roadmap, decisionInbox, validation }) {
     || r5Attempt?.decision !== "stop"
     || r6?.status !== "in_progress"
     || !["in_progress", "done"].includes(charter?.status)
-    || verdict?.status !== "todo"
-    || verdict?.decision !== "pending"
+    || verdict?.decision_attempt !== 1
+    || verdict?.supersedes_attempt !== null
+    || !(
+      (verdict?.status === "todo" && verdict?.decision === "pending")
+        || (
+          verdict?.status === "done"
+            && ["continue", "adjust", "stop"].includes(verdict?.decision)
+        )
+    )
     || (charter?.depends_on ?? []).length !== 0
     || r6.recovery_of_failed_phase !== "R5"
     || r6.scope_boundary !== "independent-research-no-product-unlock"
     || r6.authorization_ref !== "docs/decisions/OPEN_DECISIONS.yaml"
     || !Array.isArray(r6.depends_on)
     || r6.depends_on.length !== 0
-    || roadmap.decisions["R6-RECOVERY"]?.current_attempt !== "R6-T4"
-    || roadmap.decisions["R6-RECOVERY"]?.does_not_supersede !== "R5-RECOVERY"
+    || currentAttempt?.decision_key !== "R6-RECOVERY"
+    || currentAttempt?.id !== r6Decision?.current_attempt
+    || r6Decision?.does_not_supersede !== "R5-RECOVERY"
     || canonicalJson(
-      roadmap.decisions["R6-RECOVERY"]?.also_does_not_supersede,
+      r6Decision?.also_does_not_supersede,
     ) !== canonicalJson([
       "R4-RECOVERY",
       "R3-RECOVERY",
@@ -95,7 +107,7 @@ export function assertR6CharterModel({ roadmap, decisionInbox, validation }) {
     || owner?.decision !== "authorized"
     || owner?.owner_statement !== OWNER_STATEMENT
     || validation.phases < 16
-    || validation.tasks < 168
+    || validation.tasks < 171
     || validation.contracts < 32) {
     throw new Error("R6_T1_CHARTER_PROOF_FAILED");
   }
@@ -119,6 +131,7 @@ export function assertR6CharterModel({ roadmap, decisionInbox, validation }) {
     },
     r6Status: r6.status,
     r6T1Status: charter.status,
+    currentDecision: currentAttempt.decision,
   });
 }
 
@@ -162,7 +175,7 @@ export function buildR6CharterProof(repoRoot = REPO_ROOT) {
       ],
       productUnlockCount: 0,
       charterExternalExecutionAuthorized: false,
-      currentDecision: "pending",
+      currentDecision: result.currentDecision,
     },
     validation,
     sourceBindings: Object.fromEntries(BOUND_FILES.map((path) => [

@@ -131,6 +131,50 @@ describe("REQ-TRACE-001 validator", () => {
     code("decision-verdict");
   });
 
+  test("requires an explicit remediation task and new attempt after adjust", () => {
+    const attemptOne = roadmap.phases[0].tasks[0];
+    Object.assign(attemptOne, {
+      decision_key: "DECISION",
+      decision_attempt: 1,
+      supersedes_attempt: null,
+      decision: "adjust",
+      status: "done",
+    });
+    roadmap.decisions.DECISION = {
+      phase: "P0",
+      current_attempt: attemptOne.id,
+    };
+    code("decision-adjust");
+
+    const remediation = {
+      id: "P0-T2",
+      status: "done",
+      contracts: ["C-1"],
+      depends_on: ["P0-T1"],
+      tests: ["remediation"],
+    };
+    const attemptTwo = {
+      id: "P0-T3",
+      status: "todo",
+      contracts: ["C-1"],
+      depends_on: ["P0-T2"],
+      tests: ["attempt-two"],
+      decision_key: "DECISION",
+      decision_attempt: 2,
+      supersedes_attempt: "P0-T1",
+      decision: "pending",
+    };
+    roadmap.phases[0].tasks.push(remediation, attemptTwo);
+    requirements.contracts[0].roadmap_tasks.push("P0-T2", "P0-T3");
+    roadmap.decisions.DECISION.current_attempt = "P0-T3";
+    expect(validate()).toEqual({
+      phases: 1,
+      tasks: 3,
+      contracts: 1,
+      authorityFiles: 2,
+    });
+  });
+
   test("accepts an owner-authorized recovery phase without reopening the failed phase", () => {
     addRecoveryPhase();
     expect(validate()).toEqual({

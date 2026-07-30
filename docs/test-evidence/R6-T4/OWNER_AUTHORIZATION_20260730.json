@@ -1,0 +1,32 @@
+{
+  "schemaVersion": "R6-T4-owner-authorization-v1",
+  "taskId": "R6-T4",
+  "decisionKey": "R6-RECOVERY",
+  "authorized": true,
+  "authorizedAt": "2026-07-30T17:09:58+08:00",
+  "destination": "OpenAI Codex service",
+  "model": "gpt-5.6-sol",
+  "preregistrationHash": "935c7b8c8880d6439238096b99c3ada3338a7c4c94fec192a7d4c8806f9610c9",
+  "dataScopeHash": "e89a0a77f6f2ef099f4f68a1838f39574a1caf2747dccf95494d91d7e3153d10",
+  "outerEnvironmentHash": "cf24c3c5e349e230a9c04223dceb4854bd377915e21f46d830134b085bc3579d",
+  "successfulArmCount": 10,
+  "maxProcessAttempts": 20,
+  "terminationPolicy": {
+    "deadlineMs": 120000,
+    "everyAttemptConsumesBudget": true,
+    "everyAttemptEvidenceRetained": true,
+    "forceKillWaitMs": 5000,
+    "forceSignal": "SIGKILL",
+    "graceMs": 5000,
+    "gracefulSignal": "SIGTERM",
+    "laterSuccessDoesNotEraseFailure": true,
+    "maxProcessAttempts": 20,
+    "maxRetriesPerArm": 1,
+    "requiredSuccessfulArms": 10,
+    "retryableClassification": "external-transport-timeout-before-response",
+    "runnerTerminationClassification": "runner-wall-clock-terminated-before-response",
+    "runnerTerminationRetryable": false,
+    "schemaVersion": "R6-T3-termination-policy-v1"
+  },
+  "statement": "先commit,push再授权执行冻结的 R6-T4：OpenAI Codex service / gpt-5.6-sol，preregistration hash 935c7b8c8880d6439238096b99c3ada3338a7c4c94fec192a7d4c8806f9610c9，data-scope hash e89a0a77f6f2ef099f4f68a1838f39574a1caf2747dccf95494d91d7e3153d10，outer-env hash cf24c3c5e349e230a9c04223dceb4854bd377915e21f46d830134b085bc3579d，完成 10 个 arms，最多 20 个外部进程；每个进程 deadline 120000ms，grace/force observation 各 5000ms，SIGTERM 后 SIGKILL；仅已封存且真实观察到的 provider timeout 可重试一次，runner deadline termination 不可重试。"
+}

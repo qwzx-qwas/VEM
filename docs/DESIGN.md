@@ -334,7 +334,9 @@ R6 必须声明 `recovery_of_failed_phase: R5`、空 phase dependency、owner au
 
 R6 的零模型 preflight 必须构造与 decision runner 相同的 R3 capsule invocation，并复用 terminalizer 的同一 invocation predicate 验证 executable、args、cwd、explicit env 和 evidence shape；同时证明 outer env 是固定 allowlist、没有 host-secret inheritance、capsule workspace 只读、generated command 无 auth 读取权限。该 preflight 只允许执行本地 filesystem/binary/permission probe，不得启动 Codex `exec` participant 或探测 provider network；未观察外部 reachability 时继续记录 `networkRuntimeProbed=false`。
 
-R6 只允许四个原子结果：固定独立 remediation charter 与 blocked/terminal chain validator；实现并测试 explicit outer env、共享 invocation predicate 和 zero-model compatibility preflight；冻结新的 recovery-only preregistration、source hashes、deadline/grace/signal 与 process-attempt budget；在新的、绑定该 hash、目的地、数据范围、deadline、环境契约和最大进程尝试数的 owner authorization 后执行 decision attempt。外部调用授权必须发生在新预注册冻结以后，R5-T4 的旧授权不得复用。
+R6 的首个 decision attempt 只允许四个原子结果：固定独立 remediation charter 与 blocked/terminal chain validator；实现并测试 explicit outer env、共享 invocation predicate 和 zero-model compatibility preflight；冻结新的 recovery-only preregistration、source hashes、deadline/grace/signal 与 process-attempt budget；在新的、绑定该 hash、目的地、数据范围、deadline、环境契约和最大进程尝试数的 owner authorization 后执行 decision attempt。外部调用授权必须发生在新预注册冻结以后，R5-T4 的旧授权不得复用。
+
+若该 attempt 在冻结的 outer deadline 到期前只观察到 Codex provider 重连进度、没有观察到 provider `turn.failed` 或权威 final response，则它必须归类为不可重试的 runner deadline termination，封存证据并记录 `adjust`；不得把重连日志提升为 provider timeout，也不得在同一授权下启动第二个进程。`adjust` 后的 attempt two 必须先有显式、零模型的 retry-horizon/deadline remediation task，再冻结新的 source/policy/preregistration，最后取得绑定全部新 hash、deadline 与 process budget 的单独 owner authorization；attempt two 必须以递增 ordinal 和 `supersedes_attempt` 保留 attempt one，不得覆盖其 evidence。
 
 当前 owner-authorized 执行序列见 [`docs/delivery/R6_PRESPAWN_INVOCATION_REMEDIATION.md`](delivery/R6_PRESPAWN_INVOCATION_REMEDIATION.md)。
 

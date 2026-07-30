@@ -13,6 +13,12 @@ This authorization covers R6-T1 through R6-T3: charter and validator work, expli
 3. `R6-T3`: freeze fresh task/capsule/source bindings, the explicit env contract, termination policy, attempt budget, thresholds, and `externalExecutionAuthorized=false`.
 4. `R6-T4`: only after a new exact authorization, execute the bounded batch and record an immutable `R6-RECOVERY` verdict.
 
+R6-T4 attempt one completed with immutable `adjust`: the exact pre-spawn invocation worked, but the sole process reached the frozen 120000 ms runner deadline after emitting reconnect progress and before any provider terminal or authoritative final response. The process tree and evidence sealed correctly; runner deadline termination was non-retryable, so no second process started. The required adjust route is explicitly planned but not authorized:
+
+5. `R6-T5`: local-only retry-horizon/deadline compatibility remediation against immutable attempt-one evidence.
+6. `R6-T6`: freeze a new attempt-two runner/policy/preregistration with `externalExecutionAuthorized=false`.
+7. `R6-T7`: only after another exact authorization, execute decision attempt two with `supersedes_attempt: R6-T4`.
+
 ## Security and data lifecycle boundary
 
 - The outer process receives no inherited host environment or secret-bearing values.
