@@ -23,7 +23,7 @@ describe("R4-T1 independent external-transport timeout remediation charter", () 
       ],
       r4Boundary: {
         phase: "R4",
-        status: "in_progress",
+        status: "blocked",
         taskStatus: "done",
         phaseDependencies: [],
         taskDependencies: [],
@@ -91,6 +91,24 @@ describe("R4-T1 independent external-transport timeout remediation charter", () 
       decisionInbox,
       validation: validateRepository(REPO_ROOT),
     }).r4Status).toBe("failed");
+  });
+
+  test("requires the pending decision task itself to be blocked", () => {
+    const { roadmap, decisionInbox } = model();
+    const r4 = roadmap.phases.find((phase) => phase.id === "R4");
+    const verdict = r4.tasks.find((task) => task.id === "R4-T4");
+    verdict.status = "todo";
+    expect(() => assertR4CharterModel({
+      roadmap,
+      decisionInbox,
+      validation: validateRepository(REPO_ROOT),
+    })).toThrowError("R4_T1_CHARTER_PROOF_FAILED");
+    verdict.status = "blocked";
+    expect(assertR4CharterModel({
+      roadmap,
+      decisionInbox,
+      validation: validateRepository(REPO_ROOT),
+    }).r4Status).toBe("blocked");
   });
 });
 

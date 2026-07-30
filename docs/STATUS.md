@@ -6,7 +6,7 @@
 
 - 项目处于 design baseline 1.14，P0 implementation 已开始。
 - `P0-T0A0` 已完成只读 migration readiness inventory；证据位于 `docs/test-evidence/P0-T0/20260728T155608+0800/`。
-- 156 个 roadmap task、13 个 phase 和 29 个 contract 已登记。
+- 160 个 roadmap task、14 个 phase 和 30 个 contract 已登记。
 - `P0-T0A1` 已完成 owner-authorized layout commit 与 single-writer cutover；canonical writer 是 `/home/qwzx/src/VEM`，`/mnt/d/VEM` 仅保留为只读 rollback。
 - `P0-T0A2` 已完成：bounded evidence schema/validator、Node `24.18.0` 与 pnpm `10.34.0` 的 owner-accepted exact bootstrap decision 及验证证据位于 `docs/test-evidence/P0-T0/20260728T194140+0800/`。
 - `P0-T0B` 已完成：default-CA registry、隔离 Corepack/pnpm frozen install、ext4 case/symlink/long-path 和 native watcher profile 均通过，证据位于 `docs/test-evidence/P0-T0/20260728T195939+0800/`。
@@ -42,6 +42,7 @@
 - `R4-T1` 已完成独立 external-transport timeout remediation charter：R4 对 R3/R2/R1/R0/P0 五条 terminal stop chain 声明完整 non-supersession，phase/task dependency 为空且没有既有产品依赖边；owner authorization 只覆盖零模型 preflight、超时分类、有限 retry runner、测试与新预注册，外部调用仍未授权。
 - `R4-T2` 已完成零模型 transport remediation：当前 Codex binary、capsule、permission profile 与 auth denial 的真实本地 probe 通过但不声称 provider reachability；只有 sealed timeout-before-response 可进入最多一次 retry，全批硬上限为 20 process attempts，每次 attempt 独立 hash-seal。R3 timeout 只读 replay 分类通过但未实际 retry，proof hash 为 `2d19fd9b848018f08d3dcbd937c17f6764036974666d626bb8827ddfcbe9a42f`，外部调用为 0。
 - `R4-T3` 已完成新预注册：5 个 fresh transport-only task、10 个 paired arms、每 arm 1 次 retry、全批最多 20 process attempts 与 10 项 runtime source binding 冻结于 hash `0ddb8c6f51d140042167231a22f8b3f73735fc8d0e271e3da5f11590c9995104`；instrumentation/data-scope hashes 为 `78ec7bd51ffd3cbf7f36cddabdd16dcd73d5d88877700632350471d81865f064` / `2fe4246a5cdd3aee19efb1d2e2f56f2469ba82c8f5dc32f1651c68a86d0b8ca8`。30 个本地探针通过，`externalExecutionAuthorized=false`、product unlock count 为 0，R4-T4 等待单独知情授权。
+- `R4-T4` 已获精确授权但执行受阻：冻结验证通过后仅启动 1 个 direct arm 进程；它耗尽 WebSocket 5 次 timeout reconnect、fallback HTTPS 后再耗尽 5 次 reconnect，却没有退出或产生 `turn.failed`/`turn.completed`/final response。冻结 runner 缺少 wall-clock/process-tree termination，无法封存 attempt，故不允许 retry；批次被终止且第二个进程未启动。partial evidence 与 interruption record 位于 `docs/test-evidence/R4-T4/20260730T144143-0800/`，incident hash 为 `95021eac99d93d49985ee46d003a4108ff7a524244d83e3521b8edff8ecffd70`。`R4-T4`/R4 为 `blocked`，`R4-RECOVERY` 仍为 `pending`。
 - readiness 结果为 `ready`：大小写 staging 路径为同一 device/inode，payload 与 prefix-normalized manifest 已冻结，无 case collision，目标不存在，ext4 容量/owner permission 通过，且目标未被任务修改。
 - 当前 owner-approved 产品范围是 P0 proof-of-value / go-no-go prototype，不是完整 Visual V1。
 - 安全策略边界已确定但尚未实现：没有全局 security-off/trusted-local 绕过；P3 只为默认开启的增强保障项提供逐项用户 opt-out，并保持安全底线始终执行。
@@ -59,7 +60,7 @@
 
 ## 当前决策状态
 
-见 `docs/decisions/OPEN_DECISIONS.yaml`。迁移、exact toolchain、Apache-2.0 项目许可证、MCP primary/compat revision 与独立 R0/R1/R2/R3/R4 scope 均已决定；`P0-VALUE`、`R0-RECOVERY`、`R1-RECOVERY`、`R2-RECOVERY` 与 `R3-RECOVERY` 均保持各自不可覆盖的 terminal `stop`，`R4-RECOVERY` 为 pending。
+见 `docs/decisions/OPEN_DECISIONS.yaml`。迁移、exact toolchain、Apache-2.0 项目许可证、MCP primary/compat revision、独立 R0/R1/R2/R3/R4 scope 与 R4-T4 frozen batch authorization 均已决定；`P0-VALUE`、`R0-RECOVERY`、`R1-RECOVERY`、`R2-RECOVERY` 与 `R3-RECOVERY` 均保持各自不可覆盖的 terminal `stop`，`R4-RECOVERY` 因未封存的 transport hang 保持 pending。
 
 ## 状态与记录分工
 

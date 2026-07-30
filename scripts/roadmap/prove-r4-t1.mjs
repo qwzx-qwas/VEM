@@ -43,6 +43,9 @@ export function assertR4CharterModel({ roadmap, decisionInbox, validation }) {
   const charter = r4?.tasks.find((task) => task.id === "R4-T1");
   const verdict = r4?.tasks.find((task) => task.id === "R4-T4");
   const r4StatusValid = r4?.status === "in_progress"
+    || (r4?.status === "blocked"
+      && verdict?.status === "blocked"
+      && verdict.decision === "pending")
     || (r4?.status === "failed"
       && verdict?.status === "done"
       && verdict.decision === "stop");

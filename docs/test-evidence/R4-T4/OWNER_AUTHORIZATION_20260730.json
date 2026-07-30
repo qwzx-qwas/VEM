@@ -1,0 +1,14 @@
+{
+  "schemaVersion": "R4-T4-owner-authorization-v1",
+  "taskId": "R4-T4",
+  "decisionKey": "R4-RECOVERY",
+  "authorized": true,
+  "preregistrationHash": "0ddb8c6f51d140042167231a22f8b3f73735fc8d0e271e3da5f11590c9995104",
+  "destination": "OpenAI Codex service",
+  "model": "gpt-5.6-sol",
+  "dataScopeHash": "2fe4246a5cdd3aee19efb1d2e2f56f2469ba82c8f5dc32f1651c68a86d0b8ca8",
+  "successfulArmCount": 10,
+  "maxProcessAttempts": 20,
+  "statement": "我确认授权向 OpenAI Codex 服务的 gpt-5.6-sol 模型发送冻结 participant capsule 数据，包括 5 个任务 prompt、只读 demo fixture、response schema、VEM-assisted context 及对应工具输出，并排除 private ground truth、audit needles、既往任务、产品 holdout、仓库其他文件和认证密钥；授权执行绑定 preregistration hash 0ddb8c6f51d140042167231a22f8b3f73735fc8d0e271e3da5f11590c9995104 与 data-scope hash 2fe4246a5cdd3aee19efb1d2e2f56f2469ba82c8f5dc32f1651c68a86d0b8ca8 的 R4-T4 批次，目标为 10 个成功 arms，每 arm 仅允许对 sealed timeout-before-response 重试一次，最多执行 20 个外部进程。",
+  "authorizedAt": "2026-07-30T14:41:05+08:00"
+}

@@ -43,5 +43,9 @@
 - Instrumentation hash: `78ec7bd51ffd3cbf7f36cddabdd16dcd73d5d88877700632350471d81865f064`
 - Participant data-scope hash: `2fe4246a5cdd3aee19efb1d2e2f56f2469ba82c8f5dc32f1651c68a86d0b8ca8`
 - Planned result: 10 successful arms within at most 20 external process attempts.
-- External model calls authorized for R4: zero.
-- R4-T4 remains blocked on a separate destination/data-scope/hash/attempt-budget owner authorization.
+- R4-T4 authorization was granted with canonical hash `4de37dc38ae5c13661d8f032f8cf1b7c2644a4974eae5f44f13c949a9980865f`.
+- The first and only external process exhausted five WebSocket timeout reconnects, fell back to HTTPS, exhausted five more timeout reconnects and then remained alive without a process terminal.
+- The frozen runner has no independent wall-clock/process-tree termination path, so the incomplete attempt could not be sealed or classified and was not eligible for retry. The batch was interrupted; no second external process started.
+- Partial evidence is retained at `docs/test-evidence/R4-T4/20260730T144143-0800/`; canonical interruption hash is `95021eac99d93d49985ee46d003a4108ff7a524244d83e3521b8edff8ecffd70`.
+- R4-T4 and the R4 phase are blocked. `R4-RECOVERY` remains pending because no immutable attempt verdict can be produced from unsealed evidence.
+- Any repair must be a separately owner-authorized independent phase with runner-owned wall-clock termination, process-tree cancellation and exception-safe partial-evidence sealing, followed by a new preregistration and separate external-call authorization.

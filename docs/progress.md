@@ -595,3 +595,19 @@ Each future entry must include task ID, date, changed files, commands, test evid
 - Security/data-lifecycle verification: five prior terminal verdicts and six prior preregistration hashes were revalidated; ground truth and product holdout remain outside participant capsules; local probes made no provider/model call; external authorization remains false
 - Known limitations/degradations: local preflight does not prove provider reachability; this is a recovery-only engineering smoke and cannot support a statistical/product claim
 - Next eligible task: none until exact R4-T4 owner authorization binds preregistration hash, OpenAI Codex/gpt-5.6-sol destination, data-scope hash, 10 successful arms and at most 20 process attempts
+
+## R4-T4 — Owner-authorized batch blocked by non-terminating transport process
+
+- Date: 2026-07-30
+- State/outcome: `blocked` / `blocked`
+- Decision: `pending`; no `continue`, `adjust` or `stop` verdict was generated or inferred
+- Authorization: OpenAI Codex service / `gpt-5.6-sol`, 10 successful arms, at most 20 external processes, one retry only after a sealed timeout-before-response; authorization hash `4de37dc38ae5c13661d8f032f8cf1b7c2644a4974eae5f44f13c949a9980865f`
+- Execution result: frozen preregistration/source/data-scope and current no-model preflight passed; the first direct arm started one fresh process/thread, exhausted five WebSocket timeout reconnects, fell back to HTTPS, exhausted five more timeout reconnects, then remained alive without `turn.failed`, `turn.completed`, authoritative final response or process terminal
+- Safety action: the hanging batch was interrupted to enforce finite execution; no retry or second external process was started because the first attempt was not sealed and therefore was not retry-eligible
+- Evidence: raw partial stdout/stderr and local preflight are retained under `docs/test-evidence/R4-T4/20260730T144143-0800/`; interruption canonical hash `95021eac99d93d49985ee46d003a4108ff7a524244d83e3521b8edff8ecffd70`
+- Commands: frozen preregistration/source and owner-authorization verification; one authorized R4-T4 runner invocation; partial-event category inspection; interruption hash verification; 33 targeted R4/roadmap tests; roadmap validation; build, typecheck, lint and full test
+- Test results: 33 targeted tests passed; roadmap validates 14 phases, 160 tasks and 30 contracts; build/typecheck/lint passed; all 48 Vitest files and 273 tests passed when run outside the restricted child-process sandbox (the first sandboxed full-test attempt produced expected `EPERM` child-spawn interference)
+- Edge/browser verification: not applicable; no browser or frontend behavior changed
+- Security/data-lifecycle verification: participant capsule remained bound to the authorized data-scope hash; private ground truth, audit needles, product holdout, repository-other files and authentication credentials were not participant data; existing R3/R2/R1/R0/P0 stops remain immutable
+- Known limitations/degradations: frozen R4 runner lacks a runner-owned wall-clock deadline, process-tree termination and interruption-safe sealing; unsealed partial evidence cannot support a verdict or retry
+- Next eligible task: none; a new independent local-only remediation phase requires explicit owner authorization, then a new preregistration and separate authorization before any external experiment

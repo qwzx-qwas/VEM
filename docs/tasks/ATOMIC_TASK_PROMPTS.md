@@ -655,6 +655,8 @@
 - **实现约束**：任何 prereg/source/capsule/holdout/attempt-budget/failure-sealing drift fail closed；授权必须绑定目的地、数据范围和最多 20 process attempts。
 - **验收标准**：immutable verdict；continue 也仅允许提出新的独立研究路线。
 
+> **执行受阻（2026-07-30）**：Owner authorization 已精确绑定 OpenAI Codex/gpt-5.6-sol、完整 preregistration/data-scope hashes、10 个成功 arms 与最多 20 个 external processes。冻结 preflight 与授权复验通过后只启动首个 direct arm；Codex 子进程依次耗尽 WebSocket 5 次 timeout reconnect、fallback 至 HTTPS 后再耗尽 5 次 timeout reconnect，却没有退出或产生 `turn.failed`、`turn.completed`、权威 final response。冻结 runner 缺少独立 wall-clock/process-tree termination，因而无法封存 attempt 并进入受限 retry controller。为执行有限授权边界，批次被终止；第二个进程及 retry 均未启动，partial evidence 原样保留于 `docs/test-evidence/R4-T4/20260730T144143-0800/`，incident hash 为 `95021eac99d93d49985ee46d003a4108ff7a524244d83e3521b8edff8ecffd70`。本 prompt **未完成**，`R4-T4=blocked`、`R4-RECOVERY=pending`，没有生成或推断 `continue/adjust/stop` verdict。
+
 ## P0-T9A — Walking-skeleton 正向 Edge E2E
 
 ### Prompt

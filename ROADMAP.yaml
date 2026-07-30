@@ -194,7 +194,7 @@ phases:
 
   - id: R4
     title: Owner-authorized independent external-transport timeout remediation after terminal R3 stop
-    status: in_progress
+    status: blocked
     depends_on: []
     recovery_of_failed_phase: R3
     authorization_ref: docs/decisions/OPEN_DECISIONS.yaml
@@ -211,7 +211,7 @@ phases:
       - {id: R4-T1, title: Record the owner-authorized independent R4 transport-timeout remediation charter and mechanically preserve five terminal stop chains, contracts: [R4-TRANSPORT-TIMEOUT-001], status: done, depends_on: [], tests: [failed-P0-R0-R1-R2-R3 preservation empty-phase-and-task-dependency five-decision-non-supersession authorization-reference no-existing-phase-or-task-dependency and no-product-unlock checks]}
       - {id: R4-T2, title: Implement zero-model transport preflight narrow timeout-before-response classification bounded retry budgeting and per-attempt sealing, contracts: [R4-TRANSPORT-TIMEOUT-001], status: done, depends_on: [R4-T1], tests: [local-capability-preflight network-unprobed honesty timeout-terminal-shape partial-response auth-rate-limit-unknown no-retry max-one-retry max-process-attempts fresh-run-id and immutable-attempt-evidence checks]}
       - {id: R4-T3, title: Freeze a new transport-timeout recovery-only task runner threshold attempt budget and evidence preregistration without external calls, contracts: [R4-TRANSPORT-TIMEOUT-001], status: done, depends_on: [R4-T2], tests: [new-runner-hash fresh-task identity equal-base-context counterbalance retry-budget threshold product-holdout-exclusion preflight-binding pre-result immutability and external-authorization-false checks]}
-      - {id: R4-T4, title: Execute a separately owner-authorized R4 bounded-attempt batch and record the independent R4-RECOVERY verdict, contracts: [R4-TRANSPORT-TIMEOUT-001], status: todo, decision_key: R4-RECOVERY, decision_attempt: 1, supersedes_attempt: null, decision: pending, depends_on: [R4-T3], tests: [fresh-context bounded-attempt retry-classification final-file-jsonl-audit consistency raw-ledger-hash correctness wrong-attribution pairwise-cost failure-evidence and continue-adjust-stop verdict checks]}
+      - {id: R4-T4, title: Execute a separately owner-authorized R4 bounded-attempt batch and record the independent R4-RECOVERY verdict, contracts: [R4-TRANSPORT-TIMEOUT-001], status: blocked, decision_key: R4-RECOVERY, decision_attempt: 1, supersedes_attempt: null, decision: pending, depends_on: [R4-T3], tests: [fresh-context bounded-attempt retry-classification final-file-jsonl-audit consistency raw-ledger-hash correctness wrong-attribution pairwise-cost failure-evidence and continue-adjust-stop verdict checks]}
 
   - id: P1
     title: Harden the Edge Vite-injected MVP

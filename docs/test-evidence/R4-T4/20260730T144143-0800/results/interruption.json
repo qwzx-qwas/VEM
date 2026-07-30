@@ -1,0 +1,49 @@
+{
+  "schemaVersion": "R4-T4-interrupted-batch-v1",
+  "taskId": "R4-T4",
+  "taskState": "blocked",
+  "outcome": "blocked",
+  "decision": "pending",
+  "preregistrationHash": "0ddb8c6f51d140042167231a22f8b3f73735fc8d0e271e3da5f11590c9995104",
+  "dataScopeHash": "2fe4246a5cdd3aee19efb1d2e2f56f2469ba82c8f5dc32f1651c68a86d0b8ca8",
+  "authorizationHash": "4de37dc38ae5c13661d8f032f8cf1b7c2644a4974eae5f44f13c949a9980865f",
+  "resultRoot": "docs/test-evidence/R4-T4/20260730T144143-0800",
+  "runId": "r4-transport-01-preflight-heading-direct-search-attempt-1",
+  "externalProcessCount": 1,
+  "successfulArmCount": 0,
+  "secondExternalProcessStarted": false,
+  "modelResponseObserved": false,
+  "turnCompletedObserved": false,
+  "turnFailedObserved": false,
+  "processTerminalObserved": false,
+  "evidenceSealed": false,
+  "partialEvidenceRetained": true,
+  "retryPermitted": false,
+  "reason": "FROZEN_RUNNER_LACKS_WALL_CLOCK_TERMINATION",
+  "observation": "The Codex child emitted thread.started and turn.started, exhausted five WebSocket reconnects, fell back to HTTPS, exhausted five more timeout reconnects, and then remained alive without turn.failed, process terminal, authoritative final response, or runner sealing.",
+  "operatorAction": "The single hanging batch was interrupted after the second internal reconnect sequence to enforce the owner-authorized finite-execution boundary. No R4 retry or second external process was started.",
+  "requiredRemediation": "A separately authorized independent phase must add a runner-owned wall-clock deadline, process-tree termination, terminal synthesis and partial-evidence sealing, then freeze a new preregistration before any new external call.",
+  "rawEvidence": {
+    "localPreflight": {
+      "path": "results/local-preflight.json",
+      "sha256": "5b56f66b5a296549939d85fdca5ffc74347d7b9ada3004f1c9258ab2423fbeb6"
+    },
+    "stdoutPartial": {
+      "path": "runs/r4-transport-01-preflight-heading-direct-search-attempt-1/stdout.jsonl.partial",
+      "sha256": "9f8102e54db8446132ae7965356925aaff4235f858b39885ed98fe31a0a58d28"
+    },
+    "stderrPartial": {
+      "path": "runs/r4-transport-01-preflight-heading-direct-search-attempt-1/stderr.txt.partial",
+      "sha256": "ce4e6e9d251dfb1067014b2d95c24ecfd49697831686ef439501ce120ca5fa56"
+    }
+  },
+  "security": {
+    "participantScopeBound": true,
+    "privateGroundTruthSent": false,
+    "auditNeedlesSent": false,
+    "productHoldoutSent": false,
+    "repositoryOtherFilesSent": false,
+    "authenticationKeySentAsParticipantData": false
+  },
+  "recordedAt": "2026-07-30T15:00:24+08:00"
+}

@@ -286,10 +286,12 @@ decisions:
 
   - id: OWNER-R4-T4-EXTERNAL-BATCH
     title: Authorize the frozen R4-T4 bounded-attempt external transport batch
-    status: open
+    status: decided
     decision_owner: project-owner
     needed_by_task: R4-T4
-    decision: pending
+    decision: authorized
+    decided_at: 2026-07-30T14:41:05+08:00
+    evidence: Owner explicitly authorized sending the frozen five-task participant capsule scope to the OpenAI Codex service gpt-5.6-sol model, bound preregistration hash 0ddb8c6f51d140042167231a22f8b3f73735fc8d0e271e3da5f11590c9995104 and data-scope hash 2fe4246a5cdd3aee19efb1d2e2f56f2469ba82c8f5dc32f1651c68a86d0b8ca8, for ten successful arms with one retry only after a sealed timeout-before-response and at most twenty external processes.
     requested_preregistration_hash: 0ddb8c6f51d140042167231a22f8b3f73735fc8d0e271e3da5f11590c9995104
     requested_destination: OpenAI Codex service
     requested_model: gpt-5.6-sol
@@ -300,4 +302,4 @@ decisions:
       - docs/test-evidence/R4-T3/20260730T143215-0800/PREREGISTRATION.json
       - docs/test-evidence/R4-T3/20260730T143215-0800/PREREGISTRATION.sha256
       - scripts/pilot/r4-t4.mjs
-    note: R4-T4 remains ineligible until the owner explicitly authorizes the exact destination/model/participant-data scope and at most 20 external process attempts bound to the full frozen hash. Any authorization cannot modify R3/R2/R1/R0/P0 terminal stops or unlock product work.
+    note: Authorization validation passed with canonical hash 4de37dc38ae5c13661d8f032f8cf1b7c2644a4974eae5f44f13c949a9980865f. The first process exhausted Codex-internal WebSocket and HTTPS timeout reconnects but remained alive without a process terminal; the frozen runner had no wall-clock termination/sealing path. The batch was interrupted without a retry or second process, R4-T4 is blocked, and R4-RECOVERY remains pending. This authorization cannot bind a changed runner or new preregistration.
