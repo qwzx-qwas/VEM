@@ -8,6 +8,8 @@
 
 2026-07-29 最终状态：P0-T17D attempt 2 已按预登记规则记录 `P0-VALUE=stop`，P0 phase 为 `failed`。P0-T17E 随后只修复并重放了产生误报的 capsule auditor，P0-T17F 则从 immutable events 复算 timing 并确认无法做阶段级因果归因；两项均明确保持 terminal verdict，不授权下方 stretch，P0-T7 及其依赖链仍不 eligible。
 
+2026-07-30 独立 R6 research route 仍不改变上述产品结论：R6-T9 只完成 attempt-three no-call preregistration，冻结 `1200000ms` bounded runner policy 与新的 source/data/evidence bindings；`externalExecutionAuthorized=false`，R6-T10 仍需另一份精确授权，且无论后续 verdict 为何都不自动解锁 P0 产品工作。
+
 ## 建议顺序
 
 | 步骤 | 依次执行的原子任务 | 必须产出 | 结果型 stop condition |

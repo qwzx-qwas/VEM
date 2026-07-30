@@ -348,6 +348,8 @@ R6-T8 的 local-only replay 必须把 JSONL chunk 与 stdout receipt 按 ordered
 
 当前 R6-T8 compatibility disposition 只允许进入另行授权的 no-call preregistration：attempt-three explicit terminal horizon 至少 `600001ms`，terminal-observation margin 至少 `308226ms` 且不超过 `600000ms`，outer deadline 至少 `908227ms` 且不超过 `1200000ms`。具体 deadline、version/source binding、task/data scope 与 runner policy 只能由 R6-T9 选择并冻结，R6-T8 本身保持 `externalExecutionAuthorized=false`；任一 candidate 仍须保留 `5000/5000ms` termination windows、`SIGTERM`→`SIGKILL`、仅 sealed observed provider timeout 可 retry 一次、runner deadline 不可 retry、20-process cap 与逐 attempt evidence/budget 语义。
 
+当前 R6-T9 attempt-three preregistration 对 exact Codex `0.144.5` 选择 `version-bound-codex-instrumentation` provenance，并在 R6-T8 bounded envelope 内采用“保留 evidence-derived minimum margin 的最大有限 terminal horizon”：`891774ms` explicit horizon + `308226ms` terminal-observation margin = `1200000ms` outer deadline。该数值只是冻结 runner/source closure 下的 observation policy，不声称 provider 内部 retry schedule、reachability 或 terminal time。Preregistration 必须同时绑定 R6-T7 immutable result、R6-T8 proof/contract、fresh task/capsule、source/instrumentation、data scope、termination policy、fixed outer environment 与 `externalExecutionAuthorized=false`；任一 drift 均在 R6-T10 spawn 前 fail closed。
+
 任何 attempt three 都必须先完成新的零模型 R6-T8 dual-transport terminal-horizon remediation，再由 R6-T9 冻结新的 source/policy/preregistration，最后由 R6-T10 取得绑定全部新 hash、deadline、destination/model、data scope 与 process budget 的精确 owner authorization。Attempt three 必须以递增 ordinal 和 `supersedes_attempt: R6-T7` 同时保留 attempts one/two；R6-T7 的授权不能复用，也不解锁产品工作。
 
 当前 owner-authorized 执行序列见 [`docs/delivery/R6_PRESPAWN_INVOCATION_REMEDIATION.md`](delivery/R6_PRESPAWN_INVOCATION_REMEDIATION.md)。

@@ -830,6 +830,8 @@
 - **实现约束**：R6-T8 disposition、全部 source/policy/data/environment hashes 与 ordered dual-transport horizon binding 必须 fail closed。
 - **验收标准**：单独 owner 授权后，新预注册与本地 probes 通过；R6-T10 等待绑定全部新边界的另一份精确外部授权。
 
+> **已完成（2026-07-30）**：按 owner 的“授权，继续”仅完成 R6-T9 本地 no-call preregistration。基于 immutable R6-T7 attempt 2 与 R6-T8 dual-transport contract，为 exact Codex `0.144.5` 冻结 version-bound instrumentation observation policy：explicit terminal horizon `891774ms` + evidence-derived minimum observation margin `308226ms` = `1200000ms` outer deadline；这不是 provider 内部时序或 reachability 声称。5 个 fresh tasks、10 个 counterbalanced equal-base arms、13 项 runtime source closure、attempts 1/2 immutability、holdout exclusion、固定 outer env、`5000/5000ms` termination windows、`SIGTERM`→`SIGKILL`、仅 sealed observed provider timeout 可 retry 一次、runner deadline nonretryable 与 20-process cap 均已 hash-bind。证据位于 `docs/test-evidence/R6-T9/20260730T194005-0800/`；preregistration/instrumentation/data-scope/deadline-candidate/termination-policy hashes 分别为 `b3f281d44bbc08ae74b534a9903c935bff17192a9d03df4c01aad637e91d4e52` / `6f4d1ef9c81f869c7a9f4c91a43044cd1c2dbce5056e070f71371a8708b80ef1` / `7618c01d58349505a5fa6ca1e0ae1350e347de18cfa342ab88ad7cdfcd643e0a` / `074a29b812377b5ccd058250c8f87caaf29968bd613e3d1f10aa80a939a389c6` / `6e966a04617f79cc408af8cc2ef2ecc7da6cdec3603127c7c2ce69c8358531ff`，outer-env hash 仍为 `cf24c3c5e349e230a9c04223dceb4854bd377915e21f46d830134b085bc3579d`。30 个真实本地 probes、13 files / 76 项定向测试及 65 files / 354 项全仓测试通过，build/typecheck/lint/roadmap validation 通过；外部模型调用、provider request 和产品解锁均为 0。R6-T10 尚未获授权，必须等待绑定本次全部新 hashes 与已发布 commit 的另一份精确授权。
+
 ## R6-T10 — Separately authorized attempt-three verdict
 
 ### Prompt

@@ -428,7 +428,7 @@ decisions:
         decided_at: 2026-07-30T18:48:05+08:00
         evidence_ref: docs/test-evidence/R6-T7/20260730T183547-0800/results/verdict.json
     authoritative_state_ref: ROADMAP.yaml
-    note: Attempts one and two are immutable adjust. Attempt two exhausted the frozen 600000 ms runner deadline after WebSocket 5/5 and fallback to HTTPS through reconnect 3/5, without provider terminal or authoritative response. R6-T8 local remediation is complete with bounded disposition continue-to-preregistration-only, proof hash 21cb7550bc5380f0f460efbf59672ebf9bbaa28a78bbf8ce2e2053ddf73296be and contract hash 35a851a8e80785ca92e57f6e8468b183a217eb31e7ad8d7ec212b3f8f850685e. It selected no exact deadline and authorized no external call. R6-T9 attempt-three preregistration and R6-T10 exact external execution remain separately required and unauthorized; no product work is unlocked.
+    note: Attempts one and two are immutable adjust. Attempt two exhausted the frozen 600000 ms runner deadline after WebSocket 5/5 and fallback to HTTPS through reconnect 3/5, without provider terminal or authoritative response. R6-T8 local remediation completed with bounded disposition continue-to-preregistration-only, proof hash 21cb7550bc5380f0f460efbf59672ebf9bbaa28a78bbf8ce2e2053ddf73296be and contract hash 35a851a8e80785ca92e57f6e8468b183a217eb31e7ad8d7ec212b3f8f850685e. R6-T9 then completed the separately authorized no-call attempt-three preregistration with preregistration hash b3f281d44bbc08ae74b534a9903c935bff17192a9d03df4c01aad637e91d4e52 and exact 1200000 ms candidate; externalExecutionAuthorized remains false. R6-T10 still requires a new exact authorization binding every frozen hash and the published commit; no product work is unlocked.
 
   - id: OWNER-R6-T5-DEADLINE-HORIZON-REMEDIATION
     title: Authorize local-only R6 deadline-horizon remediation after attempt-one adjust
@@ -488,6 +488,25 @@ decisions:
       - docs/tasks/ATOMIC_TASK_PROMPTS.md
       - ROADMAP.yaml
     note: Authorization covered immutable attempt-one/two replay, ordered receipt correlation across the WebSocket-to-HTTPS fallback boundary, bounded local compatibility disposition, proof evidence, tests and documentation. It completed with proof hash 21cb7550bc5380f0f460efbf59672ebf9bbaa28a78bbf8ce2e2053ddf73296be and contract hash 35a851a8e80785ca92e57f6e8468b183a217eb31e7ad8d7ec212b3f8f850685e; external process/model/provider-request counts are zero. It does not authorize reuse of R6-T7 authorization, overwrite either prior attempt, select or freeze an R6-T9 policy, execute R6-T10, consume product holdout or unlock product work. The owner also required the completed R6-T7 state to be committed and pushed first; commit d3dca37 was pushed and its remote SHA verified before R6-T8 began.
+
+  - id: OWNER-R6-T9-ATTEMPT-THREE-PREREGISTRATION
+    title: Authorize local-only R6 attempt-three preregistration
+    status: decided
+    decision_owner: project-owner
+    needed_by_task: R6-T9
+    decision: authorized
+    decided_at: 2026-07-30T19:30:55+08:00
+    evidence: Owner replied "授权，继续" after the R6-T8 completion report identified R6-T9 no-call attempt-three preregistration as structurally next and stated that R6-T10 remained separately gated.
+    owner_statement: "授权，继续"
+    interpreted_scope: R6-T9-local-no-call-attempt-three-preregistration-only
+    context_refs:
+      - docs/test-evidence/R6-T8/20260730T191632-0800/proof.json
+      - docs/test-evidence/R6-T8/20260730T191632-0800/SHA256SUMS
+      - docs/test-evidence/R6-T9/20260730T194005-0800/PREREGISTRATION.json
+      - docs/test-evidence/R6-T9/20260730T194005-0800/PREREGISTRATION.sha256
+      - docs/tasks/ATOMIC_TASK_PROMPTS.md
+      - ROADMAP.yaml
+    note: Authorization covered selecting and freezing one attempt-three candidate within the immutable R6-T8 compatibility envelope, fresh tasks/capsules/source/policy/data/evidence bindings, local probes and tests with externalExecutionAuthorized=false. It completed with preregistration hash b3f281d44bbc08ae74b534a9903c935bff17192a9d03df4c01aad637e91d4e52, instrumentation hash 6f4d1ef9c81f869c7a9f4c91a43044cd1c2dbce5056e070f71371a8708b80ef1, data-scope hash 7618c01d58349505a5fa6ca1e0ae1350e347de18cfa342ab88ad7cdfcd643e0a and deadline-candidate hash 074a29b812377b5ccd058250c8f87caaf29968bd613e3d1f10aa80a939a389c6; 30 local probes passed and external model/provider call count remained zero. It does not authorize R6-T10, any provider/model call, reuse of R6-T7 authorization, overwrite attempts one/two, product holdout consumption or product unlock.
 
   - id: OWNER-R6-T7-EXTERNAL-BATCH
     title: Authorize the frozen R6-T7 attempt-two external batch
