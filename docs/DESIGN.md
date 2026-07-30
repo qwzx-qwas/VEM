@@ -278,6 +278,22 @@ R2 只允许四个原子结果：固定独立 remediation charter；实现并测
 
 当前 owner-authorized 执行序列见 [`docs/delivery/R2_FINAL_OUTPUT_REMEDIATION.md`](delivery/R2_FINAL_OUTPUT_REMEDIATION.md)。
 
+### 2.7.5 Owner-authorized capsule-audit containment remediation after R2 stop (`R3-CAPSULE-AUDIT-CONTAINMENT-001`)
+
+R2-T4 的 `stop`、R2 failed，以及 R1/R0/P0 的三条既有 terminal stop、failed phase 和全部 immutable evidence chain 都不得覆盖。Owner 可以另行授权拓扑独立的 R3 capsule-audit containment remediation research phase；该授权只允许修复审计语义、审计/评估异常的终态封存，并冻结新的 recovery-only preregistration，不授权新的外部模型调用或产品实现。
+
+R3 必须声明 `recovery_of_failed_phase: R2`、空 phase dependency、owner authorization reference 与 `independent-research-no-product-unlock` scope。`R3-RECOVERY` 必须以 `does_not_supersede: R2-RECOVERY` 和 `also_does_not_supersede: [R1-RECOVERY, R0-RECOVERY, P0-VALUE]` 固定全部 terminal decision chain；任何既有 phase/task 不得依赖 R3。
+
+Capsule audit 必须区分文本提及、受限查找尝试与已观测访问/逃逸。只在 `/work` 内执行、命令文本含 `AGENTS.md`/`SKILL.md` 等 marker、但没有返回该 marker 的路径或内容且没有 capsule 外路径证据的查找，只能记录为 non-authorizing attempted-discovery warning，不能单凭字符串提及升级为 escape。命令或 stderr 出现不在 allowlist 的绝对路径、结构化输出返回 capsule 外路径、输出暴露规则/skill 文件路径或内容、或任何实际越过只读 capsule 边界的证据，仍必须 fail closed。该区分不得削弱 Bubblewrap、只读 workspace、单文件写入、auth 不复制和 ground-truth/holdout 隔离。
+
+Auth 的只读 mount 只限制写入，不能被描述为对 participant command 不可读。R3 的 Codex CLI parent 可以在生成命令 sandbox 建立前读取该认证文件，但生成命令必须进入独立 permission profile：默认拒绝 filesystem root，只开放最小 runtime、只读 `/opt/codex` 与只读 `/work`，显式拒绝 `/codex-home/auth.json` 和 `/proc`，禁止交互式权限升级和 command network。由于当前 Linux sandbox 的运行时 `/proc/self/environ` 仍可读，CLI 传给生成命令的环境必须从 `inherit = "none"` 重建为固定非敏感值；任何 `/proc` 命令/输出证据仍由 auditor fail closed。无模型、假凭据 probe 必须证明 auth 不可读、workspace 不可写、环境不存在 auth/key/password/secret/token 变量；不支持该 profile 或 probe 不一致时不得执行 R3 external arm。
+
+Runner 必须把 audit、ground-truth/evaluator、hash verification 和 aggregate calculation 都放入有界终态封存边界。任一异常必须先保存 raw stdout/stderr、authoritative final-file observation、process terminal、ledger、audit/evaluator error、run metadata 与 SHA manifest，再返回结构化失败并触发 batch stop；异常不得在这些证据封存前逃出到顶层。协议失败、capsule integrity、evaluator attribution 和 evidence-sealing 状态必须保持独立字段，不能用 post-hoc 成功响应覆盖审计失败，也不能把没有 selected response 的失败制造成 wrong attribution。
+
+R3 只允许四个原子结果：固定独立 remediation charter；实现并测试 mention-versus-observed-access audit 与 in-run exception sealing；冻结新的 recovery-only preregistration；在新的、绑定该 hash 的 owner authorization 后执行 decision attempt。外部调用授权必须发生在新预注册冻结以后。
+
+当前 owner-authorized 执行序列见 [`docs/delivery/R3_CAPSULE_AUDIT_CONTAINMENT.md`](delivery/R3_CAPSULE_AUDIT_CONTAINMENT.md)。
+
 ## 2.8 项目与依赖许可证 (`LICENSE-POLICY-001`)
 
 P0-T1 在生成 package metadata 前必须记录项目自身许可证或明确的 private/unlicensed 状态、版权主体、贡献接收方式和发布边界；设计文档不能替项目所有者默认选择 MIT、Apache-2.0、AGPL 或商业许可。若许可证决定尚未获得项目所有者确认，允许完成不发布的 workspace scaffold，但 public package、复制第三方代码或分发 extension 的工作保持 blocked。

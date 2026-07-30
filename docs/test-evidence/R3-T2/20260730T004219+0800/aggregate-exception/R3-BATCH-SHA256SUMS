@@ -1,0 +1,14 @@
+e74b72c107cad34c6a97ebb8be779654181cab68e17300284d9540fdab68ee75  r3-batch-terminal/aggregate-errors.json
+c28473917faa0ae261ced1e50038c2e4efe9cb572d243f37a3cd7921b092c52d  r3-batch-terminal/batch-terminal.json
+32fc065b07b8e99d675b78275932072455adcdc2792492fe495c813f0c77b4c4  runs/r3-t2-batch-first/final-response-observation.json
+33780d8ba2b366bf81a1ae5f9678b674ec54f1cc36547f59e4f48e8be5f600d1  runs/r3-t2-batch-first/final-response.txt
+4bc38e19a0878dace09aee18e1b00a838f811ea7cf8179bfd2fc51eb48466251  runs/r3-t2-batch-first/R3-SHA256SUMS
+471dc37c088c9af466182166bfb62bef2df6606eb36540a2cc79df0df06becea  runs/r3-t2-batch-first/r3-terminal/capsule-audit.json
+e8a186a17bcd34e2a3b9a4e505371fdd7fcf44a564b9bfa2c6b4e06836105718  runs/r3-t2-batch-first/r3-terminal/evaluation.json
+5a41f515988497848c7c1cdd5d62e5ae6722a6200b1e268396a2d7a285e407e5  runs/r3-t2-batch-first/r3-terminal/ground-truth-observation.json
+8c1dade706f8d89e9be04a35a163fb0ebdad12b64b44ba8b7b42506941ad0e6a  runs/r3-t2-batch-first/r3-terminal/terminal.json
+6a1e790a0e83db0387a020f956b4576312c1b6135e4be7cc13c4f4a9c3aeee8e  runs/r3-t2-batch-first/receipt-ledger.json
+97a563cc732587d426b36ebc8d31c7f68dfc231715e3b08193c911d1a1f5ec30  runs/r3-t2-batch-first/run.json
+ce1d6da54f88053bba11277109a84f8122ea2f8eb5c7c4216d23d9659e48aa19  runs/r3-t2-batch-first/SHA256SUMS
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  runs/r3-t2-batch-first/stderr.txt
+842bbcde67baa701abf78eeeb943dc132cef7659355750d1c66c2b836f1db9a2  runs/r3-t2-batch-first/stdout.jsonl

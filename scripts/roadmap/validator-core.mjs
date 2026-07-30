@@ -196,12 +196,22 @@ export function validateModel(root, roadmap, requirements) {
         ? undefined
         : byTask.get(excludedDecision.current_attempt);
       const additionalExcludedKeys = descriptor.also_does_not_supersede ?? [];
+      const inheritedExcludedKeys = excludedDecision?.scope === "independent-research"
+        ? [
+            excludedDecision.does_not_supersede,
+            ...(excludedDecision.also_does_not_supersede ?? []),
+          ]
+        : [];
       if (descriptor.scope !== "independent-research"
         || typeof descriptor.does_not_supersede !== "string"
         || excludedDecision === undefined
         || excludedDecision.phase !== recoveryPhase.recovery_of_failed_phase
         || excludedAttempt?.decision !== "stop"
         || !Array.isArray(additionalExcludedKeys)
+        || additionalExcludedKeys.length !== inheritedExcludedKeys.length
+        || additionalExcludedKeys.some((excludedKey, index) => (
+          excludedKey !== inheritedExcludedKeys[index]
+        ))
         || additionalExcludedKeys.some((excludedKey) => {
           const additionalDecision = decisions[excludedKey];
           const additionalAttempt = additionalDecision === undefined

@@ -53,6 +53,13 @@ contracts:
     roadmap_tasks: [R2-T1, R2-T2, R2-T3, R2-T4]
     required_tests: [p0-r0-r1-stop-immutability, independent-phase-boundary, output-last-message-authority, jsonl-audit-consistency, single-file-capsule-write-boundary, protocol-versus-attribution-classification, failure-evidence-sealing, separate-external-authorization, no-product-unlock]
 
+  - id: R3-CAPSULE-AUDIT-CONTAINMENT-001
+    title: Owner-authorized capsule-audit containment remediation after R2 stop
+    authoritative_sections: ["2.7.5 Owner-authorized capsule-audit containment remediation after R2 stop (`R3-CAPSULE-AUDIT-CONTAINMENT-001`)"]
+    introduced_phase: R3
+    roadmap_tasks: [R3-T1, R3-T2, R3-T3, R3-T4]
+    required_tests: [p0-r0-r1-r2-stop-immutability, independent-phase-boundary, mention-versus-observed-access, forbidden-content-and-external-path-fail-closed, generated-command-auth-denial-and-clean-environment, audit-evaluator-exception-sealing, structured-batch-stop, separate-external-authorization, no-product-unlock]
+
   - id: LICENSE-POLICY-001
     title: Project license decision and third-party dependency policy
     authoritative_sections: ["2.8 项目与依赖许可证 (`LICENSE-POLICY-001`)", "附录 B：调研与实现参考"]

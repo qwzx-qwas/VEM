@@ -482,3 +482,54 @@ Each future entry must include task ID, date, changed files, commands, test evid
 - Security/data-lifecycle verification: all processes ran inside frozen read-only capsules with one runner-owned final output file; participant inputs excluded ground truth, prior tasks/prompts and product holdouts; no external retry followed the stop; all existing run evidence remained immutable and hash-valid
 - Known limitations/degradations: only 9 of 10 processes ran, the fifth pair and full cost verdict are unavailable, capsule setup duration was lost when the frozen runner aborted, and this recovery-only smoke cannot support a product-value claim
 - Next eligible task: none; R2, R1, R0 and P0 are failed, and no product task is unlocked
+
+## R3-T1 — Independent capsule-audit containment charter
+
+- Date: 2026-07-29
+- State/outcome: `done` / `passed`
+- Decision: n/a; `R3-RECOVERY` remains pending while `R2-RECOVERY=stop`, `R1-RECOVERY=stop`, `R0-RECOVERY=stop` and `P0-VALUE=stop` remain terminal
+- Changed files: R3 normative contract, independent phase/decision/task chain, owner decision, delivery plan, four prompts, four-terminal charter proof/tests, task/status/progress metadata and `docs/test-evidence/R3-T1/20260729T234157+0800/`
+- Charter result: R3 phase and R3-T1 have empty dependencies, recover failed R2 by immutable evidence only, cannot become an existing phase/task dependency, and explicitly do not supersede R2, R1, R0 or P0 decision chains
+- Commands: 27 targeted validator/R0/R1/R2/R3 charter tests; roadmap validation; build/typecheck/lint; 184-test full Vitest gate
+- Test evidence: 184 total Vitest tests across 35 files passed; roadmap validates 13 phases, 156 tasks and 29 contracts; generic validation preserves each recovery ancestor chain exactly, product unlock count is zero and charter proof hash is `5579dde55167cad9c1b024100b60e54f1d533868d4b1124a67fed233fb87b526`
+- Edge/browser verification: not applicable; governance and validation only
+- Security/data-lifecycle verification: no external call, participant data, auth payload, ground truth, holdout or product runtime change; all four prior evidence roots remain immutable
+- Known limitations/degradations: R3-T1 provides only authority and isolation; it does not change auditor/runner behavior or authorize an experiment
+- Next eligible task: `R3-T2`
+
+## R3-T2 — Mention-versus-observed audit and exception containment
+
+- Date: 2026-07-30
+- State/outcome: `done` / `passed`
+- Decision: n/a; `R3-RECOVERY` remains pending and all R2/R1/R0/P0 terminal stop verdicts remain unchanged
+- Changed files: versioned v3 capsule auditor/tests, R3 permission-profile capsule/tests, layered run/batch finalizer/tests, local proof/tests, R3 normative security clarification, roadmap/status/prompt/progress metadata and `docs/test-evidence/R3-T2/20260730T001132+0800/`
+- Commands: real no-model dummy-auth permission probe; R2 run-nine read-only replay; 48 targeted R3/validator tests; roadmap validation; build/typecheck/lint; 213-test full Vitest gate in the required local-process environment; recursive evidence SHA verification and secret-pattern scan
+- Test evidence: v3 correlates command events by item ID and treats the R2 trigger as exactly one non-authorizing warning; negative path/content/auth/proc/traversal/stderr/bounds cases fail closed; audit, evaluator, recorder-hash and aggregate injected exceptions all return only after sealed layered evidence; proof hash is `faea553178bd5dec19d9c9f737d1fdffe6af7d81266a1f6c3baa0daa60afa234`
+- Edge/browser verification: not applicable; no browser or frontend behavior changed
+- Security/data-lifecycle verification: no real credential was used by probes and no external model call occurred; generated commands cannot read the mounted auth file or write `/work`, command environment starts from no inherited variables and contains no auth/key/password/secret/token values, network and interactive escalation are disabled, ground truth values are represented only by hashes in the R3 terminal layer, and recorder manifests remain unchanged beneath the new outer manifest
+- Known limitations/degradations: Linux runtime `/proc/self/environ` remains readable despite the explicit profile deny, so R3 relies on enforced empty inheritance plus fixed non-secret variables and treats any `/proc` command/output evidence as an audit failure; unsupported permission-profile behavior blocks R3-T4
+- Next eligible task: `R3-T3`
+
+### R3-T2 freeze-readiness revalidation
+
+- Date: 2026-07-30
+- State/outcome: `done` / `passed`
+- Changed files: v3 auditor/tests, permission-profile probe/tests, finalizer/tests, local proof/tests, prompt/status/progress metadata and immutable sibling evidence `docs/test-evidence/R3-T2/20260730T004219+0800/`
+- Commands: 33 affected tests; 227-test repository gate excluding only the not-yet-eligible R3-T3 runner draft; build/typecheck; affected lint; roadmap validation; real no-model Bubblewrap probe; recursive SHA verification and secret-pattern scan
+- Test evidence: marker-only AGENTS, SKILL and their combined strict negative lookup are non-authorizing warnings while observed skill paths still fail closed; dummy-secret stderr leakage is rejected; wrong attribution now seals a failed run and batch stop; superseding proof hash is `fadca8e3f7660f144bd31ae8ab5e1155d9eb1f6ad3cc07634f2ea830306a8ec3`
+- Security/data-lifecycle verification: the real probe used only a generated dummy credential and made no model call; `networkPolicyConfiguredDisabled=true` is configuration evidence and `networkRuntimeProbed=false` avoids claiming an observation that was not made; the prior R3-T2 evidence root remains immutable
+- Known limitations/degradations: current Linux `/proc/self/environ` behavior remains contained by an empty inherited environment plus a sensitive-variable scan; a current no-model probe is still required immediately before any later authorized R3 external batch
+- Next eligible task: `R3-T3`
+
+## R3-T3 — Frozen capsule-audit containment preregistration
+
+- Date: 2026-07-30
+- State/outcome: `done` / `passed`
+- Decision: n/a; `R3-RECOVERY` remains pending, and R2/R1/R0/P0 terminal stop verdicts remain unchanged
+- Changed files: R3 recovery plan/tests, preregistration generator/tests, future authorized runner/tests, prompt/status/progress/decision metadata and `docs/test-evidence/R3-T3/20260730T114932+0800/`
+- Commands: 82 targeted R3/governance tests; 239-test full Vitest gate; build/typecheck/lint; roadmap validation; 30 real local filesystem/Codex-binary/permission-profile probes; preregistration re-verification; sensitive-pattern, symlink and diff checks
+- Test evidence: five fresh recovery-only tasks form 10 AB/BA arms with equal base capsules and only `vem-context.json` as the treatment; exact 10-file transitive source binding and preparation-source binding are frozen; preregistration hash is `8b886d443c576540f6b3b2d90e06abfd95d57955f696680dd998b748d4ffdd5b`, instrumentation hash is `1592699eea206c5d75327053c065a44a27153ff2d3e263692751e56917d6ca80`
+- Edge/browser verification: not applicable; no frontend production behavior or browser integration changed
+- Security/data-lifecycle verification: all four terminal verdict files and all five prior preregistration roots were revalidated by known hashes; ground truth, audit content needles and product holdouts remain outside participant capsules; current no-model permission preflight is mandatory before any future external arm; `externalExecutionAuthorized=false`, product unlock count is zero and external model calls are zero
+- Known limitations/degradations: network denial is bound by the strict permission profile but is not claimed as a runtime network probe; Linux `/proc/self/environ` remains readable only with a fixed non-sensitive environment and any `/proc` command/output evidence fails audit; this 5-task smoke cannot support a statistical product claim
+- Next eligible task: none without explicit owner authorization for `R3-T4`, exact preregistration hash `8b886d443c576540f6b3b2d90e06abfd95d57955f696680dd998b748d4ffdd5b`, and exactly 10 external runs

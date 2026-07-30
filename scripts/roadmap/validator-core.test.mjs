@@ -164,12 +164,22 @@ describe("REQ-TRACE-001 validator", () => {
     code("recovery-boundary");
   });
 
-  test("accepts additional terminal decision exclusions and rejects non-terminal drift", () => {
+  test("requires each recovery decision to preserve the full terminal ancestor chain", () => {
     addRecoveryPhase();
-    const p0Task = roadmap.phases[0].tasks[0];
+    addSecondRecoveryPhase();
+    expect(validate()).toMatchObject({ phases: 3, tasks: 5 });
+    roadmap.decisions.SECOND_RECOVERY.also_does_not_supersede = [];
+    code("recovery-boundary");
+    roadmap.decisions.SECOND_RECOVERY.also_does_not_supersede = [
+      "P0-VALUE",
+      "P0-VALUE",
+    ];
+    code("recovery-boundary");
+  });
+
+  test("rejects duplicate direct and additional terminal exclusions", () => {
+    addRecoveryPhase();
     roadmap.decisions.RECOVERY.also_does_not_supersede = ["P0-VALUE"];
-    expect(validate()).toMatchObject({ phases: 2, tasks: 3 });
-    p0Task.decision = "adjust";
     code("recovery-boundary");
   });
 
@@ -225,4 +235,47 @@ function addRecoveryPhase() {
     does_not_supersede: "P0-VALUE",
   };
   requirements.contracts[0].roadmap_tasks.push("R0-T1", "R0-T2");
+}
+
+function addSecondRecoveryPhase() {
+  const r0 = roadmap.phases.find((phase) => phase.id === "R0");
+  r0.status = "failed";
+  r0.tasks[0].status = "done";
+  Object.assign(r0.tasks[1], { status: "done", decision: "stop" });
+  const charter = {
+    id: "R1-T1",
+    status: "in_progress",
+    contracts: ["C-1"],
+    depends_on: [],
+    tests: ["second-recovery-charter"],
+  };
+  const verdict = {
+    id: "R1-T2",
+    status: "todo",
+    contracts: ["C-1"],
+    depends_on: ["R1-T1"],
+    tests: ["second-recovery-verdict"],
+    decision_key: "SECOND_RECOVERY",
+    decision_attempt: 1,
+    supersedes_attempt: null,
+    decision: "pending",
+  };
+  roadmap.phases.push({
+    id: "R1",
+    status: "in_progress",
+    depends_on: [],
+    recovery_of_failed_phase: "R0",
+    authorization_ref: "docs/decisions.yaml",
+    scope_boundary: "independent-research-no-product-unlock",
+    gate: { requires_decisions: { SECOND_RECOVERY: "continue" } },
+    tasks: [charter, verdict],
+  });
+  roadmap.decisions.SECOND_RECOVERY = {
+    phase: "R1",
+    current_attempt: "R1-T2",
+    scope: "independent-research",
+    does_not_supersede: "RECOVERY",
+    also_does_not_supersede: ["P0-VALUE"],
+  };
+  requirements.contracts[0].roadmap_tasks.push("R1-T1", "R1-T2");
 }

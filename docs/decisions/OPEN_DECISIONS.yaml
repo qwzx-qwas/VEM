@@ -223,3 +223,33 @@ decisions:
     evidence_ref: docs/test-evidence/R2-T4/20260729T230343+0800/results/verdict.json
     authoritative_state_ref: ROADMAP.yaml
     note: Nine fresh processes produced exact source locations, unique thread IDs, consistent authoritative final files, zero protocol failures and zero wrong attribution. Run nine included the frozen v2 auditor forbidden marker AGENTS.md in a command event, causing CAPSULE_AUDIT_V2_ESCAPE; the exception returned before audit-failure evidence was sealed, so the preregistered capsule-integrity-failed and failure-evidence-not-sealed-before-return stop conditions apply. The remaining call was not executed. This decision does not supersede R1-RECOVERY, R0-RECOVERY or P0-VALUE and cannot unlock product work.
+
+  - id: OWNER-R3-CAPSULE-AUDIT-CONTAINMENT
+    title: Authorize independent R3 capsule-audit containment remediation without overwriting R2 R1 R0 or P0 stop
+    status: decided
+    decision_owner: project-owner
+    needed_by_task: R3-T1
+    decision: authorized
+    decided_at: 2026-07-29T23:37:37+08:00
+    evidence: Owner explicitly stated "授权新增不覆盖 R2-RECOVERY、R1-RECOVERY、R0-RECOVERY 与 P0-VALUE stop 的独立 R3 capsule-audit containment remediation 阶段，并继续完成审计语义修复、异常封存与新预注册；外部实验仍需预注册后单独授权。" in the active Codex thread.
+    context_refs:
+      - docs/DESIGN.md
+      - docs/delivery/R3_CAPSULE_AUDIT_CONTAINMENT.md
+      - ROADMAP.yaml
+    context_sections:
+      - 2.7.5 Owner-authorized capsule-audit containment remediation after R2 stop (R3-CAPSULE-AUDIT-CONTAINMENT-001)
+    note: Authorization covers the independent R3 charter, capsule-audit semantics, in-run exception sealing, tests and new preregistration only. It does not authorize an R3 external model call or product work.
+
+  - id: OWNER-R3-T4-EXTERNAL-BATCH
+    title: Authorize the frozen R3-T4 capsule-audit containment external batch
+    status: open
+    decision_owner: project-owner
+    needed_by_task: R3-T4
+    decision: pending
+    requested_preregistration_hash: 8b886d443c576540f6b3b2d90e06abfd95d57955f696680dd998b748d4ffdd5b
+    requested_run_count: 10
+    context_refs:
+      - docs/test-evidence/R3-T3/20260730T114932+0800/PREREGISTRATION.json
+      - docs/test-evidence/R3-T3/20260730T114932+0800/PREREGISTRATION.sha256
+      - scripts/pilot/r3-t4.mjs
+    note: R3-T4 remains ineligible until the owner explicitly authorizes exactly 10 external processes bound to the full frozen hash. Any authorization cannot modify R2-RECOVERY, R1-RECOVERY, R0-RECOVERY, P0-VALUE or unlock product work.

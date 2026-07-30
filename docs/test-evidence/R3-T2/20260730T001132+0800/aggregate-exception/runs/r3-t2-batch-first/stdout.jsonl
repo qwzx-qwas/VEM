@@ -1,0 +1,3 @@
+{"type":"thread.started","thread_id":"r3-t2-batch-first-thread"}
+{"type":"item.completed","item":{"id":"message","type":"agent_message","text":"{\"relativeFile\":\"packages/demo-fixture/src/App.tsx\",\"line\":7,\"sourceAnchorId\":null}"}}
+{"type":"turn.completed","usage":{}}

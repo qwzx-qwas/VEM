@@ -4,7 +4,7 @@
 
 所有 prompt 共用以下规则：只改当前 task；先写/更新测试；不得削弱安全、隐私、证据或测试门禁；外部阻塞要保存证据并标记 blocked；通过后才更新 roadmap/progress；结束时使用 `AGENTS.md` 的报告格式。
 
-若执行因上下文或预算中断，在 `docs/checkpoints/<TASK-ID>.md` 记录最后完成步骤、已有证据和准确下一步。不要在本 prompt 文件下追加“已完成”或局部进度；task/phase/decision 状态仍只写入 `ROADMAP.yaml`，完成或阻塞证据写入 `docs/progress.md`。
+若执行因上下文或预算中断，在 `docs/checkpoints/<TASK-ID>.md` 记录最后完成步骤、已有证据和准确下一步。默认不要在本 prompt 文件下追加局部进度；若 owner 明确要求逐 prompt 标注完成，可以在对应 prompt 后追加简短、非权威的完成摘要。task/phase/decision 的唯一事实来源仍是 `ROADMAP.yaml`，完整完成或阻塞证据仍写入 `docs/progress.md`。
 
 ## P0-T0A0 — 只读迁移 readiness inventory
 
@@ -546,6 +546,59 @@
 - **验收标准**：immutable verdict；continue 也仅允许提出新的独立研究路线。
 
 > **已完成（2026-07-29）**：Owner 授权、完整 preregistration digest、8 个 frozen source bindings 和 15 项 capsule/recorder/preregistration 门禁通过后启动批次。前 8 个 run 全部通过；第 9 个 direct arm 同样退出 0，权威 final file 与最后 JSONL agent message 一致且定位正确，但其命令事件包含 frozen v2 auditor 禁止的 `AGENTS.md` marker，触发 `CAPSULE_AUDIT_V2_ESCAPE`。异常在 frozen runner 中未捕获，因而审计失败证据没有在返回前封存；批次 fail closed，剩余第 10 次未执行。无外部重试的 post-abort sealer 只读取并哈希封存现有证据，不修改任何 frozen binding。最终 9/9 定位正确、9 个 fresh unique threads、0 protocol failure、0 wrong attribution；immutable verdict 为 `R2-RECOVERY=stop`，stop reasons 为 `capsule-integrity-failed` 与 `failure-evidence-not-sealed-before-return`，9/10 incomplete batch 同时记为 adjust reason 但不覆盖 stop。44 项定向测试、180 项全仓 Vitest、build/typecheck/lint、roadmap/workspace/license、clean frozen install、production demo 与 98 项 preflight 全部通过。R2 phase 为 `failed`，R1/R0/P0 stops 与零产品解锁边界不变。证据位于 `docs/test-evidence/R2-T4/20260729T230343+0800/`，verdict hash 为 `ada1fb7e4c4ae202060a5e98e00dafedecfd4862803c61bab1970d7e30d681e1`。
+
+## R3-T1 — Independent capsule-audit containment charter
+
+### Prompt
+
+- **背景**：R2-T4 因 marker-only `AGENTS.md` lookup 被 frozen auditor 判为 escape，且 audit exception 在顶层 evidence seal 前逃逸；R2/R1/R0/P0 均 failed/stop。
+- **目标**：新增不覆盖四条 stop chain 的独立 R3，并机械证明零产品解锁。
+- **本阶段做**：新增 R3-CAPSULE-AUDIT-CONTAINMENT-001、独立 decision、owner authorization、R3-T1–T4 原子链与 validator/proof four-terminal checks。
+- **本阶段不做**：不改 R2/R1/R0/P0 evidence/verdict，不修 auditor/runner，不冻结新 plan，不执行外部调用。
+- **实现约束**：R3 phase 与 R3-T1 均 `depends_on: []`，只按 immutable evidence/hash 读取 failed R2；同时固定不 supersede R2/R1/R0/P0 decisions。
+- **测试要求**：failed R2/R1/R0/P0、empty deps、four-decision isolation、authorization、dependency leakage、contract reverse mapping。
+- **验收标准**：章程与全仓门禁通过后 `done`，仅 R3-T2 eligible。
+
+> **已完成（2026-07-29）**：已新增 `R3-CAPSULE-AUDIT-CONTAINMENT-001`、独立 R3/R3-RECOVERY chain、owner authorization record 与四任务原子序列；R3 phase 和 R3-T1 均为空 dependency，只读取 failed R2 的 immutable terminal evidence。机械证明固定 `does_not_supersede: R2-RECOVERY` 与 `also_does_not_supersede: [R1-RECOVERY, R0-RECOVERY, P0-VALUE]`，并拒绝任何既有 phase/task 对 R3 的依赖；generic validator 也要求每一层 recovery 精确保留完整 ancestor stop chain。27 项治理/章程定向测试、184 项全仓 Vitest、build/typecheck/lint 和 13-phase/156-task/29-contract roadmap 全部通过；product unlock count 为 0，未执行外部调用。下一项仅为 R3-T2。
+
+## R3-T2 — Mention-versus-observed-access audit 与 exception containment
+
+### Prompt
+
+- **背景**：R2 frozen v2 auditor 把命令文本中的 marker mention 直接等同于 capsule escape，且 audit throw 未进入终态封存。
+- **目标**：保持真实 escape fail closed，同时避免 marker-only/no-output lookup 误判，并确保 audit/evaluator/hash/aggregate exception 全部先封存再返回。
+- **本阶段做**：新 versioned auditor、结构化 warning/violation evidence、新 R3 recorder/runner containment boundary、R2 run-nine read-only replay 与 local failure probes。
+- **本阶段不做**：不修改 frozen R2 source/evidence，不执行外部 Codex arm，不冻结下一批。
+- **实现约束**：命令 mention 本身不是访问证据；观察到 forbidden path/content 或 unsafe absolute path 仍 stop；每个异常路径必须有 raw/final/terminal/ledger/error/SHA。
+- **测试要求**：marker mention/no output、safe `/work` search、forbidden output/content、external path、stderr/symlink、audit/evaluator/hash/aggregate throw、cancel、bounds、R2 replay。
+- **验收标准**：定向及全仓门禁通过后 `done`，使 R3-T3 eligible。
+
+> **已完成（2026-07-30）**：新增 v3 auditor，以 `item.id` 关联 started/completed、只把 completed observation 作为访问证据；真实 R2 第 9 次 run 只产生 1 个 non-authorizing bounded-discovery warning，而规则/skill path 或内容、auth、`/proc`、遍历、stderr 和 capsule 外路径仍 fail closed。新增 R3 permission-profile capsule：生成命令默认拒绝 filesystem root，仅开放最小 runtime、只读 `/opt/codex`/`/work`，显式拒绝 auth、禁用网络与交互扩权，并从空继承重建固定非敏感环境；无模型假凭据实测证明 auth 不可读、workspace 不可写且 `/proc/self/environ` 无敏感变量。新的 finalizer 分层保留 recorder `SHA256SUMS`，为 audit/evaluator/hash/aggregate exception 在返回前封存 raw/final/terminal/ledger/error 与外层 manifest。冻结前复核又补齐了 `SKILL.md` 及 AGENTS/SKILL 合并负查找的同型 warning 语义、observed skill path fail-closed、dummy-secret stderr 检查、network policy 配置证据与 runtime probe 的诚实区分，以及 wrong-attribution run/batch stop；旧证据保持不变，新 sibling 证据位于 `docs/test-evidence/R3-T2/20260730T004219+0800/`，superseding proof hash 为 `fadca8e3f7660f144bd31ae8ab5e1155d9eb1f6ad3cc07634f2ea830306a8ec3`。修补后的 33 项定向测试、排除尚未 eligible 的 R3-T3 runner 草稿后 227 项全仓 Vitest、build/typecheck/affected lint 与 13-phase/156-task/29-contract roadmap 均通过；两份 proof 的外部模型调用均为 0，R2/R1/R0/P0 stop 不变。下一项仅为 R3-T3。
+
+## R3-T3 — Capsule-audit containment recovery preregistration
+
+### Prompt
+
+- **背景**：R3-T2 提供 versioned audit semantics 与 in-run exception sealing。
+- **目标**：冻结新 runner/auditor/capsule/task/threshold hashes，保持 recovery-only corpus 与 product holdout 分离。
+- **本阶段做**：生成新 preregistration、counterbalance、equal base context、audit warning/violation contract、failure evidence contract 与 external authorization gate。
+- **本阶段不做**：不执行外部 arm、不复用 R2 hash、不授权产品工作。
+- **实现约束**：新 instrumentation hash 必须不同于 R2；`externalExecutionAuthorized=false`；ground truth evaluator-only。
+- **测试要求**：source bindings、fresh hash、task/capsule equality、holdout exclusion、auditor/runner mutation、authorization false、local probes。
+- **验收标准**：冻结并通过 probes 后 `done`；R3-T4 等待单独 owner authorization。
+
+> **已完成（2026-07-30）**：冻结 5 个全新 recovery-only task、10 个 AB/BA counterbalanced arm、equal-base capsule 和 10 项完整 runtime source binding；instrumentation hash 为 `1592699eea206c5d75327053c065a44a27153ff2d3e263692751e56917d6ca80`，完整 preregistration hash 为 `8b886d443c576540f6b3b2d90e06abfd95d57955f696680dd998b748d4ffdd5b`。runner 冻结了 direct-null/VEM-anchor ground truth、authoritative final-file、v3 audit、当前无模型 permission preflight、异常/哈希/aggregate 封存及按 pair saving 中位数计算的 verdict；四份 terminal stop verdict 与五份既有 preregistration 均按已知哈希重验。30 次本地 filesystem/Codex-binary/permission-profile probe、82 项定向测试、239 项全仓 Vitest、build/typecheck/lint、13-phase/156-task/29-contract roadmap、预注册复验和敏感信息/symlink 检查全部通过。证据位于 `docs/test-evidence/R3-T3/20260730T114932+0800/`；`externalExecutionAuthorized=false`、product unlock count 为 0，未执行外部模型调用。R3-T4 仍需绑定上述完整 hash 和恰好 10 次实验的单独 owner authorization。
+
+## R3-T4 — Separately authorized capsule-audit containment verdict
+
+### Prompt
+
+- **背景**：R3-T3 已冻结新的 auditor/runner/instrumentation plan。
+- **目标**：在单独 owner authorization 后执行 paired arms 并记录 `R3-RECOVERY` verdict。
+- **本阶段做**：fresh contexts、final-file/JSONL/audit consistency、raw/ledger/error evidence、correctness、capsule integrity 与 cost verdict。
+- **本阶段不做**：不覆盖 R2/R1/R0/P0、不自动解锁或创建产品 phase。
+- **实现约束**：任何 prereg/source/capsule/holdout/audit/failure-sealing drift fail closed。
+- **验收标准**：immutable verdict；continue 也仅允许提出新的独立研究路线。
 
 ## P0-T9A — Walking-skeleton 正向 Edge E2E
 

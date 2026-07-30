@@ -6,7 +6,7 @@
 
 - 项目处于 design baseline 1.14，P0 implementation 已开始。
 - `P0-T0A0` 已完成只读 migration readiness inventory；证据位于 `docs/test-evidence/P0-T0/20260728T155608+0800/`。
-- 152 个 roadmap task、12 个 phase 和 28 个 contract 已登记。
+- 156 个 roadmap task、13 个 phase 和 29 个 contract 已登记。
 - `P0-T0A1` 已完成 owner-authorized layout commit 与 single-writer cutover；canonical writer 是 `/home/qwzx/src/VEM`，`/mnt/d/VEM` 仅保留为只读 rollback。
 - `P0-T0A2` 已完成：bounded evidence schema/validator、Node `24.18.0` 与 pnpm `10.34.0` 的 owner-accepted exact bootstrap decision 及验证证据位于 `docs/test-evidence/P0-T0/20260728T194140+0800/`。
 - `P0-T0B` 已完成：default-CA registry、隔离 Corepack/pnpm frozen install、ext4 case/symlink/long-path 和 native watcher profile 均通过，证据位于 `docs/test-evidence/P0-T0/20260728T195939+0800/`。
@@ -35,6 +35,9 @@
 - `R2-T2` 已完成 final-output authority 修复：`--output-last-message` 的 runner-owned bounded file 是唯一 structured response，JSONL 只作审计；最后消息一致性、缺失/无效/不一致/超限/symlink 与 failure sealing 已覆盖。Bubblewrap 的 `/work` 仍只读，输出目录仅有一个 0600 file bind 可写；instrumentation hash 为 `235e7c8433787ef838c1f30d492e3ef24cb62ebd6ebf26bd43ca9cd559c0f8ab`，外部调用为 0。
 - `R2-T3` 已完成新预注册：5 个 fresh recovery-only task、10 个 counterbalanced arm 和 8 个 runtime source binding 冻结于 hash `dddd48ade2a92b2e12ec7600c9cdc0bd65eee6d47023d01d70b8bd71b47c273a`，instrumentation hash 为 `09e237ddec722207ee3b2e22c714ca5631700ff7393877a66fdd75d04c46b8a0`；30 次本地隔离探针全部通过，`externalExecutionAuthorized=false`，R2-T4 等待单独授权。
 - `R2-T4` 已完成并记录 `R2-RECOVERY=stop`：9 个 fresh process 均退出 0、权威 final file 与最后 JSONL agent message 一致、定位正确，且 0 protocol failure / 0 wrong attribution；第 9 个 run 的命令事件包含 frozen v2 auditor 禁止的 `AGENTS.md` marker，触发 `CAPSULE_AUDIT_V2_ESCAPE`，异常在 frozen runner 返回前未封存审计失败证据。批次按预登记规则停止，第 10 次未执行；无外部重试的 post-abort sealer 仅封存既有证据。R2 phase 为 `failed`，R1/R0/P0 stops 与零产品解锁边界不变。
+- `R3-T1` 已完成独立 capsule-audit containment charter：R3 对 R2/R1/R0/P0 四条 terminal stop chain 均声明 non-supersession，phase/task dependency 为空且没有既有产品依赖边；proof hash 为 `5579dde55167cad9c1b024100b60e54f1d533868d4b1124a67fed233fb87b526`。Owner authorization 仅覆盖 audit semantics、异常封存、测试与新预注册，外部调用仍未授权。
+- `R3-T2` 已完成审计语义与异常封存修复并通过冻结前复核：AGENTS、SKILL 及二者合并的严格 marker-only 负查找成为 non-authorizing warning，真实规则内容/路径、敏感/外部路径、遍历和 stderr evidence 继续 fail closed；permission profile 使生成命令无法读取 auth、无法写 `/work`、没有敏感环境变量或交互扩权，网络禁用记录为严格配置绑定而非未执行的 runtime observation。audit/evaluator/hash/aggregate 异常与 wrong attribution 均先封存并触发 batch stop；保留初始 proof 后新增 sibling proof `docs/test-evidence/R3-T2/20260730T004219+0800/`，hash 为 `fadca8e3f7660f144bd31ae8ab5e1155d9eb1f6ad3cc07634f2ea830306a8ec3`，外部调用为 0。
+- `R3-T3` 已完成新预注册：5 个 fresh containment-only task、10 个 counterbalanced arm、equal-base capsule、10 项 transitive runtime source binding 与 current no-model permission preflight 冻结于 hash `8b886d443c576540f6b3b2d90e06abfd95d57955f696680dd998b748d4ffdd5b`，instrumentation hash 为 `1592699eea206c5d75327053c065a44a27153ff2d3e263692751e56917d6ca80`；30 次本地探针全部通过，`externalExecutionAuthorized=false`、product unlock count 为 0，R3-T4 等待绑定完整 hash 和 10 次 run 的单独 owner authorization。
 - readiness 结果为 `ready`：大小写 staging 路径为同一 device/inode，payload 与 prefix-normalized manifest 已冻结，无 case collision，目标不存在，ext4 容量/owner permission 通过，且目标未被任务修改。
 - 当前 owner-approved 产品范围是 P0 proof-of-value / go-no-go prototype，不是完整 Visual V1。
 - 安全策略边界已确定但尚未实现：没有全局 security-off/trusted-local 绕过；P3 只为默认开启的增强保障项提供逐项用户 opt-out，并保持安全底线始终执行。
@@ -52,7 +55,7 @@
 
 ## 当前决策状态
 
-见 `docs/decisions/OPEN_DECISIONS.yaml`。迁移、exact toolchain、Apache-2.0 项目许可证、MCP primary/compat revision 与独立 R0/R1/R2 scope 均已决定；`P0-VALUE`、`R0-RECOVERY`、`R1-RECOVERY` 与 `R2-RECOVERY` 均保持各自不可覆盖的 terminal `stop`。
+见 `docs/decisions/OPEN_DECISIONS.yaml`。迁移、exact toolchain、Apache-2.0 项目许可证、MCP primary/compat revision 与独立 R0/R1/R2/R3 scope 均已决定；`P0-VALUE`、`R0-RECOVERY`、`R1-RECOVERY` 与 `R2-RECOVERY` 均保持各自不可覆盖的 terminal `stop`，`R3-RECOVERY` 为 pending。
 
 ## 状态与记录分工
 
