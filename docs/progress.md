@@ -737,3 +737,37 @@ Each future entry must include task ID, date, changed files, commands, test evid
 - Security/data-lifecycle verification: participant capsule was read-only with generated-command auth denial and fixed non-inherited outer env; private ground truth, product holdout and repository-other files were not participant data; the sole process tree terminated, evidence root is 0700, evidence files are 0600, no symlink exists and no retry reused the authorization
 - Known limitations/degradations: this attempt establishes invocation compatibility and safe terminalization but no correctness, pairwise cost or provider-timeout result because zero arms completed; the 120000 ms runner deadline ended before a provider terminal was observed
 - Next eligible task: none until the owner explicitly authorizes local-only R6-T5 retry-horizon/deadline remediation; R6-T6 must then freeze a new no-call preregistration, and R6-T7 requires another exact external authorization
+
+## R6-T5 — Local retry-horizon / outer-deadline remediation
+
+- Date: 2026-07-30
+- State/outcome: `done` / `passed`
+- Decision: `n/a`; `R6-RECOVERY` attempt one remains immutable `adjust`, attempt two remains pending
+- Changed files: immutable R6-T4 deadline replay and compatibility-contract module/tests, local proof generator/tests and evidence, R6 design/delivery/prompt/progress/status/decision metadata, and R6-T5 roadmap state
+- Replay result: every bound R6-T4 `RESULTS.sha256` entry and receipt/raw JSONL relation verified; trusted monotonic receipts place reconnect 2/5, 3/5 and 4/5 at 75498, 90905 and 106691 ms after spawn, with runner termination at 120005 ms and no provider terminal or authoritative response
+- Contract result: reconnect text remains an incomplete lower bound and cannot authorize retry; R6-T6 must bind explicit provider-config or version-bound Codex-instrumentation provenance, with minimum horizon 120006 ms, minimum observation margin 31574 ms, minimum outer deadline 151580 ms, outer maximum 600000 ms and margin maximum 120000 ms
+- Preserved policy: process-spawn monotonic origin, 5000 ms grace, 5000 ms force observation, `SIGTERM`→`SIGKILL`, at most one sealed observed provider-timeout retry per arm, 20-process cap, per-attempt budget/evidence retention, and non-retryable runner termination
+- Evidence: `docs/test-evidence/R6-T5/20260730T174418-0800/`; proof hash `82585caca431e25e6bc0f8a7737cdab4a437ecd5cf8ebbb88eb6158c5c719fcb`; compatibility-contract hash `6145537843ed5c35297196ec0dee74f618f0dd17bc9d89dcfa7bab87a07db4c2`; manifest entries, 0700 root, 0600 files and no-symlink checks passed
+- Commands: 7 targeted tests; targeted/full lint; local proof generation; SHA/permission/symlink verification; full suite outside the restricted child-process sandbox; build; typecheck; roadmap validation; Git whitespace check
+- Test results: 7 targeted tests and all 61 Vitest files / 338 tests passed; build, typecheck and lint passed; roadmap validates 16 phases, 171 tasks and 32 contracts
+- Edge/browser verification: not applicable; no browser or frontend behavior changed
+- Security/data-lifecycle verification: only sealed R6-T4 evidence was read; external process/model/provider-request/network-probe counts are zero; attempt one and all prior verdict/evidence chains remain immutable; product unlock count is zero
+- Known limitations/degradations: R6-T5 does not establish the provider's complete retry horizon and intentionally selects no exact attempt-two deadline; R6-T6 must obtain separate authority, freeze a compliant policy, and keep `externalExecutionAuthorized=false`
+- Next eligible task: R6-T6 is structurally next but is not authorized by the R6-T5 grant; do not start it without explicit owner authorization
+
+## R6-T6 — Attempt-two no-call preregistration
+
+- Date: 2026-07-30
+- State/outcome: `done` / `passed`
+- Decision: `pending`; `R6-RECOVERY` current attempt remains R6-T7 and has no external execution authorization
+- Changed files: new attempt-two plan/fixture/verdict policy, R6-T6 preregistration generator/tests, separately hash-bound R6-T7 runner/verifier, immutable preregistration evidence, and roadmap/design/delivery/prompt/progress/status/decision metadata
+- Policy result: exact Codex `0.144.5` version-bound instrumentation selects a 480000 ms bounded observation horizon plus a 120000 ms terminal-observation margin for a 600000 ms monotonic outer deadline from participant spawn; this is explicitly not a provider-internal retry-schedule claim
+- Preregistration result: five fresh deadline-remediation tasks produce 10 counterbalanced arms with equal-base read-only capsules; 13 runtime sources, attempt-one immutable results, R6-T5 proof/contract, fixed outer env, task/data scope, thresholds and authorization gate are hash-bound
+- Preserved safety: 5000 ms graceful and force-observation windows, `SIGTERM`→`SIGKILL`, at most one sealed observed provider-timeout retry per arm, non-retryable runner deadline, 20-process cap, per-attempt evidence retention, withheld ground truth and product-holdout exclusion
+- Evidence: `docs/test-evidence/R6-T6/20260730T180734-0800/`; preregistration `41ce5ab1a65437defdfcd86c0b4ec4db3e922af8a6c5e5642d44384ea910627e`; instrumentation `c3c4f3bc1d7e9592e197705592606bbefba67d71fb22c526df5d8b4fe4748d48`; data scope `aab9e34e3dd6074ea691cf453823dd59d08e7bbe2ee6b4eb37b7e82507c648cd`; deadline candidate `dd11e6718e0d0e907fd883195be2b62ee03a963549acd9c056b06a8a65e81be4`; termination policy `76b982ab7c12d5da5210f338b8f620f47506db6b99f47261634dea40dc1e7850`; outer env `cf24c3c5e349e230a9c04223dceb4854bd377915e21f46d830134b085bc3579d`
+- Commands: 8 initial targeted tests; 30 real local filesystem/Codex-binary/permission-profile probes; preregistration verifier; immutable hash, permission and symlink checks; 35 R6/terminalizer targeted tests; full suite; build; typecheck; lint; roadmap validation; Git whitespace check
+- Test results: 35 targeted tests and all 62 Vitest files / 342 tests passed; build, typecheck and lint passed; roadmap validates 16 phases, 171 tasks and 32 contracts
+- Edge/browser verification: not applicable; no browser or frontend product behavior changed
+- Security/data-lifecycle verification: no participant `codex exec`, provider request, provider network probe or model call ran; R6-T4 result and R6-T5 proof hashes remain unchanged; all evidence directories/files are 0700/0600 with no symlink; externalExecutionAuthorized=false and productUnlockCount=0
+- Known limitations/degradations: the 480000 ms horizon is a bounded runner observation policy, not proof of the provider's complete internal retry horizon or reachability; exact Codex version/source drift fails closed before any R6-T7 spawn
+- Next eligible task: none until a new exact R6-T7 owner authorization binds the complete R6-T6 hashes, destination/model/data scope, 600000/5000/5000 ms termination policy, signals, 10 successful arms and 20-process cap

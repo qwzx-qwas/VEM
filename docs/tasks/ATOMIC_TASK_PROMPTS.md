@@ -778,22 +778,26 @@
 - **实现约束**：不能把重连文本等同于 provider timeout；任何新 deadline 必须有限、可 hash、从 spawn 起 monotonic，且 runner termination 仍不可在原授权下 retry。
 - **验收标准**：独立 owner 授权后，本地 remediation 和目标测试通过；下一项仅为 R6-T6。
 
+> **已完成（2026-07-30）**：已仅从 immutable R6-T4 `RESULTS.sha256`、receipt ledger、raw JSONL、boundary/termination/final/verdict evidence 做逐条哈希校验与 trusted monotonic replay；确认进程 spawn 后 `75498ms`、`90905ms`、`106691ms` 分别观察到 reconnect 2/5、3/5、4/5，而 runner 在 `120005ms` 终止且始终没有 provider terminal 或权威 response。重连文本仍只构成不完整 lower bound，不授权 retry；attempt 1 继续是不可覆盖、不可重试的 runner-deadline `adjust`。兼容契约要求 R6-T6 提供来自 explicit provider config 或 version-bound Codex instrumentation 的显式 retry horizon，当前证据给出的最小 horizon/观察余量/outer deadline 分别为 `120006ms` / `31574ms` / `151580ms`，outer deadline 上界为 `600000ms`；`5000ms` grace、`5000ms` force observation、`SIGTERM`→`SIGKILL`、每 arm 最多一次 sealed observed provider-timeout retry、全批 20-process cap 与逐 attempt evidence/budget 语义不变。证明位于 `docs/test-evidence/R6-T5/20260730T174418-0800/`，proof hash `82585caca431e25e6bc0f8a7737cdab4a437ecd5cf8ebbb88eb6158c5c719fcb`，compatibility-contract hash `6145537843ed5c35297196ec0dee74f618f0dd17bc9d89dcfa7bab87a07db4c2`。7 项定向测试及 61 文件/338 项全仓测试通过；external process/model/provider call 均为 0，未选择具体 attempt-two deadline、未冻结 R6-T6、未授权 R6-T7，也未解锁产品工作。
+
 ## R6-T6 — Attempt-two preregistration
 
 ### Prompt
 
-- **背景**：R6-T5 将给出经测试的 retry-horizon/deadline compatibility contract。
+- **背景**：R6-T5 已给出经测试的 retry-horizon/deadline compatibility contract，但没有选择或冻结具体 attempt-two policy。
 - **目标**：冻结新的 attempt-two runner/source/policy/task/data/evidence plan。
 - **本阶段做**：新 source/policy hashes、fresh recovery-only task bank、equal-base capsules、counterbalance、bounded deadline/grace/signal/process budget、attempt-one evidence binding 和 external authorization gate。
 - **本阶段不做**：不执行外部 arm，不复用 R6-T4 authorization，不覆盖 attempt 1，不消费产品 holdout。
 - **实现约束**：`externalExecutionAuthorized=false`；attempt 1 evidence/hash immutable；任何 policy/source/data drift fail closed。
 - **验收标准**：新预注册与本地 probes 通过后 `done`；R6-T7 等待绑定全部新边界的单独授权。
 
+> **已完成（2026-07-30）**：已冻结独立 R6-T7 attempt-two runner、13 项 runtime source closure、5 个全新 deadline-remediation tasks / 10 个 counterbalanced arms、equal-base read-only capsules、withheld ground truth、product-holdout exclusion，以及 decision attempt 2 / `supersedesAttempt=R6-T4` 的 verdict 和 authorization gate。具体 policy 绑定 Codex `0.144.5` 的 version-bound instrumentation，选择 `480000ms` bounded observation horizon + `120000ms` terminal-observation margin = 从 participant spawn 起 `600000ms` outer deadline；这只是有限观察策略，不声称 provider 内部 retry schedule。原 `5000ms` grace、`5000ms` force observation、`SIGTERM`→`SIGKILL`、仅 sealed observed provider timeout 可 retry 一次、runner deadline 不可 retry、20-process cap 与逐 attempt evidence/budget 语义全部保留。正式预注册位于 `docs/test-evidence/R6-T6/20260730T180734-0800/`：preregistration hash `41ce5ab1a65437defdfcd86c0b4ec4db3e922af8a6c5e5642d44384ea910627e`，instrumentation hash `c3c4f3bc1d7e9592e197705592606bbefba67d71fb22c526df5d8b4fe4748d48`，data-scope hash `aab9e34e3dd6074ea691cf453823dd59d08e7bbe2ee6b4eb37b7e82507c648cd`，deadline-candidate hash `dd11e6718e0d0e907fd883195be2b62ee03a963549acd9c056b06a8a65e81be4`，termination-policy hash `76b982ab7c12d5da5210f338b8f620f47506db6b99f47261634dea40dc1e7850`，outer-env hash `cf24c3c5e349e230a9c04223dceb4854bd377915e21f46d830134b085bc3579d`。30 个本地 probes、35 项 R6/terminalizer 定向测试及 62 文件/342 项全仓测试通过；R6-T4/R6-T5 hashes 未变，`externalExecutionAuthorized=false`、外部模型调用为 0、产品解锁为 0。R6-T7 必须等待绑定全部新 hashes、具体 deadline 和 process cap 的另一份精确 owner authorization。
+
 ## R6-T7 — Separately authorized attempt-two verdict
 
 ### Prompt
 
-- **背景**：R6-T4 attempt 1 为 immutable `adjust`，R6-T6 将冻结 remediation 后的 attempt-two plan。
+- **背景**：R6-T4 attempt 1 为 immutable `adjust`，R6-T6 已冻结 remediation 后的 attempt-two plan，但没有授权执行。
 - **目标**：仅在新的精确 owner authorization 后执行 bounded attempt-two arms，并记录 `R6-RECOVERY` 当前 verdict。
 - **本阶段做**：fresh contexts、provider-terminal/runner-deadline separation、process-tree/retry/final-file/JSONL/audit consistency、attempt/batch evidence 与 pairwise verdict。
 - **本阶段不做**：不覆盖 R6-T4 或此前 R5/R4/R3/R2/R1/R0/P0 evidence/decision，不自动解锁产品 phase。

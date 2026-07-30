@@ -338,6 +338,10 @@ R6 的首个 decision attempt 只允许四个原子结果：固定独立 remedia
 
 若该 attempt 在冻结的 outer deadline 到期前只观察到 Codex provider 重连进度、没有观察到 provider `turn.failed` 或权威 final response，则它必须归类为不可重试的 runner deadline termination，封存证据并记录 `adjust`；不得把重连日志提升为 provider timeout，也不得在同一授权下启动第二个进程。`adjust` 后的 attempt two 必须先有显式、零模型的 retry-horizon/deadline remediation task，再冻结新的 source/policy/preregistration，最后取得绑定全部新 hash、deadline 与 process budget 的单独 owner authorization；attempt two 必须以递增 ordinal 和 `supersedes_attempt` 保留 attempt one，不得覆盖其 evidence。
 
+Retry-horizon remediation 必须逐项验证 attempt-one immutable manifest、receipt/raw stream 对应关系与 trusted monotonic timestamps，只能从重连日志得到“不完整的已观察下界”，不能据此声称完整 provider retry horizon 或授权 retry。Attempt-two preregistration 必须绑定一个显式、有限、可 hash 且来源为 exact model/provider configuration 或 version-bound Codex instrumentation 的 horizon；outer deadline 从 process spawn 起计时，必须至少等于该 horizon 加一个有界 terminal-observation margin，同时保留原 grace/force/signal、process-tree termination、逐 attempt budget/evidence 与 runner-termination-nonretryable 语义。对 immutable R6-T4 evidence 的当前 replay，下界为：explicit horizon 至少 `120006ms`，margin 至少 `31574ms` 且不超过 `120000ms`，outer deadline 至少 `151580ms` 且不超过 `600000ms`。R6-T5 只固定这些 compatibility bounds，不选择 attempt-two 的具体 deadline；选择和冻结只属于另行授权的 R6-T6。
+
+当前 R6-T6 attempt-two preregistration 采用 compatibility envelope 的保守有限上界：对 exact Codex `0.144.5` source closure 固定 `480000ms` version-bound observation horizon、`120000ms` terminal margin 和 `600000ms` outer deadline。该 horizon 是 runner/instrumentation 的明确观察策略，不是对 provider 内部 retry schedule、reachability 或 terminal time 的事实声称；Codex version/source、R6-T5 contract、candidate、termination policy、task/data scope 与外部授权开关必须共同 hash-bind。Binary version 或任一 binding drift 时 R6-T7 必须在 spawn 前 fail closed。
+
 当前 owner-authorized 执行序列见 [`docs/delivery/R6_PRESPAWN_INVOCATION_REMEDIATION.md`](delivery/R6_PRESPAWN_INVOCATION_REMEDIATION.md)。
 
 ## 2.8 项目与依赖许可证 (`LICENSE-POLICY-001`)

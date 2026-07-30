@@ -424,15 +424,40 @@ decisions:
         decided_at: 2026-07-30T17:12:55+08:00
         evidence_ref: docs/test-evidence/R6-T4/20260730T171100-0800/results/verdict.json
     authoritative_state_ref: ROADMAP.yaml
-    note: Attempt one is immutable adjust because the sole process hit the 120000 ms runner deadline before any provider turn.failed, turn.completed or authoritative final response. The process group terminated and all evidence was sealed, so this is not a blocker or retryable provider timeout. The current attempt remains pending and cannot run until R6-T5 remediation and R6-T6 preregistration complete and R6-T7 receives a new exact external authorization.
+    note: Attempt one is immutable adjust because the sole process hit the 120000 ms runner deadline before any provider turn.failed, turn.completed or authoritative final response. The process group terminated and all evidence was sealed, so this is not a blocker or retryable provider timeout. R6-T5 local remediation and R6-T6 attempt-two preregistration are complete; R6-T6 preregistration hash is 41ce5ab1a65437defdfcd86c0b4ec4db3e922af8a6c5e5642d44384ea910627e and externalExecutionAuthorized remains false. The current attempt remains pending and cannot run until R6-T7 receives a new exact external authorization binding every new hash, the 600000/5000/5000 ms policy, signals and twenty-process cap.
 
   - id: OWNER-R6-T5-DEADLINE-HORIZON-REMEDIATION
-    title: Decide whether to authorize local-only R6 deadline-horizon remediation after attempt-one adjust
-    status: open
+    title: Authorize local-only R6 deadline-horizon remediation after attempt-one adjust
+    status: decided
     decision_owner: project-owner
     needed_by_task: R6-T5
+    decision: authorized
+    decided_at: 2026-07-30T17:33:30+08:00
+    evidence: Owner explicitly authorized local retry-horizon / outer-deadline remediation using only immutable R6-T4 evidence, with no external model call, no attempt-one overwrite and no product unlock.
+    owner_statement: "授权执行 R6-T5 本地 retry-horizon / outer-deadline remediation；只使用不可变 R6-T4 证据，不调用外部模型，不覆盖 attempt 1，不解锁产品工作。"
     context_refs:
       - docs/test-evidence/R6-T4/20260730T171100-0800/results/verdict.json
       - docs/test-evidence/R6-T4/20260730T171100-0800/runs/r6-invocation-01-env-heading-direct-search-attempt-1/receipt-ledger.json
+      - docs/test-evidence/R6-T5/20260730T174418-0800/proof.json
+      - docs/test-evidence/R6-T5/20260730T174418-0800/SHA256SUMS
       - docs/tasks/ATOMIC_TASK_PROMPTS.md
-    note: A future authorization may cover local-only replay, bounded retry-horizon/deadline policy remediation, tests and a new no-call preregistration. It must not authorize a provider/model call, reuse the R6-T4 authorization, overwrite attempt-one evidence, or unlock product work.
+    note: Authorization covered local-only replay, bounded retry-horizon/deadline compatibility constraints, tests and immutable proof evidence. It completed with proof hash 82585caca431e25e6bc0f8a7737cdab4a437ecd5cf8ebbb88eb6158c5c719fcb and contract hash 6145537843ed5c35297196ec0dee74f618f0dd17bc9d89dcfa7bab87a07db4c2; external process/model/provider call counts are zero. It does not authorize reuse of the R6-T4 authorization, overwrite attempt-one evidence, select or freeze R6-T6 policy, execute R6-T7 or unlock product work.
+
+  - id: OWNER-R6-T6-ATTEMPT-TWO-PREREGISTRATION
+    title: Authorize local-only R6 attempt-two preregistration
+    status: decided
+    decision_owner: project-owner
+    needed_by_task: R6-T6
+    decision: authorized
+    decided_at: 2026-07-30T17:56:16+08:00
+    evidence: Owner replied "授权" immediately after the R6-T5 completion report identified R6-T6 as structurally next but requiring explicit authorization.
+    owner_statement: "授权"
+    interpreted_scope: R6-T6-local-no-call-attempt-two-preregistration-only
+    context_refs:
+      - docs/test-evidence/R6-T5/20260730T174418-0800/proof.json
+      - docs/test-evidence/R6-T5/20260730T174418-0800/SHA256SUMS
+      - docs/test-evidence/R6-T6/20260730T180734-0800/PREREGISTRATION.json
+      - docs/test-evidence/R6-T6/20260730T180734-0800/PREREGISTRATION.sha256
+      - docs/tasks/ATOMIC_TASK_PROMPTS.md
+      - ROADMAP.yaml
+    note: Authorization covered selecting and freezing one deadline candidate compliant with the immutable R6-T5 compatibility contract, fresh attempt-two task/capsule/source/policy/data/evidence bindings, local probes and tests with externalExecutionAuthorized=false. It completed with preregistration hash 41ce5ab1a65437defdfcd86c0b4ec4db3e922af8a6c5e5642d44384ea910627e, deadline-candidate hash dd11e6718e0d0e907fd883195be2b62ee03a963549acd9c056b06a8a65e81be4 and zero external model calls. It does not authorize R6-T7, any provider/model call, reuse of the R6-T4 external authorization, overwrite attempt-one evidence, product holdout consumption or product unlock.
