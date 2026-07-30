@@ -550,3 +550,48 @@ Each future entry must include task ID, date, changed files, commands, test evid
 - Security/data-lifecycle verification: only the explicitly authorized frozen participant capsule was available to the external model; the participant workspace was read-only with one runner-owned final-response file, auth was unreadable to generated commands, and private evaluator inputs remained outside the capsule
 - Known limitations/degradations: only one direct arm ran, so there is no paired correctness or cost comparison and no statistical/product-value claim; the external service request timed out despite retries; R3 cannot supersede prior stops or unlock product work
 - Next eligible task: none; R3, R2, R1, R0 and P0 are failed, and no product task is unlocked
+
+## R4-T1 — Independent external-transport timeout remediation charter
+
+- Date: 2026-07-30
+- State/outcome: `done` / `passed`
+- Decision: n/a; `R4-RECOVERY` remains pending while R3/R2/R1/R0/P0 terminal stops remain immutable
+- Changed files: R4 normative contract, independent phase/decision/task chain, owner decision, delivery plan, four prompts, five-terminal charter proof/tests and status/progress metadata
+- Charter result: R4 phase and R4-T1 have empty dependencies, recover failed R3 by immutable evidence only, cannot become an existing phase/task dependency, and explicitly do not supersede R3, R2, R1, R0 or P0 decision chains
+- Commands: roadmap validation; 32 targeted validator/R0/R1/R2/R3/R4 charter tests; charter generator and SHA-256 verification
+- Test evidence: roadmap validates 14 phases, 160 tasks and 30 contracts; proof root is `docs/test-evidence/R4-T1/20260730T141700+0800/`, proof hash is `fc665ae0c79a45d8a2e4ef152ddd54681b6e9c9561de33432349d7cb1f7d1bb3`, product unlock count is zero
+- Edge/browser verification: not applicable; governance and validation only
+- Security/data-lifecycle verification: no external call, participant payload, auth data, ground truth, holdout or product runtime change; all five prior evidence roots remain immutable
+- Known limitations/degradations: R4-T1 supplies only authority and isolation; it does not yet classify timeout evidence or implement retry behavior
+- Next eligible task: `R4-T2`
+
+## R4-T2 — Zero-model transport preflight and bounded retry controller
+
+- Date: 2026-07-30
+- State/outcome: `done` / `passed`
+- Decision: n/a; `R4-RECOVERY` remains pending and all five prior stop verdicts remain immutable
+- Changed files: R4 local transport preflight, narrow attempt classifier, immutable attempt sealer, bounded retry planner, R3 replay proof and 16 targeted tests
+- Remediation result: only a sealed nonzero attempt with empty/missing authoritative final response, no agent response, no `turn.completed`, terminal timeout `turn.failed`, passing audit and permission boundary is retryable; partial/completed response, auth/rate-limit, unknown, audit/security or evidence failure is never retryable
+- Budget result: each arm permits at most one retry and the full future batch permits at most 20 process attempts; every attempt uses a unique run ID and immutable evidence hash, and later success cannot overwrite prior failure evidence
+- Commands: 16 targeted tests; real local Codex binary and permission-profile probe; immutable R3 timeout replay; proof generation and SHA verification
+- Test evidence: `docs/test-evidence/R4-T2/20260730T142100+0800/`, proof hash `2d19fd9b848018f08d3dcbd937c17f6764036974666d626bb8827ddfcbe9a42f`
+- Edge/browser verification: not applicable; no browser behavior changed
+- Security/data-lifecycle verification: preflight used a generated dummy credential and made no model/provider call; generated commands could not read auth or write workspace; R3 evidence was read only and each replay input was hash-bound
+- Known limitations/degradations: local preflight proves binary/capsule/permission capability only and explicitly records `networkRuntimeProbed=false`; it cannot guarantee provider reachability
+- Next eligible task: `R4-T3`
+
+## R4-T3 — Frozen external-transport timeout preregistration
+
+- Date: 2026-07-30
+- State/outcome: `done` / `passed`
+- Decision: n/a; `R4-RECOVERY` remains pending and all five prior terminal stops remain immutable
+- Changed files: fresh R4 recovery plan/fixture, frozen future bounded-attempt runner, preregistration generator, authorization/verifier/mutation tests, delivery/prompt/status/progress/decision metadata and `docs/test-evidence/R4-T3/20260730T143215-0800/`
+- Preregistration result: five fresh transport-only tasks define 10 counterbalanced arms; each arm permits one retry only for sealed timeout-before-response and the full batch permits at most 20 external process attempts
+- Evidence/cost result: every attempt consumes budget and retains independent evidence; later success cannot overwrite failure, and pair cost includes the total duration of failed attempts plus retry
+- Hashes: preregistration `0ddb8c6f51d140042167231a22f8b3f73735fc8d0e271e3da5f11590c9995104`; instrumentation `78ec7bd51ffd3cbf7f36cddabdd16dcd73d5d88877700632350471d81865f064`; data scope `2fe4246a5cdd3aee19efb1d2e2f56f2469ba82c8f5dc32f1651c68a86d0b8ca8`
+- Commands: 28 R4 plan/transport/replay/prereg/runner tests; affected lint; 30 real local filesystem/Codex-binary/permission-profile probes; future-runner digest/source/probe re-verification and symlink scan
+- Test evidence: 48 Vitest files and 272 tests passed; build, typecheck and lint passed; roadmap validates 14 phases, 160 tasks and 30 contracts
+- Edge/browser verification: not applicable; no browser or frontend production behavior changed
+- Security/data-lifecycle verification: five prior terminal verdicts and six prior preregistration hashes were revalidated; ground truth and product holdout remain outside participant capsules; local probes made no provider/model call; external authorization remains false
+- Known limitations/degradations: local preflight does not prove provider reachability; this is a recovery-only engineering smoke and cannot support a statistical/product claim
+- Next eligible task: none until exact R4-T4 owner authorization binds preregistration hash, OpenAI Codex/gpt-5.6-sol destination, data-scope hash, 10 successful arms and at most 20 process attempts

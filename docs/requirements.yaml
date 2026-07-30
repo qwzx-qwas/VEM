@@ -60,6 +60,13 @@ contracts:
     roadmap_tasks: [R3-T1, R3-T2, R3-T3, R3-T4]
     required_tests: [p0-r0-r1-r2-stop-immutability, independent-phase-boundary, mention-versus-observed-access, forbidden-content-and-external-path-fail-closed, generated-command-auth-denial-and-clean-environment, audit-evaluator-exception-sealing, structured-batch-stop, separate-external-authorization, no-product-unlock]
 
+  - id: R4-TRANSPORT-TIMEOUT-001
+    title: Owner-authorized external-transport timeout remediation after R3 stop
+    authoritative_sections: ["2.7.6 Owner-authorized external-transport timeout remediation after R3 stop (`R4-TRANSPORT-TIMEOUT-001`)"]
+    introduced_phase: R4
+    roadmap_tasks: [R4-T1, R4-T2, R4-T3, R4-T4]
+    required_tests: [p0-r0-r1-r2-r3-stop-immutability, independent-phase-boundary, zero-model-transport-preflight, timeout-before-response-classification, non-timeout-and-partial-response-no-retry, bounded-retry-process-budget, per-attempt-evidence-sealing, separate-external-authorization, no-product-unlock]
+
   - id: LICENSE-POLICY-001
     title: Project license decision and third-party dependency policy
     authoritative_sections: ["2.8 项目与依赖许可证 (`LICENSE-POLICY-001`)", "附录 B：调研与实现参考"]

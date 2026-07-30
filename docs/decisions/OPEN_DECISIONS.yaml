@@ -267,3 +267,37 @@ decisions:
     evidence_ref: docs/test-evidence/R3-T4/20260730T133111-0800/results/verdict.json
     authoritative_state_ref: ROADMAP.yaml
     note: The first fresh direct process acquired a unique thread but repeated external request timeouts ended in turn.failed, an empty authoritative final response, no turn.completed and exit code 1. Capsule audit, permission/auth boundary, evaluator integrity and failure/hash sealing all passed, but the preregistered protocol-response-integrity-failed condition requires stop. The remaining nine calls were not executed. This decision does not supersede R2-RECOVERY, R1-RECOVERY, R0-RECOVERY or P0-VALUE and cannot unlock product work.
+
+  - id: OWNER-R4-TRANSPORT-TIMEOUT-REMEDIATION
+    title: Authorize independent R4 external-transport timeout remediation without overwriting R3 R2 R1 R0 or P0 stop
+    status: decided
+    decision_owner: project-owner
+    needed_by_task: R4-T1
+    decision: authorized
+    decided_at: 2026-07-30T14:14:10+08:00
+    evidence: Owner explicitly stated "授权新增不覆盖 R3-RECOVERY、R2-RECOVERY、R1-RECOVERY、R0-RECOVERY 与 P0-VALUE stop 的独立 R4 external-transport timeout remediation 阶段，并继续完成传输预检、超时分类、有限重试 runner 修复与新预注册；外部实验仍需预注册后单独授权。" in the active Codex thread.
+    context_refs:
+      - docs/DESIGN.md
+      - docs/delivery/R4_TRANSPORT_TIMEOUT_REMEDIATION.md
+      - ROADMAP.yaml
+    context_sections:
+      - 2.7.6 Owner-authorized external-transport timeout remediation after R3 stop (R4-TRANSPORT-TIMEOUT-001)
+    note: Authorization covers the independent R4 charter, zero-model preflight, timeout classification, bounded retry controller, tests and new preregistration only. It does not authorize an R4 external model call or product work.
+
+  - id: OWNER-R4-T4-EXTERNAL-BATCH
+    title: Authorize the frozen R4-T4 bounded-attempt external transport batch
+    status: open
+    decision_owner: project-owner
+    needed_by_task: R4-T4
+    decision: pending
+    requested_preregistration_hash: 0ddb8c6f51d140042167231a22f8b3f73735fc8d0e271e3da5f11590c9995104
+    requested_destination: OpenAI Codex service
+    requested_model: gpt-5.6-sol
+    requested_data_scope_hash: 2fe4246a5cdd3aee19efb1d2e2f56f2469ba82c8f5dc32f1651c68a86d0b8ca8
+    requested_successful_arm_count: 10
+    requested_max_process_attempts: 20
+    context_refs:
+      - docs/test-evidence/R4-T3/20260730T143215-0800/PREREGISTRATION.json
+      - docs/test-evidence/R4-T3/20260730T143215-0800/PREREGISTRATION.sha256
+      - scripts/pilot/r4-t4.mjs
+    note: R4-T4 remains ineligible until the owner explicitly authorizes the exact destination/model/participant-data scope and at most 20 external process attempts bound to the full frozen hash. Any authorization cannot modify R3/R2/R1/R0/P0 terminal stops or unlock product work.

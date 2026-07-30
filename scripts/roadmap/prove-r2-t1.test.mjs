@@ -28,7 +28,7 @@ describe("R2-T1 independent final-output remediation charter", () => {
         productUnlockCount: 0,
         externalExecutionAuthorized: false,
       },
-      validation: { phases: 13, tasks: 156, contracts: 29 },
+      validation: { phases: 14, tasks: 160, contracts: 30 },
     });
   });
 

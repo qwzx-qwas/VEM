@@ -602,6 +602,59 @@
 
 > **已完成（2026-07-30）**：Owner 先绑定完整 preregistration hash 和 10 次上限，再明确授权向 OpenAI Codex `gpt-5.6-sol` 发送冻结 participant capsule 数据。冻结 hash、10 项 source binding、当前 permission preflight 与 27 项 runner/封存测试通过后启动批次；首个 direct arm 获得 fresh thread ID，但外部请求连续重连后 `request timed out`，未产生 `turn.completed` 或权威 final response，进程退出 1。v3 capsule audit、permission/auth boundary、ground-truth evaluator、recorder/outer hash 与失败证据封存均通过；预登记的 `protocol-response-integrity-failed` 要求立即 stop，剩余 9 次未执行。immutable verdict 为 `R3-RECOVERY=stop`，incomplete batch 同时记录 adjust reason 但不覆盖 stop；R3 phase 为 `failed`，R2/R1/R0/P0 stops 与零产品解锁边界不变。证据位于 `docs/test-evidence/R3-T4/20260730T133111-0800/`，canonical verdict hash 为 `7a3e5b6bf94067e4681258982690afe911c51dc3da0e6cc4af66d069d537d95b`。
 
+## R4-T1 — Independent external-transport timeout remediation charter
+
+### Prompt
+
+- **背景**：R3-T4 首个 fresh process 因外部 request timeout 产生空 authoritative response 并触发 terminal stop；R3/R2/R1/R0/P0 均 failed/stop。
+- **目标**：新增不覆盖五条 stop chain 的独立 R4，并机械证明零产品解锁。
+- **本阶段做**：新增 R4-TRANSPORT-TIMEOUT-001、独立 decision、owner authorization、R4-T1–T4 原子链与 five-terminal validator/proof checks。
+- **本阶段不做**：不改 R3/R2/R1/R0/P0 evidence/verdict，不修 runner，不冻结新 plan，不执行外部调用。
+- **实现约束**：R4 phase 与 R4-T1 均 `depends_on: []`，只按 immutable evidence/hash 读取 failed R3；固定不 supersede R3/R2/R1/R0/P0 decisions。
+- **测试要求**：failed R3/R2/R1/R0/P0、empty deps、five-decision isolation、authorization、dependency leakage、contract reverse mapping。
+- **验收标准**：章程与全仓门禁通过后 `done`，仅 R4-T2 eligible。
+
+> **已完成（2026-07-30）**：新增 `R4-TRANSPORT-TIMEOUT-001`、独立 R4/R4-RECOVERY chain、owner authorization 与 R4-T1–T4 四任务原子序列。R4 phase 和 R4-T1 均为空 dependency，只读取 failed R3 的 immutable terminal evidence；decision 固定 `does_not_supersede: R3-RECOVERY` 与完整 R2/R1/R0/P0 ancestor chain，且任何既有 phase/task 不得依赖 R4。32 项治理/章程定向测试与 14-phase/160-task/30-contract roadmap 门禁通过，product unlock count 为 0，外部调用为 0。下一项仅为 R4-T2。
+
+## R4-T2 — Zero-model preflight, timeout classification and bounded retry
+
+### Prompt
+
+- **背景**：R3-T4 把 provider request timeout 正确记为 protocol failure，但没有独立 transport classification 或受全批预算约束的 outer retry。
+- **目标**：在不调用外部模型的前提下实现诚实 preflight、窄 timeout-before-response 分类、有限 retry controller 和逐 attempt 封存。
+- **本阶段做**：本地 capability preflight、R3 timeout replay、synthetic partial/auth/rate-limit/unknown cases、retry budget/state machine、attempt evidence。
+- **本阶段不做**：不联系 provider、不执行外部 Codex arm、不修改 R3 evidence、不冻结下一批。
+- **实现约束**：只有 sealed nonzero/no-final/no-turn-completed/timeout-turn-failed 可重试；每 arm 最多一次、全批最多 20 process attempts；每次 attempt 独立且不可覆盖。
+- **测试要求**：network-unprobed honesty、timeout shape、partial response、auth/rate-limit/unknown、second timeout、budget、fresh IDs、evidence immutability、R3 replay。
+- **验收标准**：定向及全仓门禁通过后 `done`，仅 R4-T3 eligible。
+
+> **已完成（2026-07-30）**：新增零模型 local transport preflight，真实 capsule 内验证当前 `codex-cli 0.144.5`、只读 workspace、generated-command auth denial 与固定非敏感环境，同时明确 `networkRuntimeProbed=false`、不声称 provider reachability。窄分类器只接受 sealed nonzero/no-final/no-agent/no-turn-completed/timeout-turn-failed；partial/completed response、auth、rate limit、unknown、audit/permission/evidence failure 均不可重试。retry controller 固定每 arm 最多 1 次、全批最多 20 process attempts、fresh run ID 和 immutable attempt evidence hash。R3 timeout evidence 的只读 replay 被分类为 `external-transport-timeout-before-response` 并只生成 retry plan，未执行 retry。16 项定向测试与 proof SHA 通过；证据位于 `docs/test-evidence/R4-T2/20260730T142100+0800/`，proof hash 为 `2d19fd9b848018f08d3dcbd937c17f6764036974666d626bb8827ddfcbe9a42f`，外部调用为 0。下一项仅为 R4-T3。
+
+## R4-T3 — Transport-timeout recovery preregistration
+
+### Prompt
+
+- **背景**：R4-T2 提供零模型 preflight、timeout classifier 与 bounded retry controller。
+- **目标**：冻结新 runner/task/threshold/source hashes、每 arm retry 上限与全批 process-attempt budget。
+- **本阶段做**：新 recovery-only task bank、counterbalance、equal-base capsules、attempt policy、transport/failure contracts、external authorization gate。
+- **本阶段不做**：不执行外部 arm、不复用 R3 instrumentation hash、不授权产品工作。
+- **实现约束**：`maxRetriesPerArm=1`、`maxProcessAttempts=20`、`externalExecutionAuthorized=false`；ground truth evaluator-only，所有五条 stop immutable。
+- **测试要求**：fresh tasks/source bindings、capsule equality、retry budget、holdout exclusion、preflight/runner mutation、authorization false、local probes。
+- **验收标准**：冻结并通过 probes 后 `done`；R4-T4 等待单独 owner authorization。
+
+> **已完成（2026-07-30）**：冻结 5 个全新 transport-remediation-only task、10 个 AB/BA paired arms、equal-base capsule、每 arm 最多 1 次 retry 与全批最多 20 个 process attempts。未来 runner 绑定 exact destination/model/data-scope authorization、零模型 current preflight、窄 timeout-before-response classifier、per-attempt immutable evidence、retry-aware total-arm cost 与 terminal verdict；10 项 runtime source binding 的 instrumentation hash 为 `78ec7bd51ffd3cbf7f36cddabdd16dcd73d5d88877700632350471d81865f064`，data-scope hash 为 `2fe4246a5cdd3aee19efb1d2e2f56f2469ba82c8f5dc32f1651c68a86d0b8ca8`。30 个本地 filesystem/Codex-binary/permission-profile probe、28 项 R4 plan/prereg/runner 定向测试、48 文件/272 项全仓 Vitest、build/typecheck/lint、14-phase/160-task/30-contract roadmap、完整 digest/source/probe 复验与 symlink 检查通过。预注册位于 `docs/test-evidence/R4-T3/20260730T143215-0800/`，完整 hash 为 `0ddb8c6f51d140042167231a22f8b3f73735fc8d0e271e3da5f11590c9995104`；`externalExecutionAuthorized=false`、product unlock count 为 0，外部调用为 0。R4-T4 仍需绑定完整 hash、OpenAI Codex/gpt-5.6-sol、data-scope hash、10 个成功 arms 和最多 20 个 external process attempts 的单独知情授权。
+
+## R4-T4 — Separately authorized bounded-attempt transport verdict
+
+### Prompt
+
+- **背景**：R4-T3 已冻结新的 transport-aware runner/instrumentation plan。
+- **目标**：在单独 owner authorization 后执行 paired arms 和受限 attempts，并记录 `R4-RECOVERY` verdict。
+- **本阶段做**：fresh contexts、retry classification、final-file/JSONL/audit consistency、attempt/batch evidence、correctness 与 cost verdict。
+- **本阶段不做**：不覆盖 R3/R2/R1/R0/P0，不自动解锁或创建产品 phase。
+- **实现约束**：任何 prereg/source/capsule/holdout/attempt-budget/failure-sealing drift fail closed；授权必须绑定目的地、数据范围和最多 20 process attempts。
+- **验收标准**：immutable verdict；continue 也仅允许提出新的独立研究路线。
+
 ## P0-T9A — Walking-skeleton 正向 Edge E2E
 
 ### Prompt

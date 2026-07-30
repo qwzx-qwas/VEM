@@ -1,0 +1,1 @@
+{"everyAttemptConsumesBudget":true,"everyAttemptEvidenceRetained":true,"laterSuccessDoesNotEraseFailure":true,"maxProcessAttempts":20,"maxRetriesPerArm":1,"requiredSuccessfulArms":10,"retryableClassification":"external-transport-timeout-before-response","schemaVersion":"R4-T3-retry-policy-v1"}

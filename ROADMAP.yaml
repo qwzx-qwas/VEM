@@ -45,6 +45,7 @@ decisions:
   R1-RECOVERY: {phase: R1, current_attempt: R1-T4, scope: independent-research, does_not_supersede: R0-RECOVERY, also_does_not_supersede: [P0-VALUE]}
   R2-RECOVERY: {phase: R2, current_attempt: R2-T4, scope: independent-research, does_not_supersede: R1-RECOVERY, also_does_not_supersede: [R0-RECOVERY, P0-VALUE]}
   R3-RECOVERY: {phase: R3, current_attempt: R3-T4, scope: independent-research, does_not_supersede: R2-RECOVERY, also_does_not_supersede: [R1-RECOVERY, R0-RECOVERY, P0-VALUE]}
+  R4-RECOVERY: {phase: R4, current_attempt: R4-T4, scope: independent-research, does_not_supersede: R3-RECOVERY, also_does_not_supersede: [R2-RECOVERY, R1-RECOVERY, R0-RECOVERY, P0-VALUE]}
   P1-INJECTED: {phase: P1, current_attempt: P1-T17}
   P2-TRUSTED: {phase: P2, current_attempt: P2-T13D}
   P3-VISUAL: {phase: P3, current_attempt: P3-T19}
@@ -190,6 +191,27 @@ phases:
       - {id: R3-T2, title: Distinguish marker mention from observed capsule escape and seal every audit evaluator and aggregate exception before returning, contracts: [R3-CAPSULE-AUDIT-CONTAINMENT-001], status: done, depends_on: [R3-T1], tests: [marker-only-warning safe-work-search forbidden-path-and-content real-escape symlink and stderr rejection audit-evaluator-hash-aggregate exception sealing structured-batch-stop bounds and cancellation checks]}
       - {id: R3-T3, title: Freeze a new capsule-audit-containment recovery-only task runner threshold and evidence preregistration without external calls, contracts: [R3-CAPSULE-AUDIT-CONTAINMENT-001], status: done, depends_on: [R3-T2], tests: [new-auditor-and-runner-hash fresh-task identity equal-base-context counterbalance threshold product-holdout-exclusion failure-sealing binding pre-result immutability and external-authorization-false checks]}
       - {id: R3-T4, title: Execute a separately owner-authorized R3 containment batch and record the independent R3-RECOVERY verdict, contracts: [R3-CAPSULE-AUDIT-CONTAINMENT-001], status: done, decision_key: R3-RECOVERY, decision_attempt: 1, supersedes_attempt: null, decision: stop, depends_on: [R3-T3], tests: [fresh-context final-file-jsonl-and-audit consistency raw-ledger-hash correctness wrong-attribution capsule-integrity pairwise-cost failure-evidence and continue-adjust-stop verdict checks]}
+
+  - id: R4
+    title: Owner-authorized independent external-transport timeout remediation after terminal R3 stop
+    status: in_progress
+    depends_on: []
+    recovery_of_failed_phase: R3
+    authorization_ref: docs/decisions/OPEN_DECISIONS.yaml
+    scope_boundary: independent-research-no-product-unlock
+    gate:
+      commands: ["pnpm roadmap:validate", "pnpm build", "pnpm typecheck", "pnpm lint", "pnpm test"]
+      requires_decisions: {R4-RECOVERY: continue}
+      done_when:
+        - R3 R2 R1 R0 and P0 terminal stop verdicts failed phases and immutable evidence remain unchanged with zero product unlock edges.
+        - A zero-model local preflight truthfully separates configured destination and local runner capability from unprobed external reachability.
+        - Only sealed timeout-before-response outcomes are retryable and every process attempt consumes the frozen bounded attempt budget.
+        - R4-T3 freezes new instrumentation tasks thresholds retry budget and external-authorization bindings before any R4 external model call.
+    tasks:
+      - {id: R4-T1, title: Record the owner-authorized independent R4 transport-timeout remediation charter and mechanically preserve five terminal stop chains, contracts: [R4-TRANSPORT-TIMEOUT-001], status: done, depends_on: [], tests: [failed-P0-R0-R1-R2-R3 preservation empty-phase-and-task-dependency five-decision-non-supersession authorization-reference no-existing-phase-or-task-dependency and no-product-unlock checks]}
+      - {id: R4-T2, title: Implement zero-model transport preflight narrow timeout-before-response classification bounded retry budgeting and per-attempt sealing, contracts: [R4-TRANSPORT-TIMEOUT-001], status: done, depends_on: [R4-T1], tests: [local-capability-preflight network-unprobed honesty timeout-terminal-shape partial-response auth-rate-limit-unknown no-retry max-one-retry max-process-attempts fresh-run-id and immutable-attempt-evidence checks]}
+      - {id: R4-T3, title: Freeze a new transport-timeout recovery-only task runner threshold attempt budget and evidence preregistration without external calls, contracts: [R4-TRANSPORT-TIMEOUT-001], status: done, depends_on: [R4-T2], tests: [new-runner-hash fresh-task identity equal-base-context counterbalance retry-budget threshold product-holdout-exclusion preflight-binding pre-result immutability and external-authorization-false checks]}
+      - {id: R4-T4, title: Execute a separately owner-authorized R4 bounded-attempt batch and record the independent R4-RECOVERY verdict, contracts: [R4-TRANSPORT-TIMEOUT-001], status: todo, decision_key: R4-RECOVERY, decision_attempt: 1, supersedes_attempt: null, decision: pending, depends_on: [R4-T3], tests: [fresh-context bounded-attempt retry-classification final-file-jsonl-audit consistency raw-ledger-hash correctness wrong-attribution pairwise-cost failure-evidence and continue-adjust-stop verdict checks]}
 
   - id: P1
     title: Harden the Edge Vite-injected MVP

@@ -39,6 +39,9 @@
 - `R3-T2` 已完成审计语义与异常封存修复并通过冻结前复核：AGENTS、SKILL 及二者合并的严格 marker-only 负查找成为 non-authorizing warning，真实规则内容/路径、敏感/外部路径、遍历和 stderr evidence 继续 fail closed；permission profile 使生成命令无法读取 auth、无法写 `/work`、没有敏感环境变量或交互扩权，网络禁用记录为严格配置绑定而非未执行的 runtime observation。audit/evaluator/hash/aggregate 异常与 wrong attribution 均先封存并触发 batch stop；保留初始 proof 后新增 sibling proof `docs/test-evidence/R3-T2/20260730T004219+0800/`，hash 为 `fadca8e3f7660f144bd31ae8ab5e1155d9eb1f6ad3cc07634f2ea830306a8ec3`，外部调用为 0。
 - `R3-T3` 已完成新预注册：5 个 fresh containment-only task、10 个 counterbalanced arm、equal-base capsule、10 项 transitive runtime source binding 与 current no-model permission preflight 冻结于 hash `8b886d443c576540f6b3b2d90e06abfd95d57955f696680dd998b748d4ffdd5b`，instrumentation hash 为 `1592699eea206c5d75327053c065a44a27153ff2d3e263692751e56917d6ca80`；30 次本地探针全部通过，`externalExecutionAuthorized=false`、product unlock count 为 0，R3-T4 等待绑定完整 hash 和 10 次 run 的单独 owner authorization。
 - `R3-T4` 已完成并记录 `R3-RECOVERY=stop`：绑定目的地、模型、participant capsule 数据范围、完整 preregistration hash 与最多 10 次调用的 owner authorization 通过后，首个 direct arm 获得 fresh thread，但外部请求重连后超时，未产生 `turn.completed` 或权威 final response，进程退出 1。v3 audit、permission/auth boundary、evaluator、recorder/outer hash 与 failure sealing 均通过；`protocol-response-integrity-failed` 要求立即停止，剩余 9 次未执行。R3 phase 为 `failed`，R2/R1/R0/P0 stops 与零产品解锁边界不变。
+- `R4-T1` 已完成独立 external-transport timeout remediation charter：R4 对 R3/R2/R1/R0/P0 五条 terminal stop chain 声明完整 non-supersession，phase/task dependency 为空且没有既有产品依赖边；owner authorization 只覆盖零模型 preflight、超时分类、有限 retry runner、测试与新预注册，外部调用仍未授权。
+- `R4-T2` 已完成零模型 transport remediation：当前 Codex binary、capsule、permission profile 与 auth denial 的真实本地 probe 通过但不声称 provider reachability；只有 sealed timeout-before-response 可进入最多一次 retry，全批硬上限为 20 process attempts，每次 attempt 独立 hash-seal。R3 timeout 只读 replay 分类通过但未实际 retry，proof hash 为 `2d19fd9b848018f08d3dcbd937c17f6764036974666d626bb8827ddfcbe9a42f`，外部调用为 0。
+- `R4-T3` 已完成新预注册：5 个 fresh transport-only task、10 个 paired arms、每 arm 1 次 retry、全批最多 20 process attempts 与 10 项 runtime source binding 冻结于 hash `0ddb8c6f51d140042167231a22f8b3f73735fc8d0e271e3da5f11590c9995104`；instrumentation/data-scope hashes 为 `78ec7bd51ffd3cbf7f36cddabdd16dcd73d5d88877700632350471d81865f064` / `2fe4246a5cdd3aee19efb1d2e2f56f2469ba82c8f5dc32f1651c68a86d0b8ca8`。30 个本地探针通过，`externalExecutionAuthorized=false`、product unlock count 为 0，R4-T4 等待单独知情授权。
 - readiness 结果为 `ready`：大小写 staging 路径为同一 device/inode，payload 与 prefix-normalized manifest 已冻结，无 case collision，目标不存在，ext4 容量/owner permission 通过，且目标未被任务修改。
 - 当前 owner-approved 产品范围是 P0 proof-of-value / go-no-go prototype，不是完整 Visual V1。
 - 安全策略边界已确定但尚未实现：没有全局 security-off/trusted-local 绕过；P3 只为默认开启的增强保障项提供逐项用户 opt-out，并保持安全底线始终执行。
@@ -56,7 +59,7 @@
 
 ## 当前决策状态
 
-见 `docs/decisions/OPEN_DECISIONS.yaml`。迁移、exact toolchain、Apache-2.0 项目许可证、MCP primary/compat revision 与独立 R0/R1/R2/R3 scope 均已决定；`P0-VALUE`、`R0-RECOVERY`、`R1-RECOVERY`、`R2-RECOVERY` 与 `R3-RECOVERY` 均保持各自不可覆盖的 terminal `stop`。
+见 `docs/decisions/OPEN_DECISIONS.yaml`。迁移、exact toolchain、Apache-2.0 项目许可证、MCP primary/compat revision 与独立 R0/R1/R2/R3/R4 scope 均已决定；`P0-VALUE`、`R0-RECOVERY`、`R1-RECOVERY`、`R2-RECOVERY` 与 `R3-RECOVERY` 均保持各自不可覆盖的 terminal `stop`，`R4-RECOVERY` 为 pending。
 
 ## 状态与记录分工
 

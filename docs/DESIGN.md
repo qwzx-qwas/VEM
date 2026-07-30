@@ -294,6 +294,22 @@ R3 只允许四个原子结果：固定独立 remediation charter；实现并测
 
 当前 owner-authorized 执行序列见 [`docs/delivery/R3_CAPSULE_AUDIT_CONTAINMENT.md`](delivery/R3_CAPSULE_AUDIT_CONTAINMENT.md)。
 
+### 2.7.6 Owner-authorized external-transport timeout remediation after R3 stop (`R4-TRANSPORT-TIMEOUT-001`)
+
+R3-T4 的 `stop`、R3 failed，以及 R2/R1/R0/P0 的四条既有 terminal stop、failed phase 和全部 immutable evidence chain 都不得覆盖。Owner 可以另行授权拓扑独立的 R4 external-transport timeout remediation research phase；该授权只允许实现传输预检、超时分类、有限重试与新的 recovery-only preregistration，不授权新的外部模型调用或产品实现。
+
+R4 必须声明 `recovery_of_failed_phase: R3`、空 phase dependency、owner authorization reference 与 `independent-research-no-product-unlock` scope。`R4-RECOVERY` 必须以 `does_not_supersede: R3-RECOVERY` 和 `also_does_not_supersede: [R2-RECOVERY, R1-RECOVERY, R0-RECOVERY, P0-VALUE]` 固定全部 terminal decision chain；任何既有 phase/task 不得依赖 R4。
+
+本地 transport preflight 必须在零模型调用下验证当前 Codex binary、固定目的地/模型声明、capsule 与 permission profile、认证文件由可信 CLI 使用但对生成命令不可读、以及 runner 所需的 process/stream/final-file 能力。未实际探测 provider network 时必须记录 `networkRuntimeProbed=false`，不能把配置存在或本地模拟冒充外部可达性。
+
+只有在进程非零退出、没有 authoritative final response、没有 `turn.completed`、JSONL 以 timeout/connectivity `turn.failed` 终止且 audit/permission/evidence sealing 均通过时，runner 才能分类为 `external-transport-timeout-before-response`。任何部分响应、协议矛盾、未知错误、认证失败、rate limit、安全/审计失败或证据不完整都不得进入可重试分类。
+
+有限重试必须由冻结计划明确 `maxRetriesPerArm` 和全批 `maxProcessAttempts`，并受后续 owner authorization 的进程尝试上限约束。每次 retry 使用新的 process/run ID，若产生 thread ID 也必须唯一；失败 attempt 的 raw/final/terminal/ledger/error/audit/hash evidence 永久保留，后续成功不得覆盖或从指标中隐藏。只有上述窄 timeout 分类可以重试；第二次 timeout、任何非 timeout failure、preregistration/source drift 或封存失败立即停止对应 arm 与批次。
+
+R4 只允许四个原子结果：固定独立 remediation charter；实现并测试零模型 transport preflight、窄超时分类和 bounded retry controller；冻结新的 recovery-only preregistration及进程尝试预算；在新的、绑定该 hash、目的地、数据范围和最大进程尝试数的 owner authorization 后执行 decision attempt。外部调用授权必须发生在新预注册冻结以后。
+
+当前 owner-authorized 执行序列见 [`docs/delivery/R4_TRANSPORT_TIMEOUT_REMEDIATION.md`](delivery/R4_TRANSPORT_TIMEOUT_REMEDIATION.md)。
+
 ## 2.8 项目与依赖许可证 (`LICENSE-POLICY-001`)
 
 P0-T1 在生成 package metadata 前必须记录项目自身许可证或明确的 private/unlicensed 状态、版权主体、贡献接收方式和发布边界；设计文档不能替项目所有者默认选择 MIT、Apache-2.0、AGPL 或商业许可。若许可证决定尚未获得项目所有者确认，允许完成不发布的 workspace scaffold，但 public package、复制第三方代码或分发 extension 的工作保持 blocked。
