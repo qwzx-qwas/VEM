@@ -352,6 +352,10 @@ R6-T8 的 local-only replay 必须把 JSONL chunk 与 stdout receipt 按 ordered
 
 任何 attempt three 都必须先完成新的零模型 R6-T8 dual-transport terminal-horizon remediation，再由 R6-T9 冻结新的 source/policy/preregistration，最后由 R6-T10 取得绑定全部新 hash、deadline、destination/model、data scope 与 process budget 的精确 owner authorization。Attempt three 必须以递增 ordinal 和 `supersedes_attempt: R6-T7` 同时保留 attempts one/two；R6-T7 的授权不能复用，也不解锁产品工作。
 
+R6-T10 attempt three 在 runner deadline 前真实观察到 provider terminal，但它不是可重试 timeout：ordered receipts 中 WebSocket reconnect 2/5–5/5 后以 `Network unreachable` fallback HTTPS，HTTPS reconnect 1/5–5/5 后的最终 `turn.failed` message 是 `error sending request`。中间 reconnect 文本中的 `request timed out` 不得替代最终 provider terminal 语义；冻结 classifier 因而返回 `protocol-or-unknown-failure`、`retryable=false`。该 attempt 必须保留 1 个 process、0/10 arms、无 retry、process group empty、empty final、完整 audit/permission/evidence 与 immutable `adjust`，不得把它回写为 provider timeout。
+
+任何 attempt four 都必须先由 R6-T11 对 immutable attempts one/two/three 做零模型 failure-class remediation，明确 non-timeout provider terminal 的 bounded disposition；只有允许继续时，R6-T12 才能冻结 fresh source/policy/task/data/evidence closure，R6-T13 还必须取得绑定全部新边界的另一份精确 external authorization。Attempt four 使用 `decision_attempt: 4` 与 `supersedes_attempt: R6-T10`，不得复用 R6-T10 authorization、覆盖 prior evidence 或解锁产品工作。
+
 当前 owner-authorized 执行序列见 [`docs/delivery/R6_PRESPAWN_INVOCATION_REMEDIATION.md`](delivery/R6_PRESPAWN_INVOCATION_REMEDIATION.md)。
 
 ## 2.8 项目与依赖许可证 (`LICENSE-POLICY-001`)

@@ -8,7 +8,7 @@
 
 2026-07-29 最终状态：P0-T17D attempt 2 已按预登记规则记录 `P0-VALUE=stop`，P0 phase 为 `failed`。P0-T17E 随后只修复并重放了产生误报的 capsule auditor，P0-T17F 则从 immutable events 复算 timing 并确认无法做阶段级因果归因；两项均明确保持 terminal verdict，不授权下方 stretch，P0-T7 及其依赖链仍不 eligible。
 
-2026-07-30 独立 R6 research route 仍不改变上述产品结论：R6-T9 只完成 attempt-three no-call preregistration，冻结 `1200000ms` bounded runner policy 与新的 source/data/evidence bindings；`externalExecutionAuthorized=false`，R6-T10 仍需另一份精确授权，且无论后续 verdict 为何都不自动解锁 P0 产品工作。
+2026-07-30 独立 R6 research route 仍不改变上述产品结论：R6-T10 attempt 3 已按精确授权执行，但唯一 process 以 non-timeout provider-terminal `protocol-or-unknown-failure` 停止，0/10 arms 完成并记录 immutable `adjust`。后续 R6-T11/T12/T13 仍分别受本地 remediation、no-call preregistration 与精确 external authorization 门禁约束，且不自动解锁 P0 产品工作。
 
 ## 建议顺序
 

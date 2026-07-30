@@ -1,0 +1,12 @@
+cb8aeb618c927ac17e48ca9f9ec9064eb4b708b560436b4d7197e442c3463e5f  results/local-preflight.json
+df9f95141b63b6c11369aeeb6b8b62f8a3c3e05126d273e047f602465dbf139c  results/run-index.json
+d1550d8b18c8ab5dd45e25c5a462de044f5605aa5a9eac7a7bfe82e2f1e1db4d  results/verdict.json
+4f7f3531f92e77aa0776a3423083b0fff777b965b53801e4b1006633ba804fcc  runs/r6-terminal-01-fallback-heading-direct-search-attempt-1/boundary-state.json
+d5dfc800628cc90493a1aa5d329c676f257a5f6fbf243c54a7647bd12eebce5a  runs/r6-terminal-01-fallback-heading-direct-search-attempt-1/failure.json
+824d7ba1b04fe34ce21393663e2cd4462fa5f3a23762f9454f8cc321dbdc6878  runs/r6-terminal-01-fallback-heading-direct-search-attempt-1/final-response-observation.json
+ee7bb627cc7397373d41c346387e78a0b5dee11dd44c831ab395b72293bc194e  runs/r6-terminal-01-fallback-heading-direct-search-attempt-1/receipt-ledger.json
+4947dc24647161b74666b7eba63dab086a5b952ec61aeb78d7c8df48b20ef91d  runs/r6-terminal-01-fallback-heading-direct-search-attempt-1/run.json
+495db20af478abdf3f8506d00fc507ac22b3244bf125391e506f49d9688e86de  runs/r6-terminal-01-fallback-heading-direct-search-attempt-1/SHA256SUMS
+09cb6400df966bbe4d3586ddb3445785c02b0fbe462c1ebd87a8d185c1499396  runs/r6-terminal-01-fallback-heading-direct-search-attempt-1/stderr.txt
+d321b71e850e4d7e210f5bd709ede60035071fe5220f656c5332dd1de3542cef  runs/r6-terminal-01-fallback-heading-direct-search-attempt-1/stdout.jsonl
+8ab8ff49c971fba5c8a23b659ef7dced784ada1890f1aaf62267ef2dec68d520  runs/r6-terminal-01-fallback-heading-direct-search-attempt-1/termination.json

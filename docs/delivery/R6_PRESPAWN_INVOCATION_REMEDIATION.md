@@ -33,11 +33,21 @@ Attempt two exposed a dual-transport horizon rather than a process-tree defect. 
 
 R6-T8 was separately authorized after commit `d3dca37e0aa2560238e81bc6639081cb6ecd321f` was pushed and its remote SHA verified. Its zero-model replay pairs each JSONL chunk with the same ordered stdout receipt occurrence and uses the explicit fallback receipt as the transport boundary; two reconnect raw hashes repeat across WebSocket and HTTPS and are correctly retained as distinct receipts. The immutable evidence establishes only a 600000 ms incomplete dual-transport lower bound and a 154113 ms maximum observed HTTPS reconnect gap. The bounded compatibility contract therefore requires at least a 600001 ms explicit terminal horizon plus a 308226 ms observation margin, for an outer deadline from 908227 through 1200000 ms. It selects no exact policy, makes no external call, keeps `externalExecutionAuthorized=false`, and leaves R6-T9 separately gated.
 
+R6-T9 was separately authorized and completed without an external model call. It froze five fresh attempt-three tasks, ten counterbalanced arms, thirteen runtime sources and exact Codex `0.144.5` policy: an 891774 ms version-bound observation horizon plus the evidence-derived 308226 ms minimum terminal margin for a 1200000 ms outer deadline. Preregistration hash is `b3f281d44bbc08ae74b534a9903c935bff17192a9d03df4c01aad637e91d4e52`; R6-T10 remained separately gated until the owner bound the published commit and all hashes.
+
+R6-T10 attempt three completed with immutable `adjust`. The exact authorization validated with canonical hash `61767b2f1a7fc0dbd3c3734f2f672ad345eebb1a5febd3c56d124687f05509c4`. One direct process/fresh thread started; ordered receipts observed WebSocket reconnect 2/5–5/5, fallback on `Network unreachable` at about 123049 ms, HTTPS reconnect 1/5–5/5, and a provider `turn.failed` at about 992292 ms. The terminal message was `error sending request`, not timeout, so the frozen classifier returned nonretryable `protocol-or-unknown-failure`. The process exited 1 with an empty final file, process group empty and all audit/permission/manifests sealed. No retry or next arm started: 0/10 arms completed, 19 process attempts remain. Canonical verdict hash is `b2c75c2bafa45bf80f83a2158779f70591ab06dbde025f4ad144809a5ef9fb16`.
+
+Attempt three exposed a non-timeout provider-terminal failure rather than another runner deadline. The required adjust route is:
+
+11. `R6-T11`: separately authorized, local-only failure-class remediation against immutable attempt-three evidence.
+12. `R6-T12`: only if R6-T11 permits bounded continuation, freeze a fresh attempt-four runner/policy/preregistration with `externalExecutionAuthorized=false`.
+13. `R6-T13`: only after another exact authorization, execute decision attempt four with `supersedes_attempt: R6-T10`.
+
 ## Security and data lifecycle boundary
 
 - The outer process receives no inherited host environment or secret-bearing values.
 - Bubblewrap continues to set the inner capsule environment separately; the R3 permission profile still denies generated-command auth and `/proc` access and keeps `/work` read-only.
-- R6-T1 through R6-T3, R6-T5, R6-T6, R6-T8, and any future R6-T9 work use local probes/replay only. They send no participant fixture, prompt, auth data, or other content to a provider.
+- R6-T1 through R6-T3, R6-T5, R6-T6, R6-T8, R6-T9, and any future R6-T11/R6-T12 work use local probes/replay only. They send no participant fixture, prompt, auth data, or other content to a provider.
 - Evidence is bounded immutable audit metadata under `docs/test-evidence/R6-*`; no new durable product artifact class is introduced.
 - R6 has no dependency edge into P0 or P1–P8 and cannot unlock product implementation.
 
@@ -51,3 +61,5 @@ R6-T8 was separately authorized after commit `d3dca37e0aa2560238e81bc6639081cb6e
 - R6-T6 is attempted without separate authority to select and freeze an exact policy satisfying the R6-T5 compatibility contract, or R6-T7 lacks another exact external authorization.
 - R6-T8 starts without separate local-only authority, mutates attempt-one/two evidence, or treats duplicate reconnect raw hashes as unique transport identity.
 - R6-T9 starts without an auditable bounded R6-T8 disposition, or R6-T10 lacks another exact external authorization binding every attempt-three boundary.
+- R6-T11 starts without separate local-only authority, mutates any prior attempt, or treats reconnect timeout progress as equivalent to the final non-timeout provider terminal.
+- R6-T12 starts without an auditable bounded R6-T11 disposition, or R6-T13 lacks another exact external authorization binding every attempt-four boundary.

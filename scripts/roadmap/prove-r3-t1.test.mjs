@@ -31,7 +31,7 @@ describe("R3-T1 independent capsule-audit containment charter", () => {
         productUnlockCount: 0,
         externalExecutionAuthorized: false,
       },
-      validation: { phases: 16, tasks: 174, contracts: 32 },
+      validation: { phases: 16, tasks: 177, contracts: 32 },
     });
   });
 

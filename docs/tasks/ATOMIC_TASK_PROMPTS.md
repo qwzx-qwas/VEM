@@ -843,6 +843,41 @@
 - **实现约束**：`decision_attempt: 3`、`supersedes_attempt: R6-T7`；只有 sealed observed provider timeout 可按新 policy 重试，runner termination 不可冒充 provider terminal。
 - **验收标准**：immutable attempt-three verdict；只有 `continue` 满足 R6 gate，且也只允许提出新的独立研究路线。
 
+> **已完成（2026-07-30）**：按 owner 精确绑定的 published commit `a1b49c3d927197ebd2c7a007aaac4fce0b15deb9`、全部 R6-T9 hashes 与 `1200000/5000/5000ms` policy 执行 attempt 3。Canonical authorization hash 为 `61767b2f1a7fc0dbd3c3734f2f672ad345eebb1a5febd3c56d124687f05509c4`。唯一启动的 direct process 使用 fresh thread `019fb2e2-311b-7803-b664-4cc6d17c9651`：ordered receipts 观察 WebSocket reconnect 2/5–5/5，约 `123049ms` 因 `Network unreachable` fallback HTTPS，随后 HTTPS reconnect 1/5–5/5，并在约 `992292ms` 真实观察到 provider `turn.failed`。该 terminal 是 `error sending request`，不含 timeout；封存分类为 `protocol-or-unknown-failure`、`retryable=false`，因此没有 retry 或下一 arm。Process 正常 exit 1，process group 清空，无 runner deadline、无 signal、无权威 final response；audit/permission/evaluator 与双层 manifests 均通过。结果为 1 个 external process、0/10 successful arms、19 个 process budget 未用，immutable verdict `adjust`；evidence 位于 `docs/test-evidence/R6-T10/20260730T195616-0800/`，canonical verdict hash `b2c75c2bafa45bf80f83a2158779f70591ab06dbde025f4ad144809a5ef9fb16`，`RESULTS.sha256` file hash `a45f1970978996cdbe8df8b99e7b09fd3fbcf4865f76d8eeb504dcde2bead13b`。20 files / 102 项定向测试、66 files / 358 项全仓测试及 build/typecheck/lint/roadmap validation 全部通过。Attempts 1/2 未覆盖，产品工作未解锁；下一步必须先单独授权 R6-T11 本地 failure-class remediation。
+
+## R6-T11 — Non-timeout provider-terminal remediation
+
+### Prompt
+
+- **背景**：R6-T10 attempt 3 真实观察到 provider `turn.failed`，但终态为 `error sending request` 而非 timeout，因此按冻结 policy 不可重试并记录 `adjust`。
+- **目标**：只读重放 immutable R6-T10 evidence，区分 WebSocket/HTTPS progress、network-unreachable/error-sending terminal、provider timeout 与 runner deadline，并给出 bounded remediation 或有证据的 `stop` disposition。
+- **本阶段做**：验证 attempts 1/2/3 manifests、ordered receipts、terminal/final/process/audit/permission 状态及 no-retry 正确性；记录 failure-class compatibility contract。
+- **本阶段不做**：不执行外部 model/provider call，不重试 attempt 3，不覆盖任何 prior attempt，不选择 attempt-four runner，不解锁产品工作。
+- **实现约束**：中间 reconnect 的 `request timed out` 不得替代最终 `turn.failed` message；未知/非 timeout terminal 不得升级为 retryable timeout。
+- **验收标准**：独立 owner 授权后，本地 proof、immutability checks 与目标测试通过；只有 bounded remediation 才允许进入 R6-T12。
+
+## R6-T12 — Attempt-four preregistration
+
+### Prompt
+
+- **背景**：R6-T11 将决定 non-timeout provider-terminal failure 是否存在可接受的 attempt-four remediation；它不执行或授权外部 arm。
+- **目标**：仅在 R6-T11 允许继续时，冻结 fresh attempt-four tasks/arms、runner/source closure、failure policy、data scope 与 evidence gate。
+- **本阶段做**：新 task identity、equal-base contexts、counterbalance、holdout exclusion、process budget、attempts 1/2/3 immutability、`decision_attempt: 4` / `supersedes_attempt: R6-T10` 和 `externalExecutionAuthorized=false`。
+- **本阶段不做**：不执行外部 arm，不复用 R6-T10 authorization，不覆盖 prior attempts，不消费产品 holdout。
+- **实现约束**：R6-T11 disposition、全部 source/policy/data/environment hashes 与 provider-terminal classification binding 必须 fail closed。
+- **验收标准**：单独 owner 授权后，新预注册与本地 probes 通过；R6-T13 等待绑定全部新边界的另一份精确外部授权。
+
+## R6-T13 — Separately authorized attempt-four verdict
+
+### Prompt
+
+- **背景**：仅当 R6-T11 remediation 与 R6-T12 no-call preregistration 均完成后，attempt 4 才具有结构资格；当前没有执行授权。
+- **目标**：仅在新的精确 owner authorization 后执行 bounded attempt-four arms，并记录 `R6-RECOVERY` 当前 verdict。
+- **本阶段做**：fresh contexts、provider-terminal/timeout/runner-deadline separation、process-tree/retry/final-file/JSONL/audit consistency、attempt/batch evidence 与 pairwise verdict。
+- **本阶段不做**：不覆盖 R6-T10/R6-T7/R6-T4 或更早 evidence/decision，不自动解锁产品 phase。
+- **实现约束**：`decision_attempt: 4`、`supersedes_attempt: R6-T10`；只有符合新冻结 policy 的 sealed observed retryable terminal 可重试。
+- **验收标准**：immutable attempt-four verdict；只有 `continue` 满足 R6 gate，且也只允许提出新的独立研究路线。
+
 ## P0-T9A — Walking-skeleton 正向 Edge E2E
 
 ### Prompt

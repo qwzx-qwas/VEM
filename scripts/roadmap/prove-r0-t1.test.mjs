@@ -32,7 +32,7 @@ describe("R0-T1 recovery charter proof", () => {
       },
       validation: {
         phases: 16,
-        tasks: 174,
+        tasks: 177,
         contracts: 32,
       },
     });
