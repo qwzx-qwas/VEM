@@ -50,7 +50,7 @@ describe("R6-T1 independent pre-spawn invocation remediation charter", () => {
         charterExternalExecutionAuthorized: false,
         currentDecision: "pending",
       },
-      validation: { phases: 16, tasks: 171, contracts: 32 },
+      validation: { phases: 16, tasks: 174, contracts: 32 },
     });
   });
 

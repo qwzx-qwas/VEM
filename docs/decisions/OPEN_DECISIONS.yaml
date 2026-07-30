@@ -415,16 +415,20 @@ decisions:
     title: Continue, adjust, or stop the independent R6 invocation-compatible route
     status: open
     decision_owner: evidence-gate
-    needed_by_task: R6-T7
+    needed_by_task: R6-T10
     decision: pending
-    current_attempt: R6-T7
+    current_attempt: R6-T10
     prior_attempts:
       - task: R6-T4
         decision: adjust
         decided_at: 2026-07-30T17:12:55+08:00
         evidence_ref: docs/test-evidence/R6-T4/20260730T171100-0800/results/verdict.json
+      - task: R6-T7
+        decision: adjust
+        decided_at: 2026-07-30T18:48:05+08:00
+        evidence_ref: docs/test-evidence/R6-T7/20260730T183547-0800/results/verdict.json
     authoritative_state_ref: ROADMAP.yaml
-    note: Attempt one is immutable adjust because the sole process hit the 120000 ms runner deadline before any provider turn.failed, turn.completed or authoritative final response. The process group terminated and all evidence was sealed, so this is not a blocker or retryable provider timeout. R6-T5 local remediation and R6-T6 attempt-two preregistration are complete; R6-T6 preregistration hash is 41ce5ab1a65437defdfcd86c0b4ec4db3e922af8a6c5e5642d44384ea910627e and externalExecutionAuthorized remains false. The current attempt remains pending and cannot run until R6-T7 receives a new exact external authorization binding every new hash, the 600000/5000/5000 ms policy, signals and twenty-process cap.
+    note: Attempts one and two are immutable adjust. Attempt two exhausted the maximum frozen 600000 ms runner deadline after WebSocket 5/5 and fallback to HTTPS through reconnect 3/5, without provider turn.failed, turn.completed or authoritative final response. Its sole process group terminated, all evidence sealed, runner termination remained non-retryable, and no retry or next arm started. R6-T8 local dual-transport horizon remediation, R6-T9 attempt-three preregistration and R6-T10 exact external authorization are all still required; none is authorized by the R6-T7 grant, and no product work is unlocked.
 
   - id: OWNER-R6-T5-DEADLINE-HORIZON-REMEDIATION
     title: Authorize local-only R6 deadline-horizon remediation after attempt-one adjust
@@ -461,3 +465,42 @@ decisions:
       - docs/tasks/ATOMIC_TASK_PROMPTS.md
       - ROADMAP.yaml
     note: Authorization covered selecting and freezing one deadline candidate compliant with the immutable R6-T5 compatibility contract, fresh attempt-two task/capsule/source/policy/data/evidence bindings, local probes and tests with externalExecutionAuthorized=false. It completed with preregistration hash 41ce5ab1a65437defdfcd86c0b4ec4db3e922af8a6c5e5642d44384ea910627e, deadline-candidate hash dd11e6718e0d0e907fd883195be2b62ee03a963549acd9c056b06a8a65e81be4 and zero external model calls. It does not authorize R6-T7, any provider/model call, reuse of the R6-T4 external authorization, overwrite attempt-one evidence, product holdout consumption or product unlock.
+
+  - id: OWNER-R6-T7-EXTERNAL-BATCH
+    title: Authorize the frozen R6-T7 attempt-two external batch
+    status: decided
+    decision_owner: project-owner
+    needed_by_task: R6-T7
+    decision: authorized
+    decided_at: 2026-07-30T18:34:22+08:00
+    evidence: Owner explicitly authorized sending the frozen participant payload to OpenAI Codex and bound the exact destination, model, decision attempt, superseded attempt, published commit, preregistration, instrumentation, data scope, deadline contract/candidate, outer environment, arm target, process cap, deadline, signal windows and retry boundary.
+    evidence_ref: docs/test-evidence/R6-T7/OWNER_AUTHORIZATION_20260730.json
+    owner_statement: "授权执行冻结的 R6-T7：OpenAI Codex service / gpt-5.6-sol，decision attempt 2 supersedes R6-T4，commit ec16d64174951036555c4297858547b0fe5e8c59，preregistration hash 41ce5ab1a65437defdfcd86c0b4ec4db3e922af8a6c5e5642d44384ea910627e，instrumentation hash c3c4f3bc1d7e9592e197705592606bbefba67d71fb22c526df5d8b4fe4748d48，data-scope hash aab9e34e3dd6074ea691cf453823dd59d08e7bbe2ee6b4eb37b7e82507c648cd，deadline-contract hash 6145537843ed5c35297196ec0dee74f618f0dd17bc9d89dcfa7bab87a07db4c2，deadline-candidate hash dd11e6718e0d0e907fd883195be2b62ee03a963549acd9c056b06a8a65e81be4，outer-env hash cf24c3c5e349e230a9c04223dceb4854bd377915e21f46d830134b085bc3579d；授权按该 data scope 向 OpenAI Codex 发送 participant payload，完成 10 个 arms，最多 20 个外部进程；每进程 deadline 600000ms，grace/force observation 各 5000ms，SIGTERM 后 SIGKILL；仅已封存且真实观察到的 provider timeout 可重试一次，runner deadline termination 不可重试；不覆盖 attempt 1，不解锁产品工作。"
+    published_commit: ec16d64174951036555c4297858547b0fe5e8c59
+    requested_preregistration_hash: 41ce5ab1a65437defdfcd86c0b4ec4db3e922af8a6c5e5642d44384ea910627e
+    requested_destination: OpenAI Codex service
+    requested_model: gpt-5.6-sol
+    requested_data_scope_hash: aab9e34e3dd6074ea691cf453823dd59d08e7bbe2ee6b4eb37b7e82507c648cd
+    requested_instrumentation_hash: c3c4f3bc1d7e9592e197705592606bbefba67d71fb22c526df5d8b4fe4748d48
+    requested_deadline_contract_hash: 6145537843ed5c35297196ec0dee74f618f0dd17bc9d89dcfa7bab87a07db4c2
+    requested_deadline_candidate_hash: dd11e6718e0d0e907fd883195be2b62ee03a963549acd9c056b06a8a65e81be4
+    requested_outer_environment_hash: cf24c3c5e349e230a9c04223dceb4854bd377915e21f46d830134b085bc3579d
+    requested_successful_arm_count: 10
+    requested_max_process_attempts: 20
+    requested_termination_policy:
+      deadline_ms: 600000
+      graceful_window_ms: 5000
+      force_observation_window_ms: 5000
+      graceful_signal: SIGTERM
+      force_signal: SIGKILL
+      max_retries_per_arm: 1
+      retryable_only_after: sealed-observed-provider-timeout-before-response
+      runner_wall_clock_termination_retryable: false
+    context_refs:
+      - docs/test-evidence/R6-T6/20260730T180734-0800/PREREGISTRATION.json
+      - docs/test-evidence/R6-T6/20260730T180734-0800/PREREGISTRATION.sha256
+      - docs/test-evidence/R6-T7/20260730T183547-0800/results/run-index.json
+      - docs/test-evidence/R6-T7/20260730T183547-0800/results/verdict.json
+      - docs/test-evidence/R6-T7/20260730T183547-0800/RESULTS.sha256
+      - scripts/pilot/r6-t7.mjs
+    note: The exact authorization validated with canonical hash a11336fb6fa5f11b5eb7a2b5f6471be1612617367e172d28899d3be08be82f2. One external process/fresh thread started and reached the 600000 ms runner deadline after WebSocket fallback and HTTPS reconnect 3/5, with no observed provider terminal or authoritative response. The process group terminated and evidence sealed before return; the outcome was non-retryable runner-wall-clock termination, so no retry or next arm started. Attempt two recorded immutable adjust with canonical verdict hash 254a47f33b9a1348e87eef99181e7c581d0a244ef1a154119240c1c8e481a961. This authorization does not overwrite attempt one, authorize R6-T8/R6-T9/R6-T10, unlock product work or bind any changed source/policy/data boundary.

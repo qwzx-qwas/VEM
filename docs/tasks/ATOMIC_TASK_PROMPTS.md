@@ -804,6 +804,41 @@
 - **实现约束**：`decision_attempt: 2`、`supersedes_attempt: R6-T4`；只有 sealed observed provider timeout 可按新 policy 重试，runner termination 不可冒充 provider terminal。
 - **验收标准**：immutable attempt-two verdict；只有 `continue` 满足 R6 gate，且也只允许提出新的独立研究路线。
 
+> **已完成（2026-07-30）**：已按 owner 绑定的 commit `ec16d64174951036555c4297858547b0fe5e8c59`、完整 preregistration/instrumentation/data-scope/deadline/environment hashes 与 `600000/5000/5000ms` termination policy 执行 attempt 2。首个 direct arm 使用 fresh thread `019fb298-81a7-7d52-b116-3d415393d847`；trusted receipt 依次观察到 WebSocket reconnect 2/5、3/5、4/5、5/5，约 `137057ms` fallback HTTPS，再观察 HTTPS reconnect 1/5、2/5、3/5，最终在约 `599996ms` 发送 `SIGTERM`。全过程没有 provider `turn.failed`、`turn.completed`、agent message 或权威 final response；process group 已清空，raw/ledger/final/boundary/termination/failure 与双层 SHA evidence 均在返回前封存。该结果是不可重试的 runner deadline termination，不是真实观察到的 provider timeout，因此没有 retry 或下一 arm：共 1 个 external process、0/10 successful arms、剩余 19 个 process budget。证据位于 `docs/test-evidence/R6-T7/20260730T183547-0800/`；authorization canonical hash 为 `a11336fb6fa5f11b5eb7a2b5f6471be1612617367e172d28899d3be08be82f2a`，canonical verdict hash 为 `254a47f33b9a1348e87eef99181e7c581d0a244ef1a154119240c1c8e481a961`，immutable attempt 2 verdict 为 `adjust`。Attempt 1 未覆盖、产品工作未解锁；下一步必须先单独授权 R6-T8 本地 dual-transport horizon remediation。
+
+## R6-T8 — Dual-transport terminal-horizon remediation
+
+### Prompt
+
+- **背景**：R6-T7 attempt 2 在冻结上限 `600000ms` 内完成 WebSocket 5/5 并 fallback HTTPS，但仅观察到 HTTPS reconnect 3/5，仍未取得 provider terminal。
+- **目标**：只读重放 immutable R6-T7 evidence，建立同时覆盖 WebSocket 与 HTTPS fallback phase 的显式 terminal-horizon compatibility disposition。
+- **本阶段做**：验证 attempt 1/2 manifests 与 receipt/raw 对应关系；按 trusted ordered receipt sequence 区分跨 transport 的重复 reconnect payload/hash；计算已观察 lower bound，并给出新的有限 deadline compatibility contract 或证据支持的 `stop` disposition。
+- **本阶段不做**：不执行外部 model/provider call，不覆盖 attempts 1/2，不选择 attempt-three runner，不授权产品工作。
+- **实现约束**：相同 raw hash 不能被假设为同一个 transport phase；transport attribution 必须来自 ordered receipt sequence 与相邻明确 fallback evidence；runner termination 仍不可重试。
+- **验收标准**：独立 owner 授权后，本地 proof、immutability checks 与目标测试通过；只有可审计的 bounded remediation 才允许进入 R6-T9。
+
+## R6-T9 — Attempt-three preregistration
+
+### Prompt
+
+- **背景**：R6-T8 将决定是否存在可接受的 attempt-three dual-transport deadline envelope；它不选择具体 runner policy。
+- **目标**：仅在 R6-T8 允许继续时，冻结 fresh attempt-three tasks/arms、runner/source closure、explicit horizon provenance、deadline candidate、termination policy、data scope 与 evidence gate。
+- **本阶段做**：新 task identity、equal-base contexts、counterbalance、holdout exclusion、process budget、attempt 1/2 immutability、`decision_attempt: 3` / `supersedes_attempt: R6-T7` 和 `externalExecutionAuthorized=false`。
+- **本阶段不做**：不执行外部 arm，不复用 R6-T7 authorization，不覆盖 attempts 1/2，不消费产品 holdout。
+- **实现约束**：R6-T8 disposition、全部 source/policy/data/environment hashes 与 ordered dual-transport horizon binding 必须 fail closed。
+- **验收标准**：单独 owner 授权后，新预注册与本地 probes 通过；R6-T10 等待绑定全部新边界的另一份精确外部授权。
+
+## R6-T10 — Separately authorized attempt-three verdict
+
+### Prompt
+
+- **背景**：仅当 R6-T8 remediation 与 R6-T9 no-call preregistration 均完成后，attempt 3 才具有结构资格；当前没有执行授权。
+- **目标**：仅在新的精确 owner authorization 后执行 bounded attempt-three arms，并记录 `R6-RECOVERY` 当前 verdict。
+- **本阶段做**：fresh contexts、dual-transport/provider-terminal/runner-deadline separation、process-tree/retry/final-file/JSONL/audit consistency、attempt/batch evidence 与 pairwise verdict。
+- **本阶段不做**：不覆盖 R6-T7、R6-T4 或此前 R5/R4/R3/R2/R1/R0/P0 evidence/decision，不自动解锁产品 phase。
+- **实现约束**：`decision_attempt: 3`、`supersedes_attempt: R6-T7`；只有 sealed observed provider timeout 可按新 policy 重试，runner termination 不可冒充 provider terminal。
+- **验收标准**：immutable attempt-three verdict；只有 `continue` 满足 R6 gate，且也只允许提出新的独立研究路线。
+
 ## P0-T9A — Walking-skeleton 正向 Edge E2E
 
 ### Prompt

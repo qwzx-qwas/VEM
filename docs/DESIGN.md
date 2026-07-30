@@ -342,6 +342,10 @@ Retry-horizon remediation 必须逐项验证 attempt-one immutable manifest、re
 
 当前 R6-T6 attempt-two preregistration 采用 compatibility envelope 的保守有限上界：对 exact Codex `0.144.5` source closure 固定 `480000ms` version-bound observation horizon、`120000ms` terminal margin 和 `600000ms` outer deadline。该 horizon 是 runner/instrumentation 的明确观察策略，不是对 provider 内部 retry schedule、reachability 或 terminal time 的事实声称；Codex version/source、R6-T5 contract、candidate、termination policy、task/data scope 与外部授权开关必须共同 hash-bind。Binary version 或任一 binding drift 时 R6-T7 必须在 spawn 前 fail closed。
 
+R6-T7 attempt two 在该最大冻结 deadline 内仍未观察到 provider terminal：trusted receipts 先完成 WebSocket reconnect 2/5 至 5/5，随后观察明确的 WebSocket→HTTPS fallback，再到 HTTPS reconnect 1/5、2/5、3/5，最后由 runner 在约 `600000ms` 终止。没有 `turn.failed`、`turn.completed`、agent message 或权威 final response，因此该 attempt 仍是 immutable `adjust`；runner deadline termination 不可重试，不得把未完成的 fallback 重连序列提升为 provider timeout。相同 reconnect payload 可以在 WebSocket 与 HTTPS 阶段重复并产生相同 raw hash，后续 replay 必须按 trusted receipt sequence、相邻 fallback evidence 和 monotonic timing 做关联，不能把 raw hash 唯一性当作 transport identity。
+
+任何 attempt three 都必须先完成新的零模型 R6-T8 dual-transport terminal-horizon remediation，再由 R6-T9 冻结新的 source/policy/preregistration，最后由 R6-T10 取得绑定全部新 hash、deadline、destination/model、data scope 与 process budget 的精确 owner authorization。Attempt three 必须以递增 ordinal 和 `supersedes_attempt: R6-T7` 同时保留 attempts one/two；R6-T7 的授权不能复用，也不解锁产品工作。
+
 当前 owner-authorized 执行序列见 [`docs/delivery/R6_PRESPAWN_INVOCATION_REMEDIATION.md`](delivery/R6_PRESPAWN_INVOCATION_REMEDIATION.md)。
 
 ## 2.8 项目与依赖许可证 (`LICENSE-POLICY-001`)
