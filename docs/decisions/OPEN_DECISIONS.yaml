@@ -428,7 +428,7 @@ decisions:
         decided_at: 2026-07-30T18:48:05+08:00
         evidence_ref: docs/test-evidence/R6-T7/20260730T183547-0800/results/verdict.json
     authoritative_state_ref: ROADMAP.yaml
-    note: Attempts one and two are immutable adjust. Attempt two exhausted the maximum frozen 600000 ms runner deadline after WebSocket 5/5 and fallback to HTTPS through reconnect 3/5, without provider turn.failed, turn.completed or authoritative final response. Its sole process group terminated, all evidence sealed, runner termination remained non-retryable, and no retry or next arm started. R6-T8 local dual-transport horizon remediation, R6-T9 attempt-three preregistration and R6-T10 exact external authorization are all still required; none is authorized by the R6-T7 grant, and no product work is unlocked.
+    note: Attempts one and two are immutable adjust. Attempt two exhausted the frozen 600000 ms runner deadline after WebSocket 5/5 and fallback to HTTPS through reconnect 3/5, without provider terminal or authoritative response. R6-T8 local remediation is complete with bounded disposition continue-to-preregistration-only, proof hash 21cb7550bc5380f0f460efbf59672ebf9bbaa28a78bbf8ce2e2053ddf73296be and contract hash 35a851a8e80785ca92e57f6e8468b183a217eb31e7ad8d7ec212b3f8f850685e. It selected no exact deadline and authorized no external call. R6-T9 attempt-three preregistration and R6-T10 exact external execution remain separately required and unauthorized; no product work is unlocked.
 
   - id: OWNER-R6-T5-DEADLINE-HORIZON-REMEDIATION
     title: Authorize local-only R6 deadline-horizon remediation after attempt-one adjust
@@ -465,6 +465,29 @@ decisions:
       - docs/tasks/ATOMIC_TASK_PROMPTS.md
       - ROADMAP.yaml
     note: Authorization covered selecting and freezing one deadline candidate compliant with the immutable R6-T5 compatibility contract, fresh attempt-two task/capsule/source/policy/data/evidence bindings, local probes and tests with externalExecutionAuthorized=false. It completed with preregistration hash 41ce5ab1a65437defdfcd86c0b4ec4db3e922af8a6c5e5642d44384ea910627e, deadline-candidate hash dd11e6718e0d0e907fd883195be2b62ee03a963549acd9c056b06a8a65e81be4 and zero external model calls. It does not authorize R6-T7, any provider/model call, reuse of the R6-T4 external authorization, overwrite attempt-one evidence, product holdout consumption or product unlock.
+
+  - id: OWNER-R6-T8-DUAL-TRANSPORT-HORIZON-REMEDIATION
+    title: Authorize local-only R6 dual-transport terminal-horizon remediation
+    status: decided
+    decision_owner: project-owner
+    needed_by_task: R6-T8
+    decision: authorized
+    decided_at: 2026-07-30T19:09:04+08:00
+    evidence: Owner replied "授权，还有记得commit push" after the R6-T7 completion report identified local-only R6-T8 as the sole next eligible task and stated that R6-T9/R6-T10 remained separately gated.
+    owner_statement: "授权，还有记得commit push"
+    interpreted_scope: R6-T8-local-no-call-dual-transport-horizon-remediation-only
+    prerequisite_publish:
+      commit: d3dca37e0aa2560238e81bc6639081cb6ecd321f
+      branch: agent/complete-p0-r1-stages
+      remote_sha_verified: true
+    context_refs:
+      - docs/test-evidence/R6-T7/20260730T183547-0800/RESULTS.sha256
+      - docs/test-evidence/R6-T7/20260730T183547-0800/results/verdict.json
+      - docs/test-evidence/R6-T7/20260730T183547-0800/runs/r6-deadline-01-horizon-heading-direct-search-attempt-1/receipt-ledger.json
+      - docs/test-evidence/R6-T7/20260730T183547-0800/runs/r6-deadline-01-horizon-heading-direct-search-attempt-1/stdout.jsonl
+      - docs/tasks/ATOMIC_TASK_PROMPTS.md
+      - ROADMAP.yaml
+    note: Authorization covered immutable attempt-one/two replay, ordered receipt correlation across the WebSocket-to-HTTPS fallback boundary, bounded local compatibility disposition, proof evidence, tests and documentation. It completed with proof hash 21cb7550bc5380f0f460efbf59672ebf9bbaa28a78bbf8ce2e2053ddf73296be and contract hash 35a851a8e80785ca92e57f6e8468b183a217eb31e7ad8d7ec212b3f8f850685e; external process/model/provider-request counts are zero. It does not authorize reuse of R6-T7 authorization, overwrite either prior attempt, select or freeze an R6-T9 policy, execute R6-T10, consume product holdout or unlock product work. The owner also required the completed R6-T7 state to be committed and pushed first; commit d3dca37 was pushed and its remote SHA verified before R6-T8 began.
 
   - id: OWNER-R6-T7-EXTERNAL-BATCH
     title: Authorize the frozen R6-T7 attempt-two external batch

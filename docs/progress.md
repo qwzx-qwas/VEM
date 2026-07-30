@@ -790,3 +790,21 @@ Each future entry must include task ID, date, changed files, commands, test evid
 - Security/data-lifecycle verification: participant transfer stayed within the authorized data-scope hash; only one authorized external process ran; prior attempts/evidence were not overwritten; all R6-T7 evidence directories/files are 0700/0600 with no symlink; manifests verify and product unlock count remains zero
 - Known limitations/degradations: the maximum frozen observation envelope ended at HTTPS reconnect 3/5 and produced no correctness, pairwise-time or cost result. Repeated reconnect payload hashes across transports require ordered receipt correlation; the evidence still does not establish the provider's complete retry horizon
 - Next eligible task: none until the owner explicitly authorizes local-only R6-T8 dual-transport terminal-horizon remediation; R6-T9 and R6-T10 remain unstarted and separately gated
+
+## R6-T8 — Local dual-transport terminal-horizon remediation
+
+- Date: 2026-07-30
+- State/outcome: `done` / `passed`
+- Decision: `n/a`; `R6-RECOVERY` attempts one/two remain immutable `adjust`, attempt three remains pending
+- Authorization/publish result: owner authorized R6-T8 and required commit/push first; the complete R6-T7 state was committed as `d3dca37e0aa2560238e81bc6639081cb6ecd321f`, pushed to `agent/complete-p0-r1-stages`, and verified against the remote SHA before R6-T8 began
+- Replay result: immutable R6-T7 top-level/per-attempt manifests and terminal/final/audit/permission state verify; ordered stdout occurrence correlation separates WebSocket reconnect 2/5–5/5, fallback at 137057 ms, and HTTPS reconnect 1/5–3/5. Two raw hashes repeat across transports and remain distinct receipt events rather than being deduplicated
+- Contract result: the 600000 ms runner deadline remains an incomplete lower bound and does not authorize retry; explicit attempt-three terminal horizon must be at least 600001 ms, observation margin at least 308226 ms, and outer deadline from 908227 through 1200000 ms. The disposition is `continue-to-preregistration-only`; no exact deadline or policy was selected
+- Evidence: `docs/test-evidence/R6-T8/20260730T191632-0800/`; proof hash `21cb7550bc5380f0f460efbf59672ebf9bbaa28a78bbf8ce2e2053ddf73296be`; compatibility-contract hash `35a851a8e80785ca92e57f6e8468b183a217eb31e7ad8d7ec212b3f8f850685e`; manifest, 0700/0600 and no-symlink checks passed
+- Changed files: dual-transport replay/contract module and tests, local proof generator/tests and evidence, owner decision metadata, R6 design/delivery/prompt/progress/status, and R6-T8 roadmap state
+- Tests added/updated: ordered duplicate-receipt correlation, WebSocket/HTTPS phase separation, immutable evidence mutation, bounded disposition/candidate validation, no-call proof and source scan
+- Commands: R6-T7 Git scope/CLI checks; explicit staging/commit; SSH push and remote SHA verification; immutable receipt/raw/manifest inspection; 15 initial replay/proof tests; proof generation and manifest/permission checks; 70 R6/terminalizer/roadmap targeted tests; full test; build; typecheck; lint; roadmap validation; Git whitespace check
+- Test results: 11 targeted files / 70 tests and all 64 Vitest files / 350 tests passed; build, typecheck and lint passed; roadmap validates 16 phases, 174 tasks and 32 contracts
+- Edge/browser verification: not applicable; no browser or frontend product behavior changed
+- Security/data-lifecycle verification: only immutable local evidence was read; participant process/provider request/network probe/external model call counts are zero; attempts one/two and all prior chains remain unchanged; proof is private bounded audit metadata and product unlock count is zero
+- Known limitations/degradations: the new 1200000 ms ceiling is a bounded compatibility envelope, not proof of provider reachability, complete terminal timing or a selected attempt-three policy; R6-T9 must provide explicit version/config provenance and new source/policy/data bindings
+- Next eligible task: R6-T9 is structurally next but not authorized by the R6-T8 grant; do not start it without explicit owner authorization

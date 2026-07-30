@@ -817,6 +817,8 @@
 - **实现约束**：相同 raw hash 不能被假设为同一个 transport phase；transport attribution 必须来自 ordered receipt sequence 与相邻明确 fallback evidence；runner termination 仍不可重试。
 - **验收标准**：独立 owner 授权后，本地 proof、immutability checks 与目标测试通过；只有可审计的 bounded remediation 才允许进入 R6-T9。
 
+> **已完成（2026-07-30）**：Owner 要求先 commit/push，R6-T7 完整结果已提交为 `d3dca37e0aa2560238e81bc6639081cb6ecd321f` 并与远端分支 SHA 核对一致；随后按本次授权仅执行 R6-T8 本地 replay。实现按 stdout JSONL chunk 的 ordered occurrence 与 receipt 一一对应，并以唯一 fallback receipt 分隔 transport phase；确认 WebSocket reconnect 2/5–5/5、`137057ms` fallback、HTTPS reconnect 1/5–3/5，同时正确保留两个跨 transport 重复 raw hash，未把 hash 当作唯一 receipt identity。Immutable attempts 1/2 manifests、terminal/final/audit/permission 状态全部通过；`600000ms` 仍只是 incomplete lower bound，没有 provider terminal，也不授权 retry。新 compatibility contract 要求 attempt-three explicit terminal horizon 至少 `600001ms`、observation margin 至少 `308226ms`、outer deadline 为 `908227..1200000ms`；R6-T8 不选择具体 policy，`externalExecutionAuthorized=false`。证据位于 `docs/test-evidence/R6-T8/20260730T191632-0800/`，proof hash `21cb7550bc5380f0f460efbf59672ebf9bbaa28a78bbf8ce2e2053ddf73296be`，contract hash `35a851a8e80785ca92e57f6e8468b183a217eb31e7ad8d7ec212b3f8f850685e`。11 files / 70 项定向测试及 64 files / 350 项全仓测试通过，build/typecheck/lint/roadmap validation 通过；外部模型调用和产品解锁均为 0。下一项 R6-T9 仍需单独授权。
+
 ## R6-T9 — Attempt-three preregistration
 
 ### Prompt

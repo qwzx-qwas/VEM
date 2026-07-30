@@ -344,6 +344,10 @@ Retry-horizon remediation 必须逐项验证 attempt-one immutable manifest、re
 
 R6-T7 attempt two 在该最大冻结 deadline 内仍未观察到 provider terminal：trusted receipts 先完成 WebSocket reconnect 2/5 至 5/5，随后观察明确的 WebSocket→HTTPS fallback，再到 HTTPS reconnect 1/5、2/5、3/5，最后由 runner 在约 `600000ms` 终止。没有 `turn.failed`、`turn.completed`、agent message 或权威 final response，因此该 attempt 仍是 immutable `adjust`；runner deadline termination 不可重试，不得把未完成的 fallback 重连序列提升为 provider timeout。相同 reconnect payload 可以在 WebSocket 与 HTTPS 阶段重复并产生相同 raw hash，后续 replay 必须按 trusted receipt sequence、相邻 fallback evidence 和 monotonic timing 做关联，不能把 raw hash 唯一性当作 transport identity。
 
+R6-T8 的 local-only replay 必须把 JSONL chunk 与 stdout receipt 按 ordered occurrence 一一对应，再以唯一 fallback receipt 分隔 WebSocket/HTTPS phase；不得先按 raw hash 去重或要求 hash 唯一。对 immutable R6-T7 evidence 的当前 replay，WebSocket reconnect 为 2/5–5/5、fallback 在 `137057ms`，HTTPS reconnect 1/5–3/5，且有两个 raw hash 各自在两个 transport phase 重复。已观察 dual-transport terminal horizon 下界为 `600000ms`，HTTPS 内最大已观察 reconnect gap 为 `154113ms`；这些日志仍不证明 provider terminal，也不授权 retry。
+
+当前 R6-T8 compatibility disposition 只允许进入另行授权的 no-call preregistration：attempt-three explicit terminal horizon 至少 `600001ms`，terminal-observation margin 至少 `308226ms` 且不超过 `600000ms`，outer deadline 至少 `908227ms` 且不超过 `1200000ms`。具体 deadline、version/source binding、task/data scope 与 runner policy 只能由 R6-T9 选择并冻结，R6-T8 本身保持 `externalExecutionAuthorized=false`；任一 candidate 仍须保留 `5000/5000ms` termination windows、`SIGTERM`→`SIGKILL`、仅 sealed observed provider timeout 可 retry 一次、runner deadline 不可 retry、20-process cap 与逐 attempt evidence/budget 语义。
+
 任何 attempt three 都必须先完成新的零模型 R6-T8 dual-transport terminal-horizon remediation，再由 R6-T9 冻结新的 source/policy/preregistration，最后由 R6-T10 取得绑定全部新 hash、deadline、destination/model、data scope 与 process budget 的精确 owner authorization。Attempt three 必须以递增 ordinal 和 `supersedes_attempt: R6-T7` 同时保留 attempts one/two；R6-T7 的授权不能复用，也不解锁产品工作。
 
 当前 owner-authorized 执行序列见 [`docs/delivery/R6_PRESPAWN_INVOCATION_REMEDIATION.md`](delivery/R6_PRESPAWN_INVOCATION_REMEDIATION.md)。

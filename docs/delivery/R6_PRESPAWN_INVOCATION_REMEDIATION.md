@@ -31,11 +31,13 @@ Attempt two exposed a dual-transport horizon rather than a process-tree defect. 
 9. `R6-T9`: only if R6-T8 permits a bounded continuation, freeze a fresh attempt-three runner/policy/preregistration with `externalExecutionAuthorized=false`.
 10. `R6-T10`: only after another exact authorization, execute decision attempt three with `supersedes_attempt: R6-T7`.
 
+R6-T8 was separately authorized after commit `d3dca37e0aa2560238e81bc6639081cb6ecd321f` was pushed and its remote SHA verified. Its zero-model replay pairs each JSONL chunk with the same ordered stdout receipt occurrence and uses the explicit fallback receipt as the transport boundary; two reconnect raw hashes repeat across WebSocket and HTTPS and are correctly retained as distinct receipts. The immutable evidence establishes only a 600000 ms incomplete dual-transport lower bound and a 154113 ms maximum observed HTTPS reconnect gap. The bounded compatibility contract therefore requires at least a 600001 ms explicit terminal horizon plus a 308226 ms observation margin, for an outer deadline from 908227 through 1200000 ms. It selects no exact policy, makes no external call, keeps `externalExecutionAuthorized=false`, and leaves R6-T9 separately gated.
+
 ## Security and data lifecycle boundary
 
 - The outer process receives no inherited host environment or secret-bearing values.
 - Bubblewrap continues to set the inner capsule environment separately; the R3 permission profile still denies generated-command auth and `/proc` access and keeps `/work` read-only.
-- R6-T1 through R6-T3, R6-T5, R6-T6, and any future R6-T8/R6-T9 work use local probes/replay only. They send no participant fixture, prompt, auth data, or other content to a provider.
+- R6-T1 through R6-T3, R6-T5, R6-T6, R6-T8, and any future R6-T9 work use local probes/replay only. They send no participant fixture, prompt, auth data, or other content to a provider.
 - Evidence is bounded immutable audit metadata under `docs/test-evidence/R6-*`; no new durable product artifact class is introduced.
 - R6 has no dependency edge into P0 or P1–P8 and cannot unlock product implementation.
 
