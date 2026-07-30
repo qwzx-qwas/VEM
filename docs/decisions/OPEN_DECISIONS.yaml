@@ -303,3 +303,90 @@ decisions:
       - docs/test-evidence/R4-T3/20260730T143215-0800/PREREGISTRATION.sha256
       - scripts/pilot/r4-t4.mjs
     note: Authorization validation passed with canonical hash 4de37dc38ae5c13661d8f032f8cf1b7c2644a4974eae5f44f13c949a9980865f. The first process exhausted Codex-internal WebSocket and HTTPS timeout reconnects but remained alive without a process terminal; the frozen runner had no wall-clock termination/sealing path. The batch was interrupted without a retry or second process, R4-T4 is blocked, and R4-RECOVERY remains pending. This authorization cannot bind a changed runner or new preregistration.
+
+  - id: OWNER-R5-PROCESS-TREE-TERMINATION-REMEDIATION
+    title: Authorize independent R5 process-tree termination remediation without changing blocked R4 or prior terminal stops
+    status: decided
+    decision_owner: project-owner
+    needed_by_task: R5-T1
+    decision: authorized
+    decided_at: 2026-07-30T15:10:00+08:00
+    evidence: Owner instructed Codex to continue from the current latest documented prompt, mark each completed prompt with a short summary, and leave a structured handoff if the run cannot finish; under the R4 delivery boundary this authorizes the local-only independent R5 charter, runner remediation, tests and new preregistration.
+    owner_statement: "结合文档内容，从当前最新阶段的prompt开始做，每完成一个阶段就在对应的prompt下面标注已完成，以及简短的概述做了什么,如果没有额度就输出：任务目标是什么，当前做了什么，有什么方案，还剩什么，下一步要做什么，供下次codex能接上任务"
+    context_refs:
+      - docs/DESIGN.md
+      - docs/delivery/R4_TRANSPORT_TIMEOUT_REMEDIATION.md
+      - docs/delivery/R5_PROCESS_TREE_TERMINATION_REMEDIATION.md
+      - ROADMAP.yaml
+    context_sections:
+      - 2.7.7 Owner-authorized process-tree termination remediation after R4 blocked (R5-PROCESS-TERMINATION-001)
+    note: Authorization covers R5 charter, local wall-clock/process-tree termination remediation, tests and a new no-call preregistration only. It does not authorize an R5 external model call, reuse the R4-T4 authorization, alter R4-T4 blocked/R4-RECOVERY pending, or unlock product work.
+
+  - id: OWNER-R5-T4-EXTERNAL-BATCH
+    title: Authorize the frozen R5-T4 bounded-deadline external batch
+    status: decided
+    decision_owner: project-owner
+    needed_by_task: R5-T4
+    decision: authorized
+    decided_at: 2026-07-30T15:56:51+08:00
+    evidence: Owner explicitly authorized the exact frozen R5-T4 destination, model, preregistration, participant data scope, successful-arm target, process cap, deadline, graceful/force windows, signals and retry boundary in the active Codex thread.
+    evidence_ref: docs/test-evidence/R5-T4/OWNER_AUTHORIZATION_20260730.json
+    requested_preregistration_hash: 8a7b315cfa5597b046228d9597a5805ad3b3dbd0becaa83a37f9ea81475ec886
+    requested_destination: OpenAI Codex service
+    requested_model: gpt-5.6-sol
+    requested_data_scope_hash: fefd57ecda3606e69eadb1165618cff24f76ce4ac699243a52f61171c98edba6
+    requested_successful_arm_count: 10
+    requested_max_process_attempts: 20
+    requested_termination_policy:
+      deadline_ms: 120000
+      graceful_window_ms: 5000
+      force_observation_window_ms: 5000
+      graceful_signal: SIGTERM
+      force_signal: SIGKILL
+      max_retries_per_arm: 1
+      retryable_only_after: sealed-observed-provider-timeout-before-response
+      runner_wall_clock_termination_retryable: false
+    context_refs:
+      - docs/test-evidence/R5-T3/20260730T154956-0800/PREREGISTRATION.json
+      - docs/test-evidence/R5-T3/20260730T154956-0800/PREREGISTRATION.sha256
+      - scripts/pilot/r5-t4.mjs
+    note: Authorization validation passed with canonical hash 4e682b719e64375f52613f128f04d39ca51d638ceb01bf1730decca0283f190c. Frozen local preflight passed, but the first planned arm failed before spawn with R5_EXECUTION_OPTIONS_INVALID because the capsule invocation omitted the explicit env record required by the terminalizer. Zero external processes/model calls occurred. The prior R4-T4 authorization is not reused; any changed source, hash, destination, participant data, process budget or termination policy requires a new authorization.
+
+  - id: R5-RECOVERY
+    title: Continue, adjust, or stop the independent R5 process-tree termination route
+    status: decided
+    decision_owner: evidence-gate
+    needed_by_task: R5-T4
+    decision: stop
+    decided_at: 2026-07-30T16:03:29+08:00
+    evidence_ref: docs/test-evidence/R5-T4/20260730T155920-0800/results/verdict.json
+    authoritative_state_ref: ROADMAP.yaml
+    note: The exact authorization and all frozen preregistration/source/probe checks passed, but terminalizer option validation rejected the first capsule invocation before spawn because invocation.env was absent. No participant process, model request, retry or next arm started. The sealed aggregate-integrity-failed stop verdict does not complete, fail, reopen or supersede blocked R4, does not alter R3/R2/R1/R0/P0 stops, and cannot unlock product work.
+
+  - id: OWNER-R6-PRESPAWN-INVOCATION-REMEDIATION
+    title: Authorize independent R6 pre-spawn invocation-contract remediation without changing R5 stop R4 blocked or prior terminal stops
+    status: decided
+    decision_owner: project-owner
+    needed_by_task: R6-T1
+    decision: authorized
+    decided_at: 2026-07-30T16:10:00+08:00
+    evidence: Owner explicitly stated "修复它" after Codex explained that R5 stopped because the frozen R3 capsule invocation lacked the explicit env record required by the R5 terminalizer.
+    owner_statement: "修复它"
+    context_refs:
+      - docs/DESIGN.md
+      - docs/delivery/R6_PRESPAWN_INVOCATION_REMEDIATION.md
+      - ROADMAP.yaml
+    context_sections:
+      - 2.7.8 Owner-authorized pre-spawn invocation-contract remediation after R5 stop (R6-PRESPAWN-INVOCATION-001)
+    note: Authorization covers the independent R6 charter, explicit fixed outer-environment contract, shared invocation validation, zero-model compatibility preflight, tests and a new no-call preregistration only. It does not authorize an R6 external model call, reuse R5-T4 authorization, alter R5/R4 or prior decisions, or unlock product work.
+
+  - id: OWNER-R6-T4-EXTERNAL-BATCH
+    title: Decide whether to authorize the frozen R6-T4 invocation-compatible external batch
+    status: open
+    decision_owner: project-owner
+    needed_by_task: R6-T4
+    context_refs:
+      - docs/test-evidence/R6-T3/20260730T165800-0800/PREREGISTRATION.json
+      - docs/test-evidence/R6-T3/20260730T165800-0800/PREREGISTRATION.sha256
+      - scripts/pilot/r6-t4.mjs
+    note: A future authorization must bind OpenAI Codex service, gpt-5.6-sol, preregistration 935c7b8c8880d6439238096b99c3ada3338a7c4c94fec192a7d4c8806f9610c9, data scope e89a0a77f6f2ef099f4f68a1838f39574a1caf2747dccf95494d91d7e3153d10, outer env cf24c3c5e349e230a9c04223dceb4854bd377915e21f46d830134b085bc3579d, ten successful arms, at most twenty processes, 120000 ms deadline, two 5000 ms termination windows, SIGTERM then SIGKILL, provider-timeout-only one-retry and runner-deadline-no-retry. No R6 external call is currently authorized.

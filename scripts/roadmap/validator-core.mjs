@@ -119,6 +119,15 @@ export function validateModel(root, roadmap, requirements) {
   visitGraph(phaseIds, (id) => phases.find((phase) => phase.id === id).depends_on ?? [], "phase-cycle");
 
   const recoveryPhases = phases.filter((phase) => phase.recovery_of_failed_phase !== undefined);
+  const blockedRemediationPhases = phases.filter(
+    (phase) => phase.remediation_of_blocked_phase !== undefined,
+  );
+  if (phases.some((phase) => (
+    phase.recovery_of_failed_phase !== undefined
+      && phase.remediation_of_blocked_phase !== undefined
+  ))) {
+    fail("recovery-boundary", "phase cannot recover failed and remediate blocked state together");
+  }
   for (const phase of recoveryPhases) {
     if (typeof phase.recovery_of_failed_phase !== "string"
       || phases.find((item) => item.id === phase.recovery_of_failed_phase)?.status !== "failed"
@@ -136,6 +145,27 @@ export function validateModel(root, roadmap, requirements) {
     )) || tasks.some((task) => (
       task.phaseId !== phase.id
       && (task.depends_on ?? []).some((dependency) => recoveryTaskIds.has(dependency))
+    ))) {
+      fail("recovery-boundary", `${phase.id} leaks into an existing product dependency`);
+    }
+  }
+  for (const phase of blockedRemediationPhases) {
+    if (typeof phase.remediation_of_blocked_phase !== "string"
+      || phases.find((item) => item.id === phase.remediation_of_blocked_phase)?.status !== "blocked"
+      || (phase.depends_on ?? []).length !== 0
+      || phase.scope_boundary !== "independent-research-no-product-unlock"
+      || typeof phase.authorization_ref !== "string") {
+      fail("recovery-boundary", `${phase.id} blocked remediation declaration invalid`);
+    }
+    safePath(root, phase.authorization_ref, "recovery-boundary");
+    const remediationTaskIds = new Set(tasks
+      .filter((task) => task.phaseId === phase.id)
+      .map((task) => task.id));
+    if (phases.some((candidate) => (
+      candidate.id !== phase.id && (candidate.depends_on ?? []).includes(phase.id)
+    )) || tasks.some((task) => (
+      task.phaseId !== phase.id
+      && (task.depends_on ?? []).some((dependency) => remediationTaskIds.has(dependency))
     ))) {
       fail("recovery-boundary", `${phase.id} leaks into an existing product dependency`);
     }
@@ -217,6 +247,61 @@ export function validateModel(root, roadmap, requirements) {
           const additionalAttempt = additionalDecision === undefined
             ? undefined
             : byTask.get(additionalDecision.current_attempt);
+          const additionalPhase = phases.find(
+            (phase) => phase.id === additionalDecision?.phase,
+          );
+          const preservedTerminalStop = additionalPhase?.status === "failed"
+            && additionalAttempt?.status === "done"
+            && additionalAttempt?.decision === "stop";
+          const preservedBlockedPending = additionalPhase?.status === "blocked"
+            && additionalAttempt?.status === "blocked"
+            && additionalAttempt?.decision === "pending";
+          return typeof excludedKey !== "string"
+            || excludedKey === key
+            || additionalDecision === undefined
+            || (!preservedTerminalStop && !preservedBlockedPending);
+        })
+        || new Set(additionalExcludedKeys).size !== additionalExcludedKeys.length
+        || recoveryPhase.gate?.requires_decisions?.[key] !== "continue"
+        || Object.keys(recoveryPhase.gate.requires_decisions).length !== 1) {
+        fail("recovery-boundary", `${key} recovery decision isolation invalid`);
+      }
+    }
+    const blockedRemediationPhase = blockedRemediationPhases.find(
+      (phase) => phase.id === descriptor.phase,
+    );
+    if (blockedRemediationPhase !== undefined) {
+      const excludedDecision = decisions[descriptor.does_not_supersede];
+      const excludedAttempt = excludedDecision === undefined
+        ? undefined
+        : byTask.get(excludedDecision.current_attempt);
+      const additionalExcludedKeys = descriptor.also_does_not_supersede ?? [];
+      const inheritedExcludedKeys = excludedDecision?.scope === "independent-research"
+        ? [
+            excludedDecision.does_not_supersede,
+            ...(excludedDecision.also_does_not_supersede ?? []),
+          ]
+        : [];
+      const blockedPhase = phases.find(
+        (phase) => phase.id === blockedRemediationPhase.remediation_of_blocked_phase,
+      );
+      if (descriptor.scope !== "independent-research"
+        || typeof descriptor.does_not_supersede !== "string"
+        || excludedDecision === undefined
+        || excludedDecision.phase !== blockedRemediationPhase.remediation_of_blocked_phase
+        || blockedPhase?.status !== "blocked"
+        || excludedAttempt?.status !== "blocked"
+        || excludedAttempt?.decision !== "pending"
+        || !Array.isArray(additionalExcludedKeys)
+        || additionalExcludedKeys.length !== inheritedExcludedKeys.length
+        || additionalExcludedKeys.some((excludedKey, index) => (
+          excludedKey !== inheritedExcludedKeys[index]
+        ))
+        || additionalExcludedKeys.some((excludedKey) => {
+          const additionalDecision = decisions[excludedKey];
+          const additionalAttempt = additionalDecision === undefined
+            ? undefined
+            : byTask.get(additionalDecision.current_attempt);
           return typeof excludedKey !== "string"
             || excludedKey === key
             || additionalDecision === undefined
@@ -224,9 +309,9 @@ export function validateModel(root, roadmap, requirements) {
             || additionalAttempt?.decision !== "stop";
         })
         || new Set(additionalExcludedKeys).size !== additionalExcludedKeys.length
-        || recoveryPhase.gate?.requires_decisions?.[key] !== "continue"
-        || Object.keys(recoveryPhase.gate.requires_decisions).length !== 1) {
-        fail("recovery-boundary", `${key} recovery decision isolation invalid`);
+        || blockedRemediationPhase.gate?.requires_decisions?.[key] !== "continue"
+        || Object.keys(blockedRemediationPhase.gate.requires_decisions).length !== 1) {
+        fail("recovery-boundary", `${key} blocked remediation decision isolation invalid`);
       }
     }
   }

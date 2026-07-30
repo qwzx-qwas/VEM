@@ -1,0 +1,1 @@
+{"batchPolicy":"retry-one-sealed-provider-timeout-only-stop-on-runner-termination-or-integrity-failure","laterSuccessMayNotOverwriteFailure":true,"perAttemptRawFinalBoundaryTerminationLedgerErrorAndHashes":true,"processTreeMustBeEmptyBeforeRetryOrNextArm":true,"schemaVersion":"R5-T3-failure-evidence-contract-v1"}

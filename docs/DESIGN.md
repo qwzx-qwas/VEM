@@ -310,6 +310,34 @@ R4 只允许四个原子结果：固定独立 remediation charter；实现并测
 
 当前 owner-authorized 执行序列见 [`docs/delivery/R4_TRANSPORT_TIMEOUT_REMEDIATION.md`](delivery/R4_TRANSPORT_TIMEOUT_REMEDIATION.md)。
 
+### 2.7.7 Owner-authorized process-tree termination remediation after R4 blocked (`R5-PROCESS-TERMINATION-001`)
+
+R4-T4 的 `blocked`、R4 phase 的 `blocked` 和 `R4-RECOVERY=pending` 必须保持不可覆盖；R3/R2/R1/R0/P0 的五条 terminal stop、failed phase 与 immutable evidence chain 同样不得改变。Owner 可以另行授权拓扑独立的 R5 process-tree termination remediation research phase；该授权只允许修复 runner-owned wall-clock deadline、进程树终止、stream drain 与 interruption-safe partial-evidence sealing，并冻结新的 recovery-only preregistration，不授权新的外部模型调用或产品实现。
+
+R5 必须声明 `remediation_of_blocked_phase: R4`、空 phase dependency、owner authorization reference 与 `independent-research-no-product-unlock` scope。`R5-RECOVERY` 必须以 `does_not_supersede: R4-RECOVERY` 固定 R4 的 blocked/pending chain，并以 `also_does_not_supersede: [R3-RECOVERY, R2-RECOVERY, R1-RECOVERY, R0-RECOVERY, P0-VALUE]` 固定全部 terminal decision chain；任何既有 phase/task 不得依赖 R5。R5 的 verdict 不能完成、失败、重开或替代 R4-T4，也不能升级任何产品 phase。
+
+Wall-clock deadline 必须由 trusted outer runner 以 monotonic clock 从 process spawn 起计时，deadline 数值、grace window、signal escalation 和 process-attempt budget 在新预注册中冻结。超时后 runner 必须终止整个 participant process group/tree，而不是只结束父 shell；先发送有界 graceful termination，再在 grace 到期后强制终止，等待 stdout/stderr/final-file handles 收束并记录每个阶段。无法证明进程树已停止、出现 orphan、signal/exit observation 矛盾或 deadline controller 自身失败时必须 fail closed，且不得启动 retry 或下一 arm。
+
+超时、外部取消、runner 异常与信号中断都必须进入同一个 exception-safe terminalization boundary：在返回或抛错前保存 bounded raw stdout/stderr、authoritative final-file observation、process-tree terminal observations、receipt ledger、audit/permission/evaluator 状态、termination metadata、error classification 与 SHA manifest。只有证据完整封存后，新的 classifier 才可以区分 `external-transport-timeout-before-response`、`runner-wall-clock-terminated-before-response` 或不可重试的 integrity failure；被 runner 终止本身不能冒充 provider `turn.failed`。
+
+R5 只允许四个原子结果：固定独立 remediation charter；实现并测试 deadline/process-tree termination 与 interruption-safe sealing；冻结新的 recovery-only preregistration、deadline/grace 与 process-attempt budget；在新的、绑定该 hash、目的地、数据范围、deadline 和最大进程尝试数的 owner authorization 后执行 decision attempt。外部调用授权必须发生在新预注册冻结以后。
+
+当前 owner-authorized 执行序列见 [`docs/delivery/R5_PROCESS_TREE_TERMINATION_REMEDIATION.md`](delivery/R5_PROCESS_TREE_TERMINATION_REMEDIATION.md)。
+
+### 2.7.8 Owner-authorized pre-spawn invocation-contract remediation after R5 stop (`R6-PRESPAWN-INVOCATION-001`)
+
+R5-T4 的 `stop`、R5 phase 的 `failed`、R4-T4/R4 的 `blocked`、`R4-RECOVERY=pending`，以及 R3/R2/R1/R0/P0 的五条 terminal stop、failed phase 与全部 immutable evidence chain 都不得覆盖。Owner 可以另行授权拓扑独立的 R6 pre-spawn invocation-contract remediation research phase；该授权只允许修复 capsule invocation 与 process terminalizer 之间的显式环境契约、增加零模型兼容性预检、运行本地测试并冻结新的 recovery-only preregistration，不授权新的外部模型调用或产品实现。
+
+R6 必须声明 `recovery_of_failed_phase: R5`、空 phase dependency、owner authorization reference 与 `independent-research-no-product-unlock` scope。`R6-RECOVERY` 必须以 `does_not_supersede: R5-RECOVERY` 固定 R5 terminal stop，以 `also_does_not_supersede: [R4-RECOVERY, R3-RECOVERY, R2-RECOVERY, R1-RECOVERY, R0-RECOVERY, P0-VALUE]` 同时固定 R4 blocked/pending chain 与此前全部 terminal stop chain；任何既有 phase/task 不得依赖 R6。R6 的 verdict 不能完成、失败、重开或替代 R4-T4，也不能改写 R5 verdict 或升级任何产品 phase。
+
+所有交给 bounded process terminalizer 的 invocation 必须在构造时携带不可变、显式且只含字符串的 outer-process `env` record；不得依赖 `spawn` 的隐式环境继承，也不得在预注册后由 runner 静默补全。当前 Bubblewrap outer process 只允许固定 `PATH=/usr/bin:/bin`；Codex capsule 内部的 HOME、CODEX_HOME、TMPDIR 与 PATH 仍由 Bubblewrap 参数和 R3 permission profile 单独固定。Outer env 不得包含 auth、key、password、secret、token、代理凭据、用户目录或其他 host 环境值，且其精确内容和兼容性预检结果必须进入 instrumentation/source binding。
+
+R6 的零模型 preflight 必须构造与 decision runner 相同的 R3 capsule invocation，并复用 terminalizer 的同一 invocation predicate 验证 executable、args、cwd、explicit env 和 evidence shape；同时证明 outer env 是固定 allowlist、没有 host-secret inheritance、capsule workspace 只读、generated command 无 auth 读取权限。该 preflight 只允许执行本地 filesystem/binary/permission probe，不得启动 Codex `exec` participant 或探测 provider network；未观察外部 reachability 时继续记录 `networkRuntimeProbed=false`。
+
+R6 只允许四个原子结果：固定独立 remediation charter 与 blocked/terminal chain validator；实现并测试 explicit outer env、共享 invocation predicate 和 zero-model compatibility preflight；冻结新的 recovery-only preregistration、source hashes、deadline/grace/signal 与 process-attempt budget；在新的、绑定该 hash、目的地、数据范围、deadline、环境契约和最大进程尝试数的 owner authorization 后执行 decision attempt。外部调用授权必须发生在新预注册冻结以后，R5-T4 的旧授权不得复用。
+
+当前 owner-authorized 执行序列见 [`docs/delivery/R6_PRESPAWN_INVOCATION_REMEDIATION.md`](delivery/R6_PRESPAWN_INVOCATION_REMEDIATION.md)。
+
 ## 2.8 项目与依赖许可证 (`LICENSE-POLICY-001`)
 
 P0-T1 在生成 package metadata 前必须记录项目自身许可证或明确的 private/unlicensed 状态、版权主体、贡献接收方式和发布边界；设计文档不能替项目所有者默认选择 MIT、Apache-2.0、AGPL 或商业许可。若许可证决定尚未获得项目所有者确认，允许完成不发布的 workspace scaffold，但 public package、复制第三方代码或分发 extension 的工作保持 blocked。

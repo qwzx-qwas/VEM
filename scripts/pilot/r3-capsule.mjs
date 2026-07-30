@@ -13,6 +13,9 @@ import { buildR2CodexCapsuleInvocation } from "./r2-capsule.mjs";
 export const R3_PERMISSION_PROFILE_NAME = "r3-capsule";
 export const R3_PERMISSION_PROFILE_CONTAINER_PATH =
   `/codex-home/${R3_PERMISSION_PROFILE_NAME}.config.toml`;
+export const R3_OUTER_PROCESS_ENV = Object.freeze({
+  PATH: "/usr/bin:/bin",
+});
 const R3_COMMAND_PATH = [
   "/opt/codex/lib/node_modules/@openai/codex/node_modules/@openai/"
     + "codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-path",
@@ -91,9 +94,12 @@ export function buildR3CodexCapsuleInvocation(options) {
   return Object.freeze({
     ...base,
     args: Object.freeze(args),
+    env: R3_OUTER_PROCESS_ENV,
     permissionProfilePath: profile.hostPath,
     evidence: Object.freeze({
       ...base.evidence,
+      outerProcessEnvironment: R3_OUTER_PROCESS_ENV,
+      outerProcessEnvironmentPolicy: "fixed-path-only-no-host-inheritance",
       innerCodexSandbox: `permission-profile:${R3_PERMISSION_PROFILE_NAME}`,
       legacySandboxMode: "removed",
       userConfigLoading: "isolated-mounted-profile-only",
@@ -156,8 +162,11 @@ export function buildR3PermissionProfileProbeInvocation({
     executable: invocation.executable,
     args: Object.freeze(args),
     cwd: invocation.cwd,
+    env: invocation.env,
     workspaceProbePath,
     evidence: Object.freeze({
+      outerProcessEnvironment: invocation.env,
+      outerProcessEnvironmentPolicy: "fixed-path-only-no-host-inheritance",
       permissionProfile: R3_PERMISSION_PROFILE_NAME,
       permissionProfileMount:
         `${R3_PERMISSION_PROFILE_CONTAINER_PATH}:ro`,
@@ -186,7 +195,7 @@ export function runR3PermissionProfileProbe(
   try {
     result = spawn(invocation.executable, invocation.args, {
       cwd: invocation.cwd,
-      env: { PATH: process.env.PATH ?? "" },
+      env: invocation.env,
       encoding: "utf8",
       timeout: 15_000,
     });
@@ -383,6 +392,7 @@ function assertRunnableProbeInvocation(invocation) {
     || invocation.executable !== "/usr/bin/bwrap"
     || invocation.cwd !== "/"
     || !Array.isArray(invocation.args)
+    || invocation.env !== R3_OUTER_PROCESS_ENV
     || typeof invocation.workspaceProbePath !== "string") {
     throw new Error("R3_CAPSULE_PROBE_INVOCATION_INVALID");
   }

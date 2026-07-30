@@ -13,6 +13,7 @@ import {
 import {
   buildR3CodexCapsuleInvocation,
   buildR3PermissionProfileProbeInvocation,
+  R3_OUTER_PROCESS_ENV,
   R3_PERMISSION_PROFILE_CONTAINER_PATH,
   R3_PERMISSION_PROFILE_NAME,
   R3_PERMISSION_PROFILE_TOML,
@@ -71,6 +72,8 @@ describe("R3 Codex permission-profile capsule", () => {
     expect(R3_PERMISSION_PROFILE_TOML)
       .toContain('HOME = "/work", TMPDIR = "/tmp"');
     expect(invocation.evidence).toMatchObject({
+      outerProcessEnvironment: { PATH: "/usr/bin:/bin" },
+      outerProcessEnvironmentPolicy: "fixed-path-only-no-host-inheritance",
       workspaceMount: "/work:ro",
       authoritativeResponseMount: "/run/vem/final-response.json:rw-single-file",
       innerCodexSandbox: "permission-profile:r3-capsule",
@@ -164,7 +167,7 @@ describe("R3 Codex permission-profile capsule", () => {
       args: invocation.args,
       options: {
         cwd: "/",
-        env: { PATH: process.env.PATH ?? "" },
+        env: R3_OUTER_PROCESS_ENV,
         encoding: "utf8",
         timeout: 15_000,
       },

@@ -183,6 +183,52 @@ describe("REQ-TRACE-001 validator", () => {
     code("recovery-boundary");
   });
 
+  test("accepts an independent remediation phase without completing a blocked decision", () => {
+    addRecoveryPhase();
+    addBlockedRemediationPhase();
+    expect(validate()).toMatchObject({ phases: 3, tasks: 5 });
+  });
+
+  test("requires blocked remediation to preserve the blocked pending attempt", () => {
+    addRecoveryPhase();
+    addBlockedRemediationPhase();
+    const recovery = roadmap.phases.find((phase) => phase.id === "R0");
+    recovery.status = "failed";
+    recovery.tasks.at(-1).status = "done";
+    recovery.tasks.at(-1).decision = "stop";
+    code("recovery-boundary");
+  });
+
+  test("rejects blocked remediation ancestor drift and dependency leakage", () => {
+    addRecoveryPhase();
+    addBlockedRemediationPhase();
+    roadmap.decisions.BLOCKED_REMEDIATION.also_does_not_supersede = [];
+    code("recovery-boundary");
+    roadmap.decisions.BLOCKED_REMEDIATION.also_does_not_supersede = ["P0-VALUE"];
+    roadmap.phases.at(-1).tasks[0].status = "done";
+    roadmap.phases[0].tasks[0].depends_on = ["R1-T1"];
+    code("recovery-boundary");
+  });
+
+  test("rejects a phase that declares failed recovery and blocked remediation together", () => {
+    addRecoveryPhase();
+    addBlockedRemediationPhase();
+    roadmap.phases.at(-1).recovery_of_failed_phase = "P0";
+    code("recovery-boundary");
+  });
+
+  test("accepts recovery after a failed remediation while preserving its blocked ancestor", () => {
+    addRecoveryPhase();
+    addBlockedRemediationPhase();
+    addRecoveryAfterBlockedRemediation();
+    expect(validate()).toMatchObject({ phases: 4, tasks: 7 });
+    const blocked = roadmap.phases.find((phase) => phase.id === "R0");
+    blocked.status = "failed";
+    blocked.tasks.at(-1).status = "done";
+    blocked.tasks.at(-1).decision = "stop";
+    code("recovery-boundary");
+  });
+
   test("YAML serializer fixtures remain deterministic", () => {
     expect(stringify(requirements)).toBe(stringify(requirements));
   });
@@ -278,4 +324,91 @@ function addSecondRecoveryPhase() {
     also_does_not_supersede: ["P0-VALUE"],
   };
   requirements.contracts[0].roadmap_tasks.push("R1-T1", "R1-T2");
+}
+
+function addBlockedRemediationPhase() {
+  const recovery = roadmap.phases.find((phase) => phase.id === "R0");
+  recovery.status = "blocked";
+  recovery.tasks[0].status = "done";
+  recovery.tasks[1].status = "blocked";
+  const charter = {
+    id: "R1-T1",
+    status: "in_progress",
+    contracts: ["C-1"],
+    depends_on: [],
+    tests: ["blocked-remediation-charter"],
+  };
+  const verdict = {
+    id: "R1-T2",
+    status: "todo",
+    contracts: ["C-1"],
+    depends_on: ["R1-T1"],
+    tests: ["blocked-remediation-verdict"],
+    decision_key: "BLOCKED_REMEDIATION",
+    decision_attempt: 1,
+    supersedes_attempt: null,
+    decision: "pending",
+  };
+  roadmap.phases.push({
+    id: "R1",
+    status: "in_progress",
+    depends_on: [],
+    remediation_of_blocked_phase: "R0",
+    authorization_ref: "docs/decisions.yaml",
+    scope_boundary: "independent-research-no-product-unlock",
+    gate: { requires_decisions: { BLOCKED_REMEDIATION: "continue" } },
+    tasks: [charter, verdict],
+  });
+  roadmap.decisions.BLOCKED_REMEDIATION = {
+    phase: "R1",
+    current_attempt: "R1-T2",
+    scope: "independent-research",
+    does_not_supersede: "RECOVERY",
+    also_does_not_supersede: ["P0-VALUE"],
+  };
+  requirements.contracts[0].roadmap_tasks.push("R1-T1", "R1-T2");
+}
+
+function addRecoveryAfterBlockedRemediation() {
+  const remediation = roadmap.phases.find((phase) => phase.id === "R1");
+  remediation.status = "failed";
+  remediation.tasks[0].status = "done";
+  remediation.tasks[1].status = "done";
+  remediation.tasks[1].decision = "stop";
+  const charter = {
+    id: "R2-T1",
+    status: "in_progress",
+    contracts: ["C-1"],
+    depends_on: [],
+    tests: ["post-remediation-recovery-charter"],
+  };
+  const verdict = {
+    id: "R2-T2",
+    status: "todo",
+    contracts: ["C-1"],
+    depends_on: ["R2-T1"],
+    tests: ["post-remediation-recovery-verdict"],
+    decision_key: "POST_REMEDIATION_RECOVERY",
+    decision_attempt: 1,
+    supersedes_attempt: null,
+    decision: "pending",
+  };
+  roadmap.phases.push({
+    id: "R2",
+    status: "in_progress",
+    depends_on: [],
+    recovery_of_failed_phase: "R1",
+    authorization_ref: "docs/decisions.yaml",
+    scope_boundary: "independent-research-no-product-unlock",
+    gate: { requires_decisions: { POST_REMEDIATION_RECOVERY: "continue" } },
+    tasks: [charter, verdict],
+  });
+  roadmap.decisions.POST_REMEDIATION_RECOVERY = {
+    phase: "R2",
+    current_attempt: "R2-T2",
+    scope: "independent-research",
+    does_not_supersede: "BLOCKED_REMEDIATION",
+    also_does_not_supersede: ["RECOVERY", "P0-VALUE"],
+  };
+  requirements.contracts[0].roadmap_tasks.push("R2-T1", "R2-T2");
 }

@@ -67,6 +67,20 @@ contracts:
     roadmap_tasks: [R4-T1, R4-T2, R4-T3, R4-T4]
     required_tests: [p0-r0-r1-r2-r3-stop-immutability, independent-phase-boundary, zero-model-transport-preflight, timeout-before-response-classification, non-timeout-and-partial-response-no-retry, bounded-retry-process-budget, per-attempt-evidence-sealing, separate-external-authorization, no-product-unlock]
 
+  - id: R5-PROCESS-TERMINATION-001
+    title: Owner-authorized process-tree termination and interruption-safe sealing remediation after R4 blocked
+    authoritative_sections: ["2.7.7 Owner-authorized process-tree termination remediation after R4 blocked (`R5-PROCESS-TERMINATION-001`)"]
+    introduced_phase: R5
+    roadmap_tasks: [R5-T1, R5-T2, R5-T3, R5-T4]
+    required_tests: [r4-blocked-pending-and-prior-stops-immutability, independent-phase-boundary, monotonic-wall-clock-deadline, process-group-tree-termination, bounded-signal-escalation, stream-and-final-file-drain, interruption-safe-partial-evidence-sealing, orphan-and-contradictory-terminal-fail-closed, separate-external-authorization, no-product-unlock]
+
+  - id: R6-PRESPAWN-INVOCATION-001
+    title: Owner-authorized explicit pre-spawn invocation environment remediation after R5 stop
+    authoritative_sections: ["2.7.8 Owner-authorized pre-spawn invocation-contract remediation after R5 stop (`R6-PRESPAWN-INVOCATION-001`)"]
+    introduced_phase: R6
+    roadmap_tasks: [R6-T1, R6-T2, R6-T3, R6-T4]
+    required_tests: [r5-stop-r4-blocked-pending-and-prior-stops-immutability, independent-phase-boundary, explicit-fixed-outer-environment, no-host-secret-inheritance, shared-terminalizer-invocation-predicate, zero-model-invocation-compatibility-preflight, preregistration-source-and-environment-binding, separate-external-authorization, no-product-unlock]
+
   - id: LICENSE-POLICY-001
     title: Project license decision and third-party dependency policy
     authoritative_sections: ["2.8 项目与依赖许可证 (`LICENSE-POLICY-001`)", "附录 B：调研与实现参考"]

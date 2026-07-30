@@ -657,6 +657,114 @@
 
 > **执行受阻（2026-07-30）**：Owner authorization 已精确绑定 OpenAI Codex/gpt-5.6-sol、完整 preregistration/data-scope hashes、10 个成功 arms 与最多 20 个 external processes。冻结 preflight 与授权复验通过后只启动首个 direct arm；Codex 子进程依次耗尽 WebSocket 5 次 timeout reconnect、fallback 至 HTTPS 后再耗尽 5 次 timeout reconnect，却没有退出或产生 `turn.failed`、`turn.completed`、权威 final response。冻结 runner 缺少独立 wall-clock/process-tree termination，因而无法封存 attempt 并进入受限 retry controller。为执行有限授权边界，批次被终止；第二个进程及 retry 均未启动，partial evidence 原样保留于 `docs/test-evidence/R4-T4/20260730T144143-0800/`，incident hash 为 `95021eac99d93d49985ee46d003a4108ff7a524244d83e3521b8edff8ecffd70`。本 prompt **未完成**，`R4-T4=blocked`、`R4-RECOVERY=pending`，没有生成或推断 `continue/adjust/stop` verdict。
 
+## R5-T1 — Independent process-tree termination remediation charter
+
+### Prompt
+
+- **背景**：R4-T4 首个 authorized process 在 transport reconnect 耗尽后仍不退出；R4-T4/R4 保持 blocked，R4-RECOVERY 保持 pending，R3/R2/R1/R0/P0 保持 failed/stop。
+- **目标**：新增不覆盖 blocked R4 或五条 stop chain 的独立 R5，并机械证明零产品解锁。
+- **本阶段做**：新增 R5-PROCESS-TERMINATION-001、独立 decision、owner authorization、R5-T1–T4 原子链、blocked-phase validator 与 six-decision proof checks。
+- **本阶段不做**：不改 R4/R3/R2/R1/R0/P0 evidence/status/verdict，不修 runner，不冻结新 plan，不执行外部调用。
+- **实现约束**：R5 phase 与 R5-T1 均 `depends_on: []`，只按 immutable evidence/hash 读取 blocked R4；固定不 supersede R4 pending decision 与 R3/R2/R1/R0/P0 terminal decisions。
+- **测试要求**：blocked R4/pending attempt、五条 failed/stop、empty deps、six-decision isolation、authorization、dependency leakage、contract reverse mapping。
+- **验收标准**：章程与全仓门禁通过后 `done`，仅 R5-T2 eligible。
+
+> **已完成（2026-07-30）**：已新增 `R5-PROCESS-TERMINATION-001`、独立 R5/R5-RECOVERY chain、owner authorization record 与 R5-T1–T4 原子序列；validator 现在能独立验证 blocked/pending remediation，并机械保持 R4-T4/R4=`blocked`、R4-RECOVERY=`pending` 与 R3/R2/R1/R0/P0 五条 failed/stop chain。R5 无 phase/task dependency，也没有既有任务依赖 R5；15-phase/164-task/31-contract roadmap、30 项定向测试及 49 文件/282 项全仓测试通过，product unlock count 与外部调用均为 0。下一项仅为 R5-T2。
+
+## R5-T2 — Wall-clock/process-tree termination 与 interruption-safe sealing
+
+### Prompt
+
+- **背景**：R5-T1 只建立 blocked-phase 独立 remediation authority；R4 frozen runner 没有 independent deadline 或 process-tree termination。
+- **目标**：在零外部模型调用下实现 trusted outer-runner wall-clock deadline、process-tree kill、stream drain 与统一 terminal evidence sealing。
+- **本阶段做**：monotonic spawn deadline、graceful-to-force signal escalation、process-group/tree observation、stdout/stderr/final-file drain、timeout/cancel/signal/exception terminalizer、synthetic/local child probes。
+- **本阶段不做**：不联系 provider、不修改或恢复 R4 attempt、不冻结 R5-T3 plan、不执行 participant arm。
+- **实现约束**：deadline 从 spawn 计时；无法证明整棵进程树终止、出现 orphan/terminal contradiction 或 sealing 不完整时 fail closed；runner termination 不伪造成 provider `turn.failed`。
+- **测试要求**：normal exit、deadline、grace/force、child/grandchild、orphan refusal、stream drain、missing final、cancel/signal/exception、evidence-before-return、bounds、no-provider-terminal-invention。
+- **验收标准**：定向及全仓门禁通过后 `done`，仅 R5-T3 eligible。
+
+> **已完成（2026-07-30）**：已新增 R5 版本化 outer-runner terminalization boundary，以 `process.hrtime.bigint` 从 spawn 起执行 wall-clock deadline，并用独立 process group 对 parent/descendant 进行有界 `SIGTERM`→`SIGKILL` 终止；normal、deadline、force、cancel/signal、launch/audit/evaluator exception、missing final、orphan 与 terminal contradiction 均在返回前封存 bounded stdout/stderr、final observation、receipt ledger、permission/audit/evaluator state、termination metadata、failure classification 和 SHA manifest。10 项终止器测试、1 项本地综合 proof 及 51 文件/293 项全仓测试通过；证据位于 `docs/test-evidence/R5-T2/20260730T153607+0800/`，proof hash 为 `f42297572767611c7707b3d5f0f363ba54f409c4c8ae832652bb808214621799`。所有 probe 均为本地合成进程，外部模型调用为 0；runner termination 从未伪造 provider `turn.failed`，R4 blocked/pending 与五条 stop chain 未改变。下一项仅为 R5-T3。
+
+## R5-T3 — Process-termination recovery preregistration
+
+### Prompt
+
+- **背景**：R5-T2 提供受测的 deadline/process-tree terminalizer 与 interruption-safe sealer。
+- **目标**：冻结新 runner/task/threshold/source hashes、deadline/grace/signal policy 与全批 process-attempt budget。
+- **本阶段做**：fresh recovery-only task bank、counterbalance、equal-base capsules、termination/failure contracts、budget、external authorization gate。
+- **本阶段不做**：不执行外部 arm、不复用 R4 instrumentation hash、不授权产品工作。
+- **实现约束**：`externalExecutionAuthorized=false`；deadline/grace/signal/budget 全部纳入 hash；ground truth evaluator-only，R4 blocked/pending 与五条 stop immutable。
+- **测试要求**：fresh tasks/source bindings、capsule equality、deadline/grace/signal/budget、holdout exclusion、termination mutation、authorization false、local probes。
+- **验收标准**：冻结并通过 probes 后 `done`；R5-T4 等待单独 owner authorization。
+
+> **已完成（2026-07-30）**：已冻结 5 个全新 process-termination-only tasks、10 个 counterbalanced arms、equal-base read-only capsules、10 项 runtime source bindings，以及 process-aware R5-T4 runner/classifier。Termination policy 固定为 spawn 后 `120000ms` deadline、`5000ms` graceful window、`5000ms` force-observation window、`SIGTERM`→`SIGKILL`、每 arm 最多 1 次且仅限已观察 provider timeout 的 retry、全批最多 20 个 external processes；runner deadline termination 明确不可重试且不能冒充 provider `turn.failed`。30 个本地 filesystem/binary/permission probes、20 项 R5 联合定向测试及 53 文件/303 项全仓测试通过。预注册位于 `docs/test-evidence/R5-T3/20260730T154956-0800/`：preregistration hash `8a7b315cfa5597b046228d9597a5805ad3b3dbd0becaa83a37f9ea81475ec886`，instrumentation hash `02fa73cd42572e703c33516b5a5f10a123f0f8e34dd0b82275016f8a8f9c6641`，data-scope hash `fefd57ecda3606e69eadb1165618cff24f76ce4ac699243a52f61171c98edba6`，termination-policy hash `ca4ffce3cf06abea99712e581a9732d6579a5490ff9f2bc24e3265b39991404f`。`externalExecutionAuthorized=false`、外部调用为 0；R4 blocked/pending 与五条 stop chain 不变。R5-T4 必须等待绑定上述完整边界的单独 owner authorization。
+
+## R5-T4 — Separately authorized bounded-deadline verdict
+
+### Prompt
+
+- **背景**：R5-T3 已冻结新的 process-termination-aware runner/instrumentation plan。
+- **目标**：在单独 owner authorization 后执行 paired arms 和受限 attempts，并记录 `R5-RECOVERY` verdict。
+- **本阶段做**：fresh contexts、deadline/termination/retry classification、final-file/JSONL/audit consistency、attempt/batch evidence、correctness 与 cost verdict。
+- **本阶段不做**：不覆盖 R4/R3/R2/R1/R0/P0，不自动解锁或创建产品 phase。
+- **实现约束**：任何 prereg/source/capsule/holdout/deadline/budget/failure-sealing drift fail closed；授权必须绑定目的地、数据范围、deadline/grace/signal policy 和 process 上限。
+- **验收标准**：immutable verdict；continue 也仅允许提出新的独立研究路线。
+
+> **已完成（2026-07-30，`R5-RECOVERY=stop`）**：Owner authorization 已精确绑定 OpenAI Codex/gpt-5.6-sol、preregistration `8a7b315c…ec886`、data scope `fefd57ec…edba6`、10 个成功 arms、最多 20 个 processes，以及 120000ms deadline、两个 5000ms termination windows 与 `SIGTERM`→`SIGKILL` policy。Frozen source/probes/authorization 复验及本地 preflight 通过；证据目录的安全 ID 规范化保持 preregistration/authorization hashes 不变。首个 planned arm 在 `spawn` 前进入 frozen terminalizer options validation，但 R3 capsule invocation 没有 frozen terminalizer 强制要求的显式 `env` record，触发 `R5_EXECUTION_OPTIONS_INVALID`。因此 participant process、process group、model request、retry 与下一 arm 均未启动，external process/model-call count 为 0。该 runner-contract incompatibility 属于 `aggregate-integrity-failed` stop condition；失败、零调用、local preflight、run index、verdict 与 `RESULTS.sha256` 已封存于 `docs/test-evidence/R5-T4/20260730T155920-0800/`，canonical verdict hash 为 `c04a6631b6285735fa3ff1da0d576e31b1a85b3fbc981a69c25aa4cb27b0a016`。最终 54 个测试文件/308 项测试、build、typecheck、lint 与 roadmap validation 全部通过。R5 phase=`failed`；R4 blocked/pending 与 R3/R2/R1/R0/P0 stop chains 不变，零产品解锁。
+
+## R6-T1 — Pre-spawn invocation remediation charter
+
+### Prompt
+
+- **背景**：R5-T4 在首个 arm 的 `spawn` 前因 capsule invocation 缺少 terminalizer 要求的显式 `env` record 而终止，R5 已形成 immutable stop。
+- **目标**：只建立独立 R6 charter，固定 R5 stop、R4 blocked/pending、此前五条 stop 与零产品解锁边界。
+- **本阶段做**：增加 R6 contract/phase/decision、owner authorization reference、recovery-after-blocked-remediation validator 语义和机械 charter proof。
+- **本阶段不做**：不修改 capsule/terminalizer runtime，不生成预注册，不执行外部调用。
+- **实现约束**：R6 phase/task dependency 为空；`R6-RECOVERY` 不 supersede R5、R4 或此前 decision；既有 phase/task 不依赖 R6。
+- **测试要求**：failed R5、blocked/pending R4、五条 stop、七 decision chain、authorization、validator、dependency leak 和 product unlock 负例。
+- **验收标准**：charter proof 与全仓目标测试通过后 `done`；下一项仅为 R6-T2。
+
+> **已完成（2026-07-30）**：已登记独立 `R6-PRESPAWN-INVOCATION-001` contract、R6 phase 与 `R6-RECOVERY` decision chain，并扩展 validator，使其能在保持 R5 failed/stop 的同时机械保留祖先 R4 blocked/pending，而不会把 R4 伪造为 terminal stop。R6 phase/task dependency 为空，既有 phase/task 对 R6 的依赖数为 0，产品解锁数为 0。Charter proof 封存于 `docs/test-evidence/R6-T1/20260730T164000-0800/`，proof hash 为 `70d3a440099d3bb7ef8c676e07cb7e38351301548d8ee881c4959e4d58e9531f`；27 项跨代 charter 测试、26 项 validator/R6 定向测试以及沙箱外 55 文件/314 项全仓测试通过，build/typecheck/lint/roadmap validation 通过，外部调用为 0。下一项仅为 R6-T2。
+
+## R6-T2 — Explicit outer env and zero-model compatibility preflight
+
+### Prompt
+
+- **背景**：R6-T1 已固定独立修复边界。
+- **目标**：消除 capsule builder 与 bounded terminalizer 的 pre-spawn invocation 契约不兼容。
+- **本阶段做**：给 exact capsule invocation 增加固定、不可变、只含字符串的 outer env；共享 terminalizer invocation predicate；执行 exact-builder zero-model compatibility/security preflight。
+- **本阶段不做**：不运行 `codex exec` participant，不探测 provider network，不冻结或执行外部 batch。
+- **实现约束**：outer env 只允许 `PATH=/usr/bin:/bin`，不得继承 host secret/user path；inner capsule env 和 R3 permission profile 继续独立 fail closed。
+- **测试要求**：fixed PATH only、immutability、secret exclusion、builder/predicate parity、permission/auth/workspace probe、network-unprobed、zero model call。
+- **验收标准**：目标测试和本地 proof 通过后 `done`；下一项仅为 R6-T3。
+
+> **已完成（2026-07-30）**：`buildR3CodexCapsuleInvocation` 与其 zero-model permission probe 现在都显式携带同一个 immutable outer env `{PATH: "/usr/bin:/bin"}`，并把精确值/策略绑定进 invocation evidence；不再隐式继承 host env。R5 terminalizer 导出并在真实 options validation 中复用同一 `isR5ProcessInvocation` predicate，exact R3 decision invocation 已通过该 predicate。真实本地 Bubblewrap permission-profile proof 继续证明 generated command 不可读 auth、`/work` 不可写、敏感环境缺失且 `networkRuntimeProbed=false`；decision invocation 只构造未执行，participant process/provider request/model call 均为 0。证据位于 `docs/test-evidence/R6-T2/20260730T164800-0800/`，proof hash `2fe69ddf81f1a6a6a15b84ae144cdbf20dd67706cd4722ae3f91358b0086b8fa`，outer-env hash `cf24c3c5e349e230a9c04223dceb4854bd377915e21f46d830134b085bc3579d`。19 项 R6/capsule/terminalizer 定向测试与沙箱外 57 文件/319 项全仓测试通过，build/typecheck/lint/roadmap validation 通过；历史 R5 test 现明确证明旧 source binding 已 drift 并拒绝复用旧授权。下一项仅为 R6-T3。
+
+## R6-T3 — Invocation-compatible recovery preregistration
+
+### Prompt
+
+- **背景**：R6-T2 已修复并证明 exact invocation 的 pre-spawn 兼容性。
+- **目标**：冻结新的 runner/task/source/environment/termination/budget/evidence plan。
+- **本阶段做**：fresh recovery-only task bank、counterbalance、equal-base capsules、explicit env hash、compatibility preflight hash、deadline/grace/signal/retry/process budget 与 authorization gate。
+- **本阶段不做**：不执行外部 arm，不复用 R5 preregistration/instrumentation/authorization，不授权产品工作。
+- **实现约束**：`externalExecutionAuthorized=false`；env/source/deadline/budget 全部纳入 hash；R5 stop、R4 blocked/pending 与五条 stop immutable。
+- **测试要求**：fresh tasks/source binding、capsule equality、environment contract、preflight binding、termination policy、budget、holdout exclusion、immutability、authorization false。
+- **验收标准**：冻结并通过 local probes 后 `done`；R6-T4 等待新的精确 owner authorization。
+
+> **已完成（2026-07-30）**：已冻结 5 个全新 invocation-contract-only tasks、10 个 counterbalanced arms、equal-base read-only capsules、11 项 runtime source bindings，以及 invocation-compatible R6-T4 runner/verifier。新 plan 精确绑定 R6-T2 compatibility proof、immutable `{PATH: "/usr/bin:/bin"}` outer env、spawn 后 `120000ms` deadline、`5000ms` grace、`5000ms` force observation、`SIGTERM`→`SIGKILL`、每 arm 最多 1 次且仅限 sealed observed provider timeout 的 retry、全批最多 20 个 processes；runner deadline termination 继续不可重试。30 个本地 filesystem/Codex-binary/permission-profile probes 均通过且没有运行 participant，24 项 R6/terminalizer 定向测试及沙箱外 59 文件/330 项全仓测试通过。预注册位于 `docs/test-evidence/R6-T3/20260730T165800-0800/`：preregistration hash `935c7b8c8880d6439238096b99c3ada3338a7c4c94fec192a7d4c8806f9610c9`，instrumentation hash `a6ac0651d8258c83da0db47accb216c41682df0a1d075768c407b8cfdc939072`，data-scope hash `e89a0a77f6f2ef099f4f68a1838f39574a1caf2747dccf95494d91d7e3153d10`，termination-policy hash `99e34c03e6b15a1bbeedc3040ccd6332d01f2ab6059cce111f978a51e937a7cd`，outer-env hash `cf24c3c5e349e230a9c04223dceb4854bd377915e21f46d830134b085bc3579d`。`externalExecutionAuthorized=false`、外部调用为 0；R5 stop、R4 blocked/pending 与此前五条 stop chain 不变。R6-T4 必须等待绑定上述完整边界的全新 owner authorization。
+
+## R6-T4 — Separately authorized invocation-compatible verdict
+
+### Prompt
+
+- **背景**：R6-T3 将冻结新的 invocation-compatible runner/instrumentation plan。
+- **目标**：仅在新的精确 owner authorization 后执行 bounded paired arms，并记录 `R6-RECOVERY` verdict。
+- **本阶段做**：pre-spawn compatibility recheck、fresh contexts、deadline/process-tree/retry classification、final-file/JSONL/audit consistency、attempt/batch evidence 与 verdict。
+- **本阶段不做**：不覆盖 R5/R4/R3/R2/R1/R0/P0，不自动解锁或创建产品 phase。
+- **实现约束**：任何 prereg/source/env/capsule/holdout/deadline/budget/failure-sealing drift fail closed；旧 R5-T4 authorization 无效。
+- **验收标准**：immutable verdict；continue 也仅允许提出新的独立研究路线。
+
 ## P0-T9A — Walking-skeleton 正向 Edge E2E
 
 ### Prompt
