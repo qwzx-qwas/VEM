@@ -413,10 +413,12 @@ decisions:
 
   - id: R6-RECOVERY
     title: Continue, adjust, or stop the independent R6 invocation-compatible route
-    status: open
+    status: decided
     decision_owner: evidence-gate
     needed_by_task: R6-T13
-    decision: pending
+    decision: stop
+    decided_at: 2026-08-01T14:38:40+08:00
+    evidence_ref: docs/test-evidence/R6-T13/20260801T141247-0800/results/verdict.json
     current_attempt: R6-T13
     prior_attempts:
       - task: R6-T4
@@ -432,7 +434,7 @@ decisions:
         decided_at: 2026-07-30T20:13:02+08:00
         evidence_ref: docs/test-evidence/R6-T10/20260730T195616-0800/results/verdict.json
     authoritative_state_ref: ROADMAP.yaml
-    note: Attempts one through three are immutable adjust. Attempt three remains nonretryable protocol-or-unknown-failure. R6-T11 completed a local-only immutable replay and recorded continue-to-preregistration-only without changing attempt three. R6-T12 then froze a fresh attempt-four source/task/data/environment/failure-policy closure with externalExecutionAuthorized=false; only a future fully evidence-conjunctive selected class or the separately preserved provider-timeout class can consume the single retry per arm. R6-T13 still requires exact authorization binding the published R6-T12 commit and every frozen hash; no product work is unlocked.
+    note: Attempts one through three remain immutable adjust. Exactly authorized attempt four started one fresh direct process, which ended before runner deadline with a sealed retryable provider timeout and an empty final response. The frozen runner then reused the same capsule while preparing the authorized retry and raised R2_CAPSULE_OUTPUT_ALREADY_PREPARED before a second process spawned. A no-call abort sealer verified the attempt manifest, reproduced the defect and recorded aggregate-integrity-failed stop. Attempt four used 1 process, completed 0/10 arms, left 19 attempts unused and produced no wrong attribution. R6 failed; this decision does not alter prior decisions or unlock product work.
 
   - id: OWNER-R6-T5-DEADLINE-HORIZON-REMEDIATION
     title: Authorize local-only R6 deadline-horizon remediation after attempt-one adjust
@@ -597,6 +599,46 @@ decisions:
       - docs/tasks/ATOMIC_TASK_PROMPTS.md
       - ROADMAP.yaml
     note: Authorization covered selecting and freezing one future-only failure policy compliant with the immutable R6-T11 contract, fresh tasks/capsules, R6-T13 runner/source closure, data/environment/evidence bindings, local probes, tests and documentation with externalExecutionAuthorized=false. It completed with preregistration hash 531e9ea500d198c60dfb834c0b210bee9fb2eaf52772fc1ae85876bcd0c5e62d, instrumentation hash 6770f8caa440672c62bf57dfa8c9ef12ddbd2d8a3c119b6d20786f36aea19e06, data-scope hash 0bd7c96a8241cbc2e78b24e776973001bc2bf59ec51ec8cb97625d245f7a2a80 and failure-candidate hash 53829a8291de64322223d91b224fa097988c22afcd4b30f6237db36a1b5b2c75; 30 local probes passed and external process/model/provider-request count remained zero. It does not authorize R6-T13, reuse R6-T10 authorization, overwrite attempts one/two/three, consume product holdout or unlock product work.
+
+  - id: OWNER-R6-T13-EXTERNAL-BATCH
+    title: Authorize the frozen R6-T13 attempt-four external batch
+    status: decided
+    decision_owner: project-owner
+    needed_by_task: R6-T13
+    decision: authorized
+    decided_at: 2026-08-01T14:12:47+08:00
+    evidence: Owner explicitly authorized sending the frozen participant prompts, read-only capsules and context to OpenAI Codex service / gpt-5.6-sol and bound the published commit, all preregistration/source/data/failure/termination/environment hashes, 10-arm target, 20-process cap, deadline, signals and shared one-retry boundary.
+    evidence_ref: docs/test-evidence/R6-T13/OWNER_AUTHORIZATION_20260801.json
+    owner_statement: >-
+      我明确授权执行 R6-T13，即基于已发布 commit 53e2e1093fd107476efdc236afc07a75affabead，向 OpenAI Codex service 的 gpt-5.6-sol 模型发送冻结数据范围内的 participant prompts、只读 capsules 与上下文，执行 R6-RECOVERY attempt 4（supersedes R6-T10）。本授权绑定 preregistration hash 531e9ea500d198c60dfb834c0b210bee9fb2eaf52772fc1ae85876bcd0c5e62d、instrumentation hash 6770f8caa440672c62bf57dfa8c9ef12ddbd2d8a3c119b6d20786f36aea19e06、data-scope hash 0bd7c96a8241cbc2e78b24e776973001bc2bf59ec51ec8cb97625d245f7a2a80、failure-contract hash fa512a787a4d72d75704ebebbd06ab78cd796387483f0e625985fb6d9fbce1d2、failure-candidate hash 53829a8291de64322223d91b224fa097988c22afcd4b30f6237db36a1b5b2c75、termination-policy hash caa4ff6248fca549c601cb7bdcd80813bb91ee646606cacce627111deae16372 和 outer-environment hash cf24c3c5e349e230a9c04223dceb4854bd377915e21f46d830134b085bc3579d。授权完成 10 个 arms、最多启动 20 个外部 processes；每次 deadline 为 1,200,000 ms，随后 SIGTERM、5,000 ms grace、SIGKILL、5,000 ms wait；每个 arm 的两个冻结可重试分类合计最多重试一次。所有尝试均消耗预算并保留证据，不覆盖 attempts 1–3，不授权任何产品解锁。
+    published_commit: 53e2e1093fd107476efdc236afc07a75affabead
+    authorization_hash: aa6d64d442416c0a3357e31bd350ef69c6fd748e269faa7b6ea0cf404e520967
+    requested_preregistration_hash: 531e9ea500d198c60dfb834c0b210bee9fb2eaf52772fc1ae85876bcd0c5e62d
+    requested_instrumentation_hash: 6770f8caa440672c62bf57dfa8c9ef12ddbd2d8a3c119b6d20786f36aea19e06
+    requested_data_scope_hash: 0bd7c96a8241cbc2e78b24e776973001bc2bf59ec51ec8cb97625d245f7a2a80
+    requested_failure_contract_hash: fa512a787a4d72d75704ebebbd06ab78cd796387483f0e625985fb6d9fbce1d2
+    requested_failure_candidate_hash: 53829a8291de64322223d91b224fa097988c22afcd4b30f6237db36a1b5b2c75
+    requested_termination_policy_hash: caa4ff6248fca549c601cb7bdcd80813bb91ee646606cacce627111deae16372
+    requested_outer_environment_hash: cf24c3c5e349e230a9c04223dceb4854bd377915e21f46d830134b085bc3579d
+    requested_destination: OpenAI Codex service
+    requested_model: gpt-5.6-sol
+    requested_successful_arm_count: 10
+    requested_max_process_attempts: 20
+    termination:
+      deadline_ms: 1200000
+      graceful_window_ms: 5000
+      force_observation_window_ms: 5000
+      graceful_signal: SIGTERM
+      force_signal: SIGKILL
+      max_retries_per_arm: 1
+      retryable_classes_share_one_retry: true
+      runner_wall_clock_termination_retryable: false
+    context_refs:
+      - docs/test-evidence/R6-T12/20260801T131600-0800/PREREGISTRATION.json
+      - docs/test-evidence/R6-T12/20260801T131600-0800/PREREGISTRATION.sha256
+      - docs/test-evidence/R6-T13/20260801T141247-0800/RESULTS.sha256
+      - scripts/pilot/r6-t13.mjs
+    note: Authorization validated with canonical hash aa6d64d442416c0a3357e31bd350ef69c6fd748e269faa7b6ea0cf404e520967. One external process/fresh thread completed a sealed provider-timeout failure and consumed one process attempt. The frozen classifier authorized one retry, but frozen capsule reuse raised R2_CAPSULE_OUTPUT_ALREADY_PREPARED before retry spawn; no second process or later arm ran. The post-abort no-call sealer recorded immutable aggregate-integrity-failed stop with canonical verdict hash f83caa14aa56b9c416bef538c8d3b38e8202cd2d40e50e457e116982f4da96b7. Attempts one/two/three and all prior decisions remain unchanged; no product work is unlocked.
 
   - id: OWNER-R6-T7-EXTERNAL-BATCH
     title: Authorize the frozen R6-T7 attempt-two external batch

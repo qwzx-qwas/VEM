@@ -45,7 +45,9 @@ export function assertR6CharterModel({ roadmap, decisionInbox, validation }) {
   const r5Attempt = r5?.tasks.find((task) => task.id === "R5-T4");
   const r6 = roadmap.phases.find((phase) => phase.id === "R6");
   const charter = r6?.tasks.find((task) => task.id === "R6-T1");
-  const verdict = r6?.tasks.find((task) => task.id === "R6-T4");
+  const priorAttempts = ["R6-T4", "R6-T7", "R6-T10"].map(
+    (taskId) => r6?.tasks.find((task) => task.id === taskId),
+  );
   const r6Decision = roadmap.decisions["R6-RECOVERY"];
   const currentAttempt = r6?.tasks.find(
     (task) => task.id === r6Decision?.current_attempt,
@@ -67,17 +69,14 @@ export function assertR6CharterModel({ roadmap, decisionInbox, validation }) {
     || r5?.status !== "failed"
     || r5Attempt?.status !== "done"
     || r5Attempt?.decision !== "stop"
-    || r6?.status !== "in_progress"
+    || r6?.status !== "failed"
     || !["in_progress", "done"].includes(charter?.status)
-    || verdict?.decision_attempt !== 1
-    || verdict?.supersedes_attempt !== null
-    || !(
-      (verdict?.status === "todo" && verdict?.decision === "pending")
-        || (
-          verdict?.status === "done"
-            && ["continue", "adjust", "stop"].includes(verdict?.decision)
-        )
-    )
+    || priorAttempts.some((attempt, index) => (
+      attempt?.status !== "done"
+        || attempt.decision !== "adjust"
+        || attempt.decision_attempt !== index + 1
+        || attempt.supersedes_attempt !== [null, "R6-T4", "R6-T7"][index]
+    ))
     || (charter?.depends_on ?? []).length !== 0
     || r6.recovery_of_failed_phase !== "R5"
     || r6.scope_boundary !== "independent-research-no-product-unlock"
@@ -86,6 +85,11 @@ export function assertR6CharterModel({ roadmap, decisionInbox, validation }) {
     || r6.depends_on.length !== 0
     || currentAttempt?.decision_key !== "R6-RECOVERY"
     || currentAttempt?.id !== r6Decision?.current_attempt
+    || currentAttempt?.id !== "R6-T13"
+    || currentAttempt?.status !== "done"
+    || currentAttempt?.decision !== "stop"
+    || currentAttempt?.decision_attempt !== 4
+    || currentAttempt?.supersedes_attempt !== "R6-T10"
     || r6Decision?.does_not_supersede !== "R5-RECOVERY"
     || canonicalJson(
       r6Decision?.also_does_not_supersede,

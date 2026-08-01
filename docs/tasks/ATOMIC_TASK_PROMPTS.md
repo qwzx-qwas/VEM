@@ -882,6 +882,8 @@
 - **实现约束**：`decision_attempt: 4`、`supersedes_attempt: R6-T10`；只有符合新冻结 policy 的 sealed observed retryable terminal 可重试。
 - **验收标准**：immutable attempt-four verdict；只有 `continue` 满足 R6 gate，且也只允许提出新的独立研究路线。
 
+> **已完成（2026-08-01）**：Owner 对已发布 commit `53e2e1093fd107476efdc236afc07a75affabead`、OpenAI Codex service / `gpt-5.6-sol`、全部 preregistration/instrumentation/data-scope/failure/termination/environment hashes、10-arm 目标、20-process cap、`1200000/5000/5000ms` 与两类共享一次 retry 给出精确授权，canonical authorization hash 为 `aa6d64d442416c0a3357e31bd350ef69c6fd748e269faa7b6ea0cf404e520967`。唯一 direct process 获得 fresh thread，完整观察 WebSocket timeout 2/5–5/5、fallback HTTPS、HTTPS timeout 1/5–5/5 及最终 `turn.failed/request timed out`；进程在 deadline 前 exit 1、process group 清空、final 为空，sealed classification 正确为可重试 `external-transport-timeout-before-response`。Frozen runner 随后计划唯一 retry，但在第二 process spawn 前复用同一 capsule 的 authoritative-output 路径并触发 `R2_CAPSULE_OUTPUT_ALREADY_PREPARED`；第二 process 未启动。零调用 abort sealer 机械复现该缺陷、验证首个 attempt manifest，并以 `aggregate-integrity-failed` 记录 immutable `R6-RECOVERY=stop`。Evidence 位于 `docs/test-evidence/R6-T13/20260801T141247-0800/`；1 process、0/10 arms、19 budget unused、无 wrong attribution、无 product unlock，verdict canonical hash `f83caa14aa56b9c416bef538c8d3b38e8202cd2d40e50e457e116982f4da96b7`，`RESULTS.sha256` 文件 hash `4e81c4742b02bc3ccae63c733c8816208e742d60dc1608c49d386d56981f4f43`。
+
 ## P0-T9A — Walking-skeleton 正向 Edge E2E
 
 ### Prompt

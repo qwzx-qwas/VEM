@@ -35,7 +35,7 @@ describe("R6-T1 independent pre-spawn invocation remediation charter", () => {
       ],
       r6Boundary: {
         phase: "R6",
-        status: "in_progress",
+        status: "failed",
         taskStatus: "done",
         doesNotSupersede: "R5-RECOVERY",
         alsoDoesNotSupersede: [
@@ -48,7 +48,7 @@ describe("R6-T1 independent pre-spawn invocation remediation charter", () => {
         ],
         productUnlockCount: 0,
         charterExternalExecutionAuthorized: false,
-        currentDecision: "pending",
+        currentDecision: "stop",
       },
       validation: { phases: 16, tasks: 177, contracts: 32 },
     });
@@ -102,6 +102,27 @@ describe("R6-T1 independent pre-spawn invocation remediation charter", () => {
       "P0-VALUE",
     ];
     roadmap.phases.find((phase) => phase.id === "P1").depends_on = ["R6"];
+    expect(() => assertR6CharterModel({
+      roadmap,
+      decisionInbox,
+      validation: validateRepository(REPO_ROOT),
+    })).toThrowError("R6_T1_CHARTER_PROOF_FAILED");
+  });
+
+  test("fails if terminal attempt four is reopened or prior adjusts change", () => {
+    const { roadmap, decisionInbox } = model();
+    const r6 = roadmap.phases.find((phase) => phase.id === "R6");
+    const attemptFour = r6.tasks.find((task) => task.id === "R6-T13");
+    attemptFour.status = "todo";
+    attemptFour.decision = "pending";
+    expect(() => assertR6CharterModel({
+      roadmap,
+      decisionInbox,
+      validation: validateRepository(REPO_ROOT),
+    })).toThrowError("R6_T1_CHARTER_PROOF_FAILED");
+    attemptFour.status = "done";
+    attemptFour.decision = "stop";
+    r6.tasks.find((task) => task.id === "R6-T10").decision = "continue";
     expect(() => assertR6CharterModel({
       roadmap,
       decisionInbox,

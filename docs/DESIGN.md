@@ -360,6 +360,8 @@ R6-T11 对 attempts one/two/three 的 immutable manifests 与 attempt-three orde
 
 任何 attempt four 都必须先由 R6-T11 对 immutable attempts one/two/three 做零模型 failure-class remediation，明确 non-timeout provider terminal 的 bounded disposition；只有允许继续时，R6-T12 才能冻结 fresh source/policy/task/data/evidence closure，R6-T13 还必须取得绑定全部新边界的另一份精确 external authorization。Attempt four 使用 `decision_attempt: 4` 与 `supersedes_attempt: R6-T10`，不得复用 R6-T10 authorization、覆盖 prior evidence 或解锁产品工作。
 
+R6-T13 的精确授权与所有 frozen bindings 均验证通过。首个 direct process/fresh thread 完整经历 WebSocket 与 HTTPS timeout receipts，并在 runner deadline 前以 `turn.failed/request timed out`、exit 1、empty final、empty process group 和 sealed boundary 结束；该 attempt 正确归类为可重试 `external-transport-timeout-before-response`。Frozen runner 在准备已授权的唯一 retry 时复用了同一 capsule，第二次 authoritative-output preparation 在 process spawn 前触发 `R2_CAPSULE_OUTPUT_ALREADY_PREPARED`。因此第二 process 没有启动，既不能把第一 attempt 改写为 retry-exhausted，也不能继续消耗其他 arms。独立零调用 abort sealer 只读验证并封存首个 attempt、机械复现该 invocation defect、生成顶层 manifest，并依 preregistered `aggregate-integrity-failed` stop condition 记录 immutable `R6-RECOVERY=stop`；R6 phase 随之 failed，prior attempts、其他 recovery decisions、P0 product verdict 与零产品解锁边界不变。
+
 当前 owner-authorized 执行序列见 [`docs/delivery/R6_PRESPAWN_INVOCATION_REMEDIATION.md`](delivery/R6_PRESPAWN_INVOCATION_REMEDIATION.md)。
 
 ## 2.8 项目与依赖许可证 (`LICENSE-POLICY-001`)
