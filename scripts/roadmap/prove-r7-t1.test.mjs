@@ -28,7 +28,7 @@ describe("R7-T1 independent retry-capsule isolation charter", () => {
       },
       r7Boundary: {
         phase: "R7",
-        status: "in_progress",
+        status: "failed",
         phaseDependencies: [],
         taskDependencies: [],
         doesNotSupersede: "R6-RECOVERY",
@@ -43,7 +43,7 @@ describe("R7-T1 independent retry-capsule isolation charter", () => {
         ],
         productUnlockCount: 0,
         externalExecutionAuthorized: false,
-        currentDecision: "pending",
+        currentDecision: "stop",
       },
       validation: { phases: 17, tasks: 181, contracts: 33 },
     });
@@ -92,15 +92,14 @@ describe("R7-T1 independent retry-capsule isolation charter", () => {
     expectFailure(restored.roadmap, restored.decisionInbox);
   });
 
-  test("rejects starting R7-T2 or deciding R7-T4 during charter", () => {
+  test("rejects reopening terminal R7 or changing its stop verdict", () => {
     const { roadmap, decisionInbox } = model();
     const r7 = roadmap.phases.find((phase) => phase.id === "R7");
-    r7.tasks.find((task) => task.id === "R7-T2").status = "in_progress";
+    r7.tasks.find((task) => task.id === "R7-T4").status = "todo";
     expectFailure(roadmap, decisionInbox);
     const restored = model();
     const attempt = restored.roadmap.phases.find((phase) => phase.id === "R7")
       .tasks.find((task) => task.id === "R7-T4");
-    attempt.status = "done";
     attempt.decision = "continue";
     expectFailure(restored.roadmap, restored.decisionInbox);
   });

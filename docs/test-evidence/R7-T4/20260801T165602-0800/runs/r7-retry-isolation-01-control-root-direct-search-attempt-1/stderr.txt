@@ -1,0 +1,10 @@
+Reading additional input from stdin...
+2026-08-01T08:57:51.375662Z ERROR codex_models_manager::manager: failed to refresh available models: timeout waiting for child process to exit
+2026-08-01T08:57:51.441005Z ERROR codex_models_manager::manager: failed to refresh available models: timeout waiting for child process to exit
+2026-08-01T08:58:24.476037Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when Client(HttpRequest(HttpRequest("http/request failed: error sending request for url (https://chatgpt.com/backend-api/ps/mcp)")))
+2026-08-01T08:58:57.598845Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when Client(HttpRequest(HttpRequest("http/request failed: error sending request for url (https://chatgpt.com/backend-api/ps/mcp)")))
+2026-08-01T09:01:13.954255Z ERROR codex_models_manager::manager: failed to refresh available models: timeout waiting for child process to exit
+2026-08-01T09:04:32.749604Z ERROR codex_models_manager::manager: failed to refresh available models: timeout waiting for child process to exit
+2026-08-01T09:07:50.679643Z ERROR codex_models_manager::manager: failed to refresh available models: timeout waiting for child process to exit
+2026-08-01T09:11:07.718555Z ERROR codex_models_manager::manager: failed to refresh available models: timeout waiting for child process to exit
+2026-08-01T09:14:28.555017Z ERROR codex_models_manager::manager: failed to refresh available models: timeout waiting for child process to exit

@@ -936,6 +936,8 @@
 - **实现约束**：`decision_attempt: 1`；每个 attempt 资源唯一；任何 drift 或 aggregate sealing failure 均 fail closed。
 - **验收标准**：immutable verdict；只有 `continue` 满足 R7 gate，且也只允许提出新的独立研究路线。
 
+> **已完成（2026-08-01）**：基于已发布 commit `91e0f08b064d48d757544aa0ca2ce9e186382d75` 与 owner 对全部冻结 hashes、OpenAI Codex service / `gpt-5.6-sol`、10-arm 目标和 20-process cap 的精确授权，执行了唯一 R7-T4 batch。第一个 direct arm 的 attempt 1 与唯一 retry 分别使用独立 capsule/control root/final file 和 fresh thread；两次均完整观察 WebSocket→HTTPS timeout 序列及 `turn.failed/request timed out`，exit 1、empty final、empty process group，封存为 `external-transport-timeout-before-response`。Retry 已真实启动并消耗预算，第二次失败后按策略停止；其余 9 arms 未启动，实际 2/20 processes、0/10 arms、剩余预算 18。顶层与两个 per-run manifests、raw ledger hashes、权限/审计边界和 exception-safe aggregate seal 均验证通过；immutable verdict 为 `R7-RECOVERY=stop`、R7 phase failed，产品解锁数为 0，R6/R5/R4 及更早 decision/evidence 均未覆盖。Evidence 位于 `docs/test-evidence/R7-T4/20260801T165602-0800/`。
+
 ## P0-T9A — Walking-skeleton 正向 Edge E2E
 
 ### Prompt

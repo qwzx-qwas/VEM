@@ -10,7 +10,7 @@
 
 2026-08-01 独立 R6 research route 仍不改变上述产品结论：R6-T10 attempt 3 的唯一 process 以 non-timeout provider-terminal `protocol-or-unknown-failure` 停止，0/10 arms 完成并记录 immutable `adjust`；R6-T11 随后以零调用重放保持该历史分类不可重试，R6-T12 再冻结只适用于 future attempt 且要求完整证据合取的新 failure policy。精确授权的 R6-T13 attempt 4 启动一个 process 并完整封存可重试 provider timeout，但 frozen runner 在 retry spawn 前复用 capsule output 路径而异常；第二 process 未启动，fail-closed verdict 为 `R6-RECOVERY=stop`，R6 phase failed，且该研究路线不解锁 P0 产品工作。
 
-2026-08-01 owner 另行授权的 R7 local route 仅修复 per-attempt capsule/final-output isolation 与 exception-safe aggregate sealing，并在新预注册前保持外部调用为零；它不覆盖 R6 或此前 decision/evidence，也不解锁本 P0 产品路线。
+2026-08-01 owner 另行授权的 R7 route 先以零调用修复 per-attempt capsule/final-output isolation 与 exception-safe aggregate sealing，随后在新预注册发布和另一份精确授权后执行 R7-T4。首个 direct arm 的两个独立 attempts 均以 sealed provider timeout 失败，0/10 arms 完成、2/20 processes 消耗，最终 `R7-RECOVERY=stop`、R7 failed；它不覆盖 R6 或此前 decision/evidence，也不解锁本 P0 产品路线。
 
 ## 建议顺序
 

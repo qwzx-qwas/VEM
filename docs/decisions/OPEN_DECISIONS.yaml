@@ -438,13 +438,15 @@ decisions:
 
   - id: R7-RECOVERY
     title: Continue, adjust, or stop the independent R7 retry-capsule isolation route
-    status: open
+    status: decided
     decision_owner: evidence-gate
     needed_by_task: R7-T4
-    decision: pending
+    decision: stop
+    decided_at: 2026-08-01T17:35:42+08:00
+    evidence_ref: docs/test-evidence/R7-T4/20260801T165602-0800/results/verdict.json
     current_attempt: R7-T4
     authoritative_state_ref: ROADMAP.yaml
-    note: R7 is a separately owner-authorized local remediation route after immutable R6-RECOVERY stop. It preserves R6, R5, R4 and every earlier decision/evidence, has no product dependency edge and cannot unlock product work. R7-T1 through R7-T3 are local zero-call work; R7-T4 requires another exact authorization after a new preregistration commit is published.
+    note: Exact owner authorization bound the published R7-T3 commit and every frozen boundary. The first direct attempt and its one authorized retry used distinct capsule/control/final resources and fresh threads; both ended with sealed provider request-timeout terminals, exit 1, empty final files and empty process groups. Retry exhaustion stopped the batch after 2/20 processes and 0/10 completed arms. Aggregate integrity therefore failed closed with immutable stop, R7 failed, all prior decisions/evidence remain unchanged and product unlock count is zero.
 
   - id: OWNER-R7-RETRY-CAPSULE-ISOLATION-REMEDIATION
     title: Authorize independent local-only R7 retry-capsule isolation remediation
@@ -468,6 +470,46 @@ decisions:
       - docs/delivery/R7_RETRY_CAPSULE_ISOLATION_REMEDIATION.md
       - ROADMAP.yaml
     note: This grant covers charter/validator work, local runner remediation, local tests/probes, new preregistration evidence and stage-by-stage commit/push. It does not authorize a participant process, provider reachability probe, model request, reuse of any R6 authorization, mutation of prior evidence or product unlock.
+
+  - id: OWNER-R7-T4-EXTERNAL-BATCH
+    title: Authorize the frozen R7-T4 retry-isolated external batch
+    status: decided
+    decision_owner: project-owner
+    needed_by_task: R7-T4
+    decision: authorized
+    decided_at: 2026-08-01T16:56:02+08:00
+    evidence: Owner explicitly authorized sending the frozen participant prompts, read-only capsules and VEM contexts to OpenAI Codex service / gpt-5.6-sol and bound the published commit, every preregistration/source/data/failure/isolation/termination/environment hash, 10-arm target, 20-process cap, signal windows, shared one-retry boundary and independent per-attempt resources.
+    evidence_ref: docs/test-evidence/R7-T4/OWNER_AUTHORIZATION_20260801.json
+    owner_statement: >-
+      我明确授权执行 R7-T4：基于已发布 commit 91e0f08b064d48d757544aa0ca2ce9e186382d75，向 OpenAI Codex service 的 gpt-5.6-sol 模型发送冻结范围内的 participant prompts、只读 capsules 与 VEM contexts，执行 R7-RECOVERY decision attempt 1（supersedesAttempt=null）。本授权绑定 preregistration hash bc2bd50ca79aaac581c083232d4bf0d55b838c64228039921e6ae1adbb8a4a78、instrumentation hash ce7979ebf9414da72e7afb65de178da3c5da6dc49990d8f8088c2ba01f5a5274、data-scope hash fca7658cc49b0e7eba3c29354a63433282a85048ff960122b7bd890a470dd8a7、failure-policy hash 9e9f3174f794ea1ed2ec18a54f983117179a867985c4107ca37e0425948588fa、retry-isolation hash d847e93ad6d5ae3b0336d465105dc1f62bf0a92bcf7eda5307053b7b7ae8f79c、termination-policy hash caa4ff6248fca549c601cb7bdcd80813bb91ee646606cacce627111deae16372 和 outer-environment hash cf24c3c5e349e230a9c04223dceb4854bd377915e21f46d830134b085bc3579d。授权完成 10 个 arms、最多启动 20 个外部 processes；每次 deadline 1,200,000 ms，随后 SIGTERM、5,000 ms grace、SIGKILL、5,000 ms wait；每个 arm 的两个冻结可重试分类合计最多重试一次。仅真实启动的 process 消耗预算，未启动 retry 不消耗预算；所有已启动尝试均保留证据并使用独立 capsule/control root/final file。本授权不覆盖 R6/R5/R4 或更早 decision/evidence，也不授权任何产品解锁或同授权换 root 重放。
+    published_commit: 91e0f08b064d48d757544aa0ca2ce9e186382d75
+    authorization_hash: 3c1cbc8869a98fd65ef20c99ab5f13322afa617790ff9f5a75000fab423f717a
+    requested_preregistration_hash: bc2bd50ca79aaac581c083232d4bf0d55b838c64228039921e6ae1adbb8a4a78
+    requested_instrumentation_hash: ce7979ebf9414da72e7afb65de178da3c5da6dc49990d8f8088c2ba01f5a5274
+    requested_data_scope_hash: fca7658cc49b0e7eba3c29354a63433282a85048ff960122b7bd890a470dd8a7
+    requested_failure_policy_hash: 9e9f3174f794ea1ed2ec18a54f983117179a867985c4107ca37e0425948588fa
+    requested_retry_isolation_hash: d847e93ad6d5ae3b0336d465105dc1f62bf0a92bcf7eda5307053b7b7ae8f79c
+    requested_termination_policy_hash: caa4ff6248fca549c601cb7bdcd80813bb91ee646606cacce627111deae16372
+    requested_outer_environment_hash: cf24c3c5e349e230a9c04223dceb4854bd377915e21f46d830134b085bc3579d
+    requested_destination: OpenAI Codex service
+    requested_model: gpt-5.6-sol
+    requested_successful_arm_count: 10
+    requested_max_process_attempts: 20
+    termination:
+      deadline_ms: 1200000
+      graceful_window_ms: 5000
+      force_observation_window_ms: 5000
+      graceful_signal: SIGTERM
+      force_signal: SIGKILL
+      max_retries_per_arm: 1
+      retryable_classes_share_one_retry: true
+      unspawned_retry_consumes_budget: false
+    context_refs:
+      - docs/test-evidence/R7-T3/20260801T162533-0800/PREREGISTRATION.json
+      - docs/test-evidence/R7-T3/20260801T162533-0800/PREREGISTRATION.sha256
+      - docs/test-evidence/R7-T4/20260801T165602-0800/RESULTS.sha256
+      - scripts/pilot/r7-t4.mjs
+    note: Authorization validated with canonical hash 3c1cbc8869a98fd65ef20c99ab5f13322afa617790ff9f5a75000fab423f717a. Exactly two external processes/fresh threads ran for the first direct arm. Both observed complete WebSocket-to-HTTPS timeout sequences and provider turn.failed/request timed out, then exited 1 with empty final responses and sealed evidence. The one retry used a distinct resource identity; after it failed, the batch stopped with 0/10 arms, 18 process attempts unused and canonical verdict hash 18a24afc0709e42207d583048e2c7214b700f6c23ff2eb31387e23d1a75a8776. The authorization ledger forbids alternate-root replay; no prior decision/evidence or product state changed.
 
   - id: OWNER-R6-T5-DEADLINE-HORIZON-REMEDIATION
     title: Authorize local-only R6 deadline-horizon remediation after attempt-one adjust

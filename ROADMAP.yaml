@@ -273,7 +273,7 @@ phases:
 
   - id: R7
     title: Owner-authorized independent retry-capsule isolation remediation after terminal R6 stop
-    status: in_progress
+    status: failed
     depends_on: []
     recovery_of_failed_phase: R6
     authorization_ref: docs/decisions/OPEN_DECISIONS.yaml
@@ -290,7 +290,7 @@ phases:
       - {id: R7-T1, title: Record the owner-authorized independent R7 retry-capsule isolation charter and mechanically preserve R6 stop plus all prior blocked and terminal chains, contracts: [R7-RETRY-CAPSULE-ISOLATION-001], status: done, depends_on: [], tests: [failed-R6 and immutable-R6-T13-stop preservation R5-stop R4-blocked-pending earlier-stop full-decision-chain owner-authorization empty-dependencies no-existing-dependency and zero-product-unlock checks]}
       - {id: R7-T2, title: Implement per-attempt capsule and final-output isolation plus exception-safe batch sealing without external calls, contracts: [R7-RETRY-CAPSULE-ISOLATION-001], status: done, depends_on: [R7-T1], tests: [distinct-control-root distinct-final-file equal-base-treatment parity retry-spawn lifecycle cleanup batch-exception sealing attempt-retention process-budget no-rerun and zero-model-call checks]}
       - {id: R7-T3, title: Freeze a fresh retry-isolated recovery runner source task data environment policy budget and evidence preregistration without external calls, contracts: [R7-RETRY-CAPSULE-ISOLATION-001], status: done, depends_on: [R7-T2], tests: [R6-evidence-immutability new-runner-and-source-hash retry-isolation-binding exception-sealing-binding fresh-task equal-base counterbalance process-budget holdout-exclusion external-authorization-false and no-product-unlock checks]}
-      - {id: R7-T4, title: Execute a separately owner-authorized retry-isolated bounded batch and record the independent R7-RECOVERY verdict, contracts: [R7-RETRY-CAPSULE-ISOLATION-001], status: todo, decision_key: R7-RECOVERY, decision_attempt: 1, supersedes_attempt: null, decision: pending, depends_on: [R7-T3], tests: [R6-evidence-immutability fresh-context distinct-retry-capsules bounded-deadline retry-classification exception-safe-aggregate-seal process-tree-terminal final-file-jsonl-audit consistency raw-ledger-hash correctness wrong-attribution pairwise-cost and continue-adjust-stop verdict checks]}
+      - {id: R7-T4, title: Execute a separately owner-authorized retry-isolated bounded batch and record the independent R7-RECOVERY verdict, contracts: [R7-RETRY-CAPSULE-ISOLATION-001], status: done, decision_key: R7-RECOVERY, decision_attempt: 1, supersedes_attempt: null, decision: stop, depends_on: [R7-T3], tests: [R6-evidence-immutability fresh-context distinct-retry-capsules bounded-deadline retry-classification exception-safe-aggregate-seal process-tree-terminal final-file-jsonl-audit consistency raw-ledger-hash correctness wrong-attribution pairwise-cost and continue-adjust-stop verdict checks]}
 
   - id: P1
     title: Harden the Edge Vite-injected MVP

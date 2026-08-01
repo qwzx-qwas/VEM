@@ -82,12 +82,12 @@ export function assertR7CharterModel({ roadmap, decisionInbox, validation }) {
     || r4?.status !== "blocked"
     || r4Attempt?.status !== "blocked"
     || r4Attempt?.decision !== "pending"
-    || r7?.status !== "in_progress"
-    || !["in_progress", "done"].includes(charter?.status)
-    || !["todo", "done"].includes(runner?.status)
-    || !["todo", "done"].includes(preregistration?.status)
-    || verdict?.status !== "todo"
-    || verdict?.decision !== "pending"
+    || r7?.status !== "failed"
+    || charter?.status !== "done"
+    || runner?.status !== "done"
+    || preregistration?.status !== "done"
+    || verdict?.status !== "done"
+    || verdict?.decision !== "stop"
     || verdict?.decision_attempt !== 1
     || verdict?.supersedes_attempt !== null
     || canonicalJson(charter?.depends_on ?? []) !== canonicalJson([])
@@ -107,8 +107,8 @@ export function assertR7CharterModel({ roadmap, decisionInbox, validation }) {
       !== canonicalJson(EXCLUDED_DECISIONS)
     || r7.gate?.requires_decisions?.["R7-RECOVERY"] !== "continue"
     || Object.keys(r7.gate.requires_decisions).length !== 1
-    || decision?.status !== "open"
-    || decision?.decision !== "pending"
+    || decision?.status !== "decided"
+    || decision?.decision !== "stop"
     || decision?.current_attempt !== "R7-T4"
     || owner?.status !== "decided"
     || owner?.decision !== "authorized"
@@ -204,7 +204,7 @@ function writeEvidence(outputRoot) {
     "- R6 remains failed with immutable R6-RECOVERY stop.",
     "- R5 stop, R4 blocked/pending and every earlier terminal stop remain unchanged.",
     "- R7 has no phase or task dependency and cannot unlock product work.",
-    "- R7-T1 through R7-T3 are local zero-call work; R7-T4 remains unauthorized.",
+    "- R7-T4 ended with an immutable stop and R7 failed without product unlock.",
     "",
   ].join("\n");
   writeFileSync(join(output, "charter-proof.json"), body, {

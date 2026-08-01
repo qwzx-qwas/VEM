@@ -1,0 +1,42 @@
+{
+  "schemaVersion": "R7-T4-owner-authorization-v1",
+  "taskId": "R7-T4",
+  "decisionKey": "R7-RECOVERY",
+  "decisionAttempt": 1,
+  "supersedesAttempt": null,
+  "authorized": true,
+  "publishedCommit": "91e0f08b064d48d757544aa0ca2ce9e186382d75",
+  "preregistrationHash": "bc2bd50ca79aaac581c083232d4bf0d55b838c64228039921e6ae1adbb8a4a78",
+  "instrumentationHash": "ce7979ebf9414da72e7afb65de178da3c5da6dc49990d8f8088c2ba01f5a5274",
+  "destination": "OpenAI Codex service",
+  "model": "gpt-5.6-sol",
+  "dataScopeHash": "fca7658cc49b0e7eba3c29354a63433282a85048ff960122b7bd890a470dd8a7",
+  "failurePolicyHash": "9e9f3174f794ea1ed2ec18a54f983117179a867985c4107ca37e0425948588fa",
+  "retryIsolationHash": "d847e93ad6d5ae3b0336d465105dc1f62bf0a92bcf7eda5307053b7b7ae8f79c",
+  "terminationPolicyHash": "caa4ff6248fca549c601cb7bdcd80813bb91ee646606cacce627111deae16372",
+  "outerEnvironmentHash": "cf24c3c5e349e230a9c04223dceb4854bd377915e21f46d830134b085bc3579d",
+  "successfulArmCount": 10,
+  "maxProcessAttempts": 20,
+  "terminationPolicy": {
+    "schemaVersion": "R6-T12-termination-policy-v1",
+    "deadlineMs": 1200000,
+    "graceMs": 5000,
+    "forceKillWaitMs": 5000,
+    "gracefulSignal": "SIGTERM",
+    "forceSignal": "SIGKILL",
+    "maxRetriesPerArm": 1,
+    "maxProcessAttempts": 20,
+    "requiredSuccessfulArms": 10,
+    "retryableClassifications": [
+      "external-transport-timeout-before-response",
+      "sealed-network-fallback-plus-nontimeout-provider-terminal-before-response"
+    ],
+    "runnerTerminationClassification": "runner-wall-clock-terminated-before-response",
+    "runnerTerminationRetryable": false,
+    "everyAttemptConsumesBudget": true,
+    "everyAttemptEvidenceRetained": true,
+    "laterSuccessDoesNotEraseFailure": true
+  },
+  "statement": "我明确授权执行 R7-T4：基于已发布 commit 91e0f08b064d48d757544aa0ca2ce9e186382d75，向 OpenAI Codex service 的 gpt-5.6-sol 模型发送冻结范围内的 participant prompts、只读 capsules 与 VEM contexts，执行 R7-RECOVERY decision attempt 1（supersedesAttempt=null）。本授权绑定 preregistration hash bc2bd50ca79aaac581c083232d4bf0d55b838c64228039921e6ae1adbb8a4a78、instrumentation hash ce7979ebf9414da72e7afb65de178da3c5da6dc49990d8f8088c2ba01f5a5274、data-scope hash fca7658cc49b0e7eba3c29354a63433282a85048ff960122b7bd890a470dd8a7、failure-policy hash 9e9f3174f794ea1ed2ec18a54f983117179a867985c4107ca37e0425948588fa、retry-isolation hash d847e93ad6d5ae3b0336d465105dc1f62bf0a92bcf7eda5307053b7b7ae8f79c、termination-policy hash caa4ff6248fca549c601cb7bdcd80813bb91ee646606cacce627111deae16372 和 outer-environment hash cf24c3c5e349e230a9c04223dceb4854bd377915e21f46d830134b085bc3579d。授权完成 10 个 arms、最多启动 20 个外部 processes；每次 deadline 1,200,000 ms，随后 SIGTERM、5,000 ms grace、SIGKILL、5,000 ms wait；每个 arm 的两个冻结可重试分类合计最多重试一次。仅真实启动的 process 消耗预算，未启动 retry 不消耗预算；所有已启动尝试均保留证据并使用独立 capsule/control root/final file。本授权不覆盖 R6/R5/R4 或更早 decision/evidence，也不授权任何产品解锁或同授权换 root 重放。",
+  "authorizedAt": "2026-08-01T16:56:02+08:00"
+}
