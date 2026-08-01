@@ -1,0 +1,1 @@
+{"batchPolicy":"retry-one-selected-sealed-failure-only-stop-on-runner-termination-or-integrity-failure","laterSuccessMayNotOverwriteFailure":true,"perAttemptRawFinalBoundaryTerminationLedgerErrorAndHashes":true,"priorAttemptEvidenceMayNotBeOverwritten":true,"processTreeMustBeEmptyBeforeRetryOrNextArm":true,"schemaVersion":"R6-T12-failure-evidence-contract-v1"}

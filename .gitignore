@@ -20,6 +20,8 @@ blob-report/
 .eslintcache
 .vite/
 .turbo/
+__pycache__/
+*.py[cod]
 
 # Logs
 *.log

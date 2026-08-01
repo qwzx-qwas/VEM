@@ -1,0 +1,31 @@
+{
+  "schemaVersion": "R5-T4-owner-authorization-v1",
+  "taskId": "R5-T4",
+  "decisionKey": "R5-RECOVERY",
+  "authorized": true,
+  "preregistrationHash": "8a7b315cfa5597b046228d9597a5805ad3b3dbd0becaa83a37f9ea81475ec886",
+  "destination": "OpenAI Codex service",
+  "model": "gpt-5.6-sol",
+  "dataScopeHash": "fefd57ecda3606e69eadb1165618cff24f76ce4ac699243a52f61171c98edba6",
+  "successfulArmCount": 10,
+  "maxProcessAttempts": 20,
+  "terminationPolicy": {
+    "schemaVersion": "R5-T3-termination-policy-v1",
+    "deadlineMs": 120000,
+    "graceMs": 5000,
+    "forceKillWaitMs": 5000,
+    "gracefulSignal": "SIGTERM",
+    "forceSignal": "SIGKILL",
+    "maxRetriesPerArm": 1,
+    "maxProcessAttempts": 20,
+    "requiredSuccessfulArms": 10,
+    "retryableClassification": "external-transport-timeout-before-response",
+    "runnerTerminationClassification": "runner-wall-clock-terminated-before-response",
+    "runnerTerminationRetryable": false,
+    "everyAttemptConsumesBudget": true,
+    "everyAttemptEvidenceRetained": true,
+    "laterSuccessDoesNotEraseFailure": true
+  },
+  "statement": "授权执行冻结的 R5-T4：OpenAI Codex service / gpt-5.6-sol，preregistration hash 8a7b315cfa5597b046228d9597a5805ad3b3dbd0becaa83a37f9ea81475ec886，data-scope hash fefd57ecda3606e69eadb1165618cff24f76ce4ac699243a52f61171c98edba6，完成 10 个 arms，最多 20 个外部进程；每个进程 deadline 120000ms，grace/force observation 各 5000ms，SIGTERM 后 SIGKILL；仅已封存且真实观察到的 provider timeout 可重试一次，runner deadline termination 不可重试。",
+  "authorizedAt": "2026-07-30T15:56:51+08:00"
+}

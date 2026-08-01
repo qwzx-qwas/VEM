@@ -1,0 +1,1 @@
+{"allocationPolicy":"integer-division-total-by-five-remainder-reported-only-in-total","excludes":"codex-process-and-source-location-time","includes":"fixture-export-registry-selection-context-and-hash-generation","perTaskSetupDurationNs":"10318510","schemaVersion":"P0-T17B-setup-cost-v1","totalSetupDurationNs":"51592551"}

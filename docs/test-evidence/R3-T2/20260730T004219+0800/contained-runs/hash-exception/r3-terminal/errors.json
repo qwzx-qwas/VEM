@@ -1,0 +1,1 @@
+{"errorCount":1,"errors":[{"code":"R3_PROOF_HASH_EXCEPTION","errorFingerprint":"99310157d0d0929789f7cbad1837533fc11081200888524ca4fdf22ec0531c34","rawMessagePersisted":false,"stage":"recorder-hash-verification"}],"rawMessagesPersisted":false,"runId":"r3-t2-hash-exception","schemaVersion":"R3-T2-contained-errors-v1"}

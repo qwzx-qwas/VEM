@@ -39,8 +39,17 @@ execution_policy:
   task_prompt_source: docs/tasks/ATOMIC_TASK_PROMPTS.md
 
 decisions:
-  P0-VALUE: {phase: P0, current_attempt: P0-T17B}
+  P0-VALUE: {phase: P0, current_attempt: P0-T17D}
   P0-GOLDEN: {phase: P0, current_attempt: P0-T9C}
+  R0-RECOVERY: {phase: R0, current_attempt: R0-T4, scope: independent-research, does_not_supersede: P0-VALUE}
+  R1-RECOVERY: {phase: R1, current_attempt: R1-T4, scope: independent-research, does_not_supersede: R0-RECOVERY, also_does_not_supersede: [P0-VALUE]}
+  R2-RECOVERY: {phase: R2, current_attempt: R2-T4, scope: independent-research, does_not_supersede: R1-RECOVERY, also_does_not_supersede: [R0-RECOVERY, P0-VALUE]}
+  R3-RECOVERY: {phase: R3, current_attempt: R3-T4, scope: independent-research, does_not_supersede: R2-RECOVERY, also_does_not_supersede: [R1-RECOVERY, R0-RECOVERY, P0-VALUE]}
+  R4-RECOVERY: {phase: R4, current_attempt: R4-T4, scope: independent-research, does_not_supersede: R3-RECOVERY, also_does_not_supersede: [R2-RECOVERY, R1-RECOVERY, R0-RECOVERY, P0-VALUE]}
+  R5-RECOVERY: {phase: R5, current_attempt: R5-T4, scope: independent-research, does_not_supersede: R4-RECOVERY, also_does_not_supersede: [R3-RECOVERY, R2-RECOVERY, R1-RECOVERY, R0-RECOVERY, P0-VALUE]}
+  R6-RECOVERY: {phase: R6, current_attempt: R6-T13, scope: independent-research, does_not_supersede: R5-RECOVERY, also_does_not_supersede: [R4-RECOVERY, R3-RECOVERY, R2-RECOVERY, R1-RECOVERY, R0-RECOVERY, P0-VALUE]}
+  R7-RECOVERY: {phase: R7, current_attempt: R7-T4, scope: independent-research, does_not_supersede: R6-RECOVERY, also_does_not_supersede: [R5-RECOVERY, R4-RECOVERY, R3-RECOVERY, R2-RECOVERY, R1-RECOVERY, R0-RECOVERY, P0-VALUE]}
+  R8-RECOVERY: {phase: R8, current_attempt: R8-T4, scope: independent-research, does_not_supersede: R7-RECOVERY, also_does_not_supersede: [R6-RECOVERY, R5-RECOVERY, R4-RECOVERY, R3-RECOVERY, R2-RECOVERY, R1-RECOVERY, R0-RECOVERY, P0-VALUE]}
   P1-INJECTED: {phase: P1, current_attempt: P1-T17}
   P2-TRUSTED: {phase: P2, current_attempt: P2-T13D}
   P3-VISUAL: {phase: P3, current_attempt: P3-T19}
@@ -49,7 +58,7 @@ decisions:
 phases:
   - id: P0
     title: Edge Vite-injected walking skeleton and minimum contracts
-    status: in_progress
+    status: failed
     depends_on: []
     gate:
       commands: ["pnpm edge:preflight:verify", "pnpm install --frozen-lockfile", "pnpm roadmap:validate", "pnpm build", "pnpm typecheck", "pnpm test"]
@@ -83,9 +92,13 @@ phases:
       - {id: P0-T5, title: Record SEL-PROV-001 injected-browser ADR and add minimum selector overlay PRIV-MIN-001 projection bounded summary external-confirmation limitation and ephemeral lifecycle, contracts: [BROWSER-MODE-001, SEL-PROV-001, PRIV-MIN-001, DATA-LIFE-001], status: done, depends_on: [P0-T3, P0-T4], tests: [ADR lint target overlay page-untrusted provenance strict-confirmation private-field redaction prompt-data summary-bound session-expiry project-restart-clear tests]}
       - {id: P0-T15, title: Record source-anchor and PROD-LEAK-001 ADR then implement the serve-only intrinsic-JSX transform and private registry output for the pinned Vite React matrix, contracts: [REV-ID-001, EVIDENCE-TRUST-001, PROD-LEAK-001], status: done, depends_on: [P0-T3, P0-T4], tests: [ADR lint plugin-order sourcemap Fast-Refresh reserved-attribute build-nonexecution production-module-graph private-registry baseline-equivalence readonly-leakage and user-attribute tests]}
       - {id: P0-T16, title: Implement revision-scoped source registry publication and lookup prototype over the P0 transform output, contracts: [REV-ID-001, EVIDENCE-TRUST-001], status: done, depends_on: [P0-T15], tests: [registry revision collision relative-location transform-compatibility and stale-anchor tests]}
-      - {id: P0-T17A, title: Implement versioned read-only pilot harness and canonical JSON evidence-bundle builder, contracts: [UX-GATE-001], status: todo, depends_on: [P0-T5, P0-T16], tests: [read-only enforcement canonical-JSON schema input-hash timing-boundary path-redaction and later-holdout-exclusion checks]}
-      - {id: P0-T17B, title: Execute preregistered three-to-five-task UX-GATE-001 value micro-pilot from immutable evidence bundles, contracts: [UX-GATE-001], status: todo, decision_key: P0-VALUE, decision_attempt: 1, supersedes_attempt: null, decision: pending, depends_on: [P0-T17A], tests: [evidence-plan immutability isolated-Codex-context counterbalanced-arm-order withheld-ground-truth task-timing direct-primary-exact degraded-top-k wrong-attribution reselection separate-setup-cost raw-hash and continue-adjust-stop verdict checks]}
-      - {id: P0-T7, title: Record TOP-P0-001 topology ADR and implement MCP-owned coordinator private runtime discovery project-instance ownership and restart semantics, contracts: [TOP-P0-001], status: todo, depends_on: [P0-T17B], requires_decisions: {P0-VALUE: continue}, tests: [real-process discovery ACL owner restart stale-instance and ambiguity tests]}
+      - {id: P0-T17A, title: Implement versioned read-only pilot harness and canonical JSON evidence-bundle builder, contracts: [UX-GATE-001], status: done, depends_on: [P0-T5, P0-T16], tests: [read-only enforcement canonical-JSON schema input-hash timing-boundary path-redaction and later-holdout-exclusion checks]}
+      - {id: P0-T17B, title: Execute preregistered three-to-five-task UX-GATE-001 value micro-pilot from immutable evidence bundles, contracts: [UX-GATE-001], status: done, decision_key: P0-VALUE, decision_attempt: 1, supersedes_attempt: null, decision: adjust, depends_on: [P0-T17A], tests: [evidence-plan immutability isolated-Codex-context counterbalanced-arm-order withheld-ground-truth task-timing direct-primary-exact degraded-top-k wrong-attribution reselection separate-setup-cost raw-hash and continue-adjust-stop verdict checks]}
+      - {id: P0-T17C, title: Remediate the P0 value-pilot participant capsule and equal-base-context boundary after attempt-one timing overhead, contracts: [UX-GATE-001], status: done, depends_on: [P0-T17B], tests: [outside-repository participant capsule no-repository-rule-or-skill-leak equal-base-context intended-vem-context-only-difference command-path audit ground-truth-and-holdout isolation and fail-closed escape checks]}
+      - {id: P0-T17D, title: Execute preregistered P0-VALUE attempt two after participant-capsule remediation without consuming later holdouts, contracts: [UX-GATE-001], status: done, decision_key: P0-VALUE, decision_attempt: 2, supersedes_attempt: P0-T17B, decision: stop, depends_on: [P0-T17C], tests: [attempt-one-evidence-immutability new-plan immutability fresh-isolated-Codex-context counterbalanced-arm-order equal-base-context withheld-ground-truth task-timing direct-primary-exact wrong-attribution separate-setup-cost raw-hash later-holdout-untouched and continue-adjust-stop verdict checks]}
+      - {id: P0-T17E, title: Preserve the terminal P0-VALUE stop while remediating capsule audit false positives with a versioned post-hoc replay, contracts: [UX-GATE-001], status: done, depends_on: [P0-T17D], tests: [attempt-two-evidence-immutability legacy-auditor-preservation command-path structured-output route-and-JSX false-positive rejection forbidden-marker actual-escape fail-closed replay-hash and no-verdict-or-phase-reopen checks]}
+      - {id: P0-T17F, title: Preserve the terminal P0-VALUE stop while producing bounded post-hoc timing forensics from immutable attempt-two events, contracts: [UX-GATE-001], status: done, depends_on: [P0-T17E], tests: [attempt-two-and-audit-evidence-immutability exact-duration-recomputation canonical-metric-agreement command-and-token-accounting order-stratified-pair-summary missing-event-timestamp limitation no-causal-or-statistical-claim evidence-hash and no-verdict-or-phase-reopen checks]}
+      - {id: P0-T7, title: Record TOP-P0-001 topology ADR and implement MCP-owned coordinator private runtime discovery project-instance ownership and restart semantics, contracts: [TOP-P0-001], status: todo, depends_on: [P0-T17D], requires_decisions: {P0-VALUE: continue}, tests: [real-process discovery ACL owner restart stale-instance and ambiguity tests]}
       - {id: P0-T11, title: Add Vite same-origin browser proxy with separate untrusted page ingress and authenticated build-integration registry channel, contracts: [EVIDENCE-TRUST-001, TOP-P0-001, PRIV-MIN-001], status: todo, depends_on: [P0-T7], tests: [proxy routing ingress schema size privacy build-capability source-registry privilege and reconnect tests]}
       - {id: P0-T12A, title: Add MCP initialization revision negotiation no-task compatibility and minimum static truthful CapabilityReport, contracts: [CORE-BOUND-001, TOP-P0-001, MCP-COMPAT-001], status: todo, depends_on: [P0-T11], tests: [MCP primary-compat initialization no-task truthful-static-capability unavailable-later-capabilities compatible-text and cancellation tests]}
       - {id: P0-T12B, title: Add server-derived single-consumer identity immutable selection claim and ConfirmationBinding lifecycle, contracts: [EVIDENCE-TRUST-001, TOP-P0-001, SEL-PROV-001, CONF-BIND-001, DATA-LIFE-001], status: todo, depends_on: [P0-T12A], tests: [consumer-identity claim snapshot-binding direct-source-evidence degraded-candidate confirmation TTL one-use conflict disconnect restart-clear and terminal-state tests]}
@@ -97,6 +110,241 @@ phases:
       - {id: P0-T9B, title: Add project-instance restart stale-session and unrelated-update negative Edge E2E, contracts: [EDGE-PREFLIGHT-001, TOP-P0-001, VER-TXN-001], status: todo, depends_on: [P0-T9A], tests: [project-instance restart stale confirmation unrelated-update and ambiguity Edge E2E]}
       - {id: P0-T9C, title: Execute preregistered 10-to-20-task P0 golden evidence verdict, contracts: [UX-GATE-001], status: todo, decision_key: P0-GOLDEN, decision_attempt: 1, supersedes_attempt: null, decision: pending, depends_on: [P0-T9B], tests: [direct-primary exact degraded-top-k target-changed ambiguity zero-false-positive-passed and continue-adjust-stop golden baseline]}
       - {id: P0-T10, title: Add CI baseline roadmap validation and read-only production non-participation leakage gate, contracts: [REQ-TRACE-001, PROD-LEAK-001, TEST-GATE-001], status: todo, depends_on: [P0-T2, P0-T9C], tests: [local CI command production module-graph non-resolution baseline-build-equivalence leakage signature and user-attribute preservation tests]}
+
+  - id: R0
+    title: Owner-authorized independent recovery research after terminal P0 stop
+    status: failed
+    depends_on: []
+    recovery_of_failed_phase: P0
+    authorization_ref: docs/decisions/OPEN_DECISIONS.yaml
+    scope_boundary: independent-research-no-product-unlock
+    gate:
+      commands: ["pnpm roadmap:validate", "pnpm build", "pnpm typecheck", "pnpm lint", "pnpm test"]
+      requires_decisions: {R0-RECOVERY: continue}
+      done_when:
+        - P0-T17D stop evidence and P0 failed remain immutable while the validator proves R0 cannot unlock any existing product phase or task.
+        - A trusted monotonic receipt ledger distinguishes runner-observed process event and final-response boundaries without claiming model-server or shell-internal timing.
+        - A preregistered recovery-only task set uses fresh isolated contexts counterbalance equal base context withheld ground truth and later product holdout exclusion.
+        - R0-T4 records an immutable continue adjust or stop verdict; continue authorizes only an owner-reviewed proposal for a separate research implementation phase.
+    tasks:
+      - {id: R0-T1, title: Record the owner-authorized terminal-stop recovery charter and mechanically enforce its independent no-product-unlock boundary, contracts: [R0-RECOVERY-001], status: done, depends_on: [P0-T17F], tests: [failed-P0 preservation empty-phase-dependency owner-authorization-reference separate-decision-key no-existing-phase-or-task-dependency and continue-does-not-satisfy-P0 checks]}
+      - {id: R0-T2, title: Implement a versioned trusted-runner monotonic event-receipt timing ledger with bounded canonical evidence, contracts: [R0-RECOVERY-001], status: done, depends_on: [R0-T1], tests: [process event receipt final-response monotonic-order clock-domain schema size raw-hash cancellation and missing-duplicate-terminal fail-closed checks]}
+      - {id: R0-T3, title: Freeze a recovery-only task bank capsule instrumentation and preregistered evidence plan without consuming product holdouts, contracts: [R0-RECOVERY-001], status: done, depends_on: [R0-T2], tests: [fresh-task identity equal-base-context treatment-only-difference counterbalance threshold instrumentation-hash later-holdout-exclusion and pre-result immutability checks]}
+      - {id: R0-T4, title: Execute the owner-authorized recovery-only micro-pilot and record the independent R0-RECOVERY verdict, contracts: [R0-RECOVERY-001], status: done, decision_key: R0-RECOVERY, decision_attempt: 1, supersedes_attempt: null, decision: stop, depends_on: [R0-T3], tests: [fresh-context raw-and-ledger-hash correctness wrong-attribution capsule-integrity pairwise-cost no-benefit-stop and continue-adjust-stop verdict checks]}
+
+  - id: R1
+    title: Owner-authorized independent runner remediation after terminal R0 stop
+    status: failed
+    depends_on: []
+    recovery_of_failed_phase: R0
+    authorization_ref: docs/decisions/OPEN_DECISIONS.yaml
+    scope_boundary: independent-research-no-product-unlock
+    gate:
+      commands: ["pnpm roadmap:validate", "pnpm build", "pnpm typecheck", "pnpm lint", "pnpm test"]
+      requires_decisions: {R1-RECOVERY: continue}
+      done_when:
+        - R0-T4 stop R0 failed P0-T17D stop and P0 failed remain immutable with zero product unlock edges.
+        - Multi-agent-message JSONL is classified without duplicate structured-response receipt and exactly one schema-valid final response is selected after stream close.
+        - Every protocol failure seals bounded raw streams terminal observation ledger evidence error metadata and hashes before returning.
+        - R1-T3 freezes new runner instrumentation task capsule threshold and external-authorization bindings before any R1 external model call.
+    tasks:
+      - {id: R1-T1, title: Record the owner-authorized independent R1 runner-remediation charter and mechanically preserve both R0 and P0 terminal stop chains, contracts: [R1-RUNNER-REMEDIATION-001], status: done, depends_on: [], tests: [failed-R0-and-P0 preservation empty-phase-and-task-dependency dual-decision-non-supersession authorization-reference no-existing-phase-or-task-dependency and no-product-unlock checks]}
+      - {id: R1-T2, title: Fix multi-agent-message final-response classification and seal bounded raw terminal and ledger failure evidence before errors return, contracts: [R1-RUNNER-REMEDIATION-001], status: done, depends_on: [R1-T1], tests: [ordinary-event receipt single-last-schema-valid response zero-valid conflicting-valid response duplicate-prevention terminal-before-throw raw-stderr-ledger-prefix hash-manifest bounds and cancellation checks]}
+      - {id: R1-T3, title: Freeze a new recovery-only runner capsule instrumentation threshold and evidence preregistration without external calls, contracts: [R1-RUNNER-REMEDIATION-001], status: done, depends_on: [R1-T2], tests: [new-runner-hash fresh-task identity equal-base-context counterbalance threshold product-holdout-exclusion failure-sealing binding pre-result immutability and external-authorization-false checks]}
+      - {id: R1-T4, title: Execute a separately owner-authorized R1 recovery batch and record the independent R1-RECOVERY verdict, contracts: [R1-RUNNER-REMEDIATION-001], status: done, decision_key: R1-RECOVERY, decision_attempt: 1, supersedes_attempt: null, decision: stop, depends_on: [R1-T3], tests: [fresh-context raw-and-ledger-hash correctness wrong-attribution capsule-integrity pairwise-cost failure-evidence and continue-adjust-stop verdict checks]}
+
+  - id: R2
+    title: Owner-authorized independent final-output authority remediation after terminal R1 stop
+    status: failed
+    depends_on: []
+    recovery_of_failed_phase: R1
+    authorization_ref: docs/decisions/OPEN_DECISIONS.yaml
+    scope_boundary: independent-research-no-product-unlock
+    gate:
+      commands: ["pnpm roadmap:validate", "pnpm build", "pnpm typecheck", "pnpm lint", "pnpm test"]
+      requires_decisions: {R2-RECOVERY: continue}
+      done_when:
+        - R1-T4 R0-T4 and P0-T17D stop verdicts and all three failed phases remain immutable with zero product unlock edges.
+        - Codex output-last-message is the sole authoritative structured response while JSONL remains an audit stream and consistency witness.
+        - The read-only participant workspace gains no write access and only one runner-owned bounded output file is writable in the capsule.
+        - Protocol response failures are separated from evaluator wrong-attribution and every terminal path seals raw final terminal ledger error and hash evidence.
+        - R2-T3 freezes new runner instrumentation tasks threshold and external-authorization bindings before any R2 external model call.
+    tasks:
+      - {id: R2-T1, title: Record the owner-authorized independent R2 final-output remediation charter and mechanically preserve P0 R0 and R1 terminal stop chains, contracts: [R2-FINAL-OUTPUT-001], status: done, depends_on: [], tests: [failed-P0-R0-R1 preservation empty-phase-and-task-dependency triple-decision-non-supersession authorization-reference no-existing-phase-or-task-dependency and no-product-unlock checks]}
+      - {id: R2-T2, title: Make output-last-message the authoritative final response through a single-file capsule write boundary and separate protocol from attribution failures, contracts: [R2-FINAL-OUTPUT-001], status: done, depends_on: [R2-T1], tests: [multiple-agent-message authoritative-final-file last-agent-consistency missing-invalid-mismatch-size-symlink single-file-write-boundary failure-classification sealing bounds and cancellation checks]}
+      - {id: R2-T3, title: Freeze a new final-output recovery-only capsule instrumentation threshold and evidence preregistration without external calls, contracts: [R2-FINAL-OUTPUT-001], status: done, depends_on: [R2-T2], tests: [new-runner-hash fresh-task identity equal-base-context counterbalance threshold product-holdout-exclusion final-file-binding pre-result-immutability and external-authorization-false checks]}
+      - {id: R2-T4, title: Execute a separately owner-authorized R2 recovery batch and record the independent R2-RECOVERY verdict, contracts: [R2-FINAL-OUTPUT-001], status: done, decision_key: R2-RECOVERY, decision_attempt: 1, supersedes_attempt: null, decision: stop, depends_on: [R2-T3], tests: [fresh-context final-file-and-jsonl-consistency raw-ledger-hash correctness wrong-attribution capsule-integrity pairwise-cost failure-evidence and continue-adjust-stop verdict checks]}
+
+  - id: R3
+    title: Owner-authorized independent capsule-audit containment remediation after terminal R2 stop
+    status: failed
+    depends_on: []
+    recovery_of_failed_phase: R2
+    authorization_ref: docs/decisions/OPEN_DECISIONS.yaml
+    scope_boundary: independent-research-no-product-unlock
+    gate:
+      commands: ["pnpm roadmap:validate", "pnpm build", "pnpm typecheck", "pnpm lint", "pnpm test"]
+      requires_decisions: {R3-RECOVERY: continue}
+      done_when:
+        - R2 R1 R0 and P0 terminal stop verdicts failed phases and immutable evidence remain unchanged with zero product unlock edges.
+        - Capsule audit distinguishes marker-only in-capsule lookup attempts from observed forbidden path content or boundary escape without weakening the capsule.
+        - Audit evaluator hash and aggregate exceptions seal bounded replayable terminal evidence before returning a structured batch-stop result.
+        - R3-T3 freezes new instrumentation tasks thresholds and external-authorization bindings before any R3 external model call.
+    tasks:
+      - {id: R3-T1, title: Record the owner-authorized independent R3 capsule-audit containment charter and mechanically preserve four terminal stop chains, contracts: [R3-CAPSULE-AUDIT-CONTAINMENT-001], status: done, depends_on: [], tests: [failed-P0-R0-R1-R2 preservation empty-phase-and-task-dependency four-decision-non-supersession authorization-reference no-existing-phase-or-task-dependency and no-product-unlock checks]}
+      - {id: R3-T2, title: Distinguish marker mention from observed capsule escape and seal every audit evaluator and aggregate exception before returning, contracts: [R3-CAPSULE-AUDIT-CONTAINMENT-001], status: done, depends_on: [R3-T1], tests: [marker-only-warning safe-work-search forbidden-path-and-content real-escape symlink and stderr rejection audit-evaluator-hash-aggregate exception sealing structured-batch-stop bounds and cancellation checks]}
+      - {id: R3-T3, title: Freeze a new capsule-audit-containment recovery-only task runner threshold and evidence preregistration without external calls, contracts: [R3-CAPSULE-AUDIT-CONTAINMENT-001], status: done, depends_on: [R3-T2], tests: [new-auditor-and-runner-hash fresh-task identity equal-base-context counterbalance threshold product-holdout-exclusion failure-sealing binding pre-result immutability and external-authorization-false checks]}
+      - {id: R3-T4, title: Execute a separately owner-authorized R3 containment batch and record the independent R3-RECOVERY verdict, contracts: [R3-CAPSULE-AUDIT-CONTAINMENT-001], status: done, decision_key: R3-RECOVERY, decision_attempt: 1, supersedes_attempt: null, decision: stop, depends_on: [R3-T3], tests: [fresh-context final-file-jsonl-and-audit consistency raw-ledger-hash correctness wrong-attribution capsule-integrity pairwise-cost failure-evidence and continue-adjust-stop verdict checks]}
+
+  - id: R4
+    title: Owner-authorized independent external-transport timeout remediation after terminal R3 stop
+    status: blocked
+    depends_on: []
+    recovery_of_failed_phase: R3
+    authorization_ref: docs/decisions/OPEN_DECISIONS.yaml
+    scope_boundary: independent-research-no-product-unlock
+    gate:
+      commands: ["pnpm roadmap:validate", "pnpm build", "pnpm typecheck", "pnpm lint", "pnpm test"]
+      requires_decisions: {R4-RECOVERY: continue}
+      done_when:
+        - R3 R2 R1 R0 and P0 terminal stop verdicts failed phases and immutable evidence remain unchanged with zero product unlock edges.
+        - A zero-model local preflight truthfully separates configured destination and local runner capability from unprobed external reachability.
+        - Only sealed timeout-before-response outcomes are retryable and every process attempt consumes the frozen bounded attempt budget.
+        - R4-T3 freezes new instrumentation tasks thresholds retry budget and external-authorization bindings before any R4 external model call.
+    tasks:
+      - {id: R4-T1, title: Record the owner-authorized independent R4 transport-timeout remediation charter and mechanically preserve five terminal stop chains, contracts: [R4-TRANSPORT-TIMEOUT-001], status: done, depends_on: [], tests: [failed-P0-R0-R1-R2-R3 preservation empty-phase-and-task-dependency five-decision-non-supersession authorization-reference no-existing-phase-or-task-dependency and no-product-unlock checks]}
+      - {id: R4-T2, title: Implement zero-model transport preflight narrow timeout-before-response classification bounded retry budgeting and per-attempt sealing, contracts: [R4-TRANSPORT-TIMEOUT-001], status: done, depends_on: [R4-T1], tests: [local-capability-preflight network-unprobed honesty timeout-terminal-shape partial-response auth-rate-limit-unknown no-retry max-one-retry max-process-attempts fresh-run-id and immutable-attempt-evidence checks]}
+      - {id: R4-T3, title: Freeze a new transport-timeout recovery-only task runner threshold attempt budget and evidence preregistration without external calls, contracts: [R4-TRANSPORT-TIMEOUT-001], status: done, depends_on: [R4-T2], tests: [new-runner-hash fresh-task identity equal-base-context counterbalance retry-budget threshold product-holdout-exclusion preflight-binding pre-result immutability and external-authorization-false checks]}
+      - {id: R4-T4, title: Execute a separately owner-authorized R4 bounded-attempt batch and record the independent R4-RECOVERY verdict, contracts: [R4-TRANSPORT-TIMEOUT-001], status: blocked, decision_key: R4-RECOVERY, decision_attempt: 1, supersedes_attempt: null, decision: pending, depends_on: [R4-T3], tests: [fresh-context bounded-attempt retry-classification final-file-jsonl-audit consistency raw-ledger-hash correctness wrong-attribution pairwise-cost failure-evidence and continue-adjust-stop verdict checks]}
+
+  - id: R5
+    title: Owner-authorized independent process-tree termination remediation after blocked R4 batch
+    status: failed
+    depends_on: []
+    remediation_of_blocked_phase: R4
+    authorization_ref: docs/decisions/OPEN_DECISIONS.yaml
+    scope_boundary: independent-research-no-product-unlock
+    gate:
+      commands: ["pnpm roadmap:validate", "pnpm build", "pnpm typecheck", "pnpm lint", "pnpm test"]
+      requires_decisions: {R5-RECOVERY: continue}
+      done_when:
+        - R4-T4 blocked R4-RECOVERY pending and all five prior terminal stop verdicts remain immutable with zero product unlock edges.
+        - A trusted monotonic wall-clock controller bounds every participant process from spawn through process-tree termination stream drain and terminal evidence sealing.
+        - Deadline expiry cancellation runner exceptions and signal interruption seal bounded partial evidence before returning and never classify runner termination as provider turn.failed.
+        - R5-T3 freezes deadline grace signal escalation process budget tasks thresholds and external-authorization bindings before any R5 external model call.
+    tasks:
+      - {id: R5-T1, title: Record the owner-authorized independent R5 process-tree termination remediation charter and mechanically preserve the blocked R4 decision plus five terminal stop chains, contracts: [R5-PROCESS-TERMINATION-001], status: done, depends_on: [], tests: [blocked-R4 pending-decision preservation five-terminal-stop preservation empty-phase-and-task-dependency six-decision-non-supersession authorization-reference no-existing-phase-or-task-dependency and no-product-unlock checks]}
+      - {id: R5-T2, title: Implement runner-owned monotonic wall-clock deadline process-tree termination stream drain and interruption-safe partial-evidence sealing, contracts: [R5-PROCESS-TERMINATION-001], status: done, depends_on: [R5-T1], tests: [spawn-deadline graceful-and-force process-group-tree orphan refusal stream-final-file drain cancellation signal runner-exception terminal-contradiction evidence-before-return bounds and no-provider-terminal-invention checks]}
+      - {id: R5-T3, title: Freeze a new process-termination recovery-only task runner deadline grace attempt budget and evidence preregistration without external calls, contracts: [R5-PROCESS-TERMINATION-001], status: done, depends_on: [R5-T2], tests: [new-runner-hash fresh-task identity equal-base-context counterbalance deadline-grace-signal budget threshold product-holdout-exclusion termination-binding pre-result immutability and external-authorization-false checks]}
+      - {id: R5-T4, title: Execute a separately owner-authorized R5 bounded-deadline batch and record the independent R5-RECOVERY verdict, contracts: [R5-PROCESS-TERMINATION-001], status: done, decision_key: R5-RECOVERY, decision_attempt: 1, supersedes_attempt: null, decision: stop, depends_on: [R5-T3], tests: [fresh-context bounded-deadline process-tree-terminal retry-classification final-file-jsonl-audit consistency raw-ledger-hash correctness wrong-attribution pairwise-cost failure-evidence and continue-adjust-stop verdict checks]}
+
+  - id: R6
+    title: Owner-authorized independent pre-spawn invocation-contract remediation after terminal R5 stop
+    status: failed
+    depends_on: []
+    recovery_of_failed_phase: R5
+    authorization_ref: docs/decisions/OPEN_DECISIONS.yaml
+    scope_boundary: independent-research-no-product-unlock
+    gate:
+      commands: ["pnpm roadmap:validate", "pnpm build", "pnpm typecheck", "pnpm lint", "pnpm test"]
+      requires_decisions: {R6-RECOVERY: continue}
+      done_when:
+        - R5-T4 stop R5 failed R4 blocked/pending and all five prior terminal stop verdicts remain immutable with zero product unlock edges.
+        - Every bounded terminalizer invocation carries a fixed explicit outer environment that cannot inherit host secrets and passes the same predicate used immediately before spawn.
+        - A zero-model compatibility preflight constructs the exact capsule invocation and proves the environment permission and terminalizer option boundary before preregistration.
+        - R6-T3 freezes new instrumentation source environment contract tasks thresholds and external-authorization bindings before any R6 external model call.
+        - The immutable R6-T4 adjust evidence remains retained, runner deadline termination remains non-retryable, and any attempt two waits for explicit deadline-horizon remediation, a new preregistration and a new exact external authorization.
+        - The immutable R6-T7 adjust evidence remains retained after the maximum frozen deadline still ended before a provider terminal, and any attempt three waits for dual-transport horizon remediation, another preregistration and another exact external authorization.
+        - The immutable R6-T10 adjust evidence remains retained after a non-timeout provider terminal stopped attempt three without retry, and any attempt four waits for explicit failure-class remediation, another preregistration and another exact external authorization.
+        - The immutable R6-T13 attempt-four stop retains the one sealed provider-timeout process, records the pre-retry capsule-output reuse as aggregate-integrity-failed, starts no retry process, and unlocks no product work.
+    tasks:
+      - {id: R6-T1, title: Record the owner-authorized independent R6 pre-spawn invocation remediation charter and mechanically preserve R5 stop R4 blocked pending and five prior stop chains, contracts: [R6-PRESPAWN-INVOCATION-001], status: done, depends_on: [], tests: [failed-R5 blocked-R4 pending-decision five-terminal-stop preservation empty-phase-and-task-dependency seven-decision-non-supersession authorization-reference no-existing-phase-or-task-dependency and no-product-unlock checks]}
+      - {id: R6-T2, title: Add a fixed explicit outer environment shared terminalizer invocation predicate and zero-model capsule compatibility preflight, contracts: [R6-PRESPAWN-INVOCATION-001], status: done, depends_on: [R6-T1], tests: [fixed-PATH-only immutable-string-record host-secret-exclusion builder-terminalizer-predicate parity exact-capsule-construction permission-profile workspace-readonly network-unprobed and no-model-call checks]}
+      - {id: R6-T3, title: Freeze a new invocation-compatible recovery-only task runner deadline environment contract attempt budget and evidence preregistration without external calls, contracts: [R6-PRESPAWN-INVOCATION-001], status: done, depends_on: [R6-T2], tests: [new-runner-hash fresh-task identity equal-base-context counterbalance fixed-environment deadline-grace-signal budget threshold product-holdout-exclusion compatibility-preflight binding pre-result immutability and external-authorization-false checks]}
+      - {id: R6-T4, title: Execute a separately owner-authorized R6 invocation-compatible bounded-deadline batch and record the independent R6-RECOVERY verdict, contracts: [R6-PRESPAWN-INVOCATION-001], status: done, decision_key: R6-RECOVERY, decision_attempt: 1, supersedes_attempt: null, decision: adjust, depends_on: [R6-T3], tests: [fresh-context pre-spawn-compatibility bounded-deadline process-tree-terminal retry-classification final-file-jsonl-audit consistency raw-ledger-hash correctness wrong-attribution pairwise-cost failure-evidence and continue-adjust-stop verdict checks]}
+      - {id: R6-T5, title: Remediate the outer deadline against the observed Codex provider retry horizon using immutable R6-T4 evidence without external calls, contracts: [R6-PRESPAWN-INVOCATION-001], status: done, depends_on: [R6-T4], tests: [attempt-one-evidence-immutability provider-terminal-versus-runner-deadline separation bounded-retry-horizon deadline-margin process-tree-and-budget preservation zero-model-remediation and no-product-unlock checks]}
+      - {id: R6-T6, title: Freeze a new R6 attempt-two runner deadline policy source environment task threshold and evidence preregistration without external calls, contracts: [R6-PRESPAWN-INVOCATION-001], status: done, depends_on: [R6-T5], tests: [attempt-one-evidence-immutability new-runner-and-policy-hash deadline-horizon-binding fresh-task identity equal-base-context counterbalance process-budget holdout-exclusion external-authorization-false and no-product-unlock checks]}
+      - {id: R6-T7, title: Execute a separately owner-authorized R6 attempt-two bounded batch and record the superseding immutable R6-RECOVERY verdict, contracts: [R6-PRESPAWN-INVOCATION-001], status: done, decision_key: R6-RECOVERY, decision_attempt: 2, supersedes_attempt: R6-T4, decision: adjust, depends_on: [R6-T6], tests: [attempt-one-evidence-immutability fresh-context bounded-deadline provider-terminal-versus-runner-deadline retry-classification process-tree-terminal final-file-jsonl-audit consistency raw-ledger-hash correctness wrong-attribution pairwise-cost and continue-adjust-stop verdict checks]}
+      - {id: R6-T8, title: Remediate the dual-transport terminal horizon after the maximum frozen outer deadline using immutable R6-T7 evidence without external calls, contracts: [R6-PRESPAWN-INVOCATION-001], status: done, depends_on: [R6-T7], tests: [attempt-one-and-two-evidence-immutability ordered-duplicate-receipt-correlation websocket-versus-https-phase-separation observed-horizon-lower-bound bounded-deadline-or-stop-disposition zero-model-remediation and no-product-unlock checks]}
+      - {id: R6-T9, title: Freeze a new R6 attempt-three runner deadline policy source environment task threshold and evidence preregistration without external calls, contracts: [R6-PRESPAWN-INVOCATION-001], status: done, depends_on: [R6-T8], tests: [attempt-one-and-two-evidence-immutability new-runner-and-policy-hash dual-transport-horizon-binding fresh-task identity equal-base-context counterbalance process-budget holdout-exclusion external-authorization-false and no-product-unlock checks]}
+      - {id: R6-T10, title: Execute a separately owner-authorized R6 attempt-three bounded batch and record the superseding immutable R6-RECOVERY verdict, contracts: [R6-PRESPAWN-INVOCATION-001], status: done, decision_key: R6-RECOVERY, decision_attempt: 3, supersedes_attempt: R6-T7, decision: adjust, depends_on: [R6-T9], tests: [attempt-one-and-two-evidence-immutability fresh-context bounded-deadline provider-terminal-versus-runner-deadline retry-classification process-tree-terminal final-file-jsonl-audit consistency raw-ledger-hash correctness wrong-attribution pairwise-cost and continue-adjust-stop verdict checks]}
+      - {id: R6-T11, title: Remediate the non-timeout provider-terminal network failure using immutable R6-T10 evidence without external calls, contracts: [R6-PRESPAWN-INVOCATION-001], status: done, depends_on: [R6-T10], tests: [attempt-one-two-three-evidence-immutability provider-terminal-nontimeout-separation ordered-dual-transport-receipts network-unreachable-versus-timeout classification no-retry-preservation bounded-remediation-or-stop-disposition zero-model and no-product-unlock checks]}
+      - {id: R6-T12, title: Freeze a new R6 attempt-four runner transport policy source environment task threshold and evidence preregistration without external calls, contracts: [R6-PRESPAWN-INVOCATION-001], status: done, depends_on: [R6-T11], tests: [attempt-one-two-three-evidence-immutability new-runner-and-policy-hash failure-remediation-binding fresh-task identity equal-base-context counterbalance process-budget holdout-exclusion external-authorization-false and no-product-unlock checks]}
+      - {id: R6-T13, title: Execute a separately owner-authorized R6 attempt-four bounded batch and record the superseding immutable R6-RECOVERY verdict, contracts: [R6-PRESPAWN-INVOCATION-001], status: done, decision_key: R6-RECOVERY, decision_attempt: 4, supersedes_attempt: R6-T10, decision: stop, depends_on: [R6-T12], tests: [attempt-one-two-three-evidence-immutability fresh-context bounded-deadline provider-terminal-versus-runner-deadline retry-classification process-tree-terminal final-file-jsonl-audit consistency raw-ledger-hash correctness wrong-attribution pairwise-cost and continue-adjust-stop verdict checks]}
+
+  - id: R7
+    title: Owner-authorized independent retry-capsule isolation remediation after terminal R6 stop
+    status: failed
+    depends_on: []
+    recovery_of_failed_phase: R6
+    authorization_ref: docs/decisions/OPEN_DECISIONS.yaml
+    scope_boundary: independent-research-no-product-unlock
+    gate:
+      commands: ["pnpm roadmap:validate", "pnpm build", "pnpm typecheck", "pnpm lint", "pnpm test"]
+      requires_decisions: {R7-RECOVERY: continue}
+      done_when:
+        - R6-T13 stop and failed R6 remain immutable together with R5 stop, R4 blocked/pending and every earlier terminal stop.
+        - Every retry attempt receives a distinct capsule control root and runner-owned final-output file while preserving equal-base participant inputs and the arm treatment boundary.
+        - Batch-level exceptions before retry spawn or after a sealed attempt produce an immutable fail-closed aggregate result and never reuse an authorization by rerunning silently.
+        - R7 preregistration binds the isolated retry lifecycle, exception-safe aggregate sealing, source/data/environment/policy hashes, process budget and externalExecutionAuthorized=false.
+    tasks:
+      - {id: R7-T1, title: Record the owner-authorized independent R7 retry-capsule isolation charter and mechanically preserve R6 stop plus all prior blocked and terminal chains, contracts: [R7-RETRY-CAPSULE-ISOLATION-001], status: done, depends_on: [], tests: [failed-R6 and immutable-R6-T13-stop preservation R5-stop R4-blocked-pending earlier-stop full-decision-chain owner-authorization empty-dependencies no-existing-dependency and zero-product-unlock checks]}
+      - {id: R7-T2, title: Implement per-attempt capsule and final-output isolation plus exception-safe batch sealing without external calls, contracts: [R7-RETRY-CAPSULE-ISOLATION-001], status: done, depends_on: [R7-T1], tests: [distinct-control-root distinct-final-file equal-base-treatment parity retry-spawn lifecycle cleanup batch-exception sealing attempt-retention process-budget no-rerun and zero-model-call checks]}
+      - {id: R7-T3, title: Freeze a fresh retry-isolated recovery runner source task data environment policy budget and evidence preregistration without external calls, contracts: [R7-RETRY-CAPSULE-ISOLATION-001], status: done, depends_on: [R7-T2], tests: [R6-evidence-immutability new-runner-and-source-hash retry-isolation-binding exception-sealing-binding fresh-task equal-base counterbalance process-budget holdout-exclusion external-authorization-false and no-product-unlock checks]}
+      - {id: R7-T4, title: Execute a separately owner-authorized retry-isolated bounded batch and record the independent R7-RECOVERY verdict, contracts: [R7-RETRY-CAPSULE-ISOLATION-001], status: done, decision_key: R7-RECOVERY, decision_attempt: 1, supersedes_attempt: null, decision: stop, depends_on: [R7-T3], tests: [R6-evidence-immutability fresh-context distinct-retry-capsules bounded-deadline retry-classification exception-safe-aggregate-seal process-tree-terminal final-file-jsonl-audit consistency raw-ledger-hash correctness wrong-attribution pairwise-cost and continue-adjust-stop verdict checks]}
+
+  - id: R8
+    title: Owner-authorized final single-attempt recovery exit before model-agnostic MCP product work
+    status: in_progress
+    depends_on: []
+    recovery_of_failed_phase: R7
+    authorization_ref: docs/decisions/OPEN_DECISIONS.yaml
+    scope_boundary: independent-research-no-product-unlock
+    gate:
+      commands: ["pnpm roadmap:validate", "pnpm build", "pnpm typecheck", "pnpm lint", "pnpm test"]
+      requires_decisions: {R8-RECOVERY: continue}
+      done_when:
+        - R7 stop and failed R7 remain immutable together with R6/R5 stops, R4 blocked/pending and every earlier terminal chain.
+        - VEM product runtime protocol capability reports and MCP behavior remain independent of participant model identity; experiment-only client model and destination fields never become product requirements.
+        - The final recovery attempt is exactly one separately authorized process with no retry and complete terminal evidence; any timeout records stop and permanently ends recovery research.
+        - A future model-agnostic MCP product route is separately scoped and must not require R8-RECOVERY continue, overwrite prior evidence or treat provider reachability as an MCP correctness requirement.
+    tasks:
+      - {id: R8-T1, title: Record the owner-authorized final recovery exit and model-agnostic product-transition charter while mechanically preserving every prior decision chain, contracts: [R8-FINAL-RECOVERY-EXIT-001], status: done, depends_on: [], tests: [r7-stop-r6-r5-stops-r4-blocked-pending-and-prior-stops-immutability independent-phase-boundary exact-owner-direction one-process-no-retry future-product-route-not-gated-by-r8 model-id-product-boundary no-existing-dependency zero-external-call and zero-product-unlock checks]}
+      - {id: R8-T2, title: Implement a local-only provider-participant adapter boundary and single-attempt timeout exit sealer without embedding model identity in VEM runtime, contracts: [R8-FINAL-RECOVERY-EXIT-001], status: done, depends_on: [R8-T1], tests: [experiment-config-versus-product-runtime separation no-model-id-in-mcp-contract single-process-cap zero-retry timeout-stop terminal-seal no-r9 and zero-model-call checks]}
+      - {id: R8-T3, title: Freeze a final one-process recovery preregistration with explicit experiment client model destination data and evidence bindings but no external call, contracts: [R8-FINAL-RECOVERY-EXIT-001], status: todo, depends_on: [R8-T2], tests: [published-source-binding explicit-experiment-model-and-client one-process-zero-retry timeout-stop no-r9 product-runtime-model-agnostic external-authorization-false and no-product-unlock checks]}
+      - {id: R8-T4, title: Execute one separately authorized final recovery process and record the immutable R8-RECOVERY exit verdict, contracts: [R8-FINAL-RECOVERY-EXIT-001], status: todo, decision_key: R8-RECOVERY, decision_attempt: 1, supersedes_attempt: null, decision: pending, depends_on: [R8-T3], tests: [exact-authorization single-process no-retry fresh-context bounded-deadline terminal-evidence timeout-stop no-r9 prior-evidence-immutability and continue-adjust-stop verdict checks]}
+
+  - id: M0
+    title: Owner-prioritized model-agnostic usable MCP vertical slice
+    status: in_progress
+    depends_on: []
+    authorization_ref: docs/decisions/OPEN_DECISIONS.yaml
+    scope_boundary: independent-product-route-no-recovery-gate
+    reuses_completed_tasks: [P0-T0F, P0-T0G, P0-T1, P0-T2, P0-T3, P0-T4, P0-T5, P0-T15, P0-T16]
+    gate:
+      commands: ["pnpm roadmap:validate", "pnpm build", "pnpm typecheck", "pnpm lint", "pnpm test", "pnpm test:edge:m0", "pnpm test:install:m0"]
+      requires_decisions: {}
+      done_when:
+        - The MCP-owned coordinator and STDIO server expose one authoritative project instance through private runtime discovery and negotiated model-agnostic MCP revisions.
+        - Vite proxies untrusted same-origin browser ingress separately from authenticated build-registry publication and selection/source MCP tools return bounded privacy-filtered evidence.
+        - Confirmation is immutable expiring and single-use; prepare records a before observation and journal barrier before edits; complete requires relevant HMR causality fresh observation and honest ambiguity.
+        - A real Edge Stable two-process walking skeleton selects confirms prepares edits observes relevant HMR and completes verification, with restart stale-session and unrelated-update negatives.
+        - A minimal CLI performs idempotent fresh-project React Vite integration and Codex MCP configuration with production non-participation and clean uninstall.
+        - P0 and every recovery decision remain immutable; M0 does not depend on P0-VALUE or any R0-R8 verdict and never branches product behavior on participant model identity.
+    tasks:
+      - {id: M0-T1, title: Record the owner-prioritized model-agnostic usable MCP route charter atomic sequence reuse boundary and prior-decision immutability proof, contracts: [USABLE-MCP-001, REQ-TRACE-001], status: done, depends_on: [], tests: [exact-owner-priority independent-product-phase p0-and-recovery-immutability no-recovery-decision-dependency model-identity-independence completed-asset-reuse exact-atomic-sequence zero-external-call checks]}
+      - {id: M0-T2, title: Implement MCP-owned coordinator project-instance authority private runtime discovery and restart semantics, contracts: [USABLE-MCP-001, TOP-P0-001], status: todo, depends_on: [M0-T1], tests: [private-discovery-acl single-project-authority real-process-owner restart stale-instance ambiguity and cleanup checks]}
+      - {id: M0-T3, title: Implement the model-agnostic MCP STDIO server initialization revision negotiation no-task compatibility and truthful CapabilityReport, contracts: [USABLE-MCP-001, CORE-BOUND-001, TOP-P0-001, MCP-COMPAT-001], status: todo, depends_on: [M0-T2], tests: [stdio-framing primary-compat-initialization no-task-wait-cancel truthful-capability consumer-connection-identity and shutdown checks]}
+      - {id: M0-T4, title: Implement the Vite same-origin browser proxy with separate untrusted page ingress and authenticated build-registry publication, contracts: [USABLE-MCP-001, TOP-P0-001, EVIDENCE-TRUST-001, PRIV-MIN-001, PROD-LEAK-001, BROWSER-MODE-001], status: todo, depends_on: [M0-T3], tests: [same-origin-proxy page-untrusted-ingress build-channel-auth schema-size-rate project-revision private-runtime and production-nonparticipation checks]}
+      - {id: M0-T5, title: Implement bounded selection and source-resolution MCP tools resources and compatible text output, contracts: [USABLE-MCP-001, CORE-BOUND-001, TOP-P0-001, EVIDENCE-TRUST-001, SEL-PROV-001, PRIV-MIN-001, MCP-COMPAT-001], status: todo, depends_on: [M0-T4], tests: [selection-summary source-resolution direct-primary degraded-candidate privacy tool-allowlist resource-expiry compatible-text cancellation and error checks]}
+      - {id: M0-T6, title: Implement server-derived consumer claim and immutable expiring single-use ConfirmationBinding lifecycle, contracts: [USABLE-MCP-001, TOP-P0-001, EVIDENCE-TRUST-001, SEL-PROV-001, CONF-BIND-001, DATA-LIFE-001], status: todo, depends_on: [M0-T5], tests: [consumer-identity immutable-claim source-and-action-hash ttl atomic-single-consumption conflict disconnect restart-clear and replay-refusal checks]}
+      - {id: M0-T7, title: Implement atomic prepare with before Observation RevisionContext barrier fixed target scope and bounded in-memory journal, contracts: [USABLE-MCP-001, REV-ID-001, CONF-BIND-001, VER-TXN-001, OBS-FRESH-001, DATA-LIFE-001], status: todo, depends_on: [M0-T6], tests: [prepare-before-edit barrier-cursor fixed-target confirmation-consumption runtime-epochs bounded-journal expiry and cleanup checks]}
+      - {id: M0-T8, title: Implement coordinator-observed relevant HMR module matching bounded update batches and early-event replay, contracts: [USABLE-MCP-001, REV-ID-001, VER-TXN-001], status: todo, depends_on: [M0-T7], tests: [module-intersection unrelated-update-ignore bounded-batch browser-receipt early-event-replay full-reload compile-error and ambiguity checks]}
+      - {id: M0-T9, title: Implement verification complete with fresh after Observation direct or transaction-matched reattachment text assertions and honest terminal states, contracts: [USABLE-MCP-001, REV-ID-001, VER-TXN-001, OBS-FRESH-001], status: todo, depends_on: [M0-T8], tests: [fresh-after-observation verification-cache-bypass direct-reattach transaction-reattach text-assertion target-changed stale ambiguous unresolved and no-false-pass checks]}
+      - {id: M0-T10, title: Add real-process Edge Stable select confirm prepare edit relevant-HMR complete walking-skeleton E2E, contracts: [USABLE-MCP-001, EDGE-PREFLIGHT-001, BROWSER-MODE-001, TOP-P0-001, CONF-BIND-001, VER-TXN-001], status: todo, depends_on: [M0-T9], tests: [real-edge two-os-process intrinsic-jsx direct-source single-confirmation prepared-edit relevant-hmr complete-verification and process-cleanup checks]}
+      - {id: M0-T11, title: Add Edge project restart stale session unrelated update and ambiguous target negative E2E, contracts: [USABLE-MCP-001, EDGE-PREFLIGHT-001, TOP-P0-001, VER-TXN-001], status: todo, depends_on: [M0-T10], tests: [project-restart stale-session stale-confirmation unrelated-hmr target-changed ambiguous-target fail-closed and cleanup checks]}
+      - {id: M0-T12, title: Package a minimal injected-preview CLI and Codex MCP configuration generator with dry-run and idempotent integration, contracts: [USABLE-MCP-001, UX-GATE-001, LICENSE-POLICY-001, BROWSER-MODE-001, PROD-LEAK-001], status: todo, depends_on: [M0-T11], tests: [cli-dry-run allowed-files idempotent-integration config-generation exact-command dependency-license and production-build checks]}
+      - {id: M0-T13, title: Validate fresh-project install first selection verified edit upgrade rollback and clean uninstall without production residue, contracts: [USABLE-MCP-001, UX-GATE-001, LICENSE-POLICY-001, EDGE-PREFLIGHT-001, BROWSER-MODE-001, PROD-LEAK-001, TEST-GATE-001], status: todo, depends_on: [M0-T12], tests: [fresh-project-install first-selection verified-edit upgrade-rollback clean-uninstall user-file-preservation no-production-residue edge-evidence and complete-gate checks]}
 
   - id: P1
     title: Harden the Edge Vite-injected MVP

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": "R5-T4-verdict-v1",
+  "decisionKey": "R5-RECOVERY",
+  "decisionAttempt": 1,
+  "verdict": "stop",
+  "stopReasons": [
+    "aggregate-integrity-failed"
+  ],
+  "adjustReasons": [
+    "fewer-than-ten-arms-complete-after-bounded-attempts"
+  ],
+  "ruleHash": "9932f0e7a95e5b43373e339dc69181fb774017503f1a87d908d6f246f80ee2e4",
+  "metrics": {
+    "successfulArmCount": 0,
+    "processAttemptCount": 0,
+    "externalProcessCount": 0,
+    "fasterPairCount": 0,
+    "directMedianNs": "0",
+    "vemMedianNs": "0",
+    "medianPerTaskSavingNs": "0",
+    "amortizedSetupNs": "0",
+    "aggregateIntegrityPassed": false
+  },
+  "failure": {
+    "stage": "terminalizer-options-validation-before-spawn",
+    "code": "R5_EXECUTION_OPTIONS_INVALID",
+    "participantProcessSpawned": false,
+    "failureEvidenceSealed": true
+  },
+  "limitations": [
+    "ZERO_EXTERNAL_PROCESS_ATTEMPTS",
+    "NO_CORRECTNESS_OR_COST_COMPARISON",
+    "RECOVERY_ONLY_ENGINEERING_SMOKE",
+    "NO_STATISTICAL_PRODUCT_CLAIM",
+    "NO_R4_OR_PRIOR_STOP_OR_PRODUCT_UNLOCK"
+  ]
+}

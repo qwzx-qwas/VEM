@@ -1,0 +1,1 @@
+{"errorCount":1,"errors":[{"code":"R3_PROOF_AUDIT_EXCEPTION","errorFingerprint":"4b560f6133bc940e5e090ba726cc973b4ebcefdcb685ab40b11337c6f0a9425d","rawMessagePersisted":false,"stage":"capsule-audit"}],"rawMessagesPersisted":false,"runId":"r3-t2-audit-exception","schemaVersion":"R3-T2-contained-errors-v1"}

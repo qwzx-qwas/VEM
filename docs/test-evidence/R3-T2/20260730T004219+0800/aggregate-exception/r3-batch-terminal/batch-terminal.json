@@ -1,0 +1,1 @@
+{"aggregateExceptionCount":1,"allRunEvidenceSealed":true,"batchStopped":true,"completedRunCount":1,"evidenceSealedBeforeReturn":true,"expectedRunCount":2,"failedRunId":null,"outcome":"stopped","remainingRunCount":1,"runIds":["r3-t2-batch-first"],"schemaVersion":"R3-T2-batch-terminal-v1"}

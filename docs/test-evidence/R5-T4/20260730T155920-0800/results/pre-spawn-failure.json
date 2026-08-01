@@ -1,0 +1,54 @@
+{
+  "schemaVersion": "R5-T4-pre-spawn-failure-v1",
+  "taskId": "R5-T4",
+  "taskState": "in_progress",
+  "decision": "pending",
+  "preregistrationHash": "8a7b315cfa5597b046228d9597a5805ad3b3dbd0becaa83a37f9ea81475ec886",
+  "instrumentationHash": "02fa73cd42572e703c33516b5a5f10a123f0f8e34dd0b82275016f8a8f9c6641",
+  "dataScopeHash": "fefd57ecda3606e69eadb1165618cff24f76ce4ac699243a52f61171c98edba6",
+  "terminationPolicyHash": "ca4ffce3cf06abea99712e581a9732d6579a5490ff9f2bc24e3265b39991404f",
+  "authorizationHash": "4e682b719e64375f52613f128f04d39ca51d638ceb01bf1730decca0283f190c",
+  "plannedRunId": "r5-terminal-01-deadline-heading-direct-search-attempt-1",
+  "failedStage": "terminalizer-options-validation-before-spawn",
+  "failureCode": "R5_EXECUTION_OPTIONS_INVALID",
+  "failureReason": "The frozen R3 capsule invocation omits an env property while the frozen R5 terminalizer requires invocation.env to be an explicit all-string record.",
+  "frozenSourceDriftObserved": false,
+  "pathNormalization": {
+    "performed": true,
+    "from": "docs/test-evidence/R5-T3/20260730T154956+0800",
+    "to": "docs/test-evidence/R5-T3/20260730T154956-0800",
+    "reason": "The frozen runner accepts only its declared safe child-ID grammar.",
+    "preregistrationHashBefore": "8a7b315cfa5597b046228d9597a5805ad3b3dbd0becaa83a37f9ea81475ec886",
+    "preregistrationHashAfter": "8a7b315cfa5597b046228d9597a5805ad3b3dbd0becaa83a37f9ea81475ec886",
+    "authorizationHashAfter": "4e682b719e64375f52613f128f04d39ca51d638ceb01bf1730decca0283f190c"
+  },
+  "executionObservation": {
+    "localPreflightPassed": true,
+    "participantCapsuleCreatedLocally": true,
+    "participantProcessSpawned": false,
+    "processGroupCreated": false,
+    "modelRequestStarted": false,
+    "providerResponseObserved": false,
+    "externalProcessCount": 0,
+    "successfulArmCount": 0,
+    "retryStarted": false,
+    "nextArmStarted": false,
+    "runsDirectoryEmpty": true
+  },
+  "security": {
+    "participantPayloadSent": false,
+    "authenticationKeySentAsParticipantData": false,
+    "privateGroundTruthSent": false,
+    "auditNeedlesSent": false,
+    "productHoldoutSent": false,
+    "repositoryOtherFilesSent": false,
+    "orphanParticipantProcessObserved": false
+  },
+  "evidence": {
+    "localPreflightPath": "results/local-preflight.json",
+    "localPreflightSha256": "0d06b99d7ccaa86e19927ff228365c1c90f85ef860488141bcb13ba9e1d3aa5d",
+    "failureEvidenceSealedBeforeVerdict": true
+  },
+  "requiredRemediation": "A changed terminalizer or invocation adapter requires a new source-bound preregistration and a new exact owner authorization before any external process.",
+  "recordedAt": "2026-07-30T16:03:29+08:00"
+}

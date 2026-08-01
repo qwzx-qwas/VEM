@@ -1,0 +1,2 @@
+{"type":"item.completed","item":{"id":"message","type":"agent_message","text":"{\"relativeFile\":\"packages/demo-fixture/src/App.tsx\",\"line\":7,\"sourceAnchorId\":\"vem1_1fca6dac19137a546084bc64ae003bc0\"}"}}
+{"type":"turn.completed"}

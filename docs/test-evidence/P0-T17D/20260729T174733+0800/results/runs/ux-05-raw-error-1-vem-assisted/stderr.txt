@@ -1,0 +1,6 @@
+Reading additional input from stdin...
+2026-07-29T10:00:31.225312Z ERROR codex_models_manager::manager: failed to refresh available models: timeout waiting for child process to exit
+2026-07-29T10:00:31.311162Z ERROR codex_models_manager::manager: failed to refresh available models: timeout waiting for child process to exit
+2026-07-29T10:00:55.428074Z ERROR codex_models_manager::manager: failed to refresh available models: timeout waiting for child process to exit
+2026-07-29T10:01:00.662888Z ERROR codex_models_manager::manager: failed to refresh available models: timeout waiting for child process to exit
+2026-07-29T10:01:04.953554Z  WARN codex_file_watcher: failed to unwatch /codex-home/skills/.system: No watch was found. about ["/codex-home/skills/.system"]

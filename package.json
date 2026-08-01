@@ -14,7 +14,7 @@
     "build": "tsc -b --pretty false",
     "typecheck": "tsc -b --pretty false",
     "lint": "eslint .",
-    "test": "vitest run --exclude '**/dist/**' --exclude '**/dist-types/**'",
+    "test": "vitest run --exclude '**/dist/**' --exclude '**/dist-types/**' --exclude 'docs/test-evidence/**'",
     "test:workspace": "vitest run --exclude '**/dist/**' --exclude '**/dist-types/**' packages/workspace-smoke scripts/workspace scripts/license",
     "test:install": "node scripts/workspace/clean-install-smoke.mjs",
     "demo:build": "pnpm --filter @vem/vite-plugin build && pnpm --filter @vem/injected-selector build && pnpm --filter @vem/demo-fixture build",

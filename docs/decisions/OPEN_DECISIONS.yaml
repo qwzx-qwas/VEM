@@ -85,8 +85,758 @@ decisions:
 
   - id: P0-VALUE
     title: Continue, adjust, or stop after the preregistered P0 value micro-pilot
-    status: scheduled
+    status: decided
     decision_owner: evidence-gate
-    needed_by_task: P0-T17B
+    needed_by_task: P0-T17D
+    decision: stop
+    decided_at: 2026-07-29T18:04:19+08:00
+    evidence_ref: docs/test-evidence/P0-T17D/20260729T174733+0800/results/verdict.json
     authoritative_state_ref: ROADMAP.yaml
-    note: This row is only a discoverability pointer; the immutable attempt and verdict live in ROADMAP.yaml.
+    note: This row is only a discoverability pointer; ROADMAP.yaml and the immutable attempt-two evidence hold the authoritative stop verdict. P0-T17B remains immutable adjust, and stop makes P0 failed without authorizing P0-T7.
+
+  - id: OWNER-R0-RECOVERY-RESEARCH
+    title: Authorize an independent recovery research phase without overwriting terminal P0
+    status: decided
+    decision_owner: project-owner
+    needed_by_task: R0-T1
+    decision: authorized
+    decided_at: 2026-07-29T18:57:38+08:00
+    evidence: Owner explicitly stated "授权修改 UX-GATE-001 与 ROADMAP，新增不覆盖 P0-T17D stop 的独立恢复研究阶段，并继续执行该阶段。" in the active Codex thread.
+    context_refs:
+      - docs/DESIGN.md
+      - docs/delivery/R0_RECOVERY_RESEARCH.md
+      - ROADMAP.yaml
+    context_sections:
+      - 2.7.2 Owner-authorized independent recovery research (R0-RECOVERY-001)
+    note: Authorization covers R0 charter instrumentation preregistration and progression. External model payloads at R0-T4 still require a separate explicit authorization after preregistration.
+
+  - id: OWNER-R0-T4-EXTERNAL-BATCH
+    title: Authorize the frozen R0-T4 recovery-only external batch
+    status: decided
+    decision_owner: project-owner
+    needed_by_task: R0-T4
+    decision: authorized
+    decided_at: 2026-07-29T19:47:19+08:00
+    evidence: Owner explicitly stated "授权执行 R0-T4 冻结批次，绑定 preregistration hash 57fb4b9b033e61eb4e0b4b9a0f14ced28064b6fb17d73f5e7ae60552d0f37359，共 10 次外部实验" in the active Codex thread.
+    evidence_ref: docs/test-evidence/R0-T4/OWNER_AUTHORIZATION_20260729.json
+    context_refs:
+      - docs/test-evidence/R0-T3/20260729T193158+0800/PREREGISTRATION.json
+      - docs/test-evidence/R0-T3/20260729T193158+0800/PREREGISTRATION.sha256
+      - scripts/pilot/r0-t4.mjs
+    note: Authorization must explicitly bind preregistration hash 57fb4b9b033e61eb4e0b4b9a0f14ced28064b6fb17d73f5e7ae60552d0f37359 before any of the 10 recovery-only prompts or fixture inputs are sent externally. It does not modify P0-VALUE or authorize product work.
+
+  - id: R0-RECOVERY
+    title: Continue, adjust, or stop the independent recovery research route
+    status: decided
+    decision_owner: evidence-gate
+    needed_by_task: R0-T4
+    decision: stop
+    decided_at: 2026-07-29T19:50:40+08:00
+    evidence_ref: docs/test-evidence/R0-T4/20260729T194719+0800/verdict.json
+    authoritative_state_ref: ROADMAP.yaml
+    note: The first authorized arm hit the preregistered event-ledger-integrity-failed stop condition when the frozen runner attempted a duplicate structured-response receipt. The remaining nine calls were not executed. This independent stop never supersedes P0-VALUE and cannot authorize P0-T7 or P1.
+
+  - id: OWNER-R1-RUNNER-REMEDIATION
+    title: Authorize an independent R1 runner remediation without overwriting R0 or P0 stop
+    status: decided
+    decision_owner: project-owner
+    needed_by_task: R1-T1
+    decision: authorized
+    decided_at: 2026-07-29T20:00:00+08:00
+    evidence: Owner explicitly stated "授权新增不覆盖 R0-RECOVERY stop 与 P0-VALUE stop 的独立 R1 runner remediation 阶段，并继续完成修复与新预注册；外部实验仍需预注册后单独授权。" in the active Codex thread.
+    context_refs:
+      - docs/DESIGN.md
+      - docs/delivery/R1_RUNNER_REMEDIATION.md
+      - ROADMAP.yaml
+    context_sections:
+      - 2.7.3 Owner-authorized runner remediation after R0 stop (R1-RUNNER-REMEDIATION-001)
+    note: Authorization covers R1 charter runner remediation tests and new preregistration only. It does not authorize any R1 external model call.
+
+  - id: OWNER-R1-T4-EXTERNAL-BATCH
+    title: Authorize the frozen R1-T4 runner-remediation external batch
+    status: decided
+    decision_owner: project-owner
+    needed_by_task: R1-T4
+    decision: authorized
+    decided_at: 2026-07-29T21:34:32+08:00
+    evidence: Owner explicitly stated "授权执行 R1-T4 冻结批次，绑定 preregistration hash 8d93104c915fdb0acce9f31bdf7c34bbc4d19f0ac74e1b2609a10ddce35ca7f1，共 10 次外部实验，记得完成该阶段去push(push前看看.gitigonre中有没有需要新增的）" in the active Codex thread.
+    evidence_ref: docs/test-evidence/R1-T4/OWNER_AUTHORIZATION_20260729.json
+    requested_preregistration_hash: 8d93104c915fdb0acce9f31bdf7c34bbc4d19f0ac74e1b2609a10ddce35ca7f1
+    requested_run_count: 10
+    context_refs:
+      - docs/test-evidence/R1-T3/20260729T203631+0800/PREREGISTRATION.json
+      - docs/test-evidence/R1-T3/20260729T203631+0800/PREREGISTRATION.sha256
+      - scripts/pilot/r1-t4.mjs
+    note: Authorization binds exactly 10 recovery-only external processes to the frozen preregistration hash. It cannot modify R0-RECOVERY, P0-VALUE, or unlock product work.
+
+  - id: R1-RECOVERY
+    title: Continue, adjust, or stop the independent R1 recovery route
+    status: decided
+    decision_owner: evidence-gate
+    needed_by_task: R1-T4
+    decision: stop
+    decided_at: 2026-07-29T21:37:39+08:00
+    evidence_ref: docs/test-evidence/R1-T4/20260729T213524+0800/results/verdict.json
+    authoritative_state_ref: ROADMAP.yaml
+    note: The direct arm completed correctly. The paired VEM arm emitted two different schema-valid agent messages, so the preregistered conflict rule failed closed after sealing raw, terminal, ledger, failure and hash evidence; the remaining eight calls were not executed. This decision does not supersede R0-RECOVERY or P0-VALUE and cannot authorize product work.
+
+  - id: OWNER-R2-FINAL-OUTPUT-REMEDIATION
+    title: Authorize independent R2 final-output authority remediation without overwriting R1 R0 or P0 stop
+    status: decided
+    decision_owner: project-owner
+    needed_by_task: R2-T1
+    decision: authorized
+    decided_at: 2026-07-29T22:25:00+08:00
+    evidence: Owner explicitly stated "对暴露的问题进行修正" in the active Codex thread.
+    context_refs:
+      - docs/DESIGN.md
+      - docs/delivery/R2_FINAL_OUTPUT_REMEDIATION.md
+      - ROADMAP.yaml
+    context_sections:
+      - 2.7.4 Owner-authorized final-output authority remediation after R1 stop (R2-FINAL-OUTPUT-001)
+    note: Authorization covers the independent R2 charter, authoritative final-output runner remediation, tests and new preregistration only. It does not authorize an R2 external model call or product work.
+
+  - id: OWNER-R2-T4-EXTERNAL-BATCH
+    title: Authorize the frozen R2-T4 final-output remediation external batch
+    status: decided
+    decision_owner: project-owner
+    needed_by_task: R2-T4
+    decision: authorized
+    decided_at: 2026-07-29T23:02:32+08:00
+    evidence: Owner explicitly stated "授权执行 R2-T4 冻结批次，绑定 preregistration hash dddd48ade2a92b2e12ec7600c9cdc0bd65eee6d47023d01d70b8bd71b47c273a，共 10 次外部实验" in the active Codex thread.
+    evidence_ref: docs/test-evidence/R2-T4/OWNER_AUTHORIZATION_20260729.json
+    requested_preregistration_hash: dddd48ade2a92b2e12ec7600c9cdc0bd65eee6d47023d01d70b8bd71b47c273a
+    requested_run_count: 10
+    context_refs:
+      - docs/test-evidence/R2-T3/20260729T225128+0800/PREREGISTRATION.json
+      - docs/test-evidence/R2-T3/20260729T225128+0800/PREREGISTRATION.sha256
+      - scripts/pilot/r2-t4.mjs
+    note: Authorization binds exactly 10 final-output-remediation external processes to the frozen preregistration hash. It cannot modify R1-RECOVERY, R0-RECOVERY, P0-VALUE or unlock product work.
+
+  - id: R2-RECOVERY
+    title: Continue, adjust, or stop the independent R2 final-output remediation route
+    status: decided
+    decision_owner: evidence-gate
+    needed_by_task: R2-T4
+    decision: stop
+    decided_at: 2026-07-29T23:18:11+08:00
+    evidence_ref: docs/test-evidence/R2-T4/20260729T230343+0800/results/verdict.json
+    authoritative_state_ref: ROADMAP.yaml
+    note: Nine fresh processes produced exact source locations, unique thread IDs, consistent authoritative final files, zero protocol failures and zero wrong attribution. Run nine included the frozen v2 auditor forbidden marker AGENTS.md in a command event, causing CAPSULE_AUDIT_V2_ESCAPE; the exception returned before audit-failure evidence was sealed, so the preregistered capsule-integrity-failed and failure-evidence-not-sealed-before-return stop conditions apply. The remaining call was not executed. This decision does not supersede R1-RECOVERY, R0-RECOVERY or P0-VALUE and cannot unlock product work.
+
+  - id: OWNER-R3-CAPSULE-AUDIT-CONTAINMENT
+    title: Authorize independent R3 capsule-audit containment remediation without overwriting R2 R1 R0 or P0 stop
+    status: decided
+    decision_owner: project-owner
+    needed_by_task: R3-T1
+    decision: authorized
+    decided_at: 2026-07-29T23:37:37+08:00
+    evidence: Owner explicitly stated "授权新增不覆盖 R2-RECOVERY、R1-RECOVERY、R0-RECOVERY 与 P0-VALUE stop 的独立 R3 capsule-audit containment remediation 阶段，并继续完成审计语义修复、异常封存与新预注册；外部实验仍需预注册后单独授权。" in the active Codex thread.
+    context_refs:
+      - docs/DESIGN.md
+      - docs/delivery/R3_CAPSULE_AUDIT_CONTAINMENT.md
+      - ROADMAP.yaml
+    context_sections:
+      - 2.7.5 Owner-authorized capsule-audit containment remediation after R2 stop (R3-CAPSULE-AUDIT-CONTAINMENT-001)
+    note: Authorization covers the independent R3 charter, capsule-audit semantics, in-run exception sealing, tests and new preregistration only. It does not authorize an R3 external model call or product work.
+
+  - id: OWNER-R3-T4-EXTERNAL-BATCH
+    title: Authorize the frozen R3-T4 capsule-audit containment external batch
+    status: decided
+    decision_owner: project-owner
+    needed_by_task: R3-T4
+    decision: authorized
+    decided_at: 2026-07-30T13:31:11+08:00
+    evidence: Owner explicitly authorized sending the frozen participant capsule data to the OpenAI Codex service using gpt-5.6-sol for at most 10 R3-T4 external experiments bound to the full preregistration hash in the active Codex thread.
+    evidence_ref: docs/test-evidence/R3-T4/OWNER_AUTHORIZATION_20260730.json
+    requested_preregistration_hash: 8b886d443c576540f6b3b2d90e06abfd95d57955f696680dd998b748d4ffdd5b
+    requested_run_count: 10
+    context_refs:
+      - docs/test-evidence/R3-T3/20260730T114932+0800/PREREGISTRATION.json
+      - docs/test-evidence/R3-T3/20260730T114932+0800/PREREGISTRATION.sha256
+      - scripts/pilot/r3-t4.mjs
+    note: Authorization bound at most 10 external processes to the frozen preregistration and explicitly covered the OpenAI Codex destination, gpt-5.6-sol model and participant capsule data boundary. It cannot modify R2-RECOVERY, R1-RECOVERY, R0-RECOVERY, P0-VALUE or unlock product work.
+
+  - id: R3-RECOVERY
+    title: Continue, adjust, or stop the independent R3 capsule-audit containment route
+    status: decided
+    decision_owner: evidence-gate
+    needed_by_task: R3-T4
+    decision: stop
+    decided_at: 2026-07-30T13:50:18+08:00
+    evidence_ref: docs/test-evidence/R3-T4/20260730T133111-0800/results/verdict.json
+    authoritative_state_ref: ROADMAP.yaml
+    note: The first fresh direct process acquired a unique thread but repeated external request timeouts ended in turn.failed, an empty authoritative final response, no turn.completed and exit code 1. Capsule audit, permission/auth boundary, evaluator integrity and failure/hash sealing all passed, but the preregistered protocol-response-integrity-failed condition requires stop. The remaining nine calls were not executed. This decision does not supersede R2-RECOVERY, R1-RECOVERY, R0-RECOVERY or P0-VALUE and cannot unlock product work.
+
+  - id: OWNER-R4-TRANSPORT-TIMEOUT-REMEDIATION
+    title: Authorize independent R4 external-transport timeout remediation without overwriting R3 R2 R1 R0 or P0 stop
+    status: decided
+    decision_owner: project-owner
+    needed_by_task: R4-T1
+    decision: authorized
+    decided_at: 2026-07-30T14:14:10+08:00
+    evidence: Owner explicitly stated "授权新增不覆盖 R3-RECOVERY、R2-RECOVERY、R1-RECOVERY、R0-RECOVERY 与 P0-VALUE stop 的独立 R4 external-transport timeout remediation 阶段，并继续完成传输预检、超时分类、有限重试 runner 修复与新预注册；外部实验仍需预注册后单独授权。" in the active Codex thread.
+    context_refs:
+      - docs/DESIGN.md
+      - docs/delivery/R4_TRANSPORT_TIMEOUT_REMEDIATION.md
+      - ROADMAP.yaml
+    context_sections:
+      - 2.7.6 Owner-authorized external-transport timeout remediation after R3 stop (R4-TRANSPORT-TIMEOUT-001)
+    note: Authorization covers the independent R4 charter, zero-model preflight, timeout classification, bounded retry controller, tests and new preregistration only. It does not authorize an R4 external model call or product work.
+
+  - id: OWNER-R4-T4-EXTERNAL-BATCH
+    title: Authorize the frozen R4-T4 bounded-attempt external transport batch
+    status: decided
+    decision_owner: project-owner
+    needed_by_task: R4-T4
+    decision: authorized
+    decided_at: 2026-07-30T14:41:05+08:00
+    evidence: Owner explicitly authorized sending the frozen five-task participant capsule scope to the OpenAI Codex service gpt-5.6-sol model, bound preregistration hash 0ddb8c6f51d140042167231a22f8b3f73735fc8d0e271e3da5f11590c9995104 and data-scope hash 2fe4246a5cdd3aee19efb1d2e2f56f2469ba82c8f5dc32f1651c68a86d0b8ca8, for ten successful arms with one retry only after a sealed timeout-before-response and at most twenty external processes.
+    requested_preregistration_hash: 0ddb8c6f51d140042167231a22f8b3f73735fc8d0e271e3da5f11590c9995104
+    requested_destination: OpenAI Codex service
+    requested_model: gpt-5.6-sol
+    requested_data_scope_hash: 2fe4246a5cdd3aee19efb1d2e2f56f2469ba82c8f5dc32f1651c68a86d0b8ca8
+    requested_successful_arm_count: 10
+    requested_max_process_attempts: 20
+    context_refs:
+      - docs/test-evidence/R4-T3/20260730T143215-0800/PREREGISTRATION.json
+      - docs/test-evidence/R4-T3/20260730T143215-0800/PREREGISTRATION.sha256
+      - scripts/pilot/r4-t4.mjs
+    note: Authorization validation passed with canonical hash 4de37dc38ae5c13661d8f032f8cf1b7c2644a4974eae5f44f13c949a9980865f. The first process exhausted Codex-internal WebSocket and HTTPS timeout reconnects but remained alive without a process terminal; the frozen runner had no wall-clock termination/sealing path. The batch was interrupted without a retry or second process, R4-T4 is blocked, and R4-RECOVERY remains pending. This authorization cannot bind a changed runner or new preregistration.
+
+  - id: OWNER-R5-PROCESS-TREE-TERMINATION-REMEDIATION
+    title: Authorize independent R5 process-tree termination remediation without changing blocked R4 or prior terminal stops
+    status: decided
+    decision_owner: project-owner
+    needed_by_task: R5-T1
+    decision: authorized
+    decided_at: 2026-07-30T15:10:00+08:00
+    evidence: Owner instructed Codex to continue from the current latest documented prompt, mark each completed prompt with a short summary, and leave a structured handoff if the run cannot finish; under the R4 delivery boundary this authorizes the local-only independent R5 charter, runner remediation, tests and new preregistration.
+    owner_statement: "结合文档内容，从当前最新阶段的prompt开始做，每完成一个阶段就在对应的prompt下面标注已完成，以及简短的概述做了什么,如果没有额度就输出：任务目标是什么，当前做了什么，有什么方案，还剩什么，下一步要做什么，供下次codex能接上任务"
+    context_refs:
+      - docs/DESIGN.md
+      - docs/delivery/R4_TRANSPORT_TIMEOUT_REMEDIATION.md
+      - docs/delivery/R5_PROCESS_TREE_TERMINATION_REMEDIATION.md
+      - ROADMAP.yaml
+    context_sections:
+      - 2.7.7 Owner-authorized process-tree termination remediation after R4 blocked (R5-PROCESS-TERMINATION-001)
+    note: Authorization covers R5 charter, local wall-clock/process-tree termination remediation, tests and a new no-call preregistration only. It does not authorize an R5 external model call, reuse the R4-T4 authorization, alter R4-T4 blocked/R4-RECOVERY pending, or unlock product work.
+
+  - id: OWNER-R5-T4-EXTERNAL-BATCH
+    title: Authorize the frozen R5-T4 bounded-deadline external batch
+    status: decided
+    decision_owner: project-owner
+    needed_by_task: R5-T4
+    decision: authorized
+    decided_at: 2026-07-30T15:56:51+08:00
+    evidence: Owner explicitly authorized the exact frozen R5-T4 destination, model, preregistration, participant data scope, successful-arm target, process cap, deadline, graceful/force windows, signals and retry boundary in the active Codex thread.
+    evidence_ref: docs/test-evidence/R5-T4/OWNER_AUTHORIZATION_20260730.json
+    requested_preregistration_hash: 8a7b315cfa5597b046228d9597a5805ad3b3dbd0becaa83a37f9ea81475ec886
+    requested_destination: OpenAI Codex service
+    requested_model: gpt-5.6-sol
+    requested_data_scope_hash: fefd57ecda3606e69eadb1165618cff24f76ce4ac699243a52f61171c98edba6
+    requested_successful_arm_count: 10
+    requested_max_process_attempts: 20
+    requested_termination_policy:
+      deadline_ms: 120000
+      graceful_window_ms: 5000
+      force_observation_window_ms: 5000
+      graceful_signal: SIGTERM
+      force_signal: SIGKILL
+      max_retries_per_arm: 1
+      retryable_only_after: sealed-observed-provider-timeout-before-response
+      runner_wall_clock_termination_retryable: false
+    context_refs:
+      - docs/test-evidence/R5-T3/20260730T154956-0800/PREREGISTRATION.json
+      - docs/test-evidence/R5-T3/20260730T154956-0800/PREREGISTRATION.sha256
+      - scripts/pilot/r5-t4.mjs
+    note: Authorization validation passed with canonical hash 4e682b719e64375f52613f128f04d39ca51d638ceb01bf1730decca0283f190c. Frozen local preflight passed, but the first planned arm failed before spawn with R5_EXECUTION_OPTIONS_INVALID because the capsule invocation omitted the explicit env record required by the terminalizer. Zero external processes/model calls occurred. The prior R4-T4 authorization is not reused; any changed source, hash, destination, participant data, process budget or termination policy requires a new authorization.
+
+  - id: R5-RECOVERY
+    title: Continue, adjust, or stop the independent R5 process-tree termination route
+    status: decided
+    decision_owner: evidence-gate
+    needed_by_task: R5-T4
+    decision: stop
+    decided_at: 2026-07-30T16:03:29+08:00
+    evidence_ref: docs/test-evidence/R5-T4/20260730T155920-0800/results/verdict.json
+    authoritative_state_ref: ROADMAP.yaml
+    note: The exact authorization and all frozen preregistration/source/probe checks passed, but terminalizer option validation rejected the first capsule invocation before spawn because invocation.env was absent. No participant process, model request, retry or next arm started. The sealed aggregate-integrity-failed stop verdict does not complete, fail, reopen or supersede blocked R4, does not alter R3/R2/R1/R0/P0 stops, and cannot unlock product work.
+
+  - id: OWNER-R6-PRESPAWN-INVOCATION-REMEDIATION
+    title: Authorize independent R6 pre-spawn invocation-contract remediation without changing R5 stop R4 blocked or prior terminal stops
+    status: decided
+    decision_owner: project-owner
+    needed_by_task: R6-T1
+    decision: authorized
+    decided_at: 2026-07-30T16:10:00+08:00
+    evidence: Owner explicitly stated "修复它" after Codex explained that R5 stopped because the frozen R3 capsule invocation lacked the explicit env record required by the R5 terminalizer.
+    owner_statement: "修复它"
+    context_refs:
+      - docs/DESIGN.md
+      - docs/delivery/R6_PRESPAWN_INVOCATION_REMEDIATION.md
+      - ROADMAP.yaml
+    context_sections:
+      - 2.7.8 Owner-authorized pre-spawn invocation-contract remediation after R5 stop (R6-PRESPAWN-INVOCATION-001)
+    note: Authorization covers the independent R6 charter, explicit fixed outer-environment contract, shared invocation validation, zero-model compatibility preflight, tests and a new no-call preregistration only. It does not authorize an R6 external model call, reuse R5-T4 authorization, alter R5/R4 or prior decisions, or unlock product work.
+
+  - id: OWNER-R6-T4-EXTERNAL-BATCH
+    title: Authorize the frozen R6-T4 invocation-compatible external batch
+    status: decided
+    decision_owner: project-owner
+    needed_by_task: R6-T4
+    decision: authorized
+    decided_at: 2026-07-30T17:09:58+08:00
+    evidence: Owner required commit and push first, then explicitly authorized the exact frozen R6-T4 destination, model, preregistration, participant data scope, outer environment, successful-arm target, process cap, deadline, termination windows, signals and retry boundary in the active Codex thread.
+    evidence_ref: docs/test-evidence/R6-T4/OWNER_AUTHORIZATION_20260730.json
+    requested_preregistration_hash: 935c7b8c8880d6439238096b99c3ada3338a7c4c94fec192a7d4c8806f9610c9
+    requested_destination: OpenAI Codex service
+    requested_model: gpt-5.6-sol
+    requested_data_scope_hash: e89a0a77f6f2ef099f4f68a1838f39574a1caf2747dccf95494d91d7e3153d10
+    requested_outer_environment_hash: cf24c3c5e349e230a9c04223dceb4854bd377915e21f46d830134b085bc3579d
+    requested_successful_arm_count: 10
+    requested_max_process_attempts: 20
+    requested_termination_policy:
+      deadline_ms: 120000
+      graceful_window_ms: 5000
+      force_observation_window_ms: 5000
+      graceful_signal: SIGTERM
+      force_signal: SIGKILL
+      max_retries_per_arm: 1
+      retryable_only_after: sealed-observed-provider-timeout-before-response
+      runner_wall_clock_termination_retryable: false
+    context_refs:
+      - docs/test-evidence/R6-T3/20260730T165800-0800/PREREGISTRATION.json
+      - docs/test-evidence/R6-T3/20260730T165800-0800/PREREGISTRATION.sha256
+      - scripts/pilot/r6-t4.mjs
+    note: Commit 07ff373 was pushed before execution. Authorization validation passed with canonical hash c2f53593214107adeb810172a65072ce91d03d41f664d5d85fbf58c8321d7d74. One external process was started; it reached the frozen runner deadline without an observed provider terminal and was sealed as non-retryable runner-wall-clock termination. No retry or second process was authorized by that outcome, and this authorization cannot bind any changed deadline, source, preregistration or attempt two.
+
+  - id: R6-RECOVERY
+    title: Continue, adjust, or stop the independent R6 invocation-compatible route
+    status: decided
+    decision_owner: evidence-gate
+    needed_by_task: R6-T13
+    decision: stop
+    decided_at: 2026-08-01T14:38:40+08:00
+    evidence_ref: docs/test-evidence/R6-T13/20260801T141247-0800/results/verdict.json
+    current_attempt: R6-T13
+    prior_attempts:
+      - task: R6-T4
+        decision: adjust
+        decided_at: 2026-07-30T17:12:55+08:00
+        evidence_ref: docs/test-evidence/R6-T4/20260730T171100-0800/results/verdict.json
+      - task: R6-T7
+        decision: adjust
+        decided_at: 2026-07-30T18:48:05+08:00
+        evidence_ref: docs/test-evidence/R6-T7/20260730T183547-0800/results/verdict.json
+      - task: R6-T10
+        decision: adjust
+        decided_at: 2026-07-30T20:13:02+08:00
+        evidence_ref: docs/test-evidence/R6-T10/20260730T195616-0800/results/verdict.json
+    authoritative_state_ref: ROADMAP.yaml
+    note: Attempts one through three remain immutable adjust. Exactly authorized attempt four started one fresh direct process, which ended before runner deadline with a sealed retryable provider timeout and an empty final response. The frozen runner then reused the same capsule while preparing the authorized retry and raised R2_CAPSULE_OUTPUT_ALREADY_PREPARED before a second process spawned. A no-call abort sealer verified the attempt manifest, reproduced the defect and recorded aggregate-integrity-failed stop. Attempt four used 1 process, completed 0/10 arms, left 19 attempts unused and produced no wrong attribution. R6 failed; this decision does not alter prior decisions or unlock product work.
+
+  - id: R7-RECOVERY
+    title: Continue, adjust, or stop the independent R7 retry-capsule isolation route
+    status: decided
+    decision_owner: evidence-gate
+    needed_by_task: R7-T4
+    decision: stop
+    decided_at: 2026-08-01T17:35:42+08:00
+    evidence_ref: docs/test-evidence/R7-T4/20260801T165602-0800/results/verdict.json
+    current_attempt: R7-T4
+    authoritative_state_ref: ROADMAP.yaml
+    note: Exact owner authorization bound the published R7-T3 commit and every frozen boundary. The first direct attempt and its one authorized retry used distinct capsule/control/final resources and fresh threads; both ended with sealed provider request-timeout terminals, exit 1, empty final files and empty process groups. Retry exhaustion stopped the batch after 2/20 processes and 0/10 completed arms. Aggregate integrity therefore failed closed with immutable stop, R7 failed, all prior decisions/evidence remain unchanged and product unlock count is zero.
+
+  - id: OWNER-R7-RETRY-CAPSULE-ISOLATION-REMEDIATION
+    title: Authorize independent local-only R7 retry-capsule isolation remediation
+    status: decided
+    decision_owner: project-owner
+    needed_by_task: R7-T1
+    decision: authorized
+    decided_at: 2026-08-01T15:01:46+08:00
+    evidence: Owner explicitly authorized a new independent R7 local route for per-attempt capsule/final-output isolation, exception-safe batch sealing, tests and a new no-call preregistration while preserving every prior decision/evidence and requiring separate authorization for any future external call.
+    owner_statement: "我明确授权新增一个不覆盖 R6-RECOVERY stop、R5/R4 及此前所有 decision/evidence，且不解锁产品工作的独立 R7 retry-capsule isolation remediation 路线；先仅执行本地零调用的 charter、每次 retry 使用独立 capsule/final-output control root 的 runner 修复、exception-safe batch sealing、测试及新预注册，并按阶段 commit/push。任何外部模型调用仍须在新预注册发布后另行精确授权。"
+    authorized_scope: [R7-T1, R7-T2, R7-T3]
+    external_execution_authorized: false
+    prerequisite_publish:
+      commit: 69b6fa42694eea00617913051bcca08cf0a78536
+      branch: agent/complete-p0-r1-stages
+      remote_sha_verified: true
+    context_refs:
+      - docs/test-evidence/R6-T13/20260801T141247-0800/RESULTS.sha256
+      - docs/test-evidence/R6-T13/20260801T141247-0800/results/verdict.json
+      - docs/DESIGN.md
+      - docs/delivery/R7_RETRY_CAPSULE_ISOLATION_REMEDIATION.md
+      - ROADMAP.yaml
+    note: This grant covers charter/validator work, local runner remediation, local tests/probes, new preregistration evidence and stage-by-stage commit/push. It does not authorize a participant process, provider reachability probe, model request, reuse of any R6 authorization, mutation of prior evidence or product unlock.
+
+  - id: R8-RECOVERY
+    title: Record the final single-attempt recovery exit verdict
+    status: open
+    decision_owner: evidence-gate
+    needed_by_task: R8-T4
+    decision: pending
+    current_attempt: R8-T4
+    authoritative_state_ref: ROADMAP.yaml
+    note: R8 is the final independent recovery exit gate after immutable R7 stop. It permits at most one separately preregistered and authorized process with no retry. Any timeout or incomplete evidence records stop and forbids R9. A future model-agnostic MCP product route is separately scoped and must not depend on R8 continue.
+
+  - id: OWNER-R8-FINAL-RECOVERY-EXIT
+    title: Authorize a final recovery attempt with timeout-to-product transition
+    status: decided
+    decision_owner: project-owner
+    needed_by_task: R8-T1
+    decision: authorized
+    decided_at: 2026-08-01T18:00:00+08:00
+    evidence: Owner allowed one more attempt, but directed that a timeout ends recovery experimentation and transitions work to a genuinely model-agnostic MCP product route after clarifying that VEM must not bind its product architecture to a specific model.
+    owner_statement: "可以尝试一下，但超时就停止 recovery 实验，转向真正的模型无关 MCP 产品开发路线。"
+    interpreted_scope: R8-final-single-attempt-recovery-exit-charter-first
+    authorized_scope: [R8-T1]
+    external_execution_authorized: false
+    model_identity_product_requirement: false
+    timeout_disposition: stop-recovery-and-transition-to-separate-model-agnostic-product-route
+    maximum_future_external_processes: 1
+    maximum_future_retries: 0
+    prerequisite_publish:
+      commit: 689ebc5e89565e89937a54d6d31bab227d24545f
+      branch: agent/complete-p0-r1-stages
+      remote_sha_verified: true
+    context_refs:
+      - docs/test-evidence/R7-T4/20260801T165602-0800/RESULTS.sha256
+      - docs/test-evidence/R7-T4/20260801T165602-0800/results/verdict.json
+      - docs/DESIGN.md
+      - docs/delivery/R8_FINAL_RECOVERY_EXIT.md
+      - ROADMAP.yaml
+    note: This entry authorizes R8-T1 local charter work and records the owner's conditional direction. It does not select an experiment model/client, authorize R8-T2/R8-T3 automatically, authorize an external process, reopen product phases, or make model identity part of VEM MCP behavior. Future external execution requires a published no-call preregistration and another exact authorization.
+
+  - id: OWNER-R8-T2-LOCAL-ADAPTER-SEALER
+    title: Continue with the local model-agnostic experiment adapter and one-shot sealer
+    status: decided
+    decision_owner: project-owner
+    needed_by_task: R8-T2
+    decision: authorized
+    decided_at: 2026-08-01T18:20:00+08:00
+    evidence: After manually publishing the completed R8-T1 charter commit, the owner directed work to continue. Under the charter boundary this authorizes only R8-T2 local implementation and tests.
+    owner_statement: "已push,继续"
+    interpreted_scope: R8-T2-local-zero-call-only
+    authorized_scope: [R8-T2]
+    external_execution_authorized: false
+    participant_process_authorized: false
+    provider_probe_authorized: false
+    model_selection_authorized: false
+    model_identity_product_requirement: false
+    prerequisite_publish:
+      commit: 622acb323b616b800837c6fd6586fa92b8136336
+      branch: agent/complete-p0-r1-stages
+      remote_sha_verified: true
+    note: This entry does not authorize R8-T3, R8-T4, an external model call, provider reachability work, product unlock, R9, or any mutation of prior decision/evidence.
+
+  - id: OWNER-M0-USABLE-MCP-PRIORITY
+    title: Prioritize the model-agnostic usable MCP vertical slice
+    status: decided
+    decision_owner: project-owner
+    needed_by_task: M0-T1
+    decision: authorized
+    decided_at: 2026-08-01T19:10:00+08:00
+    evidence: The owner explicitly prioritized the six user-visible capability groups needed to reach a usable MCP instead of treating recovery work as the product path.
+    owner_statement: |-
+      优先完成;coordinator + MCP STDIO；
+      Vite/browser proxy；
+      selection/source MCP tools；
+      confirmation + prepare/HMR/complete；
+      真实 Edge walking-skeleton；
+      最小安装 CLI。
+    interpreted_scope: M0-model-agnostic-usable-mcp-product-route
+    authorized_scope: [M0-T1, M0-T2, M0-T3, M0-T4, M0-T5, M0-T6, M0-T7, M0-T8, M0-T9, M0-T10, M0-T11, M0-T12, M0-T13]
+    external_model_execution_authorized: false
+    provider_reachability_required: false
+    participant_model_identity_requirement: false
+    local_edge_vite_mcp_process_tests_authorized: true
+    prerequisite_publish:
+      commit: c678c615817dddf35a1d598cba76e34887de5e62
+      branch: agent/complete-p0-r1-stages
+      remote_sha_verified: true
+    note: This product authorization does not reopen or supersede P0-VALUE, R0-R8 decisions or evidence. It authorizes staged local product implementation and real local Edge/Vite/MCP verification, but no external model/provider execution. Each task remains atomic and requires its own completed test gate plus commit/push before the next task begins.
+
+  - id: OWNER-R7-T4-EXTERNAL-BATCH
+    title: Authorize the frozen R7-T4 retry-isolated external batch
+    status: decided
+    decision_owner: project-owner
+    needed_by_task: R7-T4
+    decision: authorized
+    decided_at: 2026-08-01T16:56:02+08:00
+    evidence: Owner explicitly authorized sending the frozen participant prompts, read-only capsules and VEM contexts to OpenAI Codex service / gpt-5.6-sol and bound the published commit, every preregistration/source/data/failure/isolation/termination/environment hash, 10-arm target, 20-process cap, signal windows, shared one-retry boundary and independent per-attempt resources.
+    evidence_ref: docs/test-evidence/R7-T4/OWNER_AUTHORIZATION_20260801.json
+    owner_statement: >-
+      我明确授权执行 R7-T4：基于已发布 commit 91e0f08b064d48d757544aa0ca2ce9e186382d75，向 OpenAI Codex service 的 gpt-5.6-sol 模型发送冻结范围内的 participant prompts、只读 capsules 与 VEM contexts，执行 R7-RECOVERY decision attempt 1（supersedesAttempt=null）。本授权绑定 preregistration hash bc2bd50ca79aaac581c083232d4bf0d55b838c64228039921e6ae1adbb8a4a78、instrumentation hash ce7979ebf9414da72e7afb65de178da3c5da6dc49990d8f8088c2ba01f5a5274、data-scope hash fca7658cc49b0e7eba3c29354a63433282a85048ff960122b7bd890a470dd8a7、failure-policy hash 9e9f3174f794ea1ed2ec18a54f983117179a867985c4107ca37e0425948588fa、retry-isolation hash d847e93ad6d5ae3b0336d465105dc1f62bf0a92bcf7eda5307053b7b7ae8f79c、termination-policy hash caa4ff6248fca549c601cb7bdcd80813bb91ee646606cacce627111deae16372 和 outer-environment hash cf24c3c5e349e230a9c04223dceb4854bd377915e21f46d830134b085bc3579d。授权完成 10 个 arms、最多启动 20 个外部 processes；每次 deadline 1,200,000 ms，随后 SIGTERM、5,000 ms grace、SIGKILL、5,000 ms wait；每个 arm 的两个冻结可重试分类合计最多重试一次。仅真实启动的 process 消耗预算，未启动 retry 不消耗预算；所有已启动尝试均保留证据并使用独立 capsule/control root/final file。本授权不覆盖 R6/R5/R4 或更早 decision/evidence，也不授权任何产品解锁或同授权换 root 重放。
+    published_commit: 91e0f08b064d48d757544aa0ca2ce9e186382d75
+    authorization_hash: 3c1cbc8869a98fd65ef20c99ab5f13322afa617790ff9f5a75000fab423f717a
+    requested_preregistration_hash: bc2bd50ca79aaac581c083232d4bf0d55b838c64228039921e6ae1adbb8a4a78
+    requested_instrumentation_hash: ce7979ebf9414da72e7afb65de178da3c5da6dc49990d8f8088c2ba01f5a5274
+    requested_data_scope_hash: fca7658cc49b0e7eba3c29354a63433282a85048ff960122b7bd890a470dd8a7
+    requested_failure_policy_hash: 9e9f3174f794ea1ed2ec18a54f983117179a867985c4107ca37e0425948588fa
+    requested_retry_isolation_hash: d847e93ad6d5ae3b0336d465105dc1f62bf0a92bcf7eda5307053b7b7ae8f79c
+    requested_termination_policy_hash: caa4ff6248fca549c601cb7bdcd80813bb91ee646606cacce627111deae16372
+    requested_outer_environment_hash: cf24c3c5e349e230a9c04223dceb4854bd377915e21f46d830134b085bc3579d
+    requested_destination: OpenAI Codex service
+    requested_model: gpt-5.6-sol
+    requested_successful_arm_count: 10
+    requested_max_process_attempts: 20
+    termination:
+      deadline_ms: 1200000
+      graceful_window_ms: 5000
+      force_observation_window_ms: 5000
+      graceful_signal: SIGTERM
+      force_signal: SIGKILL
+      max_retries_per_arm: 1
+      retryable_classes_share_one_retry: true
+      unspawned_retry_consumes_budget: false
+    context_refs:
+      - docs/test-evidence/R7-T3/20260801T162533-0800/PREREGISTRATION.json
+      - docs/test-evidence/R7-T3/20260801T162533-0800/PREREGISTRATION.sha256
+      - docs/test-evidence/R7-T4/20260801T165602-0800/RESULTS.sha256
+      - scripts/pilot/r7-t4.mjs
+    note: Authorization validated with canonical hash 3c1cbc8869a98fd65ef20c99ab5f13322afa617790ff9f5a75000fab423f717a. Exactly two external processes/fresh threads ran for the first direct arm. Both observed complete WebSocket-to-HTTPS timeout sequences and provider turn.failed/request timed out, then exited 1 with empty final responses and sealed evidence. The one retry used a distinct resource identity; after it failed, the batch stopped with 0/10 arms, 18 process attempts unused and canonical verdict hash 18a24afc0709e42207d583048e2c7214b700f6c23ff2eb31387e23d1a75a8776. The authorization ledger forbids alternate-root replay; no prior decision/evidence or product state changed.
+
+  - id: OWNER-R6-T5-DEADLINE-HORIZON-REMEDIATION
+    title: Authorize local-only R6 deadline-horizon remediation after attempt-one adjust
+    status: decided
+    decision_owner: project-owner
+    needed_by_task: R6-T5
+    decision: authorized
+    decided_at: 2026-07-30T17:33:30+08:00
+    evidence: Owner explicitly authorized local retry-horizon / outer-deadline remediation using only immutable R6-T4 evidence, with no external model call, no attempt-one overwrite and no product unlock.
+    owner_statement: "授权执行 R6-T5 本地 retry-horizon / outer-deadline remediation；只使用不可变 R6-T4 证据，不调用外部模型，不覆盖 attempt 1，不解锁产品工作。"
+    context_refs:
+      - docs/test-evidence/R6-T4/20260730T171100-0800/results/verdict.json
+      - docs/test-evidence/R6-T4/20260730T171100-0800/runs/r6-invocation-01-env-heading-direct-search-attempt-1/receipt-ledger.json
+      - docs/test-evidence/R6-T5/20260730T174418-0800/proof.json
+      - docs/test-evidence/R6-T5/20260730T174418-0800/SHA256SUMS
+      - docs/tasks/ATOMIC_TASK_PROMPTS.md
+    note: Authorization covered local-only replay, bounded retry-horizon/deadline compatibility constraints, tests and immutable proof evidence. It completed with proof hash 82585caca431e25e6bc0f8a7737cdab4a437ecd5cf8ebbb88eb6158c5c719fcb and contract hash 6145537843ed5c35297196ec0dee74f618f0dd17bc9d89dcfa7bab87a07db4c2; external process/model/provider call counts are zero. It does not authorize reuse of the R6-T4 authorization, overwrite attempt-one evidence, select or freeze R6-T6 policy, execute R6-T7 or unlock product work.
+
+  - id: OWNER-R6-T6-ATTEMPT-TWO-PREREGISTRATION
+    title: Authorize local-only R6 attempt-two preregistration
+    status: decided
+    decision_owner: project-owner
+    needed_by_task: R6-T6
+    decision: authorized
+    decided_at: 2026-07-30T17:56:16+08:00
+    evidence: Owner replied "授权" immediately after the R6-T5 completion report identified R6-T6 as structurally next but requiring explicit authorization.
+    owner_statement: "授权"
+    interpreted_scope: R6-T6-local-no-call-attempt-two-preregistration-only
+    context_refs:
+      - docs/test-evidence/R6-T5/20260730T174418-0800/proof.json
+      - docs/test-evidence/R6-T5/20260730T174418-0800/SHA256SUMS
+      - docs/test-evidence/R6-T6/20260730T180734-0800/PREREGISTRATION.json
+      - docs/test-evidence/R6-T6/20260730T180734-0800/PREREGISTRATION.sha256
+      - docs/tasks/ATOMIC_TASK_PROMPTS.md
+      - ROADMAP.yaml
+    note: Authorization covered selecting and freezing one deadline candidate compliant with the immutable R6-T5 compatibility contract, fresh attempt-two task/capsule/source/policy/data/evidence bindings, local probes and tests with externalExecutionAuthorized=false. It completed with preregistration hash 41ce5ab1a65437defdfcd86c0b4ec4db3e922af8a6c5e5642d44384ea910627e, deadline-candidate hash dd11e6718e0d0e907fd883195be2b62ee03a963549acd9c056b06a8a65e81be4 and zero external model calls. It does not authorize R6-T7, any provider/model call, reuse of the R6-T4 external authorization, overwrite attempt-one evidence, product holdout consumption or product unlock.
+
+  - id: OWNER-R6-T8-DUAL-TRANSPORT-HORIZON-REMEDIATION
+    title: Authorize local-only R6 dual-transport terminal-horizon remediation
+    status: decided
+    decision_owner: project-owner
+    needed_by_task: R6-T8
+    decision: authorized
+    decided_at: 2026-07-30T19:09:04+08:00
+    evidence: Owner replied "授权，还有记得commit push" after the R6-T7 completion report identified local-only R6-T8 as the sole next eligible task and stated that R6-T9/R6-T10 remained separately gated.
+    owner_statement: "授权，还有记得commit push"
+    interpreted_scope: R6-T8-local-no-call-dual-transport-horizon-remediation-only
+    prerequisite_publish:
+      commit: d3dca37e0aa2560238e81bc6639081cb6ecd321f
+      branch: agent/complete-p0-r1-stages
+      remote_sha_verified: true
+    context_refs:
+      - docs/test-evidence/R6-T7/20260730T183547-0800/RESULTS.sha256
+      - docs/test-evidence/R6-T7/20260730T183547-0800/results/verdict.json
+      - docs/test-evidence/R6-T7/20260730T183547-0800/runs/r6-deadline-01-horizon-heading-direct-search-attempt-1/receipt-ledger.json
+      - docs/test-evidence/R6-T7/20260730T183547-0800/runs/r6-deadline-01-horizon-heading-direct-search-attempt-1/stdout.jsonl
+      - docs/tasks/ATOMIC_TASK_PROMPTS.md
+      - ROADMAP.yaml
+    note: Authorization covered immutable attempt-one/two replay, ordered receipt correlation across the WebSocket-to-HTTPS fallback boundary, bounded local compatibility disposition, proof evidence, tests and documentation. It completed with proof hash 21cb7550bc5380f0f460efbf59672ebf9bbaa28a78bbf8ce2e2053ddf73296be and contract hash 35a851a8e80785ca92e57f6e8468b183a217eb31e7ad8d7ec212b3f8f850685e; external process/model/provider-request counts are zero. It does not authorize reuse of R6-T7 authorization, overwrite either prior attempt, select or freeze an R6-T9 policy, execute R6-T10, consume product holdout or unlock product work. The owner also required the completed R6-T7 state to be committed and pushed first; commit d3dca37 was pushed and its remote SHA verified before R6-T8 began.
+
+  - id: OWNER-R6-T9-ATTEMPT-THREE-PREREGISTRATION
+    title: Authorize local-only R6 attempt-three preregistration
+    status: decided
+    decision_owner: project-owner
+    needed_by_task: R6-T9
+    decision: authorized
+    decided_at: 2026-07-30T19:30:55+08:00
+    evidence: Owner replied "授权，继续" after the R6-T8 completion report identified R6-T9 no-call attempt-three preregistration as structurally next and stated that R6-T10 remained separately gated.
+    owner_statement: "授权，继续"
+    interpreted_scope: R6-T9-local-no-call-attempt-three-preregistration-only
+    context_refs:
+      - docs/test-evidence/R6-T8/20260730T191632-0800/proof.json
+      - docs/test-evidence/R6-T8/20260730T191632-0800/SHA256SUMS
+      - docs/test-evidence/R6-T9/20260730T194005-0800/PREREGISTRATION.json
+      - docs/test-evidence/R6-T9/20260730T194005-0800/PREREGISTRATION.sha256
+      - docs/tasks/ATOMIC_TASK_PROMPTS.md
+      - ROADMAP.yaml
+    note: Authorization covered selecting and freezing one attempt-three candidate within the immutable R6-T8 compatibility envelope, fresh tasks/capsules/source/policy/data/evidence bindings, local probes and tests with externalExecutionAuthorized=false. It completed with preregistration hash b3f281d44bbc08ae74b534a9903c935bff17192a9d03df4c01aad637e91d4e52, instrumentation hash 6f4d1ef9c81f869c7a9f4c91a43044cd1c2dbce5056e070f71371a8708b80ef1, data-scope hash 7618c01d58349505a5fa6ca1e0ae1350e347de18cfa342ab88ad7cdfcd643e0a and deadline-candidate hash 074a29b812377b5ccd058250c8f87caaf29968bd613e3d1f10aa80a939a389c6; 30 local probes passed and external model/provider call count remained zero. It does not authorize R6-T10, any provider/model call, reuse of R6-T7 authorization, overwrite attempts one/two, product holdout consumption or product unlock.
+
+  - id: OWNER-R6-T10-EXTERNAL-BATCH
+    title: Authorize the frozen R6-T10 attempt-three external batch
+    status: decided
+    decision_owner: project-owner
+    needed_by_task: R6-T10
+    decision: authorized
+    decided_at: 2026-07-30T19:53:41+08:00
+    evidence: Owner explicitly authorized sending the frozen participant payload to OpenAI Codex and bound the exact destination, model, decision attempt, superseded attempt, published commit, preregistration, instrumentation, data scope, deadline contract/candidate, termination policy, outer environment, arm target, process cap, signal windows and retry boundary.
+    evidence_ref: docs/test-evidence/R6-T10/OWNER_AUTHORIZATION_20260730.json
+    owner_statement: "授权执行冻结的 R6-T10：OpenAI Codex service / gpt-5.6-sol，decision attempt 3 supersedes R6-T7，commit a1b49c3d927197ebd2c7a007aaac4fce0b15deb9，preregistration hash b3f281d44bbc08ae74b534a9903c935bff17192a9d03df4c01aad637e91d4e52，instrumentation hash 6f4d1ef9c81f869c7a9f4c91a43044cd1c2dbce5056e070f71371a8708b80ef1，data-scope hash 7618c01d58349505a5fa6ca1e0ae1350e347de18cfa342ab88ad7cdfcd643e0a，deadline-contract hash 35a851a8e80785ca92e57f6e8468b183a217eb31e7ad8d7ec212b3f8f850685e，deadline-candidate hash 074a29b812377b5ccd058250c8f87caaf29968bd613e3d1f10aa80a939a389c6，termination-policy hash 6e966a04617f79cc408af8cc2ef2ecc7da6cdec3603127c7c2ce69c8358531ff，outer-env hash cf24c3c5e349e230a9c04223dceb4854bd377915e21f46d830134b085bc3579d；授权按该 data scope 发送 participant payload，完成 10 个 arms，最多 20 个外部进程；每进程 deadline 1200000ms，grace/force observation 各 5000ms，SIGTERM 后 SIGKILL；仅已封存且真实观察到的 provider timeout 可重试一次，runner deadline termination 不可重试；不覆盖 attempts 1/2，不解锁产品工作。"
+    published_commit: a1b49c3d927197ebd2c7a007aaac4fce0b15deb9
+    requested_preregistration_hash: b3f281d44bbc08ae74b534a9903c935bff17192a9d03df4c01aad637e91d4e52
+    requested_destination: OpenAI Codex service
+    requested_model: gpt-5.6-sol
+    requested_data_scope_hash: 7618c01d58349505a5fa6ca1e0ae1350e347de18cfa342ab88ad7cdfcd643e0a
+    requested_instrumentation_hash: 6f4d1ef9c81f869c7a9f4c91a43044cd1c2dbce5056e070f71371a8708b80ef1
+    requested_deadline_contract_hash: 35a851a8e80785ca92e57f6e8468b183a217eb31e7ad8d7ec212b3f8f850685e
+    requested_deadline_candidate_hash: 074a29b812377b5ccd058250c8f87caaf29968bd613e3d1f10aa80a939a389c6
+    requested_termination_policy_hash: 6e966a04617f79cc408af8cc2ef2ecc7da6cdec3603127c7c2ce69c8358531ff
+    requested_outer_environment_hash: cf24c3c5e349e230a9c04223dceb4854bd377915e21f46d830134b085bc3579d
+    requested_successful_arms: 10
+    requested_max_process_attempts: 20
+    termination:
+      deadline_ms: 1200000
+      graceful_window_ms: 5000
+      force_observation_window_ms: 5000
+      graceful_signal: SIGTERM
+      force_signal: SIGKILL
+      max_retries_per_arm: 1
+      retryable_only_after: sealed-observed-provider-timeout-before-response
+      runner_wall_clock_termination_retryable: false
+    context_refs:
+      - docs/test-evidence/R6-T9/20260730T194005-0800/PREREGISTRATION.json
+      - docs/test-evidence/R6-T9/20260730T194005-0800/PREREGISTRATION.sha256
+      - scripts/pilot/r6-t10.mjs
+    note: Authorization validated with canonical hash 61767b2f1a7fc0dbd3c3734f2f672ad345eebb1a5febd3c56d124687f05509c4. One external process/fresh thread started and emitted a provider turn.failed after complete WebSocket and HTTPS reconnect phases, but its terminal message was error sending request rather than timeout. The sealed protocol-or-unknown-failure classification was nonretryable, so no retry or next arm started. Attempt three recorded immutable adjust with canonical verdict hash b2c75c2bafa45bf80f83a2158779f70591ab06dbde025f4ad144809a5ef9fb16 and results-manifest file hash a45f1970978996cdbe8df8b99e7b09fd3fbcf4865f76d8eeb504dcde2bead13b. This authorization does not overwrite attempts one/two, authorize R6-T11/R6-T12/R6-T13, unlock product work or bind changed source/policy/data.
+
+  - id: OWNER-R6-T11-PROVIDER-TERMINAL-REMEDIATION
+    title: Authorize local-only R6 non-timeout provider-terminal remediation
+    status: decided
+    decision_owner: project-owner
+    needed_by_task: R6-T11
+    decision: authorized
+    decided_at: 2026-08-01T12:29:00+08:00
+    evidence: Owner directed Codex to start from the current latest documented prompt, mark each completed prompt with a brief summary, and commit/push at each stage after the assistant identified R6-T11 as the sole eligible local-only task and explicitly kept R6-T12/R6-T13 separately gated.
+    owner_statement: "结合文档内容，从当前最新阶段的prompt开始做，每完成一个阶段就在对应的prompt下面标注已完成，以及简短的概述做了什么，同时在每个阶段完成时进行commit push"
+    interpreted_scope: R6-T11-local-no-call-provider-terminal-remediation-only
+    prerequisite_publish:
+      commit: b0317928670214b75dbea10922a2a47388436a4d
+      branch: agent/complete-p0-r1-stages
+      remote_sha_verified: true
+    context_refs:
+      - docs/test-evidence/R6-T4/20260730T171100-0800/RESULTS.sha256
+      - docs/test-evidence/R6-T7/20260730T183547-0800/RESULTS.sha256
+      - docs/test-evidence/R6-T10/20260730T195616-0800/RESULTS.sha256
+      - docs/test-evidence/R6-T10/20260730T195616-0800/runs/r6-terminal-01-fallback-heading-direct-search-attempt-1/receipt-ledger.json
+      - docs/test-evidence/R6-T10/20260730T195616-0800/runs/r6-terminal-01-fallback-heading-direct-search-attempt-1/stdout.jsonl
+      - docs/test-evidence/R6-T11/20260801T123150-0800/proof.json
+      - docs/tasks/ATOMIC_TASK_PROMPTS.md
+      - ROADMAP.yaml
+    note: Authorization covered immutable attempts-one/two/three replay, ordered WebSocket-to-HTTPS receipt attribution, non-timeout provider-terminal separation, no-retry preservation, a bounded local compatibility disposition, proof evidence, tests and documentation. It completed with proof hash 0c6b2357c745fe66ce8a88e2d49db8f5f8ae51112470ae058dbcbb5432a30dcf and contract hash fa512a787a4d72d75704ebebbd06ab78cd796387483f0e625985fb6d9fbce1d2; external process/model/provider-request counts are zero. It does not change attempt three, claim a root cause, select an attempt-four policy, authorize R6-T12/R6-T13, consume product holdout or unlock product work.
+
+  - id: OWNER-R6-T12-ATTEMPT-FOUR-PREREGISTRATION
+    title: Authorize local-only R6 attempt-four preregistration
+    status: decided
+    decision_owner: project-owner
+    needed_by_task: R6-T12
+    decision: authorized
+    decided_at: 2026-08-01T13:03:00+08:00
+    evidence: Owner explicitly authorized pushing the complete R6-T11 commit to the named GitHub repository/branch and authorized continuing with the R6-T12 local zero-call stage.
+    owner_statement: "我明确授权将 commit 4944699199b25427918d27a2b1d16989c1047934 中的私有源代码和测试证据推送到 https://github.com/qwzx-qwas/VEM.git 的 agent/complete-p0-r1-stages 分支，并授权随后继续执行 R6-T12 本地零调用阶段。"
+    interpreted_scope: R6-T12-local-no-call-attempt-four-preregistration-only
+    prerequisite_publish:
+      commit: 4944699199b25427918d27a2b1d16989c1047934
+      branch: agent/complete-p0-r1-stages
+      repository: https://github.com/qwzx-qwas/VEM.git
+      remote_sha_verified: true
+    context_refs:
+      - docs/test-evidence/R6-T11/20260801T123150-0800/proof.json
+      - docs/test-evidence/R6-T11/20260801T123150-0800/SHA256SUMS
+      - docs/test-evidence/R6-T12/20260801T131600-0800/PREREGISTRATION.json
+      - docs/test-evidence/R6-T12/20260801T131600-0800/PREREGISTRATION.sha256
+      - docs/tasks/ATOMIC_TASK_PROMPTS.md
+      - ROADMAP.yaml
+    note: Authorization covered selecting and freezing one future-only failure policy compliant with the immutable R6-T11 contract, fresh tasks/capsules, R6-T13 runner/source closure, data/environment/evidence bindings, local probes, tests and documentation with externalExecutionAuthorized=false. It completed with preregistration hash 531e9ea500d198c60dfb834c0b210bee9fb2eaf52772fc1ae85876bcd0c5e62d, instrumentation hash 6770f8caa440672c62bf57dfa8c9ef12ddbd2d8a3c119b6d20786f36aea19e06, data-scope hash 0bd7c96a8241cbc2e78b24e776973001bc2bf59ec51ec8cb97625d245f7a2a80 and failure-candidate hash 53829a8291de64322223d91b224fa097988c22afcd4b30f6237db36a1b5b2c75; 30 local probes passed and external process/model/provider-request count remained zero. It does not authorize R6-T13, reuse R6-T10 authorization, overwrite attempts one/two/three, consume product holdout or unlock product work.
+
+  - id: OWNER-R6-T13-EXTERNAL-BATCH
+    title: Authorize the frozen R6-T13 attempt-four external batch
+    status: decided
+    decision_owner: project-owner
+    needed_by_task: R6-T13
+    decision: authorized
+    decided_at: 2026-08-01T14:12:47+08:00
+    evidence: Owner explicitly authorized sending the frozen participant prompts, read-only capsules and context to OpenAI Codex service / gpt-5.6-sol and bound the published commit, all preregistration/source/data/failure/termination/environment hashes, 10-arm target, 20-process cap, deadline, signals and shared one-retry boundary.
+    evidence_ref: docs/test-evidence/R6-T13/OWNER_AUTHORIZATION_20260801.json
+    owner_statement: >-
+      我明确授权执行 R6-T13，即基于已发布 commit 53e2e1093fd107476efdc236afc07a75affabead，向 OpenAI Codex service 的 gpt-5.6-sol 模型发送冻结数据范围内的 participant prompts、只读 capsules 与上下文，执行 R6-RECOVERY attempt 4（supersedes R6-T10）。本授权绑定 preregistration hash 531e9ea500d198c60dfb834c0b210bee9fb2eaf52772fc1ae85876bcd0c5e62d、instrumentation hash 6770f8caa440672c62bf57dfa8c9ef12ddbd2d8a3c119b6d20786f36aea19e06、data-scope hash 0bd7c96a8241cbc2e78b24e776973001bc2bf59ec51ec8cb97625d245f7a2a80、failure-contract hash fa512a787a4d72d75704ebebbd06ab78cd796387483f0e625985fb6d9fbce1d2、failure-candidate hash 53829a8291de64322223d91b224fa097988c22afcd4b30f6237db36a1b5b2c75、termination-policy hash caa4ff6248fca549c601cb7bdcd80813bb91ee646606cacce627111deae16372 和 outer-environment hash cf24c3c5e349e230a9c04223dceb4854bd377915e21f46d830134b085bc3579d。授权完成 10 个 arms、最多启动 20 个外部 processes；每次 deadline 为 1,200,000 ms，随后 SIGTERM、5,000 ms grace、SIGKILL、5,000 ms wait；每个 arm 的两个冻结可重试分类合计最多重试一次。所有尝试均消耗预算并保留证据，不覆盖 attempts 1–3，不授权任何产品解锁。
+    published_commit: 53e2e1093fd107476efdc236afc07a75affabead
+    authorization_hash: aa6d64d442416c0a3357e31bd350ef69c6fd748e269faa7b6ea0cf404e520967
+    requested_preregistration_hash: 531e9ea500d198c60dfb834c0b210bee9fb2eaf52772fc1ae85876bcd0c5e62d
+    requested_instrumentation_hash: 6770f8caa440672c62bf57dfa8c9ef12ddbd2d8a3c119b6d20786f36aea19e06
+    requested_data_scope_hash: 0bd7c96a8241cbc2e78b24e776973001bc2bf59ec51ec8cb97625d245f7a2a80
+    requested_failure_contract_hash: fa512a787a4d72d75704ebebbd06ab78cd796387483f0e625985fb6d9fbce1d2
+    requested_failure_candidate_hash: 53829a8291de64322223d91b224fa097988c22afcd4b30f6237db36a1b5b2c75
+    requested_termination_policy_hash: caa4ff6248fca549c601cb7bdcd80813bb91ee646606cacce627111deae16372
+    requested_outer_environment_hash: cf24c3c5e349e230a9c04223dceb4854bd377915e21f46d830134b085bc3579d
+    requested_destination: OpenAI Codex service
+    requested_model: gpt-5.6-sol
+    requested_successful_arm_count: 10
+    requested_max_process_attempts: 20
+    termination:
+      deadline_ms: 1200000
+      graceful_window_ms: 5000
+      force_observation_window_ms: 5000
+      graceful_signal: SIGTERM
+      force_signal: SIGKILL
+      max_retries_per_arm: 1
+      retryable_classes_share_one_retry: true
+      runner_wall_clock_termination_retryable: false
+    context_refs:
+      - docs/test-evidence/R6-T12/20260801T131600-0800/PREREGISTRATION.json
+      - docs/test-evidence/R6-T12/20260801T131600-0800/PREREGISTRATION.sha256
+      - docs/test-evidence/R6-T13/20260801T141247-0800/RESULTS.sha256
+      - scripts/pilot/r6-t13.mjs
+    note: Authorization validated with canonical hash aa6d64d442416c0a3357e31bd350ef69c6fd748e269faa7b6ea0cf404e520967. One external process/fresh thread completed a sealed provider-timeout failure and consumed one process attempt. The frozen classifier authorized one retry, but frozen capsule reuse raised R2_CAPSULE_OUTPUT_ALREADY_PREPARED before retry spawn; no second process or later arm ran. The post-abort no-call sealer recorded immutable aggregate-integrity-failed stop with canonical verdict hash f83caa14aa56b9c416bef538c8d3b38e8202cd2d40e50e457e116982f4da96b7. Attempts one/two/three and all prior decisions remain unchanged; no product work is unlocked.
+
+  - id: OWNER-R6-T7-EXTERNAL-BATCH
+    title: Authorize the frozen R6-T7 attempt-two external batch
+    status: decided
+    decision_owner: project-owner
+    needed_by_task: R6-T7
+    decision: authorized
+    decided_at: 2026-07-30T18:34:22+08:00
+    evidence: Owner explicitly authorized sending the frozen participant payload to OpenAI Codex and bound the exact destination, model, decision attempt, superseded attempt, published commit, preregistration, instrumentation, data scope, deadline contract/candidate, outer environment, arm target, process cap, deadline, signal windows and retry boundary.
+    evidence_ref: docs/test-evidence/R6-T7/OWNER_AUTHORIZATION_20260730.json
+    owner_statement: "授权执行冻结的 R6-T7：OpenAI Codex service / gpt-5.6-sol，decision attempt 2 supersedes R6-T4，commit ec16d64174951036555c4297858547b0fe5e8c59，preregistration hash 41ce5ab1a65437defdfcd86c0b4ec4db3e922af8a6c5e5642d44384ea910627e，instrumentation hash c3c4f3bc1d7e9592e197705592606bbefba67d71fb22c526df5d8b4fe4748d48，data-scope hash aab9e34e3dd6074ea691cf453823dd59d08e7bbe2ee6b4eb37b7e82507c648cd，deadline-contract hash 6145537843ed5c35297196ec0dee74f618f0dd17bc9d89dcfa7bab87a07db4c2，deadline-candidate hash dd11e6718e0d0e907fd883195be2b62ee03a963549acd9c056b06a8a65e81be4，outer-env hash cf24c3c5e349e230a9c04223dceb4854bd377915e21f46d830134b085bc3579d；授权按该 data scope 向 OpenAI Codex 发送 participant payload，完成 10 个 arms，最多 20 个外部进程；每进程 deadline 600000ms，grace/force observation 各 5000ms，SIGTERM 后 SIGKILL；仅已封存且真实观察到的 provider timeout 可重试一次，runner deadline termination 不可重试；不覆盖 attempt 1，不解锁产品工作。"
+    published_commit: ec16d64174951036555c4297858547b0fe5e8c59
+    requested_preregistration_hash: 41ce5ab1a65437defdfcd86c0b4ec4db3e922af8a6c5e5642d44384ea910627e
+    requested_destination: OpenAI Codex service
+    requested_model: gpt-5.6-sol
+    requested_data_scope_hash: aab9e34e3dd6074ea691cf453823dd59d08e7bbe2ee6b4eb37b7e82507c648cd
+    requested_instrumentation_hash: c3c4f3bc1d7e9592e197705592606bbefba67d71fb22c526df5d8b4fe4748d48
+    requested_deadline_contract_hash: 6145537843ed5c35297196ec0dee74f618f0dd17bc9d89dcfa7bab87a07db4c2
+    requested_deadline_candidate_hash: dd11e6718e0d0e907fd883195be2b62ee03a963549acd9c056b06a8a65e81be4
+    requested_outer_environment_hash: cf24c3c5e349e230a9c04223dceb4854bd377915e21f46d830134b085bc3579d
+    requested_successful_arm_count: 10
+    requested_max_process_attempts: 20
+    requested_termination_policy:
+      deadline_ms: 600000
+      graceful_window_ms: 5000
+      force_observation_window_ms: 5000
+      graceful_signal: SIGTERM
+      force_signal: SIGKILL
+      max_retries_per_arm: 1
+      retryable_only_after: sealed-observed-provider-timeout-before-response
+      runner_wall_clock_termination_retryable: false
+    context_refs:
+      - docs/test-evidence/R6-T6/20260730T180734-0800/PREREGISTRATION.json
+      - docs/test-evidence/R6-T6/20260730T180734-0800/PREREGISTRATION.sha256
+      - docs/test-evidence/R6-T7/20260730T183547-0800/results/run-index.json
+      - docs/test-evidence/R6-T7/20260730T183547-0800/results/verdict.json
+      - docs/test-evidence/R6-T7/20260730T183547-0800/RESULTS.sha256
+      - scripts/pilot/r6-t7.mjs
+    note: The exact authorization validated with canonical hash a11336fb6fa5f11b5eb7a2b5f6471be1612617367e172d28899d3be08be82f2. One external process/fresh thread started and reached the 600000 ms runner deadline after WebSocket fallback and HTTPS reconnect 3/5, with no observed provider terminal or authoritative response. The process group terminated and evidence sealed before return; the outcome was non-retryable runner-wall-clock termination, so no retry or next arm started. Attempt two recorded immutable adjust with canonical verdict hash 254a47f33b9a1348e87eef99181e7c581d0a244ef1a154119240c1c8e481a961. This authorization does not overwrite attempt one, authorize R6-T8/R6-T9/R6-T10, unlock product work or bind any changed source/policy/data boundary.

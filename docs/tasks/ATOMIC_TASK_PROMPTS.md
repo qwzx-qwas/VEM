@@ -4,7 +4,7 @@
 
 所有 prompt 共用以下规则：只改当前 task；先写/更新测试；不得削弱安全、隐私、证据或测试门禁；外部阻塞要保存证据并标记 blocked；通过后才更新 roadmap/progress；结束时使用 `AGENTS.md` 的报告格式。
 
-若执行因上下文或预算中断，在 `docs/checkpoints/<TASK-ID>.md` 记录最后完成步骤、已有证据和准确下一步。不要在本 prompt 文件下追加“已完成”或局部进度；task/phase/decision 状态仍只写入 `ROADMAP.yaml`，完成或阻塞证据写入 `docs/progress.md`。
+若执行因上下文或预算中断，在 `docs/checkpoints/<TASK-ID>.md` 记录最后完成步骤、已有证据和准确下一步。默认不要在本 prompt 文件下追加局部进度；若 owner 明确要求逐 prompt 标注完成，可以在对应 prompt 后追加简短、非权威的完成摘要。task/phase/decision 的唯一事实来源仍是 `ROADMAP.yaml`，完整完成或阻塞证据仍写入 `docs/progress.md`。
 
 ## P0-T0A0 — 只读迁移 readiness inventory
 
@@ -178,6 +178,8 @@
 
 ### Prompt
 
+> **已完成（2026-07-29）**：已交付私有 `@vem/pilot-harness` 的 `VersionedReadOnlyPilotHarness` 与 `CanonicalEvidenceBundleBuilder`；闭合只读输入、Git fixture commit、全量 SHA-256、统一 monotonic-nanoseconds timing、counterbalanced arm、later-holdout exclusion、ground-truth 隔离及 canonical Draft 2020-12 bundle 均 fail closed 验证。8 项目标测试、83 项全仓 Vitest、build/typecheck/lint、roadmap/workspace/license、clean frozen install、production demo 和 98 项 preflight 回归全部通过；本阶段未运行真实 micro-pilot、未产生 P0-VALUE verdict。
+
 - **背景**：micro-pilot 发生在 coordinator/MCP 之前，需要可复核的离线证据通道。
 - **目标**：交付 VersionedReadOnlyPilotHarness 和 CanonicalEvidenceBundleBuilder。
 - **本阶段做**：读取 task manifest、fixture commit、SelectionSummary、registry snapshot；输出 immutable raw records、canonical JSON bundle、schema validation 和摘要。
@@ -305,6 +307,768 @@
 - **建议优先查看/修改的文件**：P0-T17 evidence plan/bundles/summary、`docs/progress.md`、`ROADMAP.yaml`。
 - **测试要求**：plan immutability、task pairing、raw-hash validation、verdict calculation、later-holdout untouched。
 - **验收标准**：任务完成后设为 `status: done` 并记录非 pending `decision`；只有 `decision: continue` 允许 P0-T7，adjust/stop 时后续投资暂停。
+
+> **已完成（2026-07-29）**：已按预登记哈希 `2bf456e2220cf61fb78c97c1854d6575847d783b66404ba3db3746380573b1bb` 执行 5 个任务、10 个全新临时只读 Codex context；10/10 定位正确、10 个 thread ID 唯一、VEM direct-primary 5/5、wrong attribution/reselection/operator correction 均为 0，canonical bundle 哈希为 `d7eaabf23afd3456c7adbd4cf9f1abd6c381c69149d7650b5ac9b361c642f65e`。VEM 仅 2/5 配对更快，约 39.21 秒的中位定位时间高于 direct 的约 30.37 秒，且节省未覆盖 setup cost；依照事前规则如实记录 `decision: adjust`，不作百分比产品声明、不授权 P0-T7，并保留 attempt 1 原始 evidence。
+
+## P0-T17C — Participant capsule 与 equal-base-context remediation
+
+### Prompt
+
+- **背景**：P0-T17B attempt 1 的正确性和零错误归因门槛通过，但时间/成本门槛得到 `adjust`；原始事件还显示 VEM arm 可能发现并读取 repo-local visual UI skill，participant workspace 位于 evidence/repository 树内，增加了与 direct arm 无关的上下文开销。
+- **目标**：只修复 micro-pilot participant 执行环境，使两个 arm 的基础上下文、可见文件和规则发现边界一致，唯一预期 treatment 差异是 VEM arm 的固定 `vem-context.json`。
+- **本阶段做**：在 repository/evidence 树外创建任务专用 capsule；固定模型、prompt、fixture、工具权限、timing/cache；阻止或 fail closed 检测 repo rule/skill 与 capsule 外路径读取；验证 ground truth/holdout 不进入 participant context；保存 capsule manifest/hash 与正负 probe。
+- **本阶段不做**：不执行 attempt 2，不修改 source-anchor/registry/selector 产品映射，不改 attempt 1 evidence，不调低 threshold，不替换任务或消费 later holdout。
+- **实现约束**：不得复制 auth/token、ground truth 或用户配置到 evidence；任何 observed command path 越出 capsule、非 treatment 文件差异、repo-local skill/rule 注入或隔离不可证明都必须失败。
+- **成功路径**：direct/VEM probe 具有相同基础 system/rule/tool/fixture manifest，只有 VEM context 文件不同；两个 probe 均不能读取/搜索 evaluator-only records。
+- **失败路径与边界**：仅依靠 prompt 要求“不要读取”不算隔离；无法证明 capsule 边界时保持 blocked，不运行新 attempt。
+- **建议优先查看/修改的文件**：`scripts/pilot/`、P0-T17B raw event evidence、新 capsule tests/evidence、roadmap/progress。
+- **测试要求**：outside-repo capsule、equal-base-context、intended-difference allowlist、repo rule/skill leak、command-path escape、ground-truth/holdout isolation、hash/cleanup 和 fail-closed negative probes。
+- **验收标准**：独立 capsule remediation 通过后设为 `done`，仅使 P0-T17D eligible，不直接改变 `P0-VALUE` verdict。
+
+> **已完成（2026-07-29）**：已交付 repository 外、Bubblewrap 只读 participant capsule，保留内层 Codex `read-only` sandbox；5 对 task manifest 具有同一 base-context hash，唯一 treatment 差异为各自 `vem-context.json`。10 次真实 filesystem probe 和 10 次 capsule 内 `codex-cli` binary probe 均证明 repository、home、rules、skills、ground truth、holdout 与 control metadata 不可见；command/stdout/stderr 的 capsule 外绝对路径和 skill/rule marker 均 fail closed，auth 仅允许运行时只读挂载且不复制/记录，cleanup 残留为 0。5 项 capsule 测试、93 项全仓 Vitest、build/typecheck/lint、roadmap/workspace/license、clean frozen install、production demo 与 98 项 preflight 回归通过；本阶段未执行 attempt 2、未改变 `P0-VALUE`。
+
+## P0-T17D — P0-VALUE attempt 2
+
+### Prompt
+
+- **背景**：attempt 1 的 `adjust` 与原始 evidence 不可覆写；participant capsule remediation 已独立通过。
+- **目标**：以新的 immutable evidence plan 执行 `P0-VALUE` attempt 2，给出新的 continue/adjust/stop verdict。
+- **本阶段做**：在结果前冻结 attempt 2 task/threshold/capsule/runner hashes；使用全新 Codex context、交叉平衡顺序和相同基础条件执行 direct/VEM；明确披露 attempt 1 task 的 retest 身份，保持 later holdout 未使用；保存 raw hashes、setup/per-task cost、正确性和隔离 audit。
+- **本阶段不做**：不覆盖 attempt 1，不根据局部结果改 runner/prompt/threshold，不把 later holdout 当重试集，不发表百分比产品宣传。
+- **实现约束**：`decision_attempt: 2`、`supersedes_attempt: P0-T17B`；任何 capsule escape、rule/skill leak、输入变化、wrong attribution 或 holdout 污染均 fail closed。
+- **成功路径**：所有完整性/正确性/成本门槛满足预登记 continue 条件。
+- **失败路径与边界**：不达标如实 adjust/stop；不得以 attempt 1 与 attempt 2 合并平均制造 continue。
+- **建议优先查看/修改的文件**：P0-T17C capsule evidence、attempt 2 plan/bundles/summary、`ROADMAP.yaml`、`docs/progress.md`。
+- **测试要求**：attempt-chain immutability、new-plan hash、fresh contexts、counterbalance、equal-base-context audit、raw/result hash、verdict recomputation、later-holdout untouched。
+- **验收标准**：任务完成后设为 `done` 并写入非 pending verdict；只有 attempt 2 `decision: continue` 才允许 P0-T7。
+
+> **已完成（2026-07-29）**：owner 明确授权的第二批 10 次外部 arm 已在冻结的 attempt 2 plan/capsule/runner 下执行，10/10 结构化响应正确、5/5 VEM direct-primary match、0 wrong attribution，且 fresh thread、counterbalance、later-holdout exclusion 与 raw/result hash 均通过。VEM 仅 2/5 配对更快，direct/VEM 中位时间约 41.99/44.21 秒，三个预登记成本条件均未满足；fail-closed capsule audit 另有 7/10 run 触发 `CAPSULE_COMMAND_PATH_ESCAPE`，故 immutable verdict 为 `P0-VALUE=stop`，canonical bundle 哈希为 `80b08ac28f248addc1b1f1af13bc6f4678e5d63836e6a55ad8ca5cbd700c508d`。P0 phase 已失败，P0-T7 不再 eligible。
+
+## P0-T17E — Terminal-stop 后的 capsule audit remediation
+
+### Prompt
+
+- **背景**：P0-T17D 的 immutable `stop` 已使 P0 failed；后验只读分析发现 7 个 `CAPSULE_COMMAND_PATH_ESCAPE` 来自 legacy auditor 把 route `/`、JSX `/>` 和 `/projects/:projectId` 数据误当绝对文件路径。
+- **目标**：在不修改 bound legacy runner/auditor、attempt 2 evidence 或 verdict 的前提下，交付版本化 post-hoc audit 与可复核 replay evidence。
+- **本阶段做**：新增独立 v2 auditor；区分 command absolute-path tokens、结构化 command output path lines 与普通源码/JSON 数据；保留 forbidden marker 和真实 capsule 外路径 fail-closed；对全部 attempt 2 raw streams 重放并保存 canonical hash。
+- **本阶段不做**：不重跑外部 arm、不创建 decision attempt 3、不覆盖 `P0-VALUE=stop`、不改变 P0 failed、不解锁 P0-T7/P1。
+- **实现约束**：legacy `scripts/pilot/capsule.mjs` 和 active attempt 2 目录保持 byte-for-byte 不变；v2 不得通过忽略所有 output 或扩大路径 allowlist 消除误报；post-hoc evidence 必须明确 non-authoritative。
+- **成功路径**：attempt 2 的 10 个 raw stream 经 v2 均无 observed escape；route/JSX/source JSON 不误报；真实 `/home`、`/root`、`/mnt`、repo rules/skills 与非 allowlist absolute path 仍失败。
+- **失败路径与边界**：任何 raw/result hash 变化、legacy hash 变化、无法区分的 path-like token 或真实 forbidden marker 都使 remediation 失败；不改变 terminal verdict。
+- **建议优先查看/修改的文件**：新增 `scripts/pilot/capsule-audit-v2.mjs`、对应 tests/replay、P0-T17D sibling evidence、roadmap/progress。
+- **测试要求**：legacy immutability、route `/`、JSX `/>`、parameterized route、command/output/stderr actual escape、forbidden marker、malformed JSONL、bounded input、attempt-two replay 与 verdict/phase immutability。
+- **验收标准**：v2 tests、attempt 2 replay、全仓门禁通过后设为 `done` 并在本 Prompt 下标注完成；P0 与 P0-VALUE 状态保持 failed/stop。
+
+> **已完成（2026-07-29）**：已新增独立、版本化 capsule audit v2 与 immutable attempt 2 replay；保留 legacy capsule/runner 哈希 `13a92a…956` / `25f762…46ae`，没有修改 P0-T17D raw/result evidence。v2 正确忽略 route `/`、JSX `/>` 与 parameterized route data，对 10/10 原始 stream 通过，同时 command、structured output、stderr 的真实 `/home`、`/root`、`/mnt` escape 及 rule/skill marker 继续 fail closed。5 项目标测试、103 项全仓 Vitest、build/typecheck/lint、139-task roadmap、workspace/license、clean frozen install、production demo、98 项 preflight 与 evidence hashes 均通过；active replay 哈希为 `48f3c70db5c471e2b1b94d1c18730f0a60e51b730182ec5ade4b89a563b789d7`。该 evidence 明确 non-authoritative，`P0-VALUE=stop` 与 P0 `failed` 保持不变，未解锁 P0-T7/P1。
+
+## P0-T17F — Terminal-stop 后的 timing forensics
+
+### Prompt
+
+- **背景**：P0-T17E 已解释并修复 audit false positive，但 P0-T17D 仍独立未达到成本门槛：VEM 仅 2/5 pair 更快且 median 较慢。
+- **目标**：只从 immutable attempt 2 run/event evidence 生成有界、可复算的 timing forensics，区分已观察事实与无法归因的阶段。
+- **本阶段做**：重算每个 run 的 monotonic duration；核对 canonical verdict metrics；提取 arm order、command count、reported input/cached/output/reasoning tokens 与 command-output bytes；生成 paired/order-stratified summary 和 canonical evidence hash。
+- **本阶段不做**：不重跑模型、不把 event 顺序冒充 event timestamp、不跨 attempt 合并平均、不推断模型或 VEM 的因果性能、不修改 threshold/verdict/phase、不启动产品任务。
+- **实现约束**：P0-T17D 与 active P0-T17E evidence/source bindings 保持不变；所有整数以 decimal string 保存，避免 nanosecond 精度损失；缺失/重复 turn、command completion 或 run/trial mismatch 必须失败。
+- **成功路径**：10 run/5 pair 的 duration 与 verdict 完全一致，order/usage/command 指标可从 raw JSONL 重放，明确列出可观察结论与 `NO_EVENT_TIMESTAMPS` 等限制。
+- **失败路径与边界**：任何 hash、duration、thread、arm order 或 canonical metric 不一致即失败；不得用相关性或 5-task smoke 宣称普遍性能原因。
+- **建议优先查看/修改的文件**：新增 `scripts/pilot/analyze-p0-t17d-timing.mjs`、tests、P0-T17F evidence、roadmap/progress。
+- **测试要求**：evidence immutability、duration precision、pair mapping、median/faster count agreement、usage bounds、malformed/missing/duplicate event、order summary、canonical hash、non-causal limitations 和 terminal-state preservation。
+- **验收标准**：目标/全仓测试与 evidence hashes 通过后设为 `done` 并在本 Prompt 下标注完成；`P0-VALUE=stop`、P0 failed 和后续 task locks 不变。
+
+> **已完成（2026-07-29）**：已从 immutable attempt 2 的 10 个 run/event stream 精确重算 duration，并与 canonical verdict 的 direct/VEM median `41,985,459,470 / 44,209,203,458 ns` 及 VEM faster `2/5` 完全一致。VEM/direct 分别执行 9/11 个 command、两边各有 1 个已恢复的非零 command；第二 arm 仅 3/5 更快，不能解释 arm 差异。reported token/cache/output bytes 已有界记录，但 raw event 没有逐事件 timestamp，故报告明确结论为无法把 total duration 归因给 command、cache 或 model phase。5 项目标测试、108 项全仓 Vitest、build/typecheck/lint、140-task roadmap、workspace/license、clean frozen install、production demo、98 项 preflight 和 evidence/source hashes 全部通过；active report 哈希为 `664d8e49e0fdb573944aadc14b0affbcfae1fa0f3cc2db4c7104dc8f9eac5afc`。本报告 non-authoritative/non-causal，不跨 attempt pooling，`stop/failed` 与后续锁定不变。
+
+## R0-T1 — Independent recovery charter 与 no-product-unlock validator
+
+### Prompt
+
+- **背景**：P0-T17D terminal stop 与 P0 failed 不可覆盖；owner 已明确授权新增一个独立恢复研究阶段。
+- **目标**：固定 R0 recovery charter，并机械证明它不能解锁或成为既有 P0/P1–P8 产品依赖链的一部分。
+- **本阶段做**：增加 R0-RECOVERY-001 规范、独立 decision key、owner authorization record、R0-T1–T4 原子链与 validator recovery-boundary checks。
+- **本阶段不做**：不实现 timing ledger、不冻结 task bank、不调用外部模型、不修改 P0 verdict/phase、不实现产品能力。
+- **实现约束**：R0 `depends_on: []`、`recovery_of_failed_phase: P0`、`does_not_supersede: P0-VALUE`；任何既有 task/phase 依赖 R0 都必须 fail closed。
+- **成功路径**：validator 接受 owner-authorized independent R0，拒绝 recovered phase 非 failed、R0 phase dependency、缺失/错误 decision separation 和 product dependency leakage。
+- **失败路径与边界**：不能通过给 P0 标 passed、把 stop 改 adjust/continue、让 P1 改依赖 R0 或删 decision gate 制造可执行性。
+- **建议优先查看/修改的文件**：`docs/DESIGN.md`、`ROADMAP.yaml`、`docs/requirements.yaml`、roadmap validator/tests、decision/delivery/progress 文档。
+- **测试要求**：valid recovery、failed-phase requirement、empty phase deps、authorization ref、decision isolation、phase/task leakage、bidirectional contract mapping、full roadmap gates。
+- **验收标准**：charter 与 validator checks 全部通过后设为 `done` 并标注完成；下一项仅为 R0-T2。
+
+> **已完成（2026-07-29）**：已记录 owner 对独立 R0 recovery research 的明确授权，新增 `R0-RECOVERY-001`、独立 `R0-RECOVERY` decision chain、R0-T1–T4 原子序列与 delivery charter；P0-T17D `done/stop` 和 P0 `failed` 保持不变。Validator 现机械拒绝 recovered phase 非 failed、R0 phase dependency、缺失 authorization、decision 混链以及既有 phase/task 对 R0 的依赖泄漏，证明 product unlock count 为 0。14 项 validator 测试、2 项 charter proof 测试、113 项全仓 Vitest、build/typecheck/lint、10-phase/144-task/26-contract roadmap、workspace/license、clean frozen install、production demo 与 98 项 preflight 全部通过；本阶段没有外部模型调用或产品能力实现。下一项仅为 R0-T2。
+
+## R0-T2 — Trusted monotonic event-receipt timing ledger
+
+### Prompt
+
+- **背景**：P0 raw events 没有逐事件 timestamp，无法解释 total duration。
+- **目标**：交付所有 arm 共用的 trusted outer-runner monotonic receipt ledger。
+- **本阶段做**：定义并实现 process/event/final-response receipt schema、canonical hash、bounds、clock domain、cancellation/terminal completeness。
+- **本阶段不做**：不创建 recovery tasks、不执行外部 pilot、不声称 model-server 或 shell-internal timing。
+- **实现约束**：decimal-string nanoseconds；raw event hash 与 ledger entry 一一对应；缺失、倒序、重复 terminal 或 instrumentation drift fail closed。
+- **测试要求**：process lifecycle、event receipt、final response、monotonic order、schema/size、raw hash、cancel/error、missing/duplicate terminal。
+- **验收标准**：实现与目标/全仓门禁通过后 `done`，使 R0-T3 eligible。
+
+> **已完成（2026-07-29）**：已交付版本化 `TrustedReceiptLedger`，用 trusted outer-runner 的 `process.hrtime.bigint` 记录 process spawn、JSONL event receipt、structured final response、stderr、cancellation 与 process exit；纳秒和 byte counts 均为 decimal string，原始内容只保留 SHA-256，canonical evidence 带 instrumentation hash、clock domain、bounds、完整终态及明确的 non-attribution limitations。真实本地 Node 子进程证明封存 8 个单调收件点并成功终止，ledger hash 为 `6171f65f06ca494a4eb274b1b34c81526a492254dd680475eb969adc55a5fd45`。9 项定向测试、123 项全仓 Vitest、build/typecheck/lint、10-phase/144-task/26-contract roadmap、workspace/license、clean frozen install、production demo 与 98 项 preflight 全部通过；没有外部模型调用、产品实现或 P0 verdict 变更。下一项仅为 R0-T3。
+
+## R0-T3 — Recovery-only task bank 与 preregistration
+
+### Prompt
+
+- **背景**：R0-T2 提供可信 runner-observed timing，但尚无新的 recovery-only evaluation plan。
+- **目标**：冻结未用于 P0 attempt 1/2、也不消费产品 holdout 的 recovery-only task bank 和 evidence plan。
+- **本阶段做**：固定 task/prompt/fixture/capsule/instrumentation/threshold hashes、fresh-context/counterbalance/cache policy 与 separate setup cost。
+- **本阶段不做**：不执行外部 arm、不改 threshold、不把 recovery tasks 宣称为产品 holdout。
+- **实现约束**：ground truth evaluator-only；direct/VEM 唯一 treatment 差异；later holdout untouched；外部发送前另取 owner 授权。
+- **测试要求**：task identity、input hashes、equal base context、counterbalance、threshold、ledger binding、holdout exclusion、pre-result immutability。
+- **验收标准**：preregistration frozen 且 dry-run/probes 通过后 `done`；R0-T4 等待外部调用授权。
+
+> **已完成（2026-07-29）**：已冻结 5 个从未用于 P0 attempt 1/2、也不属于 P1/P3/P4 product holdout 的 recovery-only tasks，共 10 个 counterbalanced arms；每对 arm 的 prompt、fixture、tool、sandbox、fresh tmpfs Codex home 与 base-context hash 相同，唯一 treatment 差异为 VEM arm 的 `vem-context.json`。预注册固定 future runner、capsule、v2 auditor、receipt ledger 的 8 个 source hashes、correctness/wrong-attribution/capsule/ledger/cost/no-benefit 阈值及 separate setup cost；10 次 filesystem isolation 与 10 次 `codex --version` capsule probe 全部通过。7 项 R0-T3 定向测试、130 项全仓 Vitest、build/typecheck/lint、10-phase/144-task/26-contract roadmap、workspace/license、clean frozen install、production demo 与 98 项 preflight 全部通过。预注册哈希为 `57fb4b9b033e61eb4e0b4b9a0f14ced28064b6fb17d73f5e7ae60552d0f37359`，instrumentation hash 为 `c7851c93a8451436d056cc9b2ed097e4b0fc5c6cc0e9f7289ec22ff710d4067b`，且 `externalExecutionAuthorized=false`；本阶段没有调用外部模型。R0-T4 必须取得绑定该预注册哈希的单独 owner 授权后才可开始。
+
+## R0-T4 — Independent recovery micro-pilot verdict
+
+### Prompt
+
+- **背景**：R0-T3 已冻结 plan；R0-T4 是独立 decision chain 的 attempt 1。
+- **目标**：执行 recovery-only paired arms，并记录 `R0-RECOVERY=continue|adjust|stop`。
+- **本阶段做**：在单独 owner 授权后执行 fresh contexts，保存 raw/ledger/result hashes、correctness、wrong attribution、capsule integrity 和 cost verdict。
+- **本阶段不做**：不覆盖 P0 evidence、不合并 P0/R0 平均、不自动创建后续 phase、不解锁 P0-T7/P1。
+- **实现约束**：任何输入/ledger/capsule/ground-truth/holdout integrity 失败均 fail closed。
+- **测试要求**：fresh contexts、ledger completeness、raw hashes、correctness、wrong attribution、cost/no-benefit stop、verdict recomputation。
+- **验收标准**：记录 immutable verdict；仅 continue 允许向 owner 提出新的独立 research implementation phase。
+
+> **已完成（2026-07-29）**：Owner 已明确授权绑定冻结哈希 `57fb4b9b033e61eb4e0b4b9a0f14ced28064b6fb17d73f5e7ae60552d0f37359` 的最多 10 次 recovery-only 外部实验。冻结 runner 在首个 `r0-ux-01-sync-state/direct-search` arm 收到第二个 `item.completed` agent-message 时，尝试把它再次登记为唯一 structured response；`TrustedReceiptLedger` 以 `RECEIPT_LEDGER_RESPONSE_DUPLICATE` fail closed。该事件直接满足事前 `event-ledger-integrity-failed` stop 条件，因此剩余 9 次调用未执行，未通过改 runner、忽略错误或更换阈值制造结果。由于 runner 在 sealed-write 前终止，没有完整 run/raw stream/ledger、correctness 或 cost metrics；这些缺失已作为限制写入 immutable evidence。17 项定向测试、133 项全仓 Vitest、build/typecheck/lint、10-phase/144-task/26-contract roadmap、workspace/license、clean frozen install、production demo、98 项 preflight 与 evidence/source hashes 全部通过。R0-T4 attempt 1 如实记录 `R0-RECOVERY=stop`，R0 phase 设为 `failed`；P0-T17D `stop`、P0 `failed`、P0-T7/P1 锁定与零产品解锁边界完全不变。
+
+## R1-T1 — Independent runner-remediation charter
+
+### Prompt
+
+- **背景**：R0-T4 因 frozen runner 重复登记 structured response 而 terminal stop；R0/P0 均 failed/stop。
+- **目标**：新增不覆盖两条 stop chain 的独立 R1，并机械证明零产品解锁。
+- **本阶段做**：新增 R1-RUNNER-REMEDIATION-001、独立 decision、owner authorization、R1-T1–T4 原子链与 validator dual-non-supersession checks。
+- **本阶段不做**：不改 R0/P0 evidence/verdict，不修 runner，不冻结新 plan，不执行外部调用。
+- **实现约束**：R1 phase 与 R1-T1 均 `depends_on: []`，只按 immutable hash 读取 R0 evidence；`recovery_of_failed_phase: R0`、`does_not_supersede: R0-RECOVERY`、`also_does_not_supersede: [P0-VALUE]`。
+- **测试要求**：failed R0/P0、empty deps、dual decision isolation、authorization、dependency leakage、contract reverse mapping。
+- **验收标准**：章程与全仓门禁通过后 `done`，仅 R1-T2 eligible。
+
+> **已完成（2026-07-29）**：已新增 `R1-RUNNER-REMEDIATION-001`、独立 R1/R1-RECOVERY chain 与 owner authorization record；R1 phase 和 R1-T1 均为空 dependency，只按 immutable evidence/hash 指向 failed R0。Validator 现在要求 recovered phase failed、immediate stop decision non-supersession，并验证 additional terminal decision exclusions；R1 同时固定 `does_not_supersede: R0-RECOVERY` 与 `also_does_not_supersede: [P0-VALUE]`，既有 phase/task 对 R1 的依赖仍 fail closed。20 项定向测试、136 项全仓 Vitest、build/typecheck/lint、11-phase/148-task/27-contract roadmap 全部通过；charter proof hash 为 `d74ec66439511739af86a8b8f19c3594316034ffd11ce35a01ba517dd42bb6a7`，product unlock count 为 0，未执行外部调用。下一项仅为 R1-T2。
+
+## R1-T2 — Multi-message classification 与 failure evidence sealing
+
+### Prompt
+
+- **背景**：frozen R0 runner 把每个 agent-message 都登记成唯一 final response，并在 throw 前丢失 raw/ledger。
+- **目标**：只在 stream close 后登记一次 schema-valid final response，并保证所有失败路径先封存可重放证据。
+- **本阶段做**：有界候选收集、response schema validation、唯一 final selection、protocol-failure terminal evidence、raw/stdout/stderr incremental sealing 与 hashes。
+- **本阶段不做**：不执行外部 Codex arm、不修改 R0 evidence、不冻结下一批。
+- **实现约束**：普通 agent-message 只记 stdout receipt；零有效或冲突有效候选 fail closed；错误返回前必须写 terminal/error/hash evidence。
+- **测试要求**：多 message 单 final、零/冲突 valid、duplicate prevention、terminal ordering、raw/ledger/error sealing、bounds/cancel。
+- **验收标准**：定向及全仓门禁通过后 `done`，使 R1-T3 eligible。
+
+> **已完成（2026-07-29）**：新增独立 `RemediatedRunRecorder`，把所有 agent-message 作为普通 receipt 留存，待进程和 streams 关闭后才校验候选并恰好选择一次 schema-valid 最终响应；零有效或互相冲突的有效响应 fail closed，内容相同的重复有效响应不会造成重复登记。所有成功和失败路径均先增量封存 bounded raw stdout/stderr、terminal observation、ledger、error metadata 与 SHA-256 manifest，再向调用方返回；真实本地子进程证明多消息单 final 成功及冲突 final 失败均可重放。7 项定向测试、143 项全仓 Vitest、build/typecheck/lint 与 11-phase/148-task/27-contract roadmap 全部通过；instrumentation hash 为 `c4f972ea540b12b877be0918397352cbdf0980974f086e1dffe81b290b29614a`，未执行外部调用。下一项仅为 R1-T3。
+
+## R1-T3 — Remediated recovery preregistration
+
+### Prompt
+
+- **背景**：R1-T2 提供新 runner semantics 与 failure sealing。
+- **目标**：冻结新 runner/capsule/ledger/task/threshold hashes，保持 recovery-only corpus 与 product holdout 分离。
+- **本阶段做**：生成新 preregistration、counterbalance、equal base context、setup policy、failure evidence contract 与 external authorization gate。
+- **本阶段不做**：不执行外部 arm、不复用 R0 hash、不授权产品工作。
+- **实现约束**：新 instrumentation hash 必须不同于 R0；`externalExecutionAuthorized=false`；ground truth evaluator-only。
+- **测试要求**：source bindings、fresh hash、task/capsule equality、holdout exclusion、mutation、authorization false、local probes。
+- **验收标准**：冻结并通过 probes 后 `done`；R1-T4 等待单独 owner authorization。
+
+> **已完成（2026-07-29）**：冻结了 5 个全新 R1 task ID/提示/fixture、10 个 counterbalanced arms、equal base context、仅 `vem-context.json` 的 treatment difference、既有 P0/R0 task/prompt 与产品 holdout 排除，以及 evaluator-only ground truth。新 R1-T4 runner、remediated recorder、capsule、v2 auditor 和 canonical runtime 均按 source hash 绑定；failure contract 要求 stream close 后唯一选择 final，任何协议失败在返回前封存 raw/terminal/ledger/error/SHA evidence，并在首个 integrity failure 后停止批次。20 个本地隔离 probes、8 项 R1-T3 定向测试、151 项全仓 Vitest、build/typecheck/lint、roadmap/workspace/license、clean frozen install、production demo、98 项 preflight 与最终 digest/source-binding 检查全部通过。预注册 hash 为 `8d93104c915fdb0acce9f31bdf7c34bbc4d19f0ac74e1b2609a10ddce35ca7f1`，instrumentation hash 为 `388b1e0d89deea9a91c2d8c3701131fa358d60f988a78fd9d9098cd4c07cd231`；`externalExecutionAuthorized=false`，未执行任何外部 arm。R1-T4 仅在 owner 单独绑定该完整 preregistration hash 后 eligible。
+
+## R1-T4 — Separately authorized remediated recovery verdict
+
+### Prompt
+
+- **背景**：R1-T3 已冻结新的 runner/instrumentation plan。
+- **目标**：在单独 owner authorization 后执行 paired arms 并记录 `R1-RECOVERY` verdict。
+- **本阶段做**：fresh contexts、raw/ledger/error evidence、correctness、capsule integrity 与 cost verdict。
+- **本阶段不做**：不覆盖 R0/P0、不自动解锁或创建产品 phase。
+- **实现约束**：任何 prereg/source/capsule/holdout/failure-sealing drift fail closed。
+- **验收标准**：immutable verdict；continue 也仅允许提出新的独立研究路线。
+
+> **已完成（2026-07-29）**：Owner 授权、preregistration digest 和全部 source bindings 通过后开始冻结 batch。首个 direct arm 成功、定位与 capsule audit 均正确；配对 VEM arm 退出 0，但依次产生两个不同的 schema-valid 响应（错误的 `line:1/sourceAnchorId:null` 与正确的 `line:7/direct anchor`），修复后的 recorder 在 stream close 后按预登记规则判定 `STRUCTURED_RESPONSE_CONFLICT`，没有事后挑选结果。两个 run 的 raw stdout/stderr、terminal、ledger、run/failure metadata 和 SHA manifests 全部封存并验证通过，随后 batch fail closed，剩余 8 次未执行。19 项 R1 定向测试、155 项全仓 Vitest、build/typecheck/lint、roadmap/workspace/license、clean frozen install、production demo 和 98 项 preflight 全部通过。Immutable verdict 为 `R1-RECOVERY=stop`，R1 phase 为 `failed`；R0/P0 stop 与零产品解锁边界不变。证据位于 `docs/test-evidence/R1-T4/20260729T213524+0800/`，verdict hash 为 `a0a9556a63d68fcbe769da96f140e54d1d966421d0c3bad1cbffca1f24ab9baa`。
+
+## R2-T1 — Independent final-output remediation charter
+
+### Prompt
+
+- **背景**：R1-T4 因 JSONL 中两个 schema-valid agent-message 触发 immutable stop；R1/R0/P0 均 failed/stop。
+- **目标**：新增不覆盖三条 stop chain 的独立 R2，并机械证明零产品解锁。
+- **本阶段做**：新增 R2-FINAL-OUTPUT-001、独立 decision、owner authorization、R2-T1–T4 原子链与 validator triple-non-supersession checks。
+- **本阶段不做**：不改 R1/R0/P0 evidence/verdict，不修 runner，不冻结新 plan，不执行外部调用。
+- **实现约束**：R2 phase 与 R2-T1 均 `depends_on: []`，只按 immutable evidence/hash 读取 failed R1；同时固定不 supersede R1/R0/P0 decision。
+- **测试要求**：failed R1/R0/P0、empty deps、triple decision isolation、authorization、dependency leakage、contract reverse mapping。
+- **验收标准**：章程与全仓门禁通过后 `done`，仅 R2-T2 eligible。
+
+> **已完成（2026-07-29）**：已新增 `R2-FINAL-OUTPUT-001`、独立 R2/R2-RECOVERY chain 与 owner authorization record；R2 phase 和 R2-T1 均为空 dependency，只读取 failed R1 的 immutable terminal state。Validator 机械要求 `does_not_supersede: R1-RECOVERY` 与 `also_does_not_supersede: [R0-RECOVERY, P0-VALUE]`，并继续拒绝既有 phase/task 对 R2 的依赖。17 项定向测试、157 项全仓 Vitest、build/typecheck/lint 与 12-phase/152-task/28-contract roadmap 全部通过；charter proof hash 为 `46e7522676d366c5b93f2e32b6c682fabb76c5d3fa790a37a60eb6692171c25d`，product unlock count 为 0，未执行外部调用。下一项仅为 R2-T2。
+
+## R2-T2 — Authoritative final-output file 与 single-file capsule bind
+
+### Prompt
+
+- **背景**：R1 runner 把 JSONL 中所有 schema-valid agent-message 当作 final candidates，但 JSONL 是事件审计流。
+- **目标**：以 `--output-last-message` 文件作为唯一 final response，并保持 participant workspace 只读。
+- **本阶段做**：新 R2 capsule/recorder、runner-owned 0600 single-file bind、final file size/schema/symlink checks、last agent-message consistency、协议/attribution 分类与 failure sealing。
+- **本阶段不做**：不修改 frozen R1 source/evidence，不执行外部 Codex arm，不冻结下一批。
+- **实现约束**：JSONL 只作 audit；早期 agent-message 不竞争 final；missing/invalid/mismatch fail closed；未选择响应时 wrong-attribution 必须为 false。
+- **测试要求**：early wrong/later correct、authoritative file、missing/invalid/mismatch/oversize/symlink、single writable file、raw/final/ledger/error/hash sealing、cancel。
+- **验收标准**：定向及全仓门禁通过后 `done`，使 R2-T3 eligible。
+
+> **已完成（2026-07-29）**：已新增独立 R2 capsule/recorder，Codex invocation 同时保留 `--json` 审计流并用 `--output-last-message /run/vem/final-response.json` 提供唯一权威响应；runner 在进程与 streams 收束后执行 regular-file/no-symlink/size/schema 检查，并与最后 agent-message 做 canonical 一致性校验，早期错误的 schema-valid message 不再参与竞争。Bubblewrap 继续以 `/work:ro` 挂载 participant workspace，输出目录只读覆盖后仅叠加一个 runner-owned 0600 可写文件；workspace 和 sibling write probes 均拒绝。缺失、空、无效、不一致、超限、symlink、stream cancellation 均先封存 raw/final observation/terminal/ledger/error/SHA evidence；未选择响应时 `wrongAttribution=false`，`evidenceSealed` 与 `successfulResponseComplete` 分离。12 项定向测试、169 项全仓 Vitest、build/typecheck/lint 与 roadmap 全部通过；instrumentation hash 为 `235e7c8433787ef838c1f30d492e3ef24cb62ebd6ebf26bd43ca9cd559c0f8ab`，proof hash 为 `0dcae05aec4d39e37089039354a1c6fa1085387a364a7ae00effa7ac365ecbd8`，未执行外部模型调用。下一项仅为 R2-T3。
+
+## R2-T3 — Final-output recovery preregistration
+
+### Prompt
+
+- **背景**：R2-T2 提供明确 final-output authority 与最小 capsule 写入边界。
+- **目标**：冻结新 runner/capsule/task/threshold hashes，保持 recovery-only corpus 与 product holdout 分离。
+- **本阶段做**：生成新 preregistration、counterbalance、equal base context、final-file contract、failure evidence contract 与 external authorization gate。
+- **本阶段不做**：不执行外部 arm、不复用 R1 hash、不授权产品工作。
+- **实现约束**：新 instrumentation hash 必须不同于 R1；`externalExecutionAuthorized=false`；ground truth evaluator-only。
+- **测试要求**：source bindings、fresh hash、task/capsule equality、holdout exclusion、final-file mutation、authorization false、local probes。
+- **验收标准**：冻结并通过 probes 后 `done`；R2-T4 等待单独 owner authorization。
+
+> **已完成（2026-07-29）**：已冻结 5 个全新 R2 final-output-remediation-only task、10 个 counterbalanced arms、equal base context 与仅 `vem-context.json` 的 treatment difference；P0/R0/R1 task ID、prompt hash 和 P1/P3/P4 product holdout 均排除。未来 R2-T4 runner、权威 final-file recorder、single-file capsule、v2 auditor、evaluator 与 canonical runtime 绑定 8 个 source hashes；协议失败独立归类为 `protocol-response-integrity-failed`，没有 selected response 时不制造 wrong attribution。10 次 filesystem、10 次 capsule 内 `codex --version` 和 10 次 final-output single-file probes 全部通过；4 项 R2-T3 定向测试、173 项全仓 Vitest、build/typecheck/lint、roadmap/workspace/license、clean frozen install、production demo 与 98 项 preflight 回归通过。预注册 hash 为 `dddd48ade2a92b2e12ec7600c9cdc0bd65eee6d47023d01d70b8bd71b47c273a`，instrumentation hash 为 `09e237ddec722207ee3b2e22c714ca5631700ff7393877a66fdd75d04c46b8a0`；`externalExecutionAuthorized=false`，未执行任何外部 arm。R2-T4 仅在 owner 单独绑定该完整 hash 和 10 次 run 后 eligible。
+
+## R2-T4 — Separately authorized final-output recovery verdict
+
+### Prompt
+
+- **背景**：R2-T3 已冻结新的 runner/instrumentation plan。
+- **目标**：在单独 owner authorization 后执行 paired arms 并记录 `R2-RECOVERY` verdict。
+- **本阶段做**：fresh contexts、final-file/JSONL consistency、raw/ledger/error evidence、correctness、capsule integrity 与 cost verdict。
+- **本阶段不做**：不覆盖 R1/R0/P0、不自动解锁或创建产品 phase。
+- **实现约束**：任何 prereg/source/capsule/holdout/final-file/failure-sealing drift fail closed。
+- **验收标准**：immutable verdict；continue 也仅允许提出新的独立研究路线。
+
+> **已完成（2026-07-29）**：Owner 授权、完整 preregistration digest、8 个 frozen source bindings 和 15 项 capsule/recorder/preregistration 门禁通过后启动批次。前 8 个 run 全部通过；第 9 个 direct arm 同样退出 0，权威 final file 与最后 JSONL agent message 一致且定位正确，但其命令事件包含 frozen v2 auditor 禁止的 `AGENTS.md` marker，触发 `CAPSULE_AUDIT_V2_ESCAPE`。异常在 frozen runner 中未捕获，因而审计失败证据没有在返回前封存；批次 fail closed，剩余第 10 次未执行。无外部重试的 post-abort sealer 只读取并哈希封存现有证据，不修改任何 frozen binding。最终 9/9 定位正确、9 个 fresh unique threads、0 protocol failure、0 wrong attribution；immutable verdict 为 `R2-RECOVERY=stop`，stop reasons 为 `capsule-integrity-failed` 与 `failure-evidence-not-sealed-before-return`，9/10 incomplete batch 同时记为 adjust reason 但不覆盖 stop。44 项定向测试、180 项全仓 Vitest、build/typecheck/lint、roadmap/workspace/license、clean frozen install、production demo 与 98 项 preflight 全部通过。R2 phase 为 `failed`，R1/R0/P0 stops 与零产品解锁边界不变。证据位于 `docs/test-evidence/R2-T4/20260729T230343+0800/`，verdict hash 为 `ada1fb7e4c4ae202060a5e98e00dafedecfd4862803c61bab1970d7e30d681e1`。
+
+## R3-T1 — Independent capsule-audit containment charter
+
+### Prompt
+
+- **背景**：R2-T4 因 marker-only `AGENTS.md` lookup 被 frozen auditor 判为 escape，且 audit exception 在顶层 evidence seal 前逃逸；R2/R1/R0/P0 均 failed/stop。
+- **目标**：新增不覆盖四条 stop chain 的独立 R3，并机械证明零产品解锁。
+- **本阶段做**：新增 R3-CAPSULE-AUDIT-CONTAINMENT-001、独立 decision、owner authorization、R3-T1–T4 原子链与 validator/proof four-terminal checks。
+- **本阶段不做**：不改 R2/R1/R0/P0 evidence/verdict，不修 auditor/runner，不冻结新 plan，不执行外部调用。
+- **实现约束**：R3 phase 与 R3-T1 均 `depends_on: []`，只按 immutable evidence/hash 读取 failed R2；同时固定不 supersede R2/R1/R0/P0 decisions。
+- **测试要求**：failed R2/R1/R0/P0、empty deps、four-decision isolation、authorization、dependency leakage、contract reverse mapping。
+- **验收标准**：章程与全仓门禁通过后 `done`，仅 R3-T2 eligible。
+
+> **已完成（2026-07-29）**：已新增 `R3-CAPSULE-AUDIT-CONTAINMENT-001`、独立 R3/R3-RECOVERY chain、owner authorization record 与四任务原子序列；R3 phase 和 R3-T1 均为空 dependency，只读取 failed R2 的 immutable terminal evidence。机械证明固定 `does_not_supersede: R2-RECOVERY` 与 `also_does_not_supersede: [R1-RECOVERY, R0-RECOVERY, P0-VALUE]`，并拒绝任何既有 phase/task 对 R3 的依赖；generic validator 也要求每一层 recovery 精确保留完整 ancestor stop chain。27 项治理/章程定向测试、184 项全仓 Vitest、build/typecheck/lint 和 13-phase/156-task/29-contract roadmap 全部通过；product unlock count 为 0，未执行外部调用。下一项仅为 R3-T2。
+
+## R3-T2 — Mention-versus-observed-access audit 与 exception containment
+
+### Prompt
+
+- **背景**：R2 frozen v2 auditor 把命令文本中的 marker mention 直接等同于 capsule escape，且 audit throw 未进入终态封存。
+- **目标**：保持真实 escape fail closed，同时避免 marker-only/no-output lookup 误判，并确保 audit/evaluator/hash/aggregate exception 全部先封存再返回。
+- **本阶段做**：新 versioned auditor、结构化 warning/violation evidence、新 R3 recorder/runner containment boundary、R2 run-nine read-only replay 与 local failure probes。
+- **本阶段不做**：不修改 frozen R2 source/evidence，不执行外部 Codex arm，不冻结下一批。
+- **实现约束**：命令 mention 本身不是访问证据；观察到 forbidden path/content 或 unsafe absolute path 仍 stop；每个异常路径必须有 raw/final/terminal/ledger/error/SHA。
+- **测试要求**：marker mention/no output、safe `/work` search、forbidden output/content、external path、stderr/symlink、audit/evaluator/hash/aggregate throw、cancel、bounds、R2 replay。
+- **验收标准**：定向及全仓门禁通过后 `done`，使 R3-T3 eligible。
+
+> **已完成（2026-07-30）**：新增 v3 auditor，以 `item.id` 关联 started/completed、只把 completed observation 作为访问证据；真实 R2 第 9 次 run 只产生 1 个 non-authorizing bounded-discovery warning，而规则/skill path 或内容、auth、`/proc`、遍历、stderr 和 capsule 外路径仍 fail closed。新增 R3 permission-profile capsule：生成命令默认拒绝 filesystem root，仅开放最小 runtime、只读 `/opt/codex`/`/work`，显式拒绝 auth、禁用网络与交互扩权，并从空继承重建固定非敏感环境；无模型假凭据实测证明 auth 不可读、workspace 不可写且 `/proc/self/environ` 无敏感变量。新的 finalizer 分层保留 recorder `SHA256SUMS`，为 audit/evaluator/hash/aggregate exception 在返回前封存 raw/final/terminal/ledger/error 与外层 manifest。冻结前复核又补齐了 `SKILL.md` 及 AGENTS/SKILL 合并负查找的同型 warning 语义、observed skill path fail-closed、dummy-secret stderr 检查、network policy 配置证据与 runtime probe 的诚实区分，以及 wrong-attribution run/batch stop；旧证据保持不变，新 sibling 证据位于 `docs/test-evidence/R3-T2/20260730T004219+0800/`，superseding proof hash 为 `fadca8e3f7660f144bd31ae8ab5e1155d9eb1f6ad3cc07634f2ea830306a8ec3`。修补后的 33 项定向测试、排除尚未 eligible 的 R3-T3 runner 草稿后 227 项全仓 Vitest、build/typecheck/affected lint 与 13-phase/156-task/29-contract roadmap 均通过；两份 proof 的外部模型调用均为 0，R2/R1/R0/P0 stop 不变。下一项仅为 R3-T3。
+
+## R3-T3 — Capsule-audit containment recovery preregistration
+
+### Prompt
+
+- **背景**：R3-T2 提供 versioned audit semantics 与 in-run exception sealing。
+- **目标**：冻结新 runner/auditor/capsule/task/threshold hashes，保持 recovery-only corpus 与 product holdout 分离。
+- **本阶段做**：生成新 preregistration、counterbalance、equal base context、audit warning/violation contract、failure evidence contract 与 external authorization gate。
+- **本阶段不做**：不执行外部 arm、不复用 R2 hash、不授权产品工作。
+- **实现约束**：新 instrumentation hash 必须不同于 R2；`externalExecutionAuthorized=false`；ground truth evaluator-only。
+- **测试要求**：source bindings、fresh hash、task/capsule equality、holdout exclusion、auditor/runner mutation、authorization false、local probes。
+- **验收标准**：冻结并通过 probes 后 `done`；R3-T4 等待单独 owner authorization。
+
+> **已完成（2026-07-30）**：冻结 5 个全新 recovery-only task、10 个 AB/BA counterbalanced arm、equal-base capsule 和 10 项完整 runtime source binding；instrumentation hash 为 `1592699eea206c5d75327053c065a44a27153ff2d3e263692751e56917d6ca80`，完整 preregistration hash 为 `8b886d443c576540f6b3b2d90e06abfd95d57955f696680dd998b748d4ffdd5b`。runner 冻结了 direct-null/VEM-anchor ground truth、authoritative final-file、v3 audit、当前无模型 permission preflight、异常/哈希/aggregate 封存及按 pair saving 中位数计算的 verdict；四份 terminal stop verdict 与五份既有 preregistration 均按已知哈希重验。30 次本地 filesystem/Codex-binary/permission-profile probe、82 项定向测试、239 项全仓 Vitest、build/typecheck/lint、13-phase/156-task/29-contract roadmap、预注册复验和敏感信息/symlink 检查全部通过。证据位于 `docs/test-evidence/R3-T3/20260730T114932+0800/`；`externalExecutionAuthorized=false`、product unlock count 为 0，未执行外部模型调用。R3-T4 仍需绑定上述完整 hash 和恰好 10 次实验的单独 owner authorization。
+
+## R3-T4 — Separately authorized capsule-audit containment verdict
+
+### Prompt
+
+- **背景**：R3-T3 已冻结新的 auditor/runner/instrumentation plan。
+- **目标**：在单独 owner authorization 后执行 paired arms 并记录 `R3-RECOVERY` verdict。
+- **本阶段做**：fresh contexts、final-file/JSONL/audit consistency、raw/ledger/error evidence、correctness、capsule integrity 与 cost verdict。
+- **本阶段不做**：不覆盖 R2/R1/R0/P0、不自动解锁或创建产品 phase。
+- **实现约束**：任何 prereg/source/capsule/holdout/audit/failure-sealing drift fail closed。
+- **验收标准**：immutable verdict；continue 也仅允许提出新的独立研究路线。
+
+> **已完成（2026-07-30）**：Owner 先绑定完整 preregistration hash 和 10 次上限，再明确授权向 OpenAI Codex `gpt-5.6-sol` 发送冻结 participant capsule 数据。冻结 hash、10 项 source binding、当前 permission preflight 与 27 项 runner/封存测试通过后启动批次；首个 direct arm 获得 fresh thread ID，但外部请求连续重连后 `request timed out`，未产生 `turn.completed` 或权威 final response，进程退出 1。v3 capsule audit、permission/auth boundary、ground-truth evaluator、recorder/outer hash 与失败证据封存均通过；预登记的 `protocol-response-integrity-failed` 要求立即 stop，剩余 9 次未执行。immutable verdict 为 `R3-RECOVERY=stop`，incomplete batch 同时记录 adjust reason 但不覆盖 stop；R3 phase 为 `failed`，R2/R1/R0/P0 stops 与零产品解锁边界不变。证据位于 `docs/test-evidence/R3-T4/20260730T133111-0800/`，canonical verdict hash 为 `7a3e5b6bf94067e4681258982690afe911c51dc3da0e6cc4af66d069d537d95b`。
+
+## R4-T1 — Independent external-transport timeout remediation charter
+
+### Prompt
+
+- **背景**：R3-T4 首个 fresh process 因外部 request timeout 产生空 authoritative response 并触发 terminal stop；R3/R2/R1/R0/P0 均 failed/stop。
+- **目标**：新增不覆盖五条 stop chain 的独立 R4，并机械证明零产品解锁。
+- **本阶段做**：新增 R4-TRANSPORT-TIMEOUT-001、独立 decision、owner authorization、R4-T1–T4 原子链与 five-terminal validator/proof checks。
+- **本阶段不做**：不改 R3/R2/R1/R0/P0 evidence/verdict，不修 runner，不冻结新 plan，不执行外部调用。
+- **实现约束**：R4 phase 与 R4-T1 均 `depends_on: []`，只按 immutable evidence/hash 读取 failed R3；固定不 supersede R3/R2/R1/R0/P0 decisions。
+- **测试要求**：failed R3/R2/R1/R0/P0、empty deps、five-decision isolation、authorization、dependency leakage、contract reverse mapping。
+- **验收标准**：章程与全仓门禁通过后 `done`，仅 R4-T2 eligible。
+
+> **已完成（2026-07-30）**：新增 `R4-TRANSPORT-TIMEOUT-001`、独立 R4/R4-RECOVERY chain、owner authorization 与 R4-T1–T4 四任务原子序列。R4 phase 和 R4-T1 均为空 dependency，只读取 failed R3 的 immutable terminal evidence；decision 固定 `does_not_supersede: R3-RECOVERY` 与完整 R2/R1/R0/P0 ancestor chain，且任何既有 phase/task 不得依赖 R4。32 项治理/章程定向测试与 14-phase/160-task/30-contract roadmap 门禁通过，product unlock count 为 0，外部调用为 0。下一项仅为 R4-T2。
+
+## R4-T2 — Zero-model preflight, timeout classification and bounded retry
+
+### Prompt
+
+- **背景**：R3-T4 把 provider request timeout 正确记为 protocol failure，但没有独立 transport classification 或受全批预算约束的 outer retry。
+- **目标**：在不调用外部模型的前提下实现诚实 preflight、窄 timeout-before-response 分类、有限 retry controller 和逐 attempt 封存。
+- **本阶段做**：本地 capability preflight、R3 timeout replay、synthetic partial/auth/rate-limit/unknown cases、retry budget/state machine、attempt evidence。
+- **本阶段不做**：不联系 provider、不执行外部 Codex arm、不修改 R3 evidence、不冻结下一批。
+- **实现约束**：只有 sealed nonzero/no-final/no-turn-completed/timeout-turn-failed 可重试；每 arm 最多一次、全批最多 20 process attempts；每次 attempt 独立且不可覆盖。
+- **测试要求**：network-unprobed honesty、timeout shape、partial response、auth/rate-limit/unknown、second timeout、budget、fresh IDs、evidence immutability、R3 replay。
+- **验收标准**：定向及全仓门禁通过后 `done`，仅 R4-T3 eligible。
+
+> **已完成（2026-07-30）**：新增零模型 local transport preflight，真实 capsule 内验证当前 `codex-cli 0.144.5`、只读 workspace、generated-command auth denial 与固定非敏感环境，同时明确 `networkRuntimeProbed=false`、不声称 provider reachability。窄分类器只接受 sealed nonzero/no-final/no-agent/no-turn-completed/timeout-turn-failed；partial/completed response、auth、rate limit、unknown、audit/permission/evidence failure 均不可重试。retry controller 固定每 arm 最多 1 次、全批最多 20 process attempts、fresh run ID 和 immutable attempt evidence hash。R3 timeout evidence 的只读 replay 被分类为 `external-transport-timeout-before-response` 并只生成 retry plan，未执行 retry。16 项定向测试与 proof SHA 通过；证据位于 `docs/test-evidence/R4-T2/20260730T142100+0800/`，proof hash 为 `2d19fd9b848018f08d3dcbd937c17f6764036974666d626bb8827ddfcbe9a42f`，外部调用为 0。下一项仅为 R4-T3。
+
+## R4-T3 — Transport-timeout recovery preregistration
+
+### Prompt
+
+- **背景**：R4-T2 提供零模型 preflight、timeout classifier 与 bounded retry controller。
+- **目标**：冻结新 runner/task/threshold/source hashes、每 arm retry 上限与全批 process-attempt budget。
+- **本阶段做**：新 recovery-only task bank、counterbalance、equal-base capsules、attempt policy、transport/failure contracts、external authorization gate。
+- **本阶段不做**：不执行外部 arm、不复用 R3 instrumentation hash、不授权产品工作。
+- **实现约束**：`maxRetriesPerArm=1`、`maxProcessAttempts=20`、`externalExecutionAuthorized=false`；ground truth evaluator-only，所有五条 stop immutable。
+- **测试要求**：fresh tasks/source bindings、capsule equality、retry budget、holdout exclusion、preflight/runner mutation、authorization false、local probes。
+- **验收标准**：冻结并通过 probes 后 `done`；R4-T4 等待单独 owner authorization。
+
+> **已完成（2026-07-30）**：冻结 5 个全新 transport-remediation-only task、10 个 AB/BA paired arms、equal-base capsule、每 arm 最多 1 次 retry 与全批最多 20 个 process attempts。未来 runner 绑定 exact destination/model/data-scope authorization、零模型 current preflight、窄 timeout-before-response classifier、per-attempt immutable evidence、retry-aware total-arm cost 与 terminal verdict；10 项 runtime source binding 的 instrumentation hash 为 `78ec7bd51ffd3cbf7f36cddabdd16dcd73d5d88877700632350471d81865f064`，data-scope hash 为 `2fe4246a5cdd3aee19efb1d2e2f56f2469ba82c8f5dc32f1651c68a86d0b8ca8`。30 个本地 filesystem/Codex-binary/permission-profile probe、28 项 R4 plan/prereg/runner 定向测试、48 文件/272 项全仓 Vitest、build/typecheck/lint、14-phase/160-task/30-contract roadmap、完整 digest/source/probe 复验与 symlink 检查通过。预注册位于 `docs/test-evidence/R4-T3/20260730T143215-0800/`，完整 hash 为 `0ddb8c6f51d140042167231a22f8b3f73735fc8d0e271e3da5f11590c9995104`；`externalExecutionAuthorized=false`、product unlock count 为 0，外部调用为 0。R4-T4 仍需绑定完整 hash、OpenAI Codex/gpt-5.6-sol、data-scope hash、10 个成功 arms 和最多 20 个 external process attempts 的单独知情授权。
+
+## R4-T4 — Separately authorized bounded-attempt transport verdict
+
+### Prompt
+
+- **背景**：R4-T3 已冻结新的 transport-aware runner/instrumentation plan。
+- **目标**：在单独 owner authorization 后执行 paired arms 和受限 attempts，并记录 `R4-RECOVERY` verdict。
+- **本阶段做**：fresh contexts、retry classification、final-file/JSONL/audit consistency、attempt/batch evidence、correctness 与 cost verdict。
+- **本阶段不做**：不覆盖 R3/R2/R1/R0/P0，不自动解锁或创建产品 phase。
+- **实现约束**：任何 prereg/source/capsule/holdout/attempt-budget/failure-sealing drift fail closed；授权必须绑定目的地、数据范围和最多 20 process attempts。
+- **验收标准**：immutable verdict；continue 也仅允许提出新的独立研究路线。
+
+> **执行受阻（2026-07-30）**：Owner authorization 已精确绑定 OpenAI Codex/gpt-5.6-sol、完整 preregistration/data-scope hashes、10 个成功 arms 与最多 20 个 external processes。冻结 preflight 与授权复验通过后只启动首个 direct arm；Codex 子进程依次耗尽 WebSocket 5 次 timeout reconnect、fallback 至 HTTPS 后再耗尽 5 次 timeout reconnect，却没有退出或产生 `turn.failed`、`turn.completed`、权威 final response。冻结 runner 缺少独立 wall-clock/process-tree termination，因而无法封存 attempt 并进入受限 retry controller。为执行有限授权边界，批次被终止；第二个进程及 retry 均未启动，partial evidence 原样保留于 `docs/test-evidence/R4-T4/20260730T144143-0800/`，incident hash 为 `95021eac99d93d49985ee46d003a4108ff7a524244d83e3521b8edff8ecffd70`。本 prompt **未完成**，`R4-T4=blocked`、`R4-RECOVERY=pending`，没有生成或推断 `continue/adjust/stop` verdict。
+
+## R5-T1 — Independent process-tree termination remediation charter
+
+### Prompt
+
+- **背景**：R4-T4 首个 authorized process 在 transport reconnect 耗尽后仍不退出；R4-T4/R4 保持 blocked，R4-RECOVERY 保持 pending，R3/R2/R1/R0/P0 保持 failed/stop。
+- **目标**：新增不覆盖 blocked R4 或五条 stop chain 的独立 R5，并机械证明零产品解锁。
+- **本阶段做**：新增 R5-PROCESS-TERMINATION-001、独立 decision、owner authorization、R5-T1–T4 原子链、blocked-phase validator 与 six-decision proof checks。
+- **本阶段不做**：不改 R4/R3/R2/R1/R0/P0 evidence/status/verdict，不修 runner，不冻结新 plan，不执行外部调用。
+- **实现约束**：R5 phase 与 R5-T1 均 `depends_on: []`，只按 immutable evidence/hash 读取 blocked R4；固定不 supersede R4 pending decision 与 R3/R2/R1/R0/P0 terminal decisions。
+- **测试要求**：blocked R4/pending attempt、五条 failed/stop、empty deps、six-decision isolation、authorization、dependency leakage、contract reverse mapping。
+- **验收标准**：章程与全仓门禁通过后 `done`，仅 R5-T2 eligible。
+
+> **已完成（2026-07-30）**：已新增 `R5-PROCESS-TERMINATION-001`、独立 R5/R5-RECOVERY chain、owner authorization record 与 R5-T1–T4 原子序列；validator 现在能独立验证 blocked/pending remediation，并机械保持 R4-T4/R4=`blocked`、R4-RECOVERY=`pending` 与 R3/R2/R1/R0/P0 五条 failed/stop chain。R5 无 phase/task dependency，也没有既有任务依赖 R5；15-phase/164-task/31-contract roadmap、30 项定向测试及 49 文件/282 项全仓测试通过，product unlock count 与外部调用均为 0。下一项仅为 R5-T2。
+
+## R5-T2 — Wall-clock/process-tree termination 与 interruption-safe sealing
+
+### Prompt
+
+- **背景**：R5-T1 只建立 blocked-phase 独立 remediation authority；R4 frozen runner 没有 independent deadline 或 process-tree termination。
+- **目标**：在零外部模型调用下实现 trusted outer-runner wall-clock deadline、process-tree kill、stream drain 与统一 terminal evidence sealing。
+- **本阶段做**：monotonic spawn deadline、graceful-to-force signal escalation、process-group/tree observation、stdout/stderr/final-file drain、timeout/cancel/signal/exception terminalizer、synthetic/local child probes。
+- **本阶段不做**：不联系 provider、不修改或恢复 R4 attempt、不冻结 R5-T3 plan、不执行 participant arm。
+- **实现约束**：deadline 从 spawn 计时；无法证明整棵进程树终止、出现 orphan/terminal contradiction 或 sealing 不完整时 fail closed；runner termination 不伪造成 provider `turn.failed`。
+- **测试要求**：normal exit、deadline、grace/force、child/grandchild、orphan refusal、stream drain、missing final、cancel/signal/exception、evidence-before-return、bounds、no-provider-terminal-invention。
+- **验收标准**：定向及全仓门禁通过后 `done`，仅 R5-T3 eligible。
+
+> **已完成（2026-07-30）**：已新增 R5 版本化 outer-runner terminalization boundary，以 `process.hrtime.bigint` 从 spawn 起执行 wall-clock deadline，并用独立 process group 对 parent/descendant 进行有界 `SIGTERM`→`SIGKILL` 终止；normal、deadline、force、cancel/signal、launch/audit/evaluator exception、missing final、orphan 与 terminal contradiction 均在返回前封存 bounded stdout/stderr、final observation、receipt ledger、permission/audit/evaluator state、termination metadata、failure classification 和 SHA manifest。10 项终止器测试、1 项本地综合 proof 及 51 文件/293 项全仓测试通过；证据位于 `docs/test-evidence/R5-T2/20260730T153607+0800/`，proof hash 为 `f42297572767611c7707b3d5f0f363ba54f409c4c8ae832652bb808214621799`。所有 probe 均为本地合成进程，外部模型调用为 0；runner termination 从未伪造 provider `turn.failed`，R4 blocked/pending 与五条 stop chain 未改变。下一项仅为 R5-T3。
+
+## R5-T3 — Process-termination recovery preregistration
+
+### Prompt
+
+- **背景**：R5-T2 提供受测的 deadline/process-tree terminalizer 与 interruption-safe sealer。
+- **目标**：冻结新 runner/task/threshold/source hashes、deadline/grace/signal policy 与全批 process-attempt budget。
+- **本阶段做**：fresh recovery-only task bank、counterbalance、equal-base capsules、termination/failure contracts、budget、external authorization gate。
+- **本阶段不做**：不执行外部 arm、不复用 R4 instrumentation hash、不授权产品工作。
+- **实现约束**：`externalExecutionAuthorized=false`；deadline/grace/signal/budget 全部纳入 hash；ground truth evaluator-only，R4 blocked/pending 与五条 stop immutable。
+- **测试要求**：fresh tasks/source bindings、capsule equality、deadline/grace/signal/budget、holdout exclusion、termination mutation、authorization false、local probes。
+- **验收标准**：冻结并通过 probes 后 `done`；R5-T4 等待单独 owner authorization。
+
+> **已完成（2026-07-30）**：已冻结 5 个全新 process-termination-only tasks、10 个 counterbalanced arms、equal-base read-only capsules、10 项 runtime source bindings，以及 process-aware R5-T4 runner/classifier。Termination policy 固定为 spawn 后 `120000ms` deadline、`5000ms` graceful window、`5000ms` force-observation window、`SIGTERM`→`SIGKILL`、每 arm 最多 1 次且仅限已观察 provider timeout 的 retry、全批最多 20 个 external processes；runner deadline termination 明确不可重试且不能冒充 provider `turn.failed`。30 个本地 filesystem/binary/permission probes、20 项 R5 联合定向测试及 53 文件/303 项全仓测试通过。预注册位于 `docs/test-evidence/R5-T3/20260730T154956-0800/`：preregistration hash `8a7b315cfa5597b046228d9597a5805ad3b3dbd0becaa83a37f9ea81475ec886`，instrumentation hash `02fa73cd42572e703c33516b5a5f10a123f0f8e34dd0b82275016f8a8f9c6641`，data-scope hash `fefd57ecda3606e69eadb1165618cff24f76ce4ac699243a52f61171c98edba6`，termination-policy hash `ca4ffce3cf06abea99712e581a9732d6579a5490ff9f2bc24e3265b39991404f`。`externalExecutionAuthorized=false`、外部调用为 0；R4 blocked/pending 与五条 stop chain 不变。R5-T4 必须等待绑定上述完整边界的单独 owner authorization。
+
+## R5-T4 — Separately authorized bounded-deadline verdict
+
+### Prompt
+
+- **背景**：R5-T3 已冻结新的 process-termination-aware runner/instrumentation plan。
+- **目标**：在单独 owner authorization 后执行 paired arms 和受限 attempts，并记录 `R5-RECOVERY` verdict。
+- **本阶段做**：fresh contexts、deadline/termination/retry classification、final-file/JSONL/audit consistency、attempt/batch evidence、correctness 与 cost verdict。
+- **本阶段不做**：不覆盖 R4/R3/R2/R1/R0/P0，不自动解锁或创建产品 phase。
+- **实现约束**：任何 prereg/source/capsule/holdout/deadline/budget/failure-sealing drift fail closed；授权必须绑定目的地、数据范围、deadline/grace/signal policy 和 process 上限。
+- **验收标准**：immutable verdict；continue 也仅允许提出新的独立研究路线。
+
+> **已完成（2026-07-30，`R5-RECOVERY=stop`）**：Owner authorization 已精确绑定 OpenAI Codex/gpt-5.6-sol、preregistration `8a7b315c…ec886`、data scope `fefd57ec…edba6`、10 个成功 arms、最多 20 个 processes，以及 120000ms deadline、两个 5000ms termination windows 与 `SIGTERM`→`SIGKILL` policy。Frozen source/probes/authorization 复验及本地 preflight 通过；证据目录的安全 ID 规范化保持 preregistration/authorization hashes 不变。首个 planned arm 在 `spawn` 前进入 frozen terminalizer options validation，但 R3 capsule invocation 没有 frozen terminalizer 强制要求的显式 `env` record，触发 `R5_EXECUTION_OPTIONS_INVALID`。因此 participant process、process group、model request、retry 与下一 arm 均未启动，external process/model-call count 为 0。该 runner-contract incompatibility 属于 `aggregate-integrity-failed` stop condition；失败、零调用、local preflight、run index、verdict 与 `RESULTS.sha256` 已封存于 `docs/test-evidence/R5-T4/20260730T155920-0800/`，canonical verdict hash 为 `c04a6631b6285735fa3ff1da0d576e31b1a85b3fbc981a69c25aa4cb27b0a016`。最终 54 个测试文件/308 项测试、build、typecheck、lint 与 roadmap validation 全部通过。R5 phase=`failed`；R4 blocked/pending 与 R3/R2/R1/R0/P0 stop chains 不变，零产品解锁。
+
+## R6-T1 — Pre-spawn invocation remediation charter
+
+### Prompt
+
+- **背景**：R5-T4 在首个 arm 的 `spawn` 前因 capsule invocation 缺少 terminalizer 要求的显式 `env` record 而终止，R5 已形成 immutable stop。
+- **目标**：只建立独立 R6 charter，固定 R5 stop、R4 blocked/pending、此前五条 stop 与零产品解锁边界。
+- **本阶段做**：增加 R6 contract/phase/decision、owner authorization reference、recovery-after-blocked-remediation validator 语义和机械 charter proof。
+- **本阶段不做**：不修改 capsule/terminalizer runtime，不生成预注册，不执行外部调用。
+- **实现约束**：R6 phase/task dependency 为空；`R6-RECOVERY` 不 supersede R5、R4 或此前 decision；既有 phase/task 不依赖 R6。
+- **测试要求**：failed R5、blocked/pending R4、五条 stop、七 decision chain、authorization、validator、dependency leak 和 product unlock 负例。
+- **验收标准**：charter proof 与全仓目标测试通过后 `done`；下一项仅为 R6-T2。
+
+> **已完成（2026-07-30）**：已登记独立 `R6-PRESPAWN-INVOCATION-001` contract、R6 phase 与 `R6-RECOVERY` decision chain，并扩展 validator，使其能在保持 R5 failed/stop 的同时机械保留祖先 R4 blocked/pending，而不会把 R4 伪造为 terminal stop。R6 phase/task dependency 为空，既有 phase/task 对 R6 的依赖数为 0，产品解锁数为 0。Charter proof 封存于 `docs/test-evidence/R6-T1/20260730T164000-0800/`，proof hash 为 `70d3a440099d3bb7ef8c676e07cb7e38351301548d8ee881c4959e4d58e9531f`；27 项跨代 charter 测试、26 项 validator/R6 定向测试以及沙箱外 55 文件/314 项全仓测试通过，build/typecheck/lint/roadmap validation 通过，外部调用为 0。下一项仅为 R6-T2。
+
+## R6-T2 — Explicit outer env and zero-model compatibility preflight
+
+### Prompt
+
+- **背景**：R6-T1 已固定独立修复边界。
+- **目标**：消除 capsule builder 与 bounded terminalizer 的 pre-spawn invocation 契约不兼容。
+- **本阶段做**：给 exact capsule invocation 增加固定、不可变、只含字符串的 outer env；共享 terminalizer invocation predicate；执行 exact-builder zero-model compatibility/security preflight。
+- **本阶段不做**：不运行 `codex exec` participant，不探测 provider network，不冻结或执行外部 batch。
+- **实现约束**：outer env 只允许 `PATH=/usr/bin:/bin`，不得继承 host secret/user path；inner capsule env 和 R3 permission profile 继续独立 fail closed。
+- **测试要求**：fixed PATH only、immutability、secret exclusion、builder/predicate parity、permission/auth/workspace probe、network-unprobed、zero model call。
+- **验收标准**：目标测试和本地 proof 通过后 `done`；下一项仅为 R6-T3。
+
+> **已完成（2026-07-30）**：`buildR3CodexCapsuleInvocation` 与其 zero-model permission probe 现在都显式携带同一个 immutable outer env `{PATH: "/usr/bin:/bin"}`，并把精确值/策略绑定进 invocation evidence；不再隐式继承 host env。R5 terminalizer 导出并在真实 options validation 中复用同一 `isR5ProcessInvocation` predicate，exact R3 decision invocation 已通过该 predicate。真实本地 Bubblewrap permission-profile proof 继续证明 generated command 不可读 auth、`/work` 不可写、敏感环境缺失且 `networkRuntimeProbed=false`；decision invocation 只构造未执行，participant process/provider request/model call 均为 0。证据位于 `docs/test-evidence/R6-T2/20260730T164800-0800/`，proof hash `2fe69ddf81f1a6a6a15b84ae144cdbf20dd67706cd4722ae3f91358b0086b8fa`，outer-env hash `cf24c3c5e349e230a9c04223dceb4854bd377915e21f46d830134b085bc3579d`。19 项 R6/capsule/terminalizer 定向测试与沙箱外 57 文件/319 项全仓测试通过，build/typecheck/lint/roadmap validation 通过；历史 R5 test 现明确证明旧 source binding 已 drift 并拒绝复用旧授权。下一项仅为 R6-T3。
+
+## R6-T3 — Invocation-compatible recovery preregistration
+
+### Prompt
+
+- **背景**：R6-T2 已修复并证明 exact invocation 的 pre-spawn 兼容性。
+- **目标**：冻结新的 runner/task/source/environment/termination/budget/evidence plan。
+- **本阶段做**：fresh recovery-only task bank、counterbalance、equal-base capsules、explicit env hash、compatibility preflight hash、deadline/grace/signal/retry/process budget 与 authorization gate。
+- **本阶段不做**：不执行外部 arm，不复用 R5 preregistration/instrumentation/authorization，不授权产品工作。
+- **实现约束**：`externalExecutionAuthorized=false`；env/source/deadline/budget 全部纳入 hash；R5 stop、R4 blocked/pending 与五条 stop immutable。
+- **测试要求**：fresh tasks/source binding、capsule equality、environment contract、preflight binding、termination policy、budget、holdout exclusion、immutability、authorization false。
+- **验收标准**：冻结并通过 local probes 后 `done`；R6-T4 等待新的精确 owner authorization。
+
+> **已完成（2026-07-30）**：已冻结 5 个全新 invocation-contract-only tasks、10 个 counterbalanced arms、equal-base read-only capsules、11 项 runtime source bindings，以及 invocation-compatible R6-T4 runner/verifier。新 plan 精确绑定 R6-T2 compatibility proof、immutable `{PATH: "/usr/bin:/bin"}` outer env、spawn 后 `120000ms` deadline、`5000ms` grace、`5000ms` force observation、`SIGTERM`→`SIGKILL`、每 arm 最多 1 次且仅限 sealed observed provider timeout 的 retry、全批最多 20 个 processes；runner deadline termination 继续不可重试。30 个本地 filesystem/Codex-binary/permission-profile probes 均通过且没有运行 participant，24 项 R6/terminalizer 定向测试及沙箱外 59 文件/330 项全仓测试通过。预注册位于 `docs/test-evidence/R6-T3/20260730T165800-0800/`：preregistration hash `935c7b8c8880d6439238096b99c3ada3338a7c4c94fec192a7d4c8806f9610c9`，instrumentation hash `a6ac0651d8258c83da0db47accb216c41682df0a1d075768c407b8cfdc939072`，data-scope hash `e89a0a77f6f2ef099f4f68a1838f39574a1caf2747dccf95494d91d7e3153d10`，termination-policy hash `99e34c03e6b15a1bbeedc3040ccd6332d01f2ab6059cce111f978a51e937a7cd`，outer-env hash `cf24c3c5e349e230a9c04223dceb4854bd377915e21f46d830134b085bc3579d`。`externalExecutionAuthorized=false`、外部调用为 0；R5 stop、R4 blocked/pending 与此前五条 stop chain 不变。R6-T4 必须等待绑定上述完整边界的全新 owner authorization。
+
+## R6-T4 — Separately authorized invocation-compatible verdict
+
+### Prompt
+
+- **背景**：R6-T3 将冻结新的 invocation-compatible runner/instrumentation plan。
+- **目标**：仅在新的精确 owner authorization 后执行 bounded paired arms，并记录 `R6-RECOVERY` verdict。
+- **本阶段做**：pre-spawn compatibility recheck、fresh contexts、deadline/process-tree/retry classification、final-file/JSONL/audit consistency、attempt/batch evidence 与 verdict。
+- **本阶段不做**：不覆盖 R5/R4/R3/R2/R1/R0/P0，不自动解锁或创建产品 phase。
+- **实现约束**：任何 prereg/source/env/capsule/holdout/deadline/budget/failure-sealing drift fail closed；旧 R5-T4 authorization 无效。
+- **验收标准**：immutable verdict；continue 也仅允许提出新的独立研究路线。
+
+> **已完成（2026-07-30）**：Owner 先要求并确认提交 `07ff373` 已推送至 `origin/agent/complete-p0-r1-stages`，随后以完整 preregistration/data-scope/outer-env/termination/process 边界授权 R6-T4；authorization hash 为 `c2f53593214107adeb810172a65072ce91d03d41f664d5d85fbf58c8321d7d74`。Frozen source、preflight 与授权验证通过后启动首个 direct arm；进程取得 fresh thread 并留下重连进度，但在 `120000ms` outer deadline 前没有 provider `turn.failed`、`turn.completed` 或权威 final response。Runner 按冻结策略发送 `SIGTERM`、证明 process group 已清空，并在返回前封存 raw stdout/stderr、empty final observation、ledger、boundary、termination、failure 与双层 SHA evidence；failure codes 为 `R5_FINAL_RESPONSE_EMPTY` / `R5_WALL_CLOCK_DEADLINE`。该分类是明确不可重试的 runner deadline，不是可重试 provider timeout，因此没有启动 retry 或第二个进程。结果位于 `docs/test-evidence/R6-T4/20260730T171100-0800/`，1 个 process attempt、0/10 successful arms，verdict hash `ec823dada3f0da0c442672ce966ca2f6da29446e37066ffe6bb328a02a031388`，如实记录 `R6-RECOVERY` attempt 1 为 `adjust`；R5 stop、R4 blocked/pending、此前 stop chain 与零产品解锁边界不变。
+
+## R6-T5 — Provider retry-horizon / outer-deadline remediation
+
+### Prompt
+
+- **背景**：R6-T4 attempt 1 在 120000ms runner deadline 前只观察到重连进度，按冻结规则以 `adjust` 终止且不可重试。
+- **目标**：只使用 immutable R6-T4 evidence，建立 bounded Codex provider retry horizon 与 trusted outer deadline 的显式兼容契约。
+- **本阶段做**：重放 receipt ledger/timestamps、区分 provider terminal 与 runner termination、定义有界 deadline margin、保留 process-tree/grace/signal/budget/failure sealing，并增加零模型 synthetic tests。
+- **本阶段不做**：不执行 provider/model call，不修改或覆盖 R6-T4 evidence/verdict，不冻结 attempt-two batch，不授权产品工作。
+- **实现约束**：不能把重连文本等同于 provider timeout；任何新 deadline 必须有限、可 hash、从 spawn 起 monotonic，且 runner termination 仍不可在原授权下 retry。
+- **验收标准**：独立 owner 授权后，本地 remediation 和目标测试通过；下一项仅为 R6-T6。
+
+> **已完成（2026-07-30）**：已仅从 immutable R6-T4 `RESULTS.sha256`、receipt ledger、raw JSONL、boundary/termination/final/verdict evidence 做逐条哈希校验与 trusted monotonic replay；确认进程 spawn 后 `75498ms`、`90905ms`、`106691ms` 分别观察到 reconnect 2/5、3/5、4/5，而 runner 在 `120005ms` 终止且始终没有 provider terminal 或权威 response。重连文本仍只构成不完整 lower bound，不授权 retry；attempt 1 继续是不可覆盖、不可重试的 runner-deadline `adjust`。兼容契约要求 R6-T6 提供来自 explicit provider config 或 version-bound Codex instrumentation 的显式 retry horizon，当前证据给出的最小 horizon/观察余量/outer deadline 分别为 `120006ms` / `31574ms` / `151580ms`，outer deadline 上界为 `600000ms`；`5000ms` grace、`5000ms` force observation、`SIGTERM`→`SIGKILL`、每 arm 最多一次 sealed observed provider-timeout retry、全批 20-process cap 与逐 attempt evidence/budget 语义不变。证明位于 `docs/test-evidence/R6-T5/20260730T174418-0800/`，proof hash `82585caca431e25e6bc0f8a7737cdab4a437ecd5cf8ebbb88eb6158c5c719fcb`，compatibility-contract hash `6145537843ed5c35297196ec0dee74f618f0dd17bc9d89dcfa7bab87a07db4c2`。7 项定向测试及 61 文件/338 项全仓测试通过；external process/model/provider call 均为 0，未选择具体 attempt-two deadline、未冻结 R6-T6、未授权 R6-T7，也未解锁产品工作。
+
+## R6-T6 — Attempt-two preregistration
+
+### Prompt
+
+- **背景**：R6-T5 已给出经测试的 retry-horizon/deadline compatibility contract，但没有选择或冻结具体 attempt-two policy。
+- **目标**：冻结新的 attempt-two runner/source/policy/task/data/evidence plan。
+- **本阶段做**：新 source/policy hashes、fresh recovery-only task bank、equal-base capsules、counterbalance、bounded deadline/grace/signal/process budget、attempt-one evidence binding 和 external authorization gate。
+- **本阶段不做**：不执行外部 arm，不复用 R6-T4 authorization，不覆盖 attempt 1，不消费产品 holdout。
+- **实现约束**：`externalExecutionAuthorized=false`；attempt 1 evidence/hash immutable；任何 policy/source/data drift fail closed。
+- **验收标准**：新预注册与本地 probes 通过后 `done`；R6-T7 等待绑定全部新边界的单独授权。
+
+> **已完成（2026-07-30）**：已冻结独立 R6-T7 attempt-two runner、13 项 runtime source closure、5 个全新 deadline-remediation tasks / 10 个 counterbalanced arms、equal-base read-only capsules、withheld ground truth、product-holdout exclusion，以及 decision attempt 2 / `supersedesAttempt=R6-T4` 的 verdict 和 authorization gate。具体 policy 绑定 Codex `0.144.5` 的 version-bound instrumentation，选择 `480000ms` bounded observation horizon + `120000ms` terminal-observation margin = 从 participant spawn 起 `600000ms` outer deadline；这只是有限观察策略，不声称 provider 内部 retry schedule。原 `5000ms` grace、`5000ms` force observation、`SIGTERM`→`SIGKILL`、仅 sealed observed provider timeout 可 retry 一次、runner deadline 不可 retry、20-process cap 与逐 attempt evidence/budget 语义全部保留。正式预注册位于 `docs/test-evidence/R6-T6/20260730T180734-0800/`：preregistration hash `41ce5ab1a65437defdfcd86c0b4ec4db3e922af8a6c5e5642d44384ea910627e`，instrumentation hash `c3c4f3bc1d7e9592e197705592606bbefba67d71fb22c526df5d8b4fe4748d48`，data-scope hash `aab9e34e3dd6074ea691cf453823dd59d08e7bbe2ee6b4eb37b7e82507c648cd`，deadline-candidate hash `dd11e6718e0d0e907fd883195be2b62ee03a963549acd9c056b06a8a65e81be4`，termination-policy hash `76b982ab7c12d5da5210f338b8f620f47506db6b99f47261634dea40dc1e7850`，outer-env hash `cf24c3c5e349e230a9c04223dceb4854bd377915e21f46d830134b085bc3579d`。30 个本地 probes、35 项 R6/terminalizer 定向测试及 62 文件/342 项全仓测试通过；R6-T4/R6-T5 hashes 未变，`externalExecutionAuthorized=false`、外部模型调用为 0、产品解锁为 0。R6-T7 必须等待绑定全部新 hashes、具体 deadline 和 process cap 的另一份精确 owner authorization。
+
+## R6-T7 — Separately authorized attempt-two verdict
+
+### Prompt
+
+- **背景**：R6-T4 attempt 1 为 immutable `adjust`，R6-T6 已冻结 remediation 后的 attempt-two plan，但没有授权执行。
+- **目标**：仅在新的精确 owner authorization 后执行 bounded attempt-two arms，并记录 `R6-RECOVERY` 当前 verdict。
+- **本阶段做**：fresh contexts、provider-terminal/runner-deadline separation、process-tree/retry/final-file/JSONL/audit consistency、attempt/batch evidence 与 pairwise verdict。
+- **本阶段不做**：不覆盖 R6-T4 或此前 R5/R4/R3/R2/R1/R0/P0 evidence/decision，不自动解锁产品 phase。
+- **实现约束**：`decision_attempt: 2`、`supersedes_attempt: R6-T4`；只有 sealed observed provider timeout 可按新 policy 重试，runner termination 不可冒充 provider terminal。
+- **验收标准**：immutable attempt-two verdict；只有 `continue` 满足 R6 gate，且也只允许提出新的独立研究路线。
+
+> **已完成（2026-07-30）**：已按 owner 绑定的 commit `ec16d64174951036555c4297858547b0fe5e8c59`、完整 preregistration/instrumentation/data-scope/deadline/environment hashes 与 `600000/5000/5000ms` termination policy 执行 attempt 2。首个 direct arm 使用 fresh thread `019fb298-81a7-7d52-b116-3d415393d847`；trusted receipt 依次观察到 WebSocket reconnect 2/5、3/5、4/5、5/5，约 `137057ms` fallback HTTPS，再观察 HTTPS reconnect 1/5、2/5、3/5，最终在约 `599996ms` 发送 `SIGTERM`。全过程没有 provider `turn.failed`、`turn.completed`、agent message 或权威 final response；process group 已清空，raw/ledger/final/boundary/termination/failure 与双层 SHA evidence 均在返回前封存。该结果是不可重试的 runner deadline termination，不是真实观察到的 provider timeout，因此没有 retry 或下一 arm：共 1 个 external process、0/10 successful arms、剩余 19 个 process budget。证据位于 `docs/test-evidence/R6-T7/20260730T183547-0800/`；authorization canonical hash 为 `a11336fb6fa5f11b5eb7a2b5f6471be1612617367e172d28899d3be08be82f2a`，canonical verdict hash 为 `254a47f33b9a1348e87eef99181e7c581d0a244ef1a154119240c1c8e481a961`，immutable attempt 2 verdict 为 `adjust`。Attempt 1 未覆盖、产品工作未解锁；下一步必须先单独授权 R6-T8 本地 dual-transport horizon remediation。
+
+## R6-T8 — Dual-transport terminal-horizon remediation
+
+### Prompt
+
+- **背景**：R6-T7 attempt 2 在冻结上限 `600000ms` 内完成 WebSocket 5/5 并 fallback HTTPS，但仅观察到 HTTPS reconnect 3/5，仍未取得 provider terminal。
+- **目标**：只读重放 immutable R6-T7 evidence，建立同时覆盖 WebSocket 与 HTTPS fallback phase 的显式 terminal-horizon compatibility disposition。
+- **本阶段做**：验证 attempt 1/2 manifests 与 receipt/raw 对应关系；按 trusted ordered receipt sequence 区分跨 transport 的重复 reconnect payload/hash；计算已观察 lower bound，并给出新的有限 deadline compatibility contract 或证据支持的 `stop` disposition。
+- **本阶段不做**：不执行外部 model/provider call，不覆盖 attempts 1/2，不选择 attempt-three runner，不授权产品工作。
+- **实现约束**：相同 raw hash 不能被假设为同一个 transport phase；transport attribution 必须来自 ordered receipt sequence 与相邻明确 fallback evidence；runner termination 仍不可重试。
+- **验收标准**：独立 owner 授权后，本地 proof、immutability checks 与目标测试通过；只有可审计的 bounded remediation 才允许进入 R6-T9。
+
+> **已完成（2026-07-30）**：Owner 要求先 commit/push，R6-T7 完整结果已提交为 `d3dca37e0aa2560238e81bc6639081cb6ecd321f` 并与远端分支 SHA 核对一致；随后按本次授权仅执行 R6-T8 本地 replay。实现按 stdout JSONL chunk 的 ordered occurrence 与 receipt 一一对应，并以唯一 fallback receipt 分隔 transport phase；确认 WebSocket reconnect 2/5–5/5、`137057ms` fallback、HTTPS reconnect 1/5–3/5，同时正确保留两个跨 transport 重复 raw hash，未把 hash 当作唯一 receipt identity。Immutable attempts 1/2 manifests、terminal/final/audit/permission 状态全部通过；`600000ms` 仍只是 incomplete lower bound，没有 provider terminal，也不授权 retry。新 compatibility contract 要求 attempt-three explicit terminal horizon 至少 `600001ms`、observation margin 至少 `308226ms`、outer deadline 为 `908227..1200000ms`；R6-T8 不选择具体 policy，`externalExecutionAuthorized=false`。证据位于 `docs/test-evidence/R6-T8/20260730T191632-0800/`，proof hash `21cb7550bc5380f0f460efbf59672ebf9bbaa28a78bbf8ce2e2053ddf73296be`，contract hash `35a851a8e80785ca92e57f6e8468b183a217eb31e7ad8d7ec212b3f8f850685e`。11 files / 70 项定向测试及 64 files / 350 项全仓测试通过，build/typecheck/lint/roadmap validation 通过；外部模型调用和产品解锁均为 0。下一项 R6-T9 仍需单独授权。
+
+## R6-T9 — Attempt-three preregistration
+
+### Prompt
+
+- **背景**：R6-T8 将决定是否存在可接受的 attempt-three dual-transport deadline envelope；它不选择具体 runner policy。
+- **目标**：仅在 R6-T8 允许继续时，冻结 fresh attempt-three tasks/arms、runner/source closure、explicit horizon provenance、deadline candidate、termination policy、data scope 与 evidence gate。
+- **本阶段做**：新 task identity、equal-base contexts、counterbalance、holdout exclusion、process budget、attempt 1/2 immutability、`decision_attempt: 3` / `supersedes_attempt: R6-T7` 和 `externalExecutionAuthorized=false`。
+- **本阶段不做**：不执行外部 arm，不复用 R6-T7 authorization，不覆盖 attempts 1/2，不消费产品 holdout。
+- **实现约束**：R6-T8 disposition、全部 source/policy/data/environment hashes 与 ordered dual-transport horizon binding 必须 fail closed。
+- **验收标准**：单独 owner 授权后，新预注册与本地 probes 通过；R6-T10 等待绑定全部新边界的另一份精确外部授权。
+
+> **已完成（2026-07-30）**：按 owner 的“授权，继续”仅完成 R6-T9 本地 no-call preregistration。基于 immutable R6-T7 attempt 2 与 R6-T8 dual-transport contract，为 exact Codex `0.144.5` 冻结 version-bound instrumentation observation policy：explicit terminal horizon `891774ms` + evidence-derived minimum observation margin `308226ms` = `1200000ms` outer deadline；这不是 provider 内部时序或 reachability 声称。5 个 fresh tasks、10 个 counterbalanced equal-base arms、13 项 runtime source closure、attempts 1/2 immutability、holdout exclusion、固定 outer env、`5000/5000ms` termination windows、`SIGTERM`→`SIGKILL`、仅 sealed observed provider timeout 可 retry 一次、runner deadline nonretryable 与 20-process cap 均已 hash-bind。证据位于 `docs/test-evidence/R6-T9/20260730T194005-0800/`；preregistration/instrumentation/data-scope/deadline-candidate/termination-policy hashes 分别为 `b3f281d44bbc08ae74b534a9903c935bff17192a9d03df4c01aad637e91d4e52` / `6f4d1ef9c81f869c7a9f4c91a43044cd1c2dbce5056e070f71371a8708b80ef1` / `7618c01d58349505a5fa6ca1e0ae1350e347de18cfa342ab88ad7cdfcd643e0a` / `074a29b812377b5ccd058250c8f87caaf29968bd613e3d1f10aa80a939a389c6` / `6e966a04617f79cc408af8cc2ef2ecc7da6cdec3603127c7c2ce69c8358531ff`，outer-env hash 仍为 `cf24c3c5e349e230a9c04223dceb4854bd377915e21f46d830134b085bc3579d`。30 个真实本地 probes、13 files / 76 项定向测试及 65 files / 354 项全仓测试通过，build/typecheck/lint/roadmap validation 通过；外部模型调用、provider request 和产品解锁均为 0。R6-T10 尚未获授权，必须等待绑定本次全部新 hashes 与已发布 commit 的另一份精确授权。
+
+## R6-T10 — Separately authorized attempt-three verdict
+
+### Prompt
+
+- **背景**：仅当 R6-T8 remediation 与 R6-T9 no-call preregistration 均完成后，attempt 3 才具有结构资格；当前没有执行授权。
+- **目标**：仅在新的精确 owner authorization 后执行 bounded attempt-three arms，并记录 `R6-RECOVERY` 当前 verdict。
+- **本阶段做**：fresh contexts、dual-transport/provider-terminal/runner-deadline separation、process-tree/retry/final-file/JSONL/audit consistency、attempt/batch evidence 与 pairwise verdict。
+- **本阶段不做**：不覆盖 R6-T7、R6-T4 或此前 R5/R4/R3/R2/R1/R0/P0 evidence/decision，不自动解锁产品 phase。
+- **实现约束**：`decision_attempt: 3`、`supersedes_attempt: R6-T7`；只有 sealed observed provider timeout 可按新 policy 重试，runner termination 不可冒充 provider terminal。
+- **验收标准**：immutable attempt-three verdict；只有 `continue` 满足 R6 gate，且也只允许提出新的独立研究路线。
+
+> **已完成（2026-07-30）**：按 owner 精确绑定的 published commit `a1b49c3d927197ebd2c7a007aaac4fce0b15deb9`、全部 R6-T9 hashes 与 `1200000/5000/5000ms` policy 执行 attempt 3。Canonical authorization hash 为 `61767b2f1a7fc0dbd3c3734f2f672ad345eebb1a5febd3c56d124687f05509c4`。唯一启动的 direct process 使用 fresh thread `019fb2e2-311b-7803-b664-4cc6d17c9651`：ordered receipts 观察 WebSocket reconnect 2/5–5/5，约 `123049ms` 因 `Network unreachable` fallback HTTPS，随后 HTTPS reconnect 1/5–5/5，并在约 `992292ms` 真实观察到 provider `turn.failed`。该 terminal 是 `error sending request`，不含 timeout；封存分类为 `protocol-or-unknown-failure`、`retryable=false`，因此没有 retry 或下一 arm。Process 正常 exit 1，process group 清空，无 runner deadline、无 signal、无权威 final response；audit/permission/evaluator 与双层 manifests 均通过。结果为 1 个 external process、0/10 successful arms、19 个 process budget 未用，immutable verdict `adjust`；evidence 位于 `docs/test-evidence/R6-T10/20260730T195616-0800/`，canonical verdict hash `b2c75c2bafa45bf80f83a2158779f70591ab06dbde025f4ad144809a5ef9fb16`，`RESULTS.sha256` file hash `a45f1970978996cdbe8df8b99e7b09fd3fbcf4865f76d8eeb504dcde2bead13b`。20 files / 102 项定向测试、66 files / 358 项全仓测试及 build/typecheck/lint/roadmap validation 全部通过。Attempts 1/2 未覆盖，产品工作未解锁；下一步必须先单独授权 R6-T11 本地 failure-class remediation。
+
+## R6-T11 — Non-timeout provider-terminal remediation
+
+### Prompt
+
+- **背景**：R6-T10 attempt 3 真实观察到 provider `turn.failed`，但终态为 `error sending request` 而非 timeout，因此按冻结 policy 不可重试并记录 `adjust`。
+- **目标**：只读重放 immutable R6-T10 evidence，区分 WebSocket/HTTPS progress、network-unreachable/error-sending terminal、provider timeout 与 runner deadline，并给出 bounded remediation 或有证据的 `stop` disposition。
+- **本阶段做**：验证 attempts 1/2/3 manifests、ordered receipts、terminal/final/process/audit/permission 状态及 no-retry 正确性；记录 failure-class compatibility contract。
+- **本阶段不做**：不执行外部 model/provider call，不重试 attempt 3，不覆盖任何 prior attempt，不选择 attempt-four runner，不解锁产品工作。
+- **实现约束**：中间 reconnect 的 `request timed out` 不得替代最终 `turn.failed` message；未知/非 timeout terminal 不得升级为 retryable timeout。
+- **验收标准**：独立 owner 授权后，本地 proof、immutability checks 与目标测试通过；只有 bounded remediation 才允许进入 R6-T12。
+
+> **已完成（2026-08-01）**：按 owner 要求从当前最新 prompt 执行 R6-T11，并将其解释为仅覆盖本地、零调用的 failure-class remediation。只读重放对 attempts 1/2/3 的 immutable result manifests、R6-T10 双层 manifest、ordered stdout receipts、final/process/audit/permission 边界全部做了 fail-closed 绑定；重放明确区分 WebSocket reconnect 2/5–5/5、`123049ms` 的 `Network unreachable` fallback、HTTPS reconnect 1/5–5/5，以及 `992292ms` 最终 non-timeout `turn.failed/error sending request`。Attempt 3 仍保持 `protocol-or-unknown-failure`、`retryable=false`，中间 `request timed out` 没有被提升为 provider terminal。Compatibility contract 仅给出 `continue-to-preregistration-only`：R6-T12 可另行冻结一个与 timeout 分离、要求完整 sealed evidence 的候选类别，但 R6-T11 不选择 attempt-four policy、不授权 R6-T12/R6-T13、不执行外部进程/模型/provider request，也不解锁产品工作。Evidence 位于 `docs/test-evidence/R6-T11/20260801T123150-0800/`，proof/contract hashes 为 `0c6b2357c745fe66ce8a88e2d49db8f5f8ae51112470ae058dbcbb5432a30dcf` / `fa512a787a4d72d75704ebebbd06ab78cd796387483f0e625985fb6d9fbce1d2`；11 项定向测试、67 files / 365 项全仓测试及 build/typecheck/lint/roadmap validation 全部通过。下一项仅为需单独 owner 授权的 R6-T12 no-call preregistration。
+
+## R6-T12 — Attempt-four preregistration
+
+### Prompt
+
+- **背景**：R6-T11 将决定 non-timeout provider-terminal failure 是否存在可接受的 attempt-four remediation；它不执行或授权外部 arm。
+- **目标**：仅在 R6-T11 允许继续时，冻结 fresh attempt-four tasks/arms、runner/source closure、failure policy、data scope 与 evidence gate。
+- **本阶段做**：新 task identity、equal-base contexts、counterbalance、holdout exclusion、process budget、attempts 1/2/3 immutability、`decision_attempt: 4` / `supersedes_attempt: R6-T10` 和 `externalExecutionAuthorized=false`。
+- **本阶段不做**：不执行外部 arm，不复用 R6-T10 authorization，不覆盖 prior attempts，不消费产品 holdout。
+- **实现约束**：R6-T11 disposition、全部 source/policy/data/environment hashes 与 provider-terminal classification binding 必须 fail closed。
+- **验收标准**：单独 owner 授权后，新预注册与本地 probes 通过；R6-T13 等待绑定全部新边界的另一份精确外部授权。
+
+> **已完成（2026-08-01）**：Owner 在明确授权推送 R6-T11 commit 后，同时单独授权继续 R6-T12 本地零调用阶段；远端 `agent/complete-p0-r1-stages` 已先核验为 commit `4944699199b25427918d27a2b1d16989c1047934`。R6-T12 基于 immutable R6-T11 proof/contract 冻结 5 个全新 network-terminal tasks、10 个 counterbalanced equal-base arms、13 项 R6-T13 runtime source closure、fixed outer env 与 `1200000/5000/5000ms` termination policy。新 failure policy 保留既有 sealed provider timeout 类，并仅在 ordered WebSocket→HTTPS receipts、明确 `Network unreachable` fallback、最终 non-timeout `turn.failed/error sending request`、无 response、deadline 前 nonzero exit 及完整 boundary sealing 全部同时成立时，识别 `sealed-network-fallback-plus-nontimeout-provider-terminal-before-response`；未知/不同/证据不完整的 non-timeout terminal 仍不可重试，每 arm 合计最多一次 retry、全批最多 20 processes。Attempts 1/2/3 manifests、R6-T10 `retryable=false` 历史分类、product holdout exclusion 与零产品解锁均保持。Evidence 位于 `docs/test-evidence/R6-T12/20260801T131600-0800/`；preregistration/instrumentation/data-scope/failure-candidate/termination-policy hashes 分别为 `531e9ea500d198c60dfb834c0b210bee9fb2eaf52772fc1ae85876bcd0c5e62d` / `6770f8caa440672c62bf57dfa8c9ef12ddbd2d8a3c119b6d20786f36aea19e06` / `0bd7c96a8241cbc2e78b24e776973001bc2bf59ec51ec8cb97625d245f7a2a80` / `53829a8291de64322223d91b224fa097988c22afcd4b30f6237db36a1b5b2c75` / `caa4ff6248fca549c601cb7bdcd80813bb91ee646606cacce627111deae16372`。30 个真实本地 probes、14 项定向测试及 68 files / 372 项全仓测试通过，build/typecheck/lint/roadmap validation 通过；外部 participant/provider/model call 与产品解锁为 0。R6-T13 仍须绑定 published R6-T12 commit 与全部上述 hashes 的另一份精确外部授权。
+
+## R6-T13 — Separately authorized attempt-four verdict
+
+### Prompt
+
+- **背景**：仅当 R6-T11 remediation 与 R6-T12 no-call preregistration 均完成后，attempt 4 才具有结构资格；当前没有执行授权。
+- **目标**：仅在新的精确 owner authorization 后执行 bounded attempt-four arms，并记录 `R6-RECOVERY` 当前 verdict。
+- **本阶段做**：fresh contexts、provider-terminal/timeout/runner-deadline separation、process-tree/retry/final-file/JSONL/audit consistency、attempt/batch evidence 与 pairwise verdict。
+- **本阶段不做**：不覆盖 R6-T10/R6-T7/R6-T4 或更早 evidence/decision，不自动解锁产品 phase。
+- **实现约束**：`decision_attempt: 4`、`supersedes_attempt: R6-T10`；只有符合新冻结 policy 的 sealed observed retryable terminal 可重试。
+- **验收标准**：immutable attempt-four verdict；只有 `continue` 满足 R6 gate，且也只允许提出新的独立研究路线。
+
+> **已完成（2026-08-01）**：Owner 对已发布 commit `53e2e1093fd107476efdc236afc07a75affabead`、OpenAI Codex service / `gpt-5.6-sol`、全部 preregistration/instrumentation/data-scope/failure/termination/environment hashes、10-arm 目标、20-process cap、`1200000/5000/5000ms` 与两类共享一次 retry 给出精确授权，canonical authorization hash 为 `aa6d64d442416c0a3357e31bd350ef69c6fd748e269faa7b6ea0cf404e520967`。唯一 direct process 获得 fresh thread，完整观察 WebSocket timeout 2/5–5/5、fallback HTTPS、HTTPS timeout 1/5–5/5 及最终 `turn.failed/request timed out`；进程在 deadline 前 exit 1、process group 清空、final 为空，sealed classification 正确为可重试 `external-transport-timeout-before-response`。Frozen runner 随后计划唯一 retry，但在第二 process spawn 前复用同一 capsule 的 authoritative-output 路径并触发 `R2_CAPSULE_OUTPUT_ALREADY_PREPARED`；第二 process 未启动。零调用 abort sealer 机械复现该缺陷、验证首个 attempt manifest，并以 `aggregate-integrity-failed` 记录 immutable `R6-RECOVERY=stop`。Evidence 位于 `docs/test-evidence/R6-T13/20260801T141247-0800/`；1 process、0/10 arms、19 budget unused、无 wrong attribution、无 product unlock，verdict canonical hash `f83caa14aa56b9c416bef538c8d3b38e8202cd2d40e50e457e116982f4da96b7`，`RESULTS.sha256` 文件 hash `4e81c4742b02bc3ccae63c733c8816208e742d60dc1608c49d386d56981f4f43`。
+
+## R7-T1 — Retry-capsule isolation remediation charter
+
+### Prompt
+
+- **背景**：R6-T13 首个 attempt 被正确封存为 retryable provider timeout，但 frozen runner 在 retry spawn 前复用同一 capsule authoritative-output 路径而 terminal stop。
+- **目标**：只建立独立 R7 charter，固定 R6 stop/failed、R5 stop、R4 blocked/pending、此前全部 terminal chain 与零产品解锁边界。
+- **本阶段做**：增加 R7 contract/phase/decision、owner authorization reference、完整 ancestor decision isolation、双向 traceability 与机械 charter proof。
+- **本阶段不做**：不修改 runner/capsule runtime，不生成新预注册，不运行 participant process、provider probe 或外部模型调用。
+- **实现约束**：R7 phase/task dependency 为空；`R7-RECOVERY` 不 supersede R6、R5、R4 或此前 decision；既有 phase/task 不依赖 R7。
+- **测试要求**：R6-T13 done/stop、R6 failed、R5 stop、R4 blocked/pending、此前 stops、八层 decision chain、authorization、dependency leak、traceability 与 product unlock 负例。
+- **验收标准**：charter proof 与完整门禁通过后 `done`；下一项仅为 R7-T2。
+
+> **已完成（2026-08-01）**：已建立独立 `R7-RETRY-CAPSULE-ISOLATION-001` contract、R7 phase、`R7-RECOVERY` decision 与 R7-T1–T4 原子链；owner 授权只覆盖 R7-T1–T3 本地零调用工作，R7-T4 仍需新预注册发布后的精确外部授权。专用 charter proof 机械固定 R6-T13/R6 stop、R5 stop、R4 blocked/pending、P0/R0–R3 stops、完整 `does_not_supersede` 顺序、空依赖、既有任务零反向依赖及零产品解锁。Roadmap/traceability 验证为 17 phases / 181 tasks / 33 contracts；9 个 charter/validator 文件 55 项定向测试与 70 files / 381 项全仓测试通过，build/typecheck/lint 通过，participant process/provider/model call 为 0。下一项仅为 R7-T2。
+
+## R7-T2 — Per-attempt capsule isolation and aggregate sealing
+
+### Prompt
+
+- **背景**：R7-T1 只固定修复边界；R6-T13 的 retry 在第二 process spawn 前因 capsule output reuse 失败。
+- **目标**：本地实现每 attempt 独立 capsule/control root/final file，并让 batch exception 在返回前完整封存。
+- **本阶段做**：attempt factory、equal-base/treatment parity、per-attempt cleanup、retry-spawn lifecycle、structured batch-stop/exception/run-index/verdict/manifest sealing。
+- **本阶段不做**：不生成 participant model call，不探测 provider，不冻结或执行外部 batch。
+- **实现约束**：未 spawn retry 不消耗 process budget；prior attempt evidence 不覆盖；同一 authorization 不自动换 root 重跑；cleanup failure fail closed。
+- **测试要求**：不同 control roots/final files、无 writable reuse、base/treatment parity、attempt retention、pre/post-spawn exceptions、cleanup failure、budget、no rerun、zero call。
+- **验收标准**：目标测试和 local proof 通过后 `done`；下一项仅为 R7-T3。
+
+> **已完成（2026-08-01）**：已新增 R7 专属 per-attempt factory 与 exception-safe batch sealer；每个 arm/attempt 在 spawn 前获得独立 capsule、control root、permission profile 和 runner-owned authoritative final file，direct/VEM 只保留冻结 `vem-context.json` 这一 treatment 差异。Runner 将 `retryAuthorized` 与 `retryProcessStarted` 分开记账，未 spawn retry 不消耗 process budget；pre/post-spawn、retry planning、classification、aggregate、terminal-manifest 与 cleanup failure 均生成 batch-stop、exceptions、retry decisions、run-index、local verdict 和顶层 hash manifest，同一 authorization 换 result root 重放会被拒绝。证据位于 `docs/test-evidence/R7-T2/20260801T160404-0800/`，proof hash `165c6634eca37c297e304eea19eef0f2e30597430e8ea79e5a834b7b5ee36e57`；participant process/provider request/network probe/model call 与产品解锁数均为 0。下一项仅为 R7-T3，R7-T4 仍未授权。
+
+## R7-T3 — Retry-isolated no-call preregistration
+
+### Prompt
+
+- **背景**：R7-T2 已提供本地 retry isolation 与 exception-safe aggregate sealing。
+- **目标**：冻结 fresh tasks/arms、runner/source closure、data/environment/failure/termination policy、budget 与 evidence gate。
+- **本阶段做**：R6 evidence immutability、fresh task identity、equal-base contexts、counterbalance、holdout exclusion、isolated retry lifecycle、aggregate seal、local probes 与 `externalExecutionAuthorized=false`。
+- **本阶段不做**：不运行外部 arm，不复用 R6 authorization，不覆盖 prior attempts，不消费产品 holdout。
+- **实现约束**：全部 source/policy/data/environment hashes、attempt factory 与 exception sealer fail closed；全批 process cap 保持有界。
+- **验收标准**：新预注册与本地 probes 通过后 `done`；R7-T4 等待绑定 published commit 与全部 frozen boundary 的另一份精确授权。
+
+> **已完成（2026-08-01）**：已冻结独立 R7-T4 runner、15 项 transitive runtime source closure、5 个 fresh retry-isolation tasks / 10 个 counterbalanced arms、equal-base capsules、每个 task 的四个 attempt-1/2 direct/VEM 独立资源准备、R6-T13 stop 与 R7-T2 proof 不可变绑定、既有两类 failure policy、`1200000/5000/5000 ms` termination、20-process cap、固定 outer environment、product-holdout exclusion 与 exception-safe aggregate contract。20 个 attempt-isolation 准备探针及 30 个真实 filesystem/Codex-binary/permission-profile 本地探针通过，participant process/provider request/network probe/model call 均为 0。Evidence 位于 `docs/test-evidence/R7-T3/20260801T162533-0800/`；preregistration/instrumentation/data-scope/failure-policy/retry-isolation/termination/outer-environment hashes 分别为 `bc2bd50ca79aaac581c083232d4bf0d55b838c64228039921e6ae1adbb8a4a78` / `ce7979ebf9414da72e7afb65de178da3c5da6dc49990d8f8088c2ba01f5a5274` / `fca7658cc49b0e7eba3c29354a63433282a85048ff960122b7bd890a470dd8a7` / `9e9f3174f794ea1ed2ec18a54f983117179a867985c4107ca37e0425948588fa` / `d847e93ad6d5ae3b0336d465105dc1f62bf0a92bcf7eda5307053b7b7ae8f79c` / `caa4ff6248fca549c601cb7bdcd80813bb91ee646606cacce627111deae16372` / `cf24c3c5e349e230a9c04223dceb4854bd377915e21f46d830134b085bc3579d`。`externalExecutionAuthorized=false`、产品解锁数为 0；R7-T4 必须等待本提交发布后绑定全部 hashes、目的地、模型、10 arms 与 20-process cap 的另一份精确授权。
+
+## R7-T4 — Separately authorized retry-isolated verdict
+
+### Prompt
+
+- **背景**：仅当 R7-T3 新预注册完成并发布后，R7 external decision 才具有结构资格；当前没有执行授权。
+- **目标**：仅在新的精确 owner authorization 后执行 bounded paired arms，并记录 `R7-RECOVERY` verdict。
+- **本阶段做**：fresh per-attempt capsules、bounded retry/process lifecycle、provider/runner classification、exception-safe batch evidence、correctness 与 pairwise cost verdict。
+- **本阶段不做**：不覆盖 R6/R5/R4 或更早 evidence/decision，不自动解锁产品 phase。
+- **实现约束**：`decision_attempt: 1`；每个 attempt 资源唯一；任何 drift 或 aggregate sealing failure 均 fail closed。
+- **验收标准**：immutable verdict；只有 `continue` 满足 R7 gate，且也只允许提出新的独立研究路线。
+
+> **已完成（2026-08-01）**：基于已发布 commit `91e0f08b064d48d757544aa0ca2ce9e186382d75` 与 owner 对全部冻结 hashes、OpenAI Codex service / `gpt-5.6-sol`、10-arm 目标和 20-process cap 的精确授权，执行了唯一 R7-T4 batch。第一个 direct arm 的 attempt 1 与唯一 retry 分别使用独立 capsule/control root/final file 和 fresh thread；两次均完整观察 WebSocket→HTTPS timeout 序列及 `turn.failed/request timed out`，exit 1、empty final、empty process group，封存为 `external-transport-timeout-before-response`。Retry 已真实启动并消耗预算，第二次失败后按策略停止；其余 9 arms 未启动，实际 2/20 processes、0/10 arms、剩余预算 18。顶层与两个 per-run manifests、raw ledger hashes、权限/审计边界和 exception-safe aggregate seal 均验证通过；immutable verdict 为 `R7-RECOVERY=stop`、R7 phase failed，产品解锁数为 0，R6/R5/R4 及更早 decision/evidence 均未覆盖。Evidence 位于 `docs/test-evidence/R7-T4/20260801T165602-0800/`。
+
+## R8-T1 — Final recovery exit and model-agnostic transition charter
+
+### Prompt
+
+- **背景**：R7 已 immutable stop；owner 只允许再尝试一次，并要求 timeout 后永久停止 recovery、转向模型无关 MCP 产品路线。
+- **目标**：建立最终 recovery exit gate，机械保持全部 prior decisions/evidence，并把模型 identity 限定为 future experiment metadata 而非 VEM 产品要求。
+- **本阶段做**：R8 contract/phase/decision、one-process/no-retry/timeout-stop/no-R9 规则、未来产品路线不依赖 R8 continue、owner direction、traceability 与本地 charter proof。
+- **本阶段不做**：不修改 participant runner，不选择模型或 client，不生成预注册，不运行 process/provider probe/model call，不创建或解锁产品 phase。
+- **实现约束**：R8 空 phase/task dependency；不 supersede R7 或更早链；任何现有 phase/task 不依赖 R8；产品 runtime/protocol/capability 不含 model ID。
+- **验收标准**：charter proof 与完整门禁通过后 `done`；下一项仅为 R8-T2 local-only adapter boundary。
+
+> **已完成（2026-08-01）**：已建立独立 `R8-FINAL-RECOVERY-EXIT-001` contract、R8 phase、`R8-RECOVERY` decision 与 R8-T1–T4 原子链，并机械固定 R7/R6/R5 与更早 terminal stops、R4 blocked/pending、完整 non-supersession 顺序、空依赖和零产品解锁。最终 recovery 被限制为另行预注册/授权的单 process、零 retry；任何 timeout/incomplete/sealing failure 均永久 stop，且禁止 R9。产品 runtime、MCP protocol/tools/resources/CapabilityReport 不得绑定 participant model ID；future experiment 的 client/model/destination 仅是可复核授权 metadata，未来产品路线不依赖 `R8-RECOVERY=continue`。本阶段 process/provider probe/model call 为 0。
+
+## R8-T2 — Experiment adapter and one-shot exit sealer
+
+### Prompt
+
+- **目标**：本地实现 experiment-only client/model config 与 VEM runtime 的硬隔离，以及 exactly-one-process、zero-retry、timeout-stop 的 terminal sealer。
+- **边界**：不选择或调用外部模型；不把 provider reachability 变成 MCP correctness 条件；不允许 R9。
+
+> **已完成（2026-08-01）**：已在 `scripts/pilot` 建立 experiment-only participant adapter；client/model/destination 仅形成可审计 descriptor，不进入或转发到 VEM 产品 runtime，产品配置出现 model/provider/client/destination 字段或具体 model ID 时 fail closed，产品 package 扫描未发现 participant model identity。独立 one-shot sealer 只暴露一次 process-start 与一次 terminal-seal，process cap 为 1、retry 为 0；第二次 start、runner/sealer exception、缺失/不完整 terminal、transport failure 和 timeout 均封存为 `stop`，完整 timeout 也禁止 R9，所有 disposition 的产品解锁数均为 0。Evidence 位于 `docs/test-evidence/R8-T2/20260801T185500+0800/`，proof hash `aa9a2bb7795dfdaea87f908a30baf40179d52dffc377934359eebb792010e0b9`；本阶段 participant process/provider request/network probe/model call 均为 0。
+
+## R8-T3 — Final one-process no-call preregistration
+
+### Prompt
+
+- **目标**：冻结一个明确的 experiment client/model/destination、一个 process、零 retry、timeout-stop、source/data/environment/evidence bindings 与 `externalExecutionAuthorized=false`。
+- **边界**：模型只属于实验记录，不进入 VEM product runtime；发布后仍需另一份精确外部授权。
+
+## R8-T4 — Separately authorized final recovery exit
+
+### Prompt
+
+- **目标**：在精确授权后只启动一个 process，封存 terminal evidence 并记录 immutable `R8-RECOVERY` verdict。
+- **边界**：任何 timeout/incomplete/sealing failure 都是 `stop`，无 retry、无 R9；无论 verdict 如何都不自动证明产品价值或解锁旧 phase。
+
+## M0-T1 — Model-agnostic usable MCP route charter
+
+### Prompt
+
+- **背景**：owner 明确要求优先交付可用 MCP；P0 与 recovery decisions 保持原 verdict，不能通过重开或改写获得产品实现资格。
+- **目标**：建立不依赖 P0/R0–R8 verdict 的 M0 产品 phase，按 coordinator/STDIO → Vite proxy → selection/source → confirmation/prepare/HMR/complete → Edge walking skeleton → minimal CLI 固定原子任务链。
+- **本阶段做**：`USABLE-MCP-001`、M0 phase/tasks、owner priority、completed-asset reuse boundary、traceability、delivery charter 与零调用证明。
+- **本阶段不做**：不实现 coordinator 或协议代码，不启动 Edge/Vite/MCP participant process，不调用 provider/model，不改写任何 prior decision/evidence。
+- **验收标准**：prior chain、空 recovery dependency、模型无关、精确优先顺序、13 个原子任务、完整 reverse mapping 与 zero-call proof 通过。
+
+> **已完成（2026-08-01）**：已建立独立非 recovery 的 `USABLE-MCP-001` 与 M0 phase，将 owner 指定的六组优先能力拆为 13 个依次提交的原子任务：coordinator authority、MCP STDIO、Vite/browser proxy、selection/source tools、claim/confirmation、prepare、relevant HMR、fresh complete、Edge 正向/负向 E2E、minimal CLI 与 fresh-project lifecycle gate。M0 phase/task dependency 均不引用 `P0-VALUE` 或 R0–R8 verdict；P0 failed/stop、R0–R3/R5–R7 stops、R4 blocked/pending 与 R8 当前链保持不可覆盖。复用范围仅限已完成并测试的环境、protocol、fixture、selector、anchor 和 registry 资产，不声称 P0 gate 成功。产品 runtime/MCP 仍不含 participant model identity，provider reachability 不是 correctness 条件；本阶段 external model/provider/network probe 与 Edge/Vite/MCP process 均为 0。下一项为 M0-T2 coordinator authority/private discovery。
+
+## M0-T2 — Coordinator authority and private discovery
+
+### Prompt
+
+- **目标**：实现 MCP-owned coordinator、private runtime discovery、单一 authoritative project instance 与 restart/stale-instance semantics。
+- **边界**：不同时实现 MCP wire protocol、Vite proxy 或 browser tools；runtime metadata 私有且 bounded。
+
+## M0-T3 — Model-agnostic MCP STDIO
+
+### Prompt
+
+- **目标**：实现 MCP STDIO framing、primary/compat revision negotiation、无 Tasks 核心路径、connection-derived consumer identity 与 truthful CapabilityReport。
+- **边界**：不含 model ID/provider branch，不提前暴露未实现 tools/resources。
+
+## M0-T4 — Vite/browser proxy boundary
+
+### Prompt
+
+- **目标**：实现 Vite same-origin `/__vem/browser` proxy，并将 untrusted page ingress 与 authenticated build-registry channel 分离。
+- **边界**：页面不接收 token/filesystem/shell/absolute path；production build 不参与。
+
+## M0-T5 — Selection/source MCP tools
+
+### Prompt
+
+- **目标**：提供 bounded selection summary、source-resolution tools/resources、direct-primary/degraded evidence 与 compatible text output。
+- **边界**：read/metadata only；严格 privacy projection；heuristic candidate 不冒充 exact。
+
+## M0-T6 — Claim and ConfirmationBinding
+
+### Prompt
+
+- **目标**：实现 server-derived consumer claim 与 immutable source/action-bound、TTL、atomic single-use ConfirmationBinding。
+- **边界**：claim 不是 consent；mutable active selection 不能驱动 prepared work。
+
+## M0-T7 — Prepare-before-edit barrier
+
+### Prompt
+
+- **目标**：在源码编辑前原子消费 confirmation，记录 before Observation、RevisionContext barrier、fixed target scope 与 bounded journal cursor。
+- **边界**：不得用 edit-after-the-fact observation 替代 before state。
+
+## M0-T8 — Relevant HMR correlation
+
+### Prompt
+
+- **目标**：实现 coordinator-observed module intersection、bounded update batch、unrelated-update ignore 与 early-event replay。
+- **边界**：缺失或竞争证据必须 ambiguous，不能猜测 passed。
+
+## M0-T9 — Fresh verification complete
+
+### Prompt
+
+- **目标**：以 fresh after Observation、direct/transaction-matched reattachment 与 text assertions 完成 verification。
+- **边界**：普通 context cache hit 不得通过；target-changed/stale/ambiguous/unresolved 保持诚实终态。
+
+## M0-T10 — Real Edge walking skeleton
+
+### Prompt
+
+- **目标**：真实 Edge Stable + Vite/MCP 两进程完成 select → confirm → prepare → edit → relevant HMR → complete 正向闭环。
+- **边界**：不以 Playwright Chromium 替代 Tier-1 Edge；进程、profile 与 runtime metadata 必须清理。
+
+## M0-T11 — Edge negative lifecycle E2E
+
+### Prompt
+
+- **目标**：覆盖 project restart、stale session/confirmation、unrelated update、target changed 与 ambiguity 的真实 Edge fail-closed 行为。
+- **边界**：负例不得通过自动重选或降低 freshness/confirmation 要求制造成功。
+
+## M0-T12 — Minimal install CLI
+
+### Prompt
+
+- **目标**：提供 injected-preview CLI dry-run/idempotent integration 与明确的 Codex MCP config generator。
+- **边界**：只改 allowlisted dev files；不污染 production graph；保留用户配置与属性。
+
+## M0-T13 — Fresh-project usable gate
+
+### Prompt
+
+- **目标**：证明 fresh project install、first selection、verified edit、upgrade rollback 与 clean uninstall 无 production residue。
+- **边界**：完整 gate 前不宣称 installable；uninstall 不删除用户源码。
 
 ## P0-T9A — Walking-skeleton 正向 Edge E2E
 

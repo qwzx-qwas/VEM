@@ -1,0 +1,20 @@
+RESULT=pass
+P0_T17A_TARGETED=pass files=1 tests=8
+FULL_VITEST=pass files=12 tests=83
+BUILD=pass
+TYPECHECK=pass
+LINT=pass
+ROADMAP_VALIDATION=pass phases=9 tasks=136 contracts=25 authorityFiles=1
+WORKSPACE_CHECK=pass node=24.18.0 pnpm=10.34.0 workspaceProjects=8
+LICENSE_AUDIT=pass packages=235 vendored=0
+CLEAN_FROZEN_INSTALL=pass packageManager=pnpm@10.34.0
+DEMO_BUILD=pass vite=8.1.5 transformedModules=23 files=4 bytes=1092834 externalUrls=0 vemOwnedSignatures=0
+BOOTSTRAP_PREFLIGHT_REGRESSION=pass tests=98
+READ_ONLY_BOUNDARY=pass allowedOperations=read,hash,validate,rank,evaluate writes=false network=false arbitraryCommands=false outputPaths=false
+CANONICAL_BUNDLE=pass schema=draft-2020-12 hashNamespace=vem-pilot-v1-sha256 stableKeyOrder=true immutable=true
+INPUT_INTEGRITY=pass taskManifest=true selection=true registry=true groundTruth=true trial=true fixtureCommit=true postBuildRehash=true
+TIMING_BOUNDARY=pass clock=monotonic unit=nanoseconds setupSeparate=true cachePolicyBound=true counterbalancedOrder=true
+PRIVACY=pass participantGroundTruthWithheld=true physicalPaths=false promptText=false selectionText=false rawPagePath=false registryRelativePath=false
+HOLDOUT_EXCLUSION=pass overlapFailClosed=true laterHoldoutConsumed=false
+DECISION=none realPilotExecuted=false
+SANDBOX_NOTE=workspace/license/install subprocess gates initially returned managed-sandbox EPERM; the same bounded repository commands passed with approved execution and unchanged assertions

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": "R5-T4-run-index-v1",
+  "preregistrationHash": "8a7b315cfa5597b046228d9597a5805ad3b3dbd0becaa83a37f9ea81475ec886",
+  "instrumentationHash": "02fa73cd42572e703c33516b5a5f10a123f0f8e34dd0b82275016f8a8f9c6641",
+  "authorizationHash": "4e682b719e64375f52613f128f04d39ca51d638ceb01bf1730decca0283f190c",
+  "dataScopeHash": "fefd57ecda3606e69eadb1165618cff24f76ce4ac699243a52f61171c98edba6",
+  "terminationPolicyHash": "ca4ffce3cf06abea99712e581a9732d6579a5490ff9f2bc24e3265b39991404f",
+  "batchStopped": true,
+  "successfulArmCount": 0,
+  "processAttemptCount": 0,
+  "externalProcessCount": 0,
+  "runIds": [],
+  "plannedRunId": "r5-terminal-01-deadline-heading-direct-search-attempt-1",
+  "plannedRunSpawned": false,
+  "failureCode": "R5_EXECUTION_OPTIONS_INVALID",
+  "failureEvidenceRawSha256": "8e93e4a06204cf1495ef9eb21729f8465cc041a3226af3bcb6fbe3320ccf2813",
+  "failureEvidenceCanonicalSha256": "2bf16c6d29e088012a32687666142e28e46ca10db505b12b3f878a90cddacd17",
+  "verdictHash": "c04a6631b6285735fa3ff1da0d576e31b1a85b3fbc981a69c25aa4cb27b0a016",
+  "failureEvidenceSealed": true
+}

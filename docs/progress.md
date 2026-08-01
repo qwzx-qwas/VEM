@@ -211,3 +211,828 @@ Each future entry must include task ID, date, changed files, commands, test evid
 - Security/data-lifecycle verification: closed publication and lookup inputs reject unknown fields, oversized records, non-canonical/traversing paths, mismatched anchor identity hash, duplicate/colliding anchors, incompatible transform, stale project/build/source/sequence and project restart reuse; state is memory-only and bounded to current plus one previous revision, with no filesystem/source read, persistence, transport, browser, MCP, HMR, candidate or edit-authority implementation
 - Known limitations/degradations: direct lookup is coordinator-side prototype data only and does not prove DOM binding or user authorization; no Coordinator discovery/channel, selection-to-registry ingress, heuristic source candidate, cross-revision successor/reattachment, source content read, MCP surface or crash recovery is claimed
 - Next eligible task: `P0-T17A`
+
+## P0-T17A — Versioned read-only pilot harness and canonical evidence bundle
+
+- Date: 2026-07-29
+- State/outcome: `done` / `passed`
+- Decision: n/a; this task deliberately produces no `P0-VALUE` verdict
+- Changed files: private `packages/pilot-harness/`, workspace references/lock/notices, roadmap/status/prompt/progress records, and `docs/test-evidence/P0-T17/20260729T164018+0800/`
+- Commands: targeted harness Vitest/typecheck/lint; full Vitest/build/typecheck/lint; roadmap/workspace/license gates; isolated clean frozen install; real demo production build; full Python preflight regression; Git whitespace/diff review
+- Test evidence: 8 P0-T17A target tests and 83 total Vitest tests across 12 files passed; root build, strict typecheck and lint passed; roadmap validation remained at 9 phases/136 tasks/25 contracts; workspace fixed Node/pnpm, 235-package/zero-vendored license audit, clean frozen install, production demo and 98 preflight tests passed
+- Harness evidence: `VersionedReadOnlyPilotHarness` accepts only 3–5 closed, hash-bound, root-confined regular-file inputs and fixed read/hash/validate/rank/evaluate operations; it verifies the exact Git fixture commit, rehashes every input after building, rejects symlink/path escape/holdout overlap/timing or cache divergence/direct-as-candidate misuse, and emits immutable namespaced raw-record hashes
+- Bundle evidence: `CanonicalEvidenceBundleBuilder` emits deterministic key-sorted JSON, a SHA-256 content hash, strict Draft 2020-12 validation and a bounded human summary; final evidence exposes only opaque hashes/match booleans and excludes ground-truth paths, participant prompt text, selection text, raw page paths, physical paths and registry relative paths
+- Edge/browser verification: no browser rerun was required for this offline harness; the existing real Edge channel gate and production non-participation evidence remain unchanged
+- Security/data-lifecycle verification: participant task manifests contain only the ground-truth content hash, while evaluator-only build requests provide the separately hashed ground-truth file after trials; the implementation imports no filesystem write or network API, accepts no output path/arbitrary command/URL, writes no product state and claims no persistence, Coordinator, MCP, browser, capture or verdict capability
+- Known limitations/degradations: P0-T17A validates synthetic trial inputs but does not execute fresh Codex arms, collect real timings, consume a later holdout, calculate statistics or decide `continue|adjust|stop`; those remain solely P0-T17B
+- Next eligible task: `P0-T17B`
+
+## P0-T17B — UX-GATE-001 value micro-pilot
+
+- Date: 2026-07-29
+- State/outcome: `done` / `passed`
+- Decision: `P0-VALUE=adjust`; attempt 1 is immutable and does not authorize P0-T7
+- Evidence: owner authorization, two abandoned-before-results preregistrations, active plan, raw Codex events, ten per-arm records, canonical bundle, result hashes and verdict are under `docs/test-evidence/P0-T17B/`; active preregistration hash is `2bf456e2220cf61fb78c97c1854d6575847d783b66404ba3db3746380573b1bb` and canonical bundle hash is `d7eaabf23afd3456c7adbd4cf9f1abd6c381c69149d7650b5ac9b361c642f65e`
+- Pilot result: all 10 processes exited 0 with 10 unique thread IDs; 10/10 structured responses mapped exactly to ground truth, all 5 VEM direct-primary records matched, and wrong attribution, target change, reselection and operator correction were all zero
+- Cost result: VEM was faster on only 2/5 pairs; direct median was `30,373,336,505 ns`, VEM median was `39,209,353,423 ns`, median saving was zero, total setup was `51,592,551 ns`, and all three preregistered cost conditions triggered `adjust`
+- Commands: preregistration/runner hash verification; ten authorized `codex exec --ephemeral` read-only arms; `RESULTS.sha256`; independent bundle schema/hash and verdict recomputation; targeted/full Vitest, build/typecheck/lint, roadmap/workspace/license, clean frozen install, production demo, 98 preflight tests and Git whitespace check
+- Test evidence: 5 P0-T17B scoring tests and 8 P0-T17A harness tests passed; root build, strict typecheck, lint and 88 Vitest tests passed; result manifest, all 10 raw records, canonical schema/hash and recomputed verdict passed; roadmap validation now covers 9 phases, 138 tasks and 25 contracts
+- Edge/browser verification: no browser rerun was required for this offline value pilot; existing real Edge channel evidence remains unchanged
+- Security/data-lifecycle verification: participant copies contained only two fixture source files plus VEM context in the assisted arm; evaluator ground-truth/holdout identifiers did not appear in result events; later holdout remained untouched; all payloads were sent only after explicit owner authorization
+- Known limitations/degradations: this five-task personal-project engineering smoke makes no statistical or percentage product claim; raw events show repo-local visual UI skill discovery in some VEM arms and the participant workspace lived under the repository evidence tree, so P0-T17C must make the equal-base-context/capsule boundary explicit before a new attempt
+- Next eligible task: `P0-T17C`; P0-T17D attempt 2 remains dependent on its remediation and P0-T7 remains decision-gated
+
+## P0-T17C — Participant capsule and equal-base-context remediation
+
+- Date: 2026-07-29
+- State/outcome: `done` / `passed`
+- Decision: n/a; `P0-VALUE` remains pending on P0-T17D attempt 2
+- Changed files: `scripts/pilot/capsule.mjs`, capsule tests, bounded remediation evidence generator, roadmap/requirements/delivery/status/prompt/progress records, and `docs/test-evidence/P0-T17C/20260729T173959+0800/`
+- Commands: real Bubblewrap filesystem and capsule-local Codex binary probes; attempt-one raw-event leak audit; SHA-256 evidence verification; targeted/full Vitest; build/typecheck/lint; roadmap/workspace/license; isolated clean frozen install; production demo; 98 preflight tests; Git whitespace check
+- Test evidence: 5 new capsule tests and 93 total Vitest tests across 14 files passed; 5 capsule pairs produced one shared base-context hash and five distinct VEM treatment hashes; 10 filesystem probes, 10 Codex binary probes, positive/negative event audits, evidence hashes, 9-phase/138-task/25-contract roadmap validation and all repository gates passed
+- Capsule evidence: participant workspaces are created under a random `/tmp/vem-p0-t17c-capsule-*` root outside repository/evidence, mounted read-only at `/work`; system binaries and the pinned Codex installation are read-only, Codex home is tmpfs, and control manifests are not mounted
+- Security/data-lifecycle verification: repository, home, `/mnt`, root, project rules/skills, evaluator ground truth and holdout are absent inside the outer capsule; only `App.tsx`, `fixtures.ts`, response schema and assisted-arm `vem-context.json` are visible; auth is a runtime-only mode-0600 read-only mount and is never copied or recorded; command/stdout/stderr path escape audits fail closed; all ten probe capsules were removed with zero residue
+- Known limitations/degradations: Linux Bubblewrap is the selected P0 capsule provider; API network remains available to the Codex process while model-generated commands retain the inner read-only Codex sandbox; this task proves the runner boundary only and does not execute attempt 2 or change the decision
+- Next eligible task: `P0-T17D`; P0-T7 remains locked until the current attempt records `continue`
+
+## P0-T17D — P0-VALUE attempt 2
+
+- Date: 2026-07-29
+- State/outcome: `done` / `passed`
+- Decision: `P0-VALUE=stop`; the immutable attempt-two verdict makes P0 `failed` and does not authorize P0-T7
+- Evidence: explicit owner authorization is at `docs/test-evidence/P0-T17D/OWNER_AUTHORIZATION_20260729.md`; the preregistered plan, inputs, ten raw runs, trials, setup cost, canonical bundle, result manifest and verdict are under `docs/test-evidence/P0-T17D/20260729T174733+0800/`; preregistration hash is `df5859bc0af40b0daca4f2ea8b6030e8d2b950228595595a29aba8976fc70d93` and canonical bundle hash is `80b08ac28f248addc1b1f1af13bc6f4678e5d63836e6a55ad8ca5cbd700c508d`
+- Pilot result: all 10 authorized processes exited 0 with 10 unique fresh thread IDs; 10/10 structured responses mapped exactly to ground truth, all 5 VEM records matched direct-primary, wrong attribution was zero, attempt-one evidence stayed immutable, and the later holdout remained untouched
+- Cost result: VEM was faster on only 2/5 pairs; direct median was `41,985,459,470 ns`, VEM median was `44,209,203,458 ns`, median saving was zero, total setup was `119,319,692 ns`, and amortized setup was `23,863,938 ns`; all three preregistered cost conditions failed
+- Capsule verdict: 7/10 runs triggered the frozen `CAPSULE_COMMAND_PATH_ESCAPE` rule, so the preregistered fail-closed outcome is `stop`; a separate post-hoc analysis at `docs/test-evidence/P0-T17D/ATTEMPT_2_AUDIT_ANALYSIS_20260729.md` found the parser matched source strings `/`, `/>`, and `/projects/:projectId`, with no repository/home/rule/skill marker observed, but does not modify the raw result
+- Commands: preregistration/runner/capsule hash verification; ten owner-authorized capsule-contained `codex exec --ephemeral` read-only arms; `RESULTS.sha256`; independent canonical schema/hash and verdict recomputation; literal stdout/stderr marker scan and read-only audit-token replay; targeted/full Vitest; build/typecheck/lint; roadmap/workspace/license; isolated clean frozen install; production demo build; 98 preflight tests; Git whitespace check
+- Test evidence: 5 P0-T17D tests, 5 capsule tests, 8 harness tests and 98 total Vitest tests across 15 files passed; result checksums, all 10 raw records, canonical schema/hash, independent verdict recomputation, 9-phase/138-task/25-contract roadmap validation and all repository gates passed
+- Edge/browser verification: no browser rerun was required for this offline value pilot; the existing real Edge channel and production non-participation evidence remain unchanged
+- Security/data-lifecycle verification: Bubblewrap kept repository, home, rules, skills, evaluator ground truth and later holdout outside participant visibility; only task fixtures, response schema and assisted-arm VEM context were mounted read-only, auth was a runtime-only read-only mount, all processes used the inner Codex read-only sandbox, and no participant capsule residue remained
+- Known limitations/degradations: this five-task personal-project retest is an engineering smoke, not a statistical product claim; the fail-closed audit parser produced post-hoc-classified false positives, while timing independently failed the continue threshold and would have yielded only `adjust`; the immutable `stop` is not overwritten
+- Next eligible task: none in the owner-approved P0 scope; P0-T7 and every dependent task remain ineligible because `P0-VALUE=continue` was not satisfied
+
+## P0-T17E — Terminal-stop capsule audit remediation
+
+- Date: 2026-07-29
+- State/outcome: `done` / `passed`
+- Decision: n/a; `P0-VALUE=stop` and P0 `failed` remain authoritative
+- Changed files: versioned `scripts/pilot/capsule-audit-v2.mjs`, replay generator and 5 tests; ROADMAP/requirements/status/delivery/prompt/progress records; active evidence at `docs/test-evidence/P0-T17E/20260729T182851+0800/`
+- Evidence: legacy `scripts/pilot/capsule.mjs` and `p0-t17d.mjs` remain byte-identical to preregistered hashes `13a92abba7c00a89d2dc0e9344f590edd0808a0063723b2a005ac423cf626956` and `25f76241ed3a5a124e595d5b2667b02d668b75314096b0368618e207a16946ae`; v2 auditor/replay hashes are `105e99adedeedf98727980eb4a278f527480584d3695568be38b07ba3976777b` and `0ad68df29ac4160a53a2a94ad37051b6c6ad4004a23f7107d917ed75358165f5`; active replay hash is `48f3c70db5c471e2b1b94d1c18730f0a60e51b730182ec5ade4b89a563b789d7`
+- Remediation result: the v2 parser separately audits absolute paths in commands, path-shaped structured output lines, stderr and forbidden markers, while treating route `/`, JSX `/>`, parameterized route data and embedded source JSON as data; all 10 immutable attempt-two streams pass v2 versus 7 legacy false positives
+- Commands: targeted v2 Vitest; versioned replay generator; active `SHA256SUMS`; full Vitest/build/typecheck/lint; roadmap/workspace/license; isolated clean frozen install; production demo build; 98 preflight tests; Git whitespace and final hash/state checks
+- Test evidence: 5 P0-T17E target tests and 103 total Vitest tests across 16 files passed; actual command `/home`, output `/root`, stderr `/mnt`, forbidden rule/skill marker, malformed/oversized JSONL and attempt evidence/source mutation fail closed; roadmap validation covers 9 phases, 139 tasks and 25 contracts; all repository gates passed
+- Edge/browser verification: not applicable to this post-hoc offline evidence parser; no browser or external model rerun occurred
+- Security/data-lifecycle verification: v2 keeps bounded JSONL/stderr byte and event limits, scans command/output/stderr at their appropriate structure, returns no physical external path on success, and writes only canonical non-authoritative replay metadata under the task evidence root; P0-T17D inputs/results, auth, ground truth and later holdout were not read into participant context or modified
+- Known limitations/degradations: v2 is a post-hoc diagnostic and cannot revise P0-T17D; the pilot timing still independently misses every continue cost threshold, so no product-path authorization follows from the 10/10 replay pass
+- Next eligible task: none; P0-T7/P0-T9A/P1 remain locked by `P0-VALUE=stop` and failed P0
+
+## P0-T17F — Terminal-stop timing forensics
+
+- Date: 2026-07-29
+- State/outcome: `done` / `passed`
+- Decision: n/a; `P0-VALUE=stop` and P0 `failed` remain authoritative
+- Changed files: bounded `scripts/pilot/analyze-p0-t17d-timing.mjs`, 5 tests, ROADMAP/requirements/status/delivery/prompt/progress records, and active evidence at `docs/test-evidence/P0-T17F/20260729T183822+0800/`
+- Evidence: analyzer SHA-256 is `443bad08176cba5e3edca959e2db082d31a48033bcfed2848dc92f0079512777`; bound attempt result-manifest/verdict and active audit replay hashes are `463db09ac15c078d53fb34be7d4083574b1a5c34a84071d0646a6775a22fc7ee`, `38d1dd20b591baadaed2ba4b2ebd93723706387133e366370e62c7f431ee336a`, and `48f3c70db5c471e2b1b94d1c18730f0a60e51b730182ec5ade4b89a563b789d7`; canonical report hash is `664d8e49e0fdb573944aadc14b0affbcfae1fa0f3cc2db4c7104dc8f9eac5afc`
+- Forensics result: all 10 run durations exactly equal their trial and canonical raw-record durations; direct/VEM medians reproduce `41,985,459,470 / 44,209,203,458 ns`, VEM is faster on 2/5 pairs, and second arm is faster on 3/5 pairs
+- Descriptive event result: direct/VEM report 11/9 completed commands, one recovered nonzero command each, input tokens `230,178 / 188,629`, cached input tokens `138,496 / 56,064`, and command-output bytes `9,063 / 13,156`; these counts are observations, not duration attribution
+- Commands: targeted timing-forensics Vitest; canonical report generator; evidence SHA-256; full Vitest/build/typecheck/lint; roadmap/workspace/license; isolated clean frozen install; production demo build; 98 preflight tests; Git whitespace and source/evidence binding checks
+- Test evidence: 5 P0-T17F target tests and 108 total Vitest tests across 17 files passed; malformed/duplicate/incomplete/oversized events, command pairing, usage bounds, BigInt nanosecond precision, run/trial/bundle mismatches, verdict metric mismatch and terminal evidence mutation fail closed; roadmap validation covers 9 phases, 140 tasks and 25 contracts; all repository gates passed
+- Edge/browser verification: not applicable to this post-hoc offline analysis; no browser or external model rerun occurred
+- Security/data-lifecycle verification: analysis reads only hash-bound attempt/audit evidence, preserves all decimal integers as strings, records no prompt/source/output bodies in its report, writes only canonical bounded metadata under the task evidence root and does not touch auth, ground truth, holdout, participant context or product state
+- Known limitations/degradations: JSONL events provide total-run ordering and final usage but no per-event timestamps; command, token, cache and byte counts cannot identify model/service latency or causally explain arm duration, and the five-task disclosed retest supports no statistical product claim
+- Next eligible task: none; P0-T7/P0-T9A/P1 remain locked by `P0-VALUE=stop` and failed P0
+
+## R0-T1 — Independent recovery charter and no-product-unlock validator
+
+- Date: 2026-07-29
+- State/outcome: `done` / `passed`
+- Decision: n/a; `R0-RECOVERY` remains pending on R0-T4 while `P0-VALUE=stop` remains terminal
+- Changed files: `docs/DESIGN.md` R0-RECOVERY-001 authority, independent R0 phase and decision chain in `ROADMAP.yaml`, reverse mapping in `docs/requirements.yaml`, owner decision and delivery charter, four R0 prompts, recovery-boundary validator/tests, charter proof generator/tests, status/progress and `docs/test-evidence/R0-T1/`
+- Charter result: R0 has no phase dependency, declares recovery of failed P0, uses a separate decision key with `does_not_supersede: P0-VALUE`, and cannot become a dependency of any existing phase/task; a future R0 continue can only authorize an owner-reviewed proposal for another independent research phase
+- Commands: targeted 14-test roadmap validator and 2-test charter proof suites; charter evidence generator and SHA-256; full Vitest/build/typecheck/lint; roadmap/workspace/license; isolated clean frozen install; production demo build; 98 preflight tests; Git whitespace and final source/evidence binding checks
+- Test evidence: 16 targeted tests and 113 total Vitest tests across 18 files passed; non-failed recovery target, R0 phase dependency, missing authorization, decision phase/supersession drift, existing phase/task dependency leakage and unsupported decision requirement all fail closed; roadmap validation covers 10 phases, 144 tasks and 26 contracts
+- Edge/browser verification: not applicable; R0-T1 changes only normative scope, roadmap validation and evidence, with no browser or external model execution
+- Security/data-lifecycle verification: owner authorization is recorded without secret material; P0 raw evidence, verdict and phase remain immutable; no auth, participant context, ground truth, holdout, source mutation, network payload or product runtime state is introduced
+- Known limitations/degradations: R0-T1 provides governance and mechanical dependency isolation only; it does not implement timing instrumentation, create a recovery corpus, run an experiment, change any terminal verdict or authorize product capability
+- Next eligible task: `R0-T2`
+
+## R0-T2 — Trusted outer-runner monotonic receipt ledger
+
+- Date: 2026-07-29
+- State/outcome: `done` / `passed`
+- Decision: n/a; `R0-RECOVERY` remains pending on R0-T4 and `P0-VALUE=stop` remains terminal
+- Changed files: pilot-harness receipt-ledger implementation/export/package test script, ledger and real-process proof tests, R0-T1 lifecycle regression assertion, task/roadmap/status/progress metadata and `docs/test-evidence/R0-T2/20260729T191734+0800/`
+- Ledger result: one real local Node process produced 8 trusted receipt points spanning spawn, four stdout JSONL events, one structured response, one stderr chunk and exit; canonical ledger hash is `6171f65f06ca494a4eb274b1b34c81526a492254dd680475eb969adc55a5fd45`
+- Commands: 9 targeted receipt/proof tests; full Vitest/build/typecheck/lint; roadmap/workspace/license; isolated clean frozen install; production demo build; 98 preflight tests; evidence SHA-256 and Git whitespace checks
+- Test evidence: 123 total Vitest tests across 20 files passed; lifecycle, monotonic/invalid clock, bounded bytes/entries, raw hashes, cancellation/error, malformed/duplicate response, terminal completeness, canonical sealing, raw-body exclusion and real-process collection all pass
+- Edge/browser verification: not applicable; R0-T2 changes only the research harness and executes one local Node probe, with no browser path or external model call
+- Security/data-lifecycle verification: ledger stores only bounded hashes and metadata, never raw event/response/stderr bodies; evidence is canonical, hash-bound and task-root constrained; no auth, participant context, ground truth, holdout, network payload or product runtime state is introduced
+- Known limitations/degradations: receipt timestamps are local outer-runner observations only and do not identify provider generation time, model compute time or shell-internal timing; the proof is instrumentation validation, not a product-benefit result
+- Next eligible task: `R0-T3`
+
+## R0-T3 — Recovery-only task bank and immutable preregistration
+
+- Date: 2026-07-29
+- State/outcome: `done` / `passed`
+- Decision: n/a; `R0-RECOVERY` remains pending on R0-T4 and `P0-VALUE=stop` remains terminal
+- Changed files: recovery plan/verdict module, preregistration generator, hash-bound future R0-T4 runner, 7 preregistration/verdict/authorization tests, task/roadmap/decision/status/progress metadata and `docs/test-evidence/R0-T3/20260729T193158+0800/`
+- Preregistration result: 5 fresh recovery-only tasks and 10 counterbalanced arms are frozen under hash `57fb4b9b033e61eb4e0b4b9a0f14ced28064b6fb17d73f5e7ae60552d0f37359`; runtime instrumentation binds 8 sources under hash `c7851c93a8451436d056cc9b2ed097e4b0fc5c6cc0e9f7289ec22ff710d4067b`
+- Commands: 16 targeted R0-T2/R0-T3 tests; preregistration generator; 10 filesystem-isolation and 10 Codex-binary capsule probes; full Vitest/build/typecheck/lint; roadmap/workspace/license; isolated clean frozen install; production demo build; 98 preflight tests; final preregistration/source-binding and Git whitespace checks
+- Test evidence: 130 total Vitest tests across 21 files passed; fresh task/prompt identity, P0 and product-holdout exclusion, equal capsule base context, treatment-only difference, frozen runner/ledger/auditor hashes, mutation detection, continue/no-benefit/integrity verdicts and separate hash-bound owner authorization all pass
+- Edge/browser verification: not applicable; R0-T3 uses a synthetic source-location fixture and local capsule probes only, with no browser or external model execution
+- Security/data-lifecycle verification: evaluator ground truth stays under `private/` and is absent from participant capsules; product holdout IDs are copied only into an exclusion record and remain unconsumed; repository/home/rules/skills stay absent from capsules; no auth contents, raw external output, network payload or product runtime state is stored
+- Known limitations/degradations: this five-task recovery corpus is an engineering smoke, not a product holdout or statistical claim; receipt time remains runner-local; external execution and any R0 verdict require the separate R0-T4 authorization and cannot alter P0
+- Next eligible task: none until `OWNER-R0-T4-EXTERNAL-BATCH` explicitly authorizes the frozen preregistration hash
+
+## R0-T4 — Independent recovery micro-pilot verdict
+
+- Date: 2026-07-29
+- State/outcome: `done` / `failed`
+- Decision: `R0-RECOVERY=stop`; R0 phase is `failed`, while `P0-VALUE=stop` remains independently terminal
+- Changed files: hash-bound owner authorization, immutable failure/verdict/summary/SHA evidence, ROADMAP decision/phase/task state, decision/status/delivery/prompt/progress records
+- Execution result: frozen preregistration and all 8 runtime source bindings passed; one authorized external process began for `r0-ux-01-sync-state/direct-search`, then the frozen runner attempted a duplicate structured-response receipt and the ledger rejected it with `RECEIPT_LEDGER_RESPONSE_DUPLICATE`
+- Stop behavior: the preregistered `event-ledger-integrity-failed` condition took precedence over the incomplete-run adjust reason; the remaining 9 authorized calls were deliberately not executed
+- Evidence: `docs/test-evidence/R0-T4/20260729T194719+0800/`; failure/verdict hashes are `9a6e06c84f06484565700559ebda113cd8bfcaf9b778ae9d9176b7db41e78269` / `5815559a6d2b8d9c71246067a4befefe97f375edb476ffd479ee56c07978e38b`
+- Commands: frozen digest/source/authorization checks; one fail-closed external invocation; evidence SHA-256; 17 targeted verdict/preregistration/ledger tests; full Vitest/build/typecheck/lint; roadmap/workspace/license; isolated clean frozen install; production demo build; 98 preflight tests; Git whitespace and final source-binding checks
+- Test evidence: 133 total Vitest tests across 22 files passed; frozen authorization and source binding, first-arm failure identity, stop-over-adjust precedence, empty unsealed run directory, P0/R0 terminal isolation and R0 charter terminal-state lifecycle all pass
+- Edge/browser verification: not applicable; no browser path changed or ran
+- Security/data-lifecycle verification: the process ran in the frozen read-only capsule; capsule cleanup completed and no Codex/bwrap child remained; ground truth and product holdout stayed outside participant context
+- Known limitations/degradations: failure occurred before sealed-write, so no complete raw stream, receipt ledger, correctness or cost metric exists; the stop is an instrumentation-integrity verdict, not a source-location or product-benefit result
+- Next eligible task: none; R0 and P0 are failed, and no product task is unlocked
+
+## R1-T1 — Independent runner-remediation charter
+
+- Date: 2026-07-29
+- State/outcome: `done` / `passed`
+- Decision: n/a; `R1-RECOVERY` remains pending while `R0-RECOVERY=stop` and `P0-VALUE=stop` remain terminal
+- Changed files: R1 normative contract, independent phase/decision/task chain, owner decision, delivery plan, four prompts, validator dual-terminal checks/tests, charter proof/tests and `docs/test-evidence/R1-T1/20260729T201742+0800/`
+- Charter result: R1 phase and charter task have empty dependencies, recover failed R0 by immutable evidence only, cannot become an existing phase/task dependency, and explicitly do not supersede either R0 or P0 decision chain
+- Commands: 20 targeted validator/R0/R1 charter tests; charter generator and SHA-256; full build/typecheck/lint/roadmap/Vitest gates
+- Test evidence: 136 total Vitest tests across 23 files passed; roadmap validates 11 phases, 148 tasks and 27 contracts; proof hash is `d74ec66439511739af86a8b8f19c3594316034ffd11ce35a01ba517dd42bb6a7`
+- Edge/browser verification: not applicable; governance and validation only
+- Security/data-lifecycle verification: no external call, participant data, auth, ground truth, holdout or product runtime change; product unlock count is zero
+- Known limitations/degradations: R1-T1 provides only authority and isolation; it does not repair the runner or authorize an experiment
+- Next eligible task: `R1-T2`
+
+## R1-T2 — Multi-message classification and failure evidence sealing
+
+- Date: 2026-07-29
+- State/outcome: `done` / `passed`
+- Decision: n/a; `R1-RECOVERY` remains pending while `R0-RECOVERY=stop` and `P0-VALUE=stop` remain terminal
+- Changed files: remediated recorder/process executor, 6 recorder tests, local proof generator/test, task/status/progress metadata and `docs/test-evidence/R1-T2/20260729T202500+0800/`
+- Runner result: all JSONL events are ordinary receipts; schema-valid candidates are classified only after process and stream close, then one final response is selected exactly once. Zero valid or conflicting valid candidates fail closed, while identical repeated valid candidates remain non-conflicting.
+- Failure sealing: raw stdout/stderr are created before spawn and incrementally written; raw streams, terminal observation, receipt ledger, failure metadata and SHA-256 manifest are sealed before a failure is returned
+- Commands: 7 targeted recorder/proof tests; two real local Node process proofs; full build/typecheck/lint/roadmap/Vitest gates; evidence SHA-256 verification
+- Test evidence: 143 total Vitest tests across 25 files passed; roadmap validates 11 phases, 148 tasks and 27 contracts. Instrumentation hash is `c4f972ea540b12b877be0918397352cbdf0980974f086e1dffe81b290b29614a`; success/failure ledger hashes are `959a4d0df4faf5177d7073468e54958a61510224f65062aa40ecc106ceb40027` / `abeaf2364461d5e5d22036a2d69843f0eebf91e99ff7b3141dd143af27c3dd9e`
+- Edge/browser verification: not applicable; only local synthetic child processes ran
+- Security/data-lifecycle verification: no external call, participant data, authorization payload, ground truth, product holdout or product runtime state was consumed; evidence is bounded and hash-sealed
+- Known limitations/degradations: R1-T2 repairs and proves the recorder semantics only; it neither freezes nor authorizes a new experiment
+- Next eligible task: `R1-T3`
+
+## R1-T3 — Remediated recovery preregistration
+
+- Date: 2026-07-29
+- State/outcome: `done` / `passed`
+- Decision: n/a; `R1-RECOVERY` remains pending while `R0-RECOVERY=stop` and `P0-VALUE=stop` remain terminal
+- Changed files: fresh R1 recovery plan/fixture, hash-bound future R1-T4 runner, preregistration generator, 8 preregistration/verdict/authorization tests, open owner-authorization record, delivery/task/status/progress metadata and `docs/test-evidence/R1-T3/20260729T203631+0800/`
+- Preregistration result: 5 fresh runner-remediation-only tasks and 10 counterbalanced arms are frozen under hash `8d93104c915fdb0acce9f31bdf7c34bbc4d19f0ac74e1b2609a10ddce35ca7f1`; 7 runtime sources are bound under instrumentation hash `388b1e0d89deea9a91c2d8c3701131fa358d60f988a78fd9d9098cd4c07cd231`, distinct from R0
+- Failure contract: all agent messages remain ordinary receipts until streams close; exactly one schema-valid nonconflicting response is selected; protocol failures seal raw stdout/stderr, terminal observation, ledger, failure metadata and SHA manifest before return, then stop the batch
+- Commands: 15 targeted R1-T2/R1-T3 tests; preregistration generator; 10 filesystem-isolation and 10 Codex-binary capsule probes; full Vitest/build/typecheck/lint; roadmap/workspace/license; isolated clean frozen install; production demo build; 98 preflight tests; final preregistration/source-binding and Git whitespace checks
+- Test evidence: 151 total Vitest tests across 26 files passed; roadmap validates 11 phases, 148 tasks and 27 contracts; workspace uses exact Node 24.18.0/pnpm 10.34.0; 235-package/zero-vendored license audit and all 20 local capsule probes passed
+- Edge/browser verification: not applicable; R1-T3 uses a synthetic source-location fixture and local capsule/version probes only, with no browser or external model execution
+- Security/data-lifecycle verification: evaluator ground truth remains under `private/` and absent from participant paths; prior P0/R0 tasks/prompts and product holdouts are excluded; repository/home/rules/skills remain absent from capsules; `externalExecutionAuthorized=false`, no R1-T4 evidence root exists and no external payload was sent
+- Known limitations/degradations: the five-task batch is an engineering smoke, not a statistical or product claim; receipt timing does not expose provider/model/shell-internal time; R1 cannot supersede R0/P0 or unlock product work
+- Next eligible task: none until the owner explicitly authorizes `R1-T4` bound to preregistration hash `8d93104c915fdb0acce9f31bdf7c34bbc4d19f0ac74e1b2609a10ddce35ca7f1`
+
+## R1-T4 — Separately authorized remediated recovery verdict
+
+- Date: 2026-07-29
+- State/outcome: `done` / `failed`
+- Decision: `R1-RECOVERY=stop`; R1 phase is `failed`, while `R0-RECOVERY=stop` and `P0-VALUE=stop` remain independently terminal
+- Changed files: hash-bound owner authorization, two-run raw/ledger/evaluation/failure evidence, aggregate verdict/hash evidence, task-specific immutable-evidence tests, ROADMAP decision/phase/task state and decision/status/delivery/prompt/progress records
+- Execution result: frozen preregistration and all 7 runtime source bindings passed. The direct arm exited zero with the exact line and passed capsule/evidence checks. The paired VEM arm also exited zero but emitted two distinct schema-valid responses: `line:1/sourceAnchorId:null` followed by the correct `line:7/vem1_1fca6dac19137a546084bc64ae003bc0`
+- Stop behavior: the remediated recorder classified candidates only after stream close, recorded `STRUCTURED_RESPONSE_CONFLICT`, selected neither response, sealed failure evidence and stopped the remaining 8 authorized calls
+- Evidence: `docs/test-evidence/R1-T4/20260729T213524+0800/`; verdict/batch-stop/aggregate-manifest hashes are `a0a9556a63d68fcbe769da96f140e54d1d966421d0c3bad1cbffca1f24ab9baa` / `0638600b21322d4fba52ccf8f93ccc9e2043b9b497c50594a300f647a7e079f0` / `3c1dfe69afc67f35b85196f1ebaa0f2eb7cf78471949ab7ad2b1013165ef21d6`
+- Commands: frozen digest/source/authorization checks; 2 external fresh-context arms before preregistered batch stop; per-run and aggregate SHA verification; 19 targeted R1 tests; full Vitest/build/typecheck/lint; roadmap/workspace/license; isolated clean frozen install; production demo build; 98 preflight tests; `.gitignore`, secret-pattern, Git whitespace and final source/evidence binding checks
+- Test evidence: 155 total Vitest tests across 27 files passed; roadmap validates 11 phases, 148 tasks and 27 contracts; exact Node 24.18.0/pnpm 10.34.0 workspace, 235-package/zero-vendored license audit and clean install passed
+- Edge/browser verification: not applicable; no browser path changed or ran
+- Security/data-lifecycle verification: both processes ran inside the frozen read-only capsule with fresh thread IDs; ground truth, prior task prompts and product holdout remained outside participant context; per-run and aggregate hashes passed
+- Known limitations/degradations: only 2 of 10 processes ran, so no five-pair cost comparison or product-benefit claim exists; the stop is a conflicting-final-response protocol verdict
+- Next eligible task: none; R1, R0 and P0 are failed, and no product task is unlocked
+
+## R2-T1 — Independent final-output remediation charter
+
+- Date: 2026-07-29
+- State/outcome: `done` / `passed`
+- Decision: n/a; `R2-RECOVERY` remains pending while `R1-RECOVERY=stop`, `R0-RECOVERY=stop` and `P0-VALUE=stop` remain terminal
+- Changed files: R2 normative contract, independent phase/decision/task chain, owner decision, delivery plan, four prompts, triple-terminal charter proof/tests, task/status/progress metadata and `docs/test-evidence/R2-T1/20260729T223351+0800/`
+- Charter result: R2 phase and charter task have empty dependencies, recover failed R1 by immutable terminal state only, cannot become an existing phase/task dependency, and explicitly do not supersede R1, R0 or P0 decision chains
+- Commands: 17 targeted validator/charter tests; roadmap validation; charter generator and SHA-256; build/typecheck/lint; 157-test full Vitest gate outside the sandbox because its local Node child-process probes are denied with EPERM inside the sandbox
+- Test evidence: 157 total Vitest tests across 28 files passed; roadmap validates 12 phases, 152 tasks and 28 contracts; proof hash is `46e7522676d366c5b93f2e32b6c682fabb76c5d3fa790a37a60eb6692171c25d`
+- Edge/browser verification: not applicable; governance and validation only
+- Security/data-lifecycle verification: no external call, participant data, auth, ground truth, holdout or product runtime change; product unlock count is zero
+- Known limitations/degradations: R2-T1 provides only authority and isolation; it does not repair the runner or authorize an experiment
+- Next eligible task: `R2-T2`
+
+## R2-T2 — Authoritative final-output file and single-file capsule bind
+
+- Date: 2026-07-29
+- State/outcome: `done` / `passed`
+- Decision: n/a; `R2-RECOVERY` remains pending and all prior stop verdicts remain terminal
+- Changed files: new R2 capsule invocation/output mount, authoritative final-response recorder/classifier, 12 tests, local proof generator, roadmap/status/prompt/progress metadata and `docs/test-evidence/R2-T2/20260729T224307+0800/`; frozen R1 sources/evidence were not modified
+- Runner result: JSONL agent messages are audit receipts only; the bounded runner-owned `--output-last-message` file is read once after process/stream close, validated and required to equal the last agent-message before selection. The reproduced early-wrong/later-correct stream selects line 7 without a conflict.
+- Capsule result: `/work` remains read-only; a read-only output directory is overlaid with exactly one writable mode-0600 final-response file at `/run/vem/final-response.json`; workspace and sibling writes fail while the authoritative file write succeeds
+- Failure/classification result: missing, empty, invalid, mismatched, oversized and symlink outputs plus stream cancellation fail closed and seal raw/final observation/terminal/ledger/error/hash evidence; protocol failure with no selected response records `wrongAttribution=false`, while an actually selected incorrect response remains wrong attribution
+- Commands: 12 targeted local-process/Bubblewrap/proof tests; roadmap validation; build/typecheck/lint; 169-test full Vitest gate outside the sandbox; proof generator and SHA256SUMS verification
+- Test evidence: 169 total Vitest tests across 31 files passed; roadmap validates 12 phases, 152 tasks and 28 contracts; instrumentation/proof hashes are `235e7c8433787ef838c1f30d492e3ef24cb62ebd6ebf26bd43ca9cd559c0f8ab` / `0dcae05aec4d39e37089039354a1c6fa1085387a364a7ae00effa7ac365ecbd8`
+- Edge/browser verification: not applicable; only local synthetic processes and Bubblewrap probes ran
+- Security/data-lifecycle verification: one runner-owned 0700 control root and 0600 file are used, no participant-selected host path exists, raw/final/error evidence is bounded and hash-sealed, capsule cleanup removes the control file, and no external model/auth/ground-truth/holdout/product state was consumed
+- Known limitations/degradations: this task proves the runner authority boundary locally; it does not freeze or authorize a new experiment
+- Next eligible task: `R2-T3`
+
+## R2-T3 — Final-output recovery-only preregistration
+
+- Date: 2026-07-29
+- State/outcome: `done` / `passed`
+- Decision: n/a; `R2-RECOVERY` remains pending and all P0/R0/R1 stop verdicts remain immutable
+- Changed files: fresh R2 recovery plan/fixture, hash-bound future R2-T4 runner, preregistration generator, 4 preregistration/authorization/verdict/mutation tests, open owner-authorization record, delivery/task/status/progress metadata and `docs/test-evidence/R2-T3/20260729T225128+0800/`
+- Preregistration result: 5 fresh final-output-remediation-only tasks and 10 counterbalanced arms are frozen under hash `dddd48ade2a92b2e12ec7600c9cdc0bd65eee6d47023d01d70b8bd71b47c273a`; 8 runtime sources are bound under instrumentation hash `09e237ddec722207ee3b2e22c714ca5631700ff7393877a66fdd75d04c46b8a0`, distinct from R1
+- Authority/failure contract: `--output-last-message` runner file is authoritative, JSONL is audit-only, `/work` is read-only with one writable final file, final file must be bounded/schema-valid/canonically consistent with the last agent-message, and protocol failures are separate from actual wrong attribution while every path seals evidence before return
+- Isolation result: 10 filesystem, 10 capsule-local `codex --version` and 10 final-output single-file probes passed; every task pair has the same base context and only the VEM arm receives `vem-context.json`
+- Commands: 4 targeted R2-T3 tests; preregistration generator; independent preregistration/source-binding verification; full Vitest/build/typecheck/lint/roadmap; workspace/license; isolated clean frozen install; production demo; 98 preflight tests
+- Test evidence: 173 total Vitest tests across 32 files passed; roadmap validates 12 phases, 152 tasks and 28 contracts; exact Node 24.18.0/pnpm 10.34.0, 235-package/zero-vendored license audit, clean install, production non-leakage and all local probes passed
+- Edge/browser verification: not applicable; synthetic source-location fixture and local capsule/version/output probes only, with no browser or external model execution
+- Security/data-lifecycle verification: evaluator ground truth remains under `private/` and absent from participant paths; all prior tasks/prompts and product holdouts are excluded; repository/home/rules/skills remain absent; the only new capsule write is the runner-owned bounded final file and capsule cleanup removes it
+- Known limitations/degradations: this is a five-task recovery engineering smoke, not a product holdout or statistical claim; receipt timing still cannot expose provider/model/shell-internal time; R2 cannot supersede prior stops or unlock product work
+- Next eligible task: none until the owner explicitly authorizes exactly 10 R2-T4 calls bound to preregistration hash `dddd48ade2a92b2e12ec7600c9cdc0bd65eee6d47023d01d70b8bd71b47c273a`
+
+## R2-T4 — Separately authorized final-output recovery verdict
+
+- Date: 2026-07-29
+- State/outcome: `done` / `failed`
+- Decision: `R2-RECOVERY=stop`; R2 phase is `failed`, while `R1-RECOVERY=stop`, `R0-RECOVERY=stop` and `P0-VALUE=stop` remain independently terminal
+- Changed files: hash-bound owner authorization, 9-run raw/final/ledger/evaluation evidence, post-abort audit failure sealer/tests, aggregate verdict/hash evidence, ROADMAP decision/phase/task state and decision/status/delivery/prompt/progress records
+- Execution result: frozen preregistration and all 8 runtime source bindings passed. Nine fresh processes exited zero with 9 unique thread IDs; all 9 authoritative final files matched the last JSONL agent message and withheld ground truth, all 4 completed VEM arms matched direct-primary evidence, and protocol failure/wrong-attribution counts were both zero.
+- Stop behavior: run nine's command event contained the frozen v2 auditor forbidden marker `AGENTS.md` and reproduced `CAPSULE_AUDIT_V2_ESCAPE`. The exception escaped the frozen runner before audit-failure evidence was sealed, so `capsule-integrity-failed` and `failure-evidence-not-sealed-before-return` require stop. The remaining call was not executed and no external retry occurred.
+- Post-abort sealing: a no-external-call sealer verified the unchanged preregistration/source bindings, all recorder SHA manifests, exact run-order prefix and audit failure, then preserved `failureEvidenceSealedBeforeReturn=false` while hash-sealing post-abort evaluation, batch-stop, run-index, setup limitation and verdict evidence
+- Evidence: `docs/test-evidence/R2-T4/20260729T230343+0800/`; verdict/audit-failure/batch-stop/aggregate-manifest hashes are `ada1fb7e4c4ae202060a5e98e00dafedecfd4862803c61bab1970d7e30d681e1` / `f921fbf54041a254e5bba65d164b3bc2201e2e1d4322868629d1fc8eb97088c0` / `77018e80bee6626e0d6ec8330c6f6fd909ee7c7dd7941131b71d34f8e01fcf2c` / `6551c42ab0c60385216334a3214641843af086ba7446c760d1a5c7d370c235e8`
+- Commands: frozen digest/source/authorization checks; 9 external fresh-context processes before preregistered batch stop; per-run and aggregate SHA verification; 44 targeted terminal-state/capsule/recorder/roadmap/evidence tests; full Vitest/build/typecheck/lint; roadmap/workspace/license; isolated clean frozen install; production demo build; 98 preflight tests; Git whitespace and final frozen-binding checks
+- Test evidence: 180 total Vitest tests across 34 files and 44 targeted tests passed; roadmap validates 12 phases, 152 tasks and 28 contracts; exact Node 24.18.0/pnpm 10.34.0 workspace, 235-package/zero-vendored license audit, clean install, production non-leakage and 98 preflight tests passed
+- Edge/browser verification: not applicable; no browser path changed or ran
+- Security/data-lifecycle verification: all processes ran inside frozen read-only capsules with one runner-owned final output file; participant inputs excluded ground truth, prior tasks/prompts and product holdouts; no external retry followed the stop; all existing run evidence remained immutable and hash-valid
+- Known limitations/degradations: only 9 of 10 processes ran, the fifth pair and full cost verdict are unavailable, capsule setup duration was lost when the frozen runner aborted, and this recovery-only smoke cannot support a product-value claim
+- Next eligible task: none; R2, R1, R0 and P0 are failed, and no product task is unlocked
+
+## R3-T1 — Independent capsule-audit containment charter
+
+- Date: 2026-07-29
+- State/outcome: `done` / `passed`
+- Decision: n/a; `R3-RECOVERY` remains pending while `R2-RECOVERY=stop`, `R1-RECOVERY=stop`, `R0-RECOVERY=stop` and `P0-VALUE=stop` remain terminal
+- Changed files: R3 normative contract, independent phase/decision/task chain, owner decision, delivery plan, four prompts, four-terminal charter proof/tests, task/status/progress metadata and `docs/test-evidence/R3-T1/20260729T234157+0800/`
+- Charter result: R3 phase and R3-T1 have empty dependencies, recover failed R2 by immutable evidence only, cannot become an existing phase/task dependency, and explicitly do not supersede R2, R1, R0 or P0 decision chains
+- Commands: 27 targeted validator/R0/R1/R2/R3 charter tests; roadmap validation; build/typecheck/lint; 184-test full Vitest gate
+- Test evidence: 184 total Vitest tests across 35 files passed; roadmap validates 13 phases, 156 tasks and 29 contracts; generic validation preserves each recovery ancestor chain exactly, product unlock count is zero and charter proof hash is `5579dde55167cad9c1b024100b60e54f1d533868d4b1124a67fed233fb87b526`
+- Edge/browser verification: not applicable; governance and validation only
+- Security/data-lifecycle verification: no external call, participant data, auth payload, ground truth, holdout or product runtime change; all four prior evidence roots remain immutable
+- Known limitations/degradations: R3-T1 provides only authority and isolation; it does not change auditor/runner behavior or authorize an experiment
+- Next eligible task: `R3-T2`
+
+## R3-T2 — Mention-versus-observed audit and exception containment
+
+- Date: 2026-07-30
+- State/outcome: `done` / `passed`
+- Decision: n/a; `R3-RECOVERY` remains pending and all R2/R1/R0/P0 terminal stop verdicts remain unchanged
+- Changed files: versioned v3 capsule auditor/tests, R3 permission-profile capsule/tests, layered run/batch finalizer/tests, local proof/tests, R3 normative security clarification, roadmap/status/prompt/progress metadata and `docs/test-evidence/R3-T2/20260730T001132+0800/`
+- Commands: real no-model dummy-auth permission probe; R2 run-nine read-only replay; 48 targeted R3/validator tests; roadmap validation; build/typecheck/lint; 213-test full Vitest gate in the required local-process environment; recursive evidence SHA verification and secret-pattern scan
+- Test evidence: v3 correlates command events by item ID and treats the R2 trigger as exactly one non-authorizing warning; negative path/content/auth/proc/traversal/stderr/bounds cases fail closed; audit, evaluator, recorder-hash and aggregate injected exceptions all return only after sealed layered evidence; proof hash is `faea553178bd5dec19d9c9f737d1fdffe6af7d81266a1f6c3baa0daa60afa234`
+- Edge/browser verification: not applicable; no browser or frontend behavior changed
+- Security/data-lifecycle verification: no real credential was used by probes and no external model call occurred; generated commands cannot read the mounted auth file or write `/work`, command environment starts from no inherited variables and contains no auth/key/password/secret/token values, network and interactive escalation are disabled, ground truth values are represented only by hashes in the R3 terminal layer, and recorder manifests remain unchanged beneath the new outer manifest
+- Known limitations/degradations: Linux runtime `/proc/self/environ` remains readable despite the explicit profile deny, so R3 relies on enforced empty inheritance plus fixed non-secret variables and treats any `/proc` command/output evidence as an audit failure; unsupported permission-profile behavior blocks R3-T4
+- Next eligible task: `R3-T3`
+
+### R3-T2 freeze-readiness revalidation
+
+- Date: 2026-07-30
+- State/outcome: `done` / `passed`
+- Changed files: v3 auditor/tests, permission-profile probe/tests, finalizer/tests, local proof/tests, prompt/status/progress metadata and immutable sibling evidence `docs/test-evidence/R3-T2/20260730T004219+0800/`
+- Commands: 33 affected tests; 227-test repository gate excluding only the not-yet-eligible R3-T3 runner draft; build/typecheck; affected lint; roadmap validation; real no-model Bubblewrap probe; recursive SHA verification and secret-pattern scan
+- Test evidence: marker-only AGENTS, SKILL and their combined strict negative lookup are non-authorizing warnings while observed skill paths still fail closed; dummy-secret stderr leakage is rejected; wrong attribution now seals a failed run and batch stop; superseding proof hash is `fadca8e3f7660f144bd31ae8ab5e1155d9eb1f6ad3cc07634f2ea830306a8ec3`
+- Security/data-lifecycle verification: the real probe used only a generated dummy credential and made no model call; `networkPolicyConfiguredDisabled=true` is configuration evidence and `networkRuntimeProbed=false` avoids claiming an observation that was not made; the prior R3-T2 evidence root remains immutable
+- Known limitations/degradations: current Linux `/proc/self/environ` behavior remains contained by an empty inherited environment plus a sensitive-variable scan; a current no-model probe is still required immediately before any later authorized R3 external batch
+- Next eligible task: `R3-T3`
+
+## R3-T3 — Frozen capsule-audit containment preregistration
+
+- Date: 2026-07-30
+- State/outcome: `done` / `passed`
+- Decision: n/a; `R3-RECOVERY` remains pending, and R2/R1/R0/P0 terminal stop verdicts remain unchanged
+- Changed files: R3 recovery plan/tests, preregistration generator/tests, future authorized runner/tests, prompt/status/progress/decision metadata and `docs/test-evidence/R3-T3/20260730T114932+0800/`
+- Commands: 82 targeted R3/governance tests; 239-test full Vitest gate; build/typecheck/lint; roadmap validation; 30 real local filesystem/Codex-binary/permission-profile probes; preregistration re-verification; sensitive-pattern, symlink and diff checks
+- Test evidence: five fresh recovery-only tasks form 10 AB/BA arms with equal base capsules and only `vem-context.json` as the treatment; exact 10-file transitive source binding and preparation-source binding are frozen; preregistration hash is `8b886d443c576540f6b3b2d90e06abfd95d57955f696680dd998b748d4ffdd5b`, instrumentation hash is `1592699eea206c5d75327053c065a44a27153ff2d3e263692751e56917d6ca80`
+- Edge/browser verification: not applicable; no frontend production behavior or browser integration changed
+- Security/data-lifecycle verification: all four terminal verdict files and all five prior preregistration roots were revalidated by known hashes; ground truth, audit content needles and product holdouts remain outside participant capsules; current no-model permission preflight is mandatory before any future external arm; `externalExecutionAuthorized=false`, product unlock count is zero and external model calls are zero
+- Known limitations/degradations: network denial is bound by the strict permission profile but is not claimed as a runtime network probe; Linux `/proc/self/environ` remains readable only with a fixed non-sensitive environment and any `/proc` command/output evidence fails audit; this 5-task smoke cannot support a statistical product claim
+- Next eligible task: none without explicit owner authorization for `R3-T4`, exact preregistration hash `8b886d443c576540f6b3b2d90e06abfd95d57955f696680dd998b748d4ffdd5b`, and exactly 10 external runs
+
+## R3-T4 — Separately authorized capsule-audit containment verdict
+
+- Date: 2026-07-30
+- State/outcome: `done` / `failed`
+- Decision: `R3-RECOVERY=stop`; R3 phase is `failed`, while `R2-RECOVERY=stop`, `R1-RECOVERY=stop`, `R0-RECOVERY=stop` and `P0-VALUE=stop` remain independently terminal
+- Changed files: destination/data-bound owner authorization, one-run raw/final/ledger/evaluation evidence, aggregate verdict/hash evidence, ROADMAP decision/phase/task state and decision/status/delivery/prompt/progress records
+- Execution result: the exact R3-T3 preregistration and all 10 runtime source bindings passed, as did the current no-model permission preflight. The first direct arm acquired one fresh unique thread, but repeated external request timeouts ended in `turn.failed`, an empty authoritative final response, missing `turn.completed` and process exit code 1.
+- Stop behavior: `protocol-response-integrity-failed` is a preregistered stop condition, so the batch stopped after 1/10 processes and the remaining nine external calls were not executed. `external-run-did-not-produce-ten-fresh-complete-processes` is also recorded as an adjust reason but cannot override stop.
+- Integrity result: the v3 capsule audit passed with no warnings or failures; permission profile/auth boundary, ground-truth evaluator, recorder evidence, outer manifests and exception/failure sealing all passed. No wrong attribution occurred and no participant-visible ground truth, prior task or product holdout was consumed.
+- Evidence: `docs/test-evidence/R3-T4/20260730T133111-0800/`; canonical verdict hash is `7a3e5b6bf94067e4681258982690afe911c51dc3da0e6cc4af66d069d537d95b`, authorization hash is `5858c3a5e4595cff03fd4980732afbc99299003bdf00ac6c8db3d5e720eda1ac`, and all result/batch/run SHA manifests verify.
+- Commands: exact preregistration/source/authorization verification; 27 pre-run runner/plan/finalizer tests and 31 terminal-state targeted tests; one external fresh-context process before frozen batch stop; result/batch/run SHA verification; full Vitest/build/typecheck/lint/roadmap gates
+- Test evidence: 42 Vitest files and 240 tests passed; roadmap validates 13 phases, 156 tasks and 29 contracts; build, typecheck, lint, frozen preregistration re-verification, secret/symlink/ignore and Git whitespace checks passed
+- Edge/browser verification: not applicable; no browser or frontend behavior changed
+- Security/data-lifecycle verification: only the explicitly authorized frozen participant capsule was available to the external model; the participant workspace was read-only with one runner-owned final-response file, auth was unreadable to generated commands, and private evaluator inputs remained outside the capsule
+- Known limitations/degradations: only one direct arm ran, so there is no paired correctness or cost comparison and no statistical/product-value claim; the external service request timed out despite retries; R3 cannot supersede prior stops or unlock product work
+- Next eligible task: none; R3, R2, R1, R0 and P0 are failed, and no product task is unlocked
+
+## R4-T1 — Independent external-transport timeout remediation charter
+
+- Date: 2026-07-30
+- State/outcome: `done` / `passed`
+- Decision: n/a; `R4-RECOVERY` remains pending while R3/R2/R1/R0/P0 terminal stops remain immutable
+- Changed files: R4 normative contract, independent phase/decision/task chain, owner decision, delivery plan, four prompts, five-terminal charter proof/tests and status/progress metadata
+- Charter result: R4 phase and R4-T1 have empty dependencies, recover failed R3 by immutable evidence only, cannot become an existing phase/task dependency, and explicitly do not supersede R3, R2, R1, R0 or P0 decision chains
+- Commands: roadmap validation; 32 targeted validator/R0/R1/R2/R3/R4 charter tests; charter generator and SHA-256 verification
+- Test evidence: roadmap validates 14 phases, 160 tasks and 30 contracts; proof root is `docs/test-evidence/R4-T1/20260730T141700+0800/`, proof hash is `fc665ae0c79a45d8a2e4ef152ddd54681b6e9c9561de33432349d7cb1f7d1bb3`, product unlock count is zero
+- Edge/browser verification: not applicable; governance and validation only
+- Security/data-lifecycle verification: no external call, participant payload, auth data, ground truth, holdout or product runtime change; all five prior evidence roots remain immutable
+- Known limitations/degradations: R4-T1 supplies only authority and isolation; it does not yet classify timeout evidence or implement retry behavior
+- Next eligible task: `R4-T2`
+
+## R4-T2 — Zero-model transport preflight and bounded retry controller
+
+- Date: 2026-07-30
+- State/outcome: `done` / `passed`
+- Decision: n/a; `R4-RECOVERY` remains pending and all five prior stop verdicts remain immutable
+- Changed files: R4 local transport preflight, narrow attempt classifier, immutable attempt sealer, bounded retry planner, R3 replay proof and 16 targeted tests
+- Remediation result: only a sealed nonzero attempt with empty/missing authoritative final response, no agent response, no `turn.completed`, terminal timeout `turn.failed`, passing audit and permission boundary is retryable; partial/completed response, auth/rate-limit, unknown, audit/security or evidence failure is never retryable
+- Budget result: each arm permits at most one retry and the full future batch permits at most 20 process attempts; every attempt uses a unique run ID and immutable evidence hash, and later success cannot overwrite prior failure evidence
+- Commands: 16 targeted tests; real local Codex binary and permission-profile probe; immutable R3 timeout replay; proof generation and SHA verification
+- Test evidence: `docs/test-evidence/R4-T2/20260730T142100+0800/`, proof hash `2d19fd9b848018f08d3dcbd937c17f6764036974666d626bb8827ddfcbe9a42f`
+- Edge/browser verification: not applicable; no browser behavior changed
+- Security/data-lifecycle verification: preflight used a generated dummy credential and made no model/provider call; generated commands could not read auth or write workspace; R3 evidence was read only and each replay input was hash-bound
+- Known limitations/degradations: local preflight proves binary/capsule/permission capability only and explicitly records `networkRuntimeProbed=false`; it cannot guarantee provider reachability
+- Next eligible task: `R4-T3`
+
+## R4-T3 — Frozen external-transport timeout preregistration
+
+- Date: 2026-07-30
+- State/outcome: `done` / `passed`
+- Decision: n/a; `R4-RECOVERY` remains pending and all five prior terminal stops remain immutable
+- Changed files: fresh R4 recovery plan/fixture, frozen future bounded-attempt runner, preregistration generator, authorization/verifier/mutation tests, delivery/prompt/status/progress/decision metadata and `docs/test-evidence/R4-T3/20260730T143215-0800/`
+- Preregistration result: five fresh transport-only tasks define 10 counterbalanced arms; each arm permits one retry only for sealed timeout-before-response and the full batch permits at most 20 external process attempts
+- Evidence/cost result: every attempt consumes budget and retains independent evidence; later success cannot overwrite failure, and pair cost includes the total duration of failed attempts plus retry
+- Hashes: preregistration `0ddb8c6f51d140042167231a22f8b3f73735fc8d0e271e3da5f11590c9995104`; instrumentation `78ec7bd51ffd3cbf7f36cddabdd16dcd73d5d88877700632350471d81865f064`; data scope `2fe4246a5cdd3aee19efb1d2e2f56f2469ba82c8f5dc32f1651c68a86d0b8ca8`
+- Commands: 28 R4 plan/transport/replay/prereg/runner tests; affected lint; 30 real local filesystem/Codex-binary/permission-profile probes; future-runner digest/source/probe re-verification and symlink scan
+- Test evidence: 48 Vitest files and 272 tests passed; build, typecheck and lint passed; roadmap validates 14 phases, 160 tasks and 30 contracts
+- Edge/browser verification: not applicable; no browser or frontend production behavior changed
+- Security/data-lifecycle verification: five prior terminal verdicts and six prior preregistration hashes were revalidated; ground truth and product holdout remain outside participant capsules; local probes made no provider/model call; external authorization remains false
+- Known limitations/degradations: local preflight does not prove provider reachability; this is a recovery-only engineering smoke and cannot support a statistical/product claim
+- Next eligible task: none until exact R4-T4 owner authorization binds preregistration hash, OpenAI Codex/gpt-5.6-sol destination, data-scope hash, 10 successful arms and at most 20 process attempts
+
+## R4-T4 — Owner-authorized batch blocked by non-terminating transport process
+
+- Date: 2026-07-30
+- State/outcome: `blocked` / `blocked`
+- Decision: `pending`; no `continue`, `adjust` or `stop` verdict was generated or inferred
+- Authorization: OpenAI Codex service / `gpt-5.6-sol`, 10 successful arms, at most 20 external processes, one retry only after a sealed timeout-before-response; authorization hash `4de37dc38ae5c13661d8f032f8cf1b7c2644a4974eae5f44f13c949a9980865f`
+- Execution result: frozen preregistration/source/data-scope and current no-model preflight passed; the first direct arm started one fresh process/thread, exhausted five WebSocket timeout reconnects, fell back to HTTPS, exhausted five more timeout reconnects, then remained alive without `turn.failed`, `turn.completed`, authoritative final response or process terminal
+- Safety action: the hanging batch was interrupted to enforce finite execution; no retry or second external process was started because the first attempt was not sealed and therefore was not retry-eligible
+- Evidence: raw partial stdout/stderr and local preflight are retained under `docs/test-evidence/R4-T4/20260730T144143-0800/`; interruption canonical hash `95021eac99d93d49985ee46d003a4108ff7a524244d83e3521b8edff8ecffd70`
+- Commands: frozen preregistration/source and owner-authorization verification; one authorized R4-T4 runner invocation; partial-event category inspection; interruption hash verification; 33 targeted R4/roadmap tests; roadmap validation; build, typecheck, lint and full test
+- Test results: 33 targeted tests passed; roadmap validates 14 phases, 160 tasks and 30 contracts; build/typecheck/lint passed; all 48 Vitest files and 273 tests passed when run outside the restricted child-process sandbox (the first sandboxed full-test attempt produced expected `EPERM` child-spawn interference)
+- Edge/browser verification: not applicable; no browser or frontend behavior changed
+- Security/data-lifecycle verification: participant capsule remained bound to the authorized data-scope hash; private ground truth, audit needles, product holdout, repository-other files and authentication credentials were not participant data; existing R3/R2/R1/R0/P0 stops remain immutable
+- Known limitations/degradations: frozen R4 runner lacks a runner-owned wall-clock deadline, process-tree termination and interruption-safe sealing; unsealed partial evidence cannot support a verdict or retry
+- Next eligible task: none; a new independent local-only remediation phase requires explicit owner authorization, then a new preregistration and separate authorization before any external experiment
+
+## R5-T1 — Independent process-tree termination remediation charter
+
+- Date: 2026-07-30
+- State/outcome: `done` / `passed`
+- Decision: n/a; `R5-RECOVERY` remains pending, `R4-T4`/R4 remain blocked, and all five prior terminal stop verdicts remain immutable
+- Changed files: R5 normative contract, blocked-phase remediation validator, independent phase/decision/task chain, owner decision, delivery plan, four prompts, charter proof/tests and status/progress metadata
+- Charter result: R5 phase and R5-T1 have empty dependencies, read blocked R4 only through immutable evidence, cannot become an existing phase/task dependency, and explicitly do not supersede R4 pending or R3/R2/R1/R0/P0 terminal decision chains
+- Commands: roadmap validation; 30 targeted validator/R4/R5 charter tests; build; typecheck; lint; full test outside the restricted child-process sandbox; charter generator and SHA-256 verification
+- Test evidence: roadmap validates 15 phases, 164 tasks and 31 contracts; 49 Vitest files and 282 tests passed; build, typecheck and lint passed; proof root is `docs/test-evidence/R5-T1/20260730T152000+0800/`, proof hash is `0c1636405758498cd84e67fc0e9d27868ebf6d60f59c0e408edc51d3b16f24c0`, product unlock count is zero
+- Edge/browser verification: not applicable; governance and validation only
+- Security/data-lifecycle verification: no external call, participant payload, auth data, ground truth, holdout, process runner or product runtime changed; R4 partial evidence and all prior terminal evidence remain immutable
+- Known limitations/degradations: R5-T1 supplies only authority and isolation; runner-owned deadline, process-tree termination, stream drain and interruption-safe sealing remain R5-T2
+- Next eligible task: `R5-T2`
+
+## R5-T2 — Wall-clock/process-tree termination and interruption-safe sealing
+
+- Date: 2026-07-30
+- State/outcome: `done` / `passed`
+- Decision: n/a; `R5-RECOVERY` and `R4-RECOVERY` remain pending, R4-T4/R4 remain blocked, and all five prior terminal stop verdicts remain immutable
+- Changed files: versioned R5 process terminalizer, process-tree/stream/final/boundary tests, local proof generator, sealed evidence, delivery/prompt/status/progress metadata and R5-T2 roadmap state
+- Remediation result: the trusted outer boundary starts a monotonic deadline at spawn, isolates the participant in a process group, applies bounded `SIGTERM` then `SIGKILL`, verifies group emptiness, drains or truthfully closes stdout/stderr/final observations, and seals receipt/boundary/termination/failure/hash evidence before return
+- Failure result: cancellation/signal, launch failure, audit/evaluator exceptions, missing final, orphan reports and contradictory terminal observations fail closed; runner termination remains separate from an actually observed provider `turn.failed` and never invents one
+- Commands: 10 process-terminalizer tests; local seven-process synthetic proof; top and per-run SHA-256 verification; full test outside the restricted child-process sandbox; build; typecheck; lint; roadmap validation; Git whitespace check
+- Test evidence: `docs/test-evidence/R5-T2/20260730T153607+0800/`; proof hash `f42297572767611c7707b3d5f0f363ba54f409c4c8ae832652bb808214621799`; 51 Vitest files and 293 tests passed; build, typecheck, lint and the 15-phase/164-task/31-contract roadmap validation passed
+- Edge/browser verification: not applicable; no browser or frontend behavior changed
+- Security/data-lifecycle verification: all probes used local synthetic Node processes with no provider, credential, participant payload, ground truth or product holdout access; every run used bounded runner-owned evidence roots and SHA manifests; the immutable R4 interruption hash was revalidated without changing R4 evidence
+- Known limitations/degradations: R5-T2 proves only the local terminalization primitive and failure sealing; it does not freeze tasks, runtime bindings, deadline/grace/process budget or external authorization for a new batch
+- Next eligible task: `R5-T3`
+
+## R5-T3 — Frozen process-termination recovery preregistration
+
+- Date: 2026-07-30
+- State/outcome: `done` / `passed`
+- Decision: n/a; `R5-RECOVERY` and `R4-RECOVERY` remain pending, R4-T4/R4 remain blocked, and all five prior terminal stop verdicts remain immutable
+- Changed files: fresh R5 task/fixture/verdict plan, termination-aware classifier and retry policy, frozen R5-T4 runner/verifier, preregistration generator/tests, immutable preregistration evidence, delivery/prompt/status/progress/decision metadata and R5-T3 roadmap state
+- Preregistration result: five fresh process-termination-only tasks define 10 counterbalanced arms with equal-base read-only capsules; the 10-source runtime closure includes the R5-T4 runner, process terminalizer and attempt classifier, and no R4 runner hash is reused
+- Termination/budget result: every process starts with a 120000 ms monotonic deadline, 5000 ms graceful window, 5000 ms force-observation window and `SIGTERM`→`SIGKILL`; only a sealed observed provider timeout may retry once, runner wall-clock termination is non-retryable, and the full batch is capped at 20 processes
+- Hashes: preregistration `8a7b315cfa5597b046228d9597a5805ad3b3dbd0becaa83a37f9ea81475ec886`; instrumentation `02fa73cd42572e703c33516b5a5f10a123f0f8e34dd0b82275016f8a8f9c6641`; data scope `fefd57ecda3606e69eadb1165618cff24f76ce4ac699243a52f61171c98edba6`; termination policy `ca4ffce3cf06abea99712e581a9732d6579a5490ff9f2bc24e3265b39991404f`
+- Commands: 20 R5 terminalizer/plan/classifier/preregistration tests; 30 real local filesystem/Codex-binary/permission-profile probes; preregistration/source/probe re-verification; symlink scan; full test outside the restricted child-process sandbox; build; typecheck; lint; roadmap validation; Git whitespace check
+- Test evidence: `docs/test-evidence/R5-T3/20260730T154956-0800/`; 53 Vitest files and 303 tests passed; build, typecheck, lint and the 15-phase/164-task/31-contract roadmap validation passed
+- Edge/browser verification: not applicable; no browser or frontend behavior changed
+- Security/data-lifecycle verification: ground truth, prior task exclusions, product holdout and audit needles remain evaluator-only; participant capsules are read-only, generated commands cannot read auth, all 30 probes made no model call, `externalExecutionAuthorized=false`, and R4 plus prior terminal evidence hashes were read-only verified
+- Known limitations/degradations: local probes do not prove provider reachability or external batch success; no R5 external process is authorized, and even a future `continue` cannot alter R4 or unlock product work
+- Next eligible task: none until a new owner authorization binds the exact R5 preregistration, OpenAI Codex/`gpt-5.6-sol`, participant data scope, 10 successful arms, 20-process cap, deadline/grace/force windows and `SIGTERM`→`SIGKILL` policy
+
+## R5-T4 — Authorized batch stopped before participant spawn
+
+- Date: 2026-07-30
+- State/outcome: `done` / `failed`
+- Decision: `R5-RECOVERY=stop`; R5 phase is `failed`, R4-T4/R4 remain blocked with R4-RECOVERY pending, and all five prior terminal stop verdicts remain immutable
+- Authorization: OpenAI Codex service / `gpt-5.6-sol`, preregistration `8a7b315cfa5597b046228d9597a5805ad3b3dbd0becaa83a37f9ea81475ec886`, data scope `fefd57ecda3606e69eadb1165618cff24f76ce4ac699243a52f61171c98edba6`, 10 successful arms, at most 20 processes, 120000 ms deadline, two 5000 ms termination windows and `SIGTERM`→`SIGKILL`; authorization hash `4e682b719e64375f52613f128f04d39ca51d638ceb01bf1730decca0283f190c`
+- Execution result: frozen preregistration/source/probe/authorization verification and current local preflight passed; the first planned direct arm reached terminalizer option validation, where the R3 capsule invocation lacked the explicit `env` record required by the frozen R5 terminalizer, causing `R5_EXECUTION_OPTIONS_INVALID` before `spawn`
+- Safety/result: no participant process or process group was created, no model request or provider response occurred, no retry or next arm started, and external process/model-call count remained zero; changing either frozen source would invalidate the authorized instrumentation/preregistration hash
+- Evidence: `docs/test-evidence/R5-T4/20260730T155920-0800/`; canonical verdict hash `c04a6631b6285735fa3ff1da0d576e31b1a85b3fbc981a69c25aa4cb27b0a016`; raw failure hash `8e93e4a06204cf1495ef9eb21729f8465cc041a3226af3bcb6fbe3320ccf2813`; all `RESULTS.sha256` entries verify
+- Commands: exact preregistration/source/probe/authorization verification; 24 pre-run R5 tests; full pre-run test/build/typecheck/lint/roadmap gates; three fail-closed runner invocations (two pre-execution path-ID rejections and one pre-spawn invocation-contract rejection); process absence and evidence permission checks; terminal evidence and hash verification
+- Test results: final full suite passed 54 Vitest files and 308 tests; build, typecheck, lint, roadmap validation, R5 targeted terminal-state tests and all result-manifest hashes passed
+- Edge/browser verification: not applicable; no browser or frontend behavior changed
+- Security/data-lifecycle verification: no participant data, private ground truth, holdout, audit needles, authentication key or repository-other files were sent to a model; result directories are 0700, evidence files are 0600, and R4 plus prior terminal evidence remains unchanged
+- Known limitations/degradations: there is no external correctness, cost, provider reachability or process-tree deadline observation because zero participant processes spawned; a compatible runner requires a new immutable source binding, preregistration and exact owner authorization in a separately authorized route
+- Next eligible task: none; R5, R3, R2, R1, R0 and P0 are failed, while R4 remains blocked, and no product task is unlocked
+
+## R6-T1 — Independent pre-spawn invocation remediation charter
+
+- Date: 2026-07-30
+- State/outcome: `done` / `passed`
+- Decision: `n/a`; R6-RECOVERY remains pending and no external decision attempt is authorized
+- Changed files: R6 normative contract/requirements/roadmap/decision/delivery/prompt metadata, recovery-after-blocked-remediation validator, R6 charter proof/tests, historical charter count expectations, progress and status
+- Charter result: R6 is an empty-dependency recovery of failed R5; it preserves R5-RECOVERY stop, R4-T4/R4 blocked with R4-RECOVERY pending, and the P0/R0/R1/R2/R3 stop chains without creating an existing product dependency
+- Validator result: recovery after a failed blocked-remediation phase may preserve an inherited blocked/pending ancestor as well as terminal stop ancestors; mutation tests reject rewriting that ancestor into a fabricated stop
+- Evidence: `docs/test-evidence/R6-T1/20260730T164000-0800/`; proof hash `70d3a440099d3bb7ef8c676e07cb7e38351301548d8ee881c4959e4d58e9531f`; manifest entries verify
+- Commands: 26 validator/R6 targeted tests; 27 R0–R6 charter tests; full suite outside the restricted child-process sandbox; build; typecheck; lint; roadmap validation
+- Test results: 55 Vitest files and 314 tests passed outside the sandbox; build, typecheck, lint and 16-phase/168-task/32-contract roadmap validation passed
+- Edge/browser verification: not applicable; no browser or frontend behavior changed
+- Security/data-lifecycle verification: no participant process/model call occurred, no provider network was probed, immutable prior evidence was not changed, and R6 creates only bounded local charter evidence
+- Known limitations/degradations: runtime invocation compatibility is not fixed by R6-T1; R6-T2 is required before any new preregistration
+- Next eligible task: R6-T2 only
+
+## R6-T2 — Explicit outer env and zero-model compatibility preflight
+
+- Date: 2026-07-30
+- State/outcome: `done` / `passed`
+- Decision: `n/a`; no R6 external decision attempt is authorized
+- Changed files: R3 capsule invocation/probe, R5 terminalizer shared invocation predicate, R6 compatibility preflight/proof/tests, frozen R5 historical drift assertion, prompt/progress/status and R6-T2 roadmap state
+- Runtime result: exact R3 decision and permission-probe invocations now carry the same immutable `{PATH: "/usr/bin:/bin"}` outer env; the exact environment and no-host-inheritance policy are part of invocation evidence, and the terminalizer consumes the same predicate proven by preflight
+- Security result: a real local Bubblewrap permission-profile probe passed with generated-command auth denial, read-only workspace, no sensitive proc environment, no host env inheritance and no provider network probe
+- Evidence: `docs/test-evidence/R6-T2/20260730T164800-0800/`; proof hash `2fe69ddf81f1a6a6a15b84ae144cdbf20dd67706cd4722ae3f91358b0086b8fa`; outer-env hash `cf24c3c5e349e230a9c04223dceb4854bd377915e21f46d830134b085bc3579d`; manifest entries verify
+- Commands: 19 R6/capsule/terminalizer targeted tests outside the sandbox; real zero-model proof; evidence manifest/symlink checks; full suite outside the restricted child-process sandbox; build; typecheck; lint; roadmap validation
+- Test results: 57 Vitest files and 319 tests passed outside the sandbox; build, typecheck, lint and 16-phase/168-task/32-contract roadmap validation passed
+- Edge/browser verification: not applicable; no browser or frontend behavior changed
+- Security/data-lifecycle verification: exact decision invocation was constructed but never executed; participant process, provider request, network probe and model call counts are zero; R5/R4 and earlier evidence hashes remain unchanged
+- Known limitations/degradations: local compatibility proves the pre-spawn contract and permission boundary, not provider reachability or batch success; old R5 preregistration correctly fails current-source verification and cannot be reused
+- Next eligible task: R6-T3 only
+
+## R6-T3 — Invocation-compatible recovery preregistration
+
+- Date: 2026-07-30
+- State/outcome: `done` / `passed`
+- Decision: `pending`; R6-T4 has no external execution authorization
+- Changed files: fresh R6 task/fixture/verdict plan, invocation-compatible classifier/retry policy and runner/verifier, preregistration generator/tests, immutable preregistration evidence, prompt/progress/status/decision metadata and R6-T3 roadmap state
+- Preregistration result: five fresh invocation-contract-only tasks define 10 counterbalanced arms with equal-base read-only capsules; the 11-source runtime closure binds the R6-T4 runner, current R5 terminalizer, R6 classifier/plan, R6 compatibility preflight and capsule/audit/canonical dependencies
+- Environment/termination result: every exact invocation binds immutable `PATH=/usr/bin:/bin` and the R6-T2 compatibility proof; every process retains the 120000 ms monotonic deadline, 5000 ms graceful and force-observation windows, `SIGTERM`→`SIGKILL`, provider-timeout-only one-retry rule and 20-process cap
+- Hashes: preregistration `935c7b8c8880d6439238096b99c3ada3338a7c4c94fec192a7d4c8806f9610c9`; instrumentation `a6ac0651d8258c83da0db47accb216c41682df0a1d075768c407b8cfdc939072`; data scope `e89a0a77f6f2ef099f4f68a1838f39574a1caf2747dccf95494d91d7e3153d10`; termination policy `99e34c03e6b15a1bbeedc3040ccd6332d01f2ab6059cce111f978a51e937a7cd`; outer env `cf24c3c5e349e230a9c04223dceb4854bd377915e21f46d830134b085bc3579d`
+- Commands: 24 R6/terminalizer targeted tests; 30 real local filesystem/Codex-binary/permission-profile probes; frozen preregistration/source/probe verification; symlink/permission scan; full suite outside the restricted child-process sandbox; build; typecheck; lint; roadmap validation; Git whitespace check
+- Test results: 59 Vitest files and 330 tests passed outside the sandbox; build, typecheck, lint and 16-phase/168-task/32-contract roadmap validation passed
+- Edge/browser verification: not applicable; no browser or frontend behavior changed
+- Security/data-lifecycle verification: no `codex exec` participant or provider request was started; all probes report modelCall=false/networkRuntimeProbed=false, outer env has no host inheritance, capsules remain read-only, generated-command auth remains denied, and R5/R4/prior evidence is immutable
+- Known limitations/degradations: local probes do not establish provider reachability or batch outcome; R6-T4 requires a new authorization bound to every new hash/environment/termination/process boundary
+- Next eligible task: none until exact R6-T4 owner authorization
+
+## R6-T4 — Authorized invocation-compatible decision attempt one
+
+- Date: 2026-07-30
+- State/outcome: `done` / `passed`
+- Decision: `R6-RECOVERY=adjust`; attempt one is immutable, R6 remains `in_progress`, and R5 stop, R4 blocked/pending plus all earlier stop chains remain unchanged
+- Publish/authorization: commit `07ff373` (`fix: preregister R6 invocation recovery`) was pushed to `origin/agent/complete-p0-r1-stages` before execution; the exact OpenAI Codex service / `gpt-5.6-sol` preregistration, data-scope, outer-env, 10-arm, 20-process and 120000/5000/5000ms termination boundary then validated with authorization hash `c2f53593214107adeb810172a65072ce91d03d41f664d5d85fbf58c8321d7d74`
+- Execution result: frozen preregistration/source/capsule/environment and current local preflight passed; the first direct arm started one fresh process/thread and emitted reconnect progress, but produced no provider `turn.failed`, `turn.completed` or authoritative final response before the 120000 ms runner deadline
+- Termination/retry result: the trusted outer runner sent `SIGTERM`, observed the process group empty, drained bounded streams, recorded an empty final file and sealed raw/ledger/boundary/termination/failure evidence before return; `providerTurnFailedObserved=false`, so the classification is non-retryable `runner-wall-clock-terminated-before-response`, not a retryable provider timeout, and no second process started
+- Evidence: `docs/test-evidence/R6-T4/20260730T171100-0800/`; one process attempt, zero successful arms, 19 process attempts unused; verdict hash `ec823dada3f0da0c442672ce966ca2f6da29446e37066ffe6bb328a02a031388`; `RESULTS.sha256` file hash `89fd404e6ba72dc9397044a9a496c8c0195ede8d64c771dfb0912c7d1d2745d8`; every top-level and per-attempt manifest entry verifies
+- Changed files: immutable R6-T4 authorization/result evidence, R6-T4 prompt completion annotation, roadmap/requirements/design/status/progress/decision metadata, explicit R6-T5/T6/T7 adjust route, and validator/charter tests for mandatory remediation plus superseding attempt after `adjust`
+- Commands: commit and SSH push; exact preregistration/authorization verification; one authorized R6-T4 runner invocation; result/attempt SHA verification; permission/symlink inspection; 35 targeted tests; full test; build; typecheck; lint; roadmap validation; Git whitespace check
+- Test results: 35 targeted tests and all 59 Vitest files / 331 tests passed; build, typecheck and lint passed; roadmap validates 16 phases, 171 tasks and 32 contracts
+- Edge/browser verification: not applicable; this task exercised the isolated Codex process/provider boundary and changed no browser/frontend behavior
+- Security/data-lifecycle verification: participant capsule was read-only with generated-command auth denial and fixed non-inherited outer env; private ground truth, product holdout and repository-other files were not participant data; the sole process tree terminated, evidence root is 0700, evidence files are 0600, no symlink exists and no retry reused the authorization
+- Known limitations/degradations: this attempt establishes invocation compatibility and safe terminalization but no correctness, pairwise cost or provider-timeout result because zero arms completed; the 120000 ms runner deadline ended before a provider terminal was observed
+- Next eligible task: none until the owner explicitly authorizes local-only R6-T5 retry-horizon/deadline remediation; R6-T6 must then freeze a new no-call preregistration, and R6-T7 requires another exact external authorization
+
+## R6-T5 — Local retry-horizon / outer-deadline remediation
+
+- Date: 2026-07-30
+- State/outcome: `done` / `passed`
+- Decision: `n/a`; `R6-RECOVERY` attempt one remains immutable `adjust`, attempt two remains pending
+- Changed files: immutable R6-T4 deadline replay and compatibility-contract module/tests, local proof generator/tests and evidence, R6 design/delivery/prompt/progress/status/decision metadata, and R6-T5 roadmap state
+- Replay result: every bound R6-T4 `RESULTS.sha256` entry and receipt/raw JSONL relation verified; trusted monotonic receipts place reconnect 2/5, 3/5 and 4/5 at 75498, 90905 and 106691 ms after spawn, with runner termination at 120005 ms and no provider terminal or authoritative response
+- Contract result: reconnect text remains an incomplete lower bound and cannot authorize retry; R6-T6 must bind explicit provider-config or version-bound Codex-instrumentation provenance, with minimum horizon 120006 ms, minimum observation margin 31574 ms, minimum outer deadline 151580 ms, outer maximum 600000 ms and margin maximum 120000 ms
+- Preserved policy: process-spawn monotonic origin, 5000 ms grace, 5000 ms force observation, `SIGTERM`→`SIGKILL`, at most one sealed observed provider-timeout retry per arm, 20-process cap, per-attempt budget/evidence retention, and non-retryable runner termination
+- Evidence: `docs/test-evidence/R6-T5/20260730T174418-0800/`; proof hash `82585caca431e25e6bc0f8a7737cdab4a437ecd5cf8ebbb88eb6158c5c719fcb`; compatibility-contract hash `6145537843ed5c35297196ec0dee74f618f0dd17bc9d89dcfa7bab87a07db4c2`; manifest entries, 0700 root, 0600 files and no-symlink checks passed
+- Commands: 7 targeted tests; targeted/full lint; local proof generation; SHA/permission/symlink verification; full suite outside the restricted child-process sandbox; build; typecheck; roadmap validation; Git whitespace check
+- Test results: 7 targeted tests and all 61 Vitest files / 338 tests passed; build, typecheck and lint passed; roadmap validates 16 phases, 171 tasks and 32 contracts
+- Edge/browser verification: not applicable; no browser or frontend behavior changed
+- Security/data-lifecycle verification: only sealed R6-T4 evidence was read; external process/model/provider-request/network-probe counts are zero; attempt one and all prior verdict/evidence chains remain immutable; product unlock count is zero
+- Known limitations/degradations: R6-T5 does not establish the provider's complete retry horizon and intentionally selects no exact attempt-two deadline; R6-T6 must obtain separate authority, freeze a compliant policy, and keep `externalExecutionAuthorized=false`
+- Next eligible task: R6-T6 is structurally next but is not authorized by the R6-T5 grant; do not start it without explicit owner authorization
+
+## R6-T6 — Attempt-two no-call preregistration
+
+- Date: 2026-07-30
+- State/outcome: `done` / `passed`
+- Decision: `pending`; `R6-RECOVERY` current attempt remains R6-T7 and has no external execution authorization
+- Changed files: new attempt-two plan/fixture/verdict policy, R6-T6 preregistration generator/tests, separately hash-bound R6-T7 runner/verifier, immutable preregistration evidence, and roadmap/design/delivery/prompt/progress/status/decision metadata
+- Policy result: exact Codex `0.144.5` version-bound instrumentation selects a 480000 ms bounded observation horizon plus a 120000 ms terminal-observation margin for a 600000 ms monotonic outer deadline from participant spawn; this is explicitly not a provider-internal retry-schedule claim
+- Preregistration result: five fresh deadline-remediation tasks produce 10 counterbalanced arms with equal-base read-only capsules; 13 runtime sources, attempt-one immutable results, R6-T5 proof/contract, fixed outer env, task/data scope, thresholds and authorization gate are hash-bound
+- Preserved safety: 5000 ms graceful and force-observation windows, `SIGTERM`→`SIGKILL`, at most one sealed observed provider-timeout retry per arm, non-retryable runner deadline, 20-process cap, per-attempt evidence retention, withheld ground truth and product-holdout exclusion
+- Evidence: `docs/test-evidence/R6-T6/20260730T180734-0800/`; preregistration `41ce5ab1a65437defdfcd86c0b4ec4db3e922af8a6c5e5642d44384ea910627e`; instrumentation `c3c4f3bc1d7e9592e197705592606bbefba67d71fb22c526df5d8b4fe4748d48`; data scope `aab9e34e3dd6074ea691cf453823dd59d08e7bbe2ee6b4eb37b7e82507c648cd`; deadline candidate `dd11e6718e0d0e907fd883195be2b62ee03a963549acd9c056b06a8a65e81be4`; termination policy `76b982ab7c12d5da5210f338b8f620f47506db6b99f47261634dea40dc1e7850`; outer env `cf24c3c5e349e230a9c04223dceb4854bd377915e21f46d830134b085bc3579d`
+- Commands: 8 initial targeted tests; 30 real local filesystem/Codex-binary/permission-profile probes; preregistration verifier; immutable hash, permission and symlink checks; 35 R6/terminalizer targeted tests; full suite; build; typecheck; lint; roadmap validation; Git whitespace check
+- Test results: 35 targeted tests and all 62 Vitest files / 342 tests passed; build, typecheck and lint passed; roadmap validates 16 phases, 171 tasks and 32 contracts
+- Edge/browser verification: not applicable; no browser or frontend product behavior changed
+- Security/data-lifecycle verification: no participant `codex exec`, provider request, provider network probe or model call ran; R6-T4 result and R6-T5 proof hashes remain unchanged; all evidence directories/files are 0700/0600 with no symlink; externalExecutionAuthorized=false and productUnlockCount=0
+- Known limitations/degradations: the 480000 ms horizon is a bounded runner observation policy, not proof of the provider's complete internal retry horizon or reachability; exact Codex version/source drift fails closed before any R6-T7 spawn
+- Next eligible task: none until a new exact R6-T7 owner authorization binds the complete R6-T6 hashes, destination/model/data scope, 600000/5000/5000 ms termination policy, signals, 10 successful arms and 20-process cap
+
+## R6-T7 — Authorized decision attempt two
+
+- Date: 2026-07-30
+- State/outcome: `done` / `passed`
+- Decision: `R6-RECOVERY=adjust`; attempts one and two are immutable, R6 remains `in_progress`, and R5 stop, R4 blocked/pending plus all earlier stop chains remain unchanged
+- Authorization: published commit `ec16d64174951036555c4297858547b0fe5e8c59`; OpenAI Codex service / `gpt-5.6-sol`; exact preregistration/instrumentation/data-scope/deadline-contract/deadline-candidate/outer-env bindings; 10-arm target, 20-process cap, 600000/5000/5000 ms termination policy and provider-timeout-only retry boundary; canonical authorization hash `a11336fb6fa5f11b5eb7a2b5f6471be1612617367e172d28899d3be08be82f2a`
+- Execution result: one direct process obtained fresh thread `019fb298-81a7-7d52-b116-3d415393d847`; trusted receipts observed WebSocket reconnect 2/5 at about 70862 ms, 3/5 at 86311 ms, 4/5 at 102114 ms, 5/5 at 118739 ms, fallback HTTPS at 137057 ms, then HTTPS reconnect 1/5 at 290850 ms, 2/5 at 444962 ms and 3/5 at 599075 ms
+- Terminal result: runner sent `SIGTERM` at about 599996 ms; `SIGKILL` was unnecessary, the process group was empty, and no provider `turn.failed`, `turn.completed`, agent message or authoritative final response was observed. The sealed failure codes are `R5_FINAL_RESPONSE_EMPTY` and `R5_WALL_CLOCK_DEADLINE`
+- Retry/budget result: runner deadline termination is non-retryable and cannot be reclassified as provider timeout, so no retry or next arm started; 1 process attempt, 0/10 successful arms and 19 process attempts unused
+- Evidence: `docs/test-evidence/R6-T7/20260730T183547-0800/`; canonical verdict hash `254a47f33b9a1348e87eef99181e7c581d0a244ef1a154119240c1c8e481a961`; raw verdict/run-index/RESULTS hashes `1283979be6a67ed5298877f8ab30c0eca087f8a1fcf88d3032364a353d0acf96` / `cea55223658df24837b5f3995c345e260c228343ccc431487ec82a6f7915c1f3` / `2ba2b0537b4fb312e2e82cdd69a7c87b41d05b7117572c5b58978bd300e8fdd7`
+- Changed files: immutable R6-T7 owner authorization/result evidence; R6-T7 prompt completion annotation; R6-T8/T9/T10 adjust route; roadmap/requirements/design/delivery/status/progress/decision metadata; current roadmap-count assertions in seven charter tests
+- Tests added/updated: roadmap contract reverse mapping now covers R6-T8/T9/T10 and dual-transport ordered-receipt requirements; charter tests expect the current 174-task roadmap. No frozen R6-T7 runtime source was modified
+- Commands: commit/push and remote SHA verification before execution; exact preregistration/authorization verification; one authorized R6-T7 runner invocation; top-level/per-attempt SHA verification; permission/symlink inspection; 62 R6/terminalizer/roadmap targeted tests; full test; build; typecheck; lint; roadmap validation; Git whitespace check
+- Test results: 9 targeted files / 62 tests and all 62 Vitest files / 342 tests passed; build, typecheck and lint passed; roadmap validates 16 phases, 174 tasks and 32 contracts. The first full run exposed only six stale 171-task current-count assertions, which were updated to 174 before the clean rerun
+- Edge/browser verification: not applicable; no browser or frontend product behavior changed
+- Security/data-lifecycle verification: participant transfer stayed within the authorized data-scope hash; only one authorized external process ran; prior attempts/evidence were not overwritten; all R6-T7 evidence directories/files are 0700/0600 with no symlink; manifests verify and product unlock count remains zero
+- Known limitations/degradations: the maximum frozen observation envelope ended at HTTPS reconnect 3/5 and produced no correctness, pairwise-time or cost result. Repeated reconnect payload hashes across transports require ordered receipt correlation; the evidence still does not establish the provider's complete retry horizon
+- Next eligible task: none until the owner explicitly authorizes local-only R6-T8 dual-transport terminal-horizon remediation; R6-T9 and R6-T10 remain unstarted and separately gated
+
+## R6-T8 — Local dual-transport terminal-horizon remediation
+
+- Date: 2026-07-30
+- State/outcome: `done` / `passed`
+- Decision: `n/a`; `R6-RECOVERY` attempts one/two remain immutable `adjust`, attempt three remains pending
+- Authorization/publish result: owner authorized R6-T8 and required commit/push first; the complete R6-T7 state was committed as `d3dca37e0aa2560238e81bc6639081cb6ecd321f`, pushed to `agent/complete-p0-r1-stages`, and verified against the remote SHA before R6-T8 began
+- Replay result: immutable R6-T7 top-level/per-attempt manifests and terminal/final/audit/permission state verify; ordered stdout occurrence correlation separates WebSocket reconnect 2/5–5/5, fallback at 137057 ms, and HTTPS reconnect 1/5–3/5. Two raw hashes repeat across transports and remain distinct receipt events rather than being deduplicated
+- Contract result: the 600000 ms runner deadline remains an incomplete lower bound and does not authorize retry; explicit attempt-three terminal horizon must be at least 600001 ms, observation margin at least 308226 ms, and outer deadline from 908227 through 1200000 ms. The disposition is `continue-to-preregistration-only`; no exact deadline or policy was selected
+- Evidence: `docs/test-evidence/R6-T8/20260730T191632-0800/`; proof hash `21cb7550bc5380f0f460efbf59672ebf9bbaa28a78bbf8ce2e2053ddf73296be`; compatibility-contract hash `35a851a8e80785ca92e57f6e8468b183a217eb31e7ad8d7ec212b3f8f850685e`; manifest, 0700/0600 and no-symlink checks passed
+- Changed files: dual-transport replay/contract module and tests, local proof generator/tests and evidence, owner decision metadata, R6 design/delivery/prompt/progress/status, and R6-T8 roadmap state
+- Tests added/updated: ordered duplicate-receipt correlation, WebSocket/HTTPS phase separation, immutable evidence mutation, bounded disposition/candidate validation, no-call proof and source scan
+- Commands: R6-T7 Git scope/CLI checks; explicit staging/commit; SSH push and remote SHA verification; immutable receipt/raw/manifest inspection; 15 initial replay/proof tests; proof generation and manifest/permission checks; 70 R6/terminalizer/roadmap targeted tests; full test; build; typecheck; lint; roadmap validation; Git whitespace check
+- Test results: 11 targeted files / 70 tests and all 64 Vitest files / 350 tests passed; build, typecheck and lint passed; roadmap validates 16 phases, 174 tasks and 32 contracts
+- Edge/browser verification: not applicable; no browser or frontend product behavior changed
+- Security/data-lifecycle verification: only immutable local evidence was read; participant process/provider request/network probe/external model call counts are zero; attempts one/two and all prior chains remain unchanged; proof is private bounded audit metadata and product unlock count is zero
+- Known limitations/degradations: the new 1200000 ms ceiling is a bounded compatibility envelope, not proof of provider reachability, complete terminal timing or a selected attempt-three policy; R6-T9 must provide explicit version/config provenance and new source/policy/data bindings
+- Next eligible task: R6-T9 is structurally next but not authorized by the R6-T8 grant; do not start it without explicit owner authorization
+
+## R6-T9 — Attempt-three no-call preregistration
+
+- Date: 2026-07-30
+- State/outcome: `done` / `passed`
+- Decision: `pending`; `R6-RECOVERY` current attempt remains R6-T10, attempts one/two remain immutable `adjust`, and no external execution is authorized
+- Policy result: exact Codex `0.144.5` version-bound instrumentation selects a 891774 ms explicit terminal horizon plus the R6-T8 evidence-derived minimum 308226 ms terminal-observation margin for a 1200000 ms monotonic outer deadline from participant spawn; this is an observation policy, not a provider-internal schedule, reachability or terminal-time claim
+- Preregistration result: five fresh terminal-remediation tasks produce 10 counterbalanced arms with equal-base read-only capsules; 13 runtime sources, immutable R6-T7 attempt-two results, R6-T8 proof/contract, fixed outer env, task/data scope, thresholds and the separate R6-T10 authorization gate are hash-bound
+- Preserved safety: 5000 ms graceful and force-observation windows, `SIGTERM`→`SIGKILL`, at most one sealed observed provider-timeout retry per arm, non-retryable runner deadline, 20-process cap, per-attempt evidence retention, withheld ground truth, product-holdout exclusion and zero product unlock
+- Evidence: `docs/test-evidence/R6-T9/20260730T194005-0800/`; preregistration `b3f281d44bbc08ae74b534a9903c935bff17192a9d03df4c01aad637e91d4e52`; instrumentation `6f4d1ef9c81f869c7a9f4c91a43044cd1c2dbce5056e070f71371a8708b80ef1`; data scope `7618c01d58349505a5fa6ca1e0ae1350e347de18cfa342ab88ad7cdfcd643e0a`; deadline contract `35a851a8e80785ca92e57f6e8468b183a217eb31e7ad8d7ec212b3f8f850685e`; deadline candidate `074a29b812377b5ccd058250c8f87caaf29968bd613e3d1f10aa80a939a389c6`; termination policy `6e966a04617f79cc408af8cc2ef2ecc7da6cdec3603127c7c2ce69c8358531ff`; outer env `cf24c3c5e349e230a9c04223dceb4854bd377915e21f46d830134b085bc3579d`
+- Changed files: new attempt-three plan/fixture/verdict policy, R6-T9 preregistration generator/tests, separately hash-bound R6-T10 runner/verifier, immutable preregistration evidence, owner decision metadata, and roadmap/design/delivery/prompt/progress/status updates
+- Tests added/updated: exact R6-T8-envelope selection, attempts-one/two immutability, R6-T6 task/prompt exclusion, fresh task identity, equal-base capsule/counterbalance, source drift, exact R6-T10 authorization binding, no-call source scan and existing dual-transport/terminalizer/roadmap regression coverage
+- Commands: syntax checks; 12 initial targeted tests; 30 real local filesystem/Codex-binary/permission-profile probes; preregistration verifier; immutable hash, 0700/0600 and no-symlink checks; 13 targeted files / 76 tests outside the restricted child-process sandbox; full test; build; typecheck; lint; roadmap validation; Git whitespace check
+- Test results: 13 targeted files / 76 tests and all 65 Vitest files / 354 tests passed; build, typecheck and lint passed; roadmap validates 16 phases, 174 tasks and 32 contracts. One sandboxed targeted run produced two local-child-process EPERM false failures; the exact suite passed outside that restriction
+- Edge/browser verification: not applicable; no browser or frontend product behavior changed
+- Security/data-lifecycle verification: no participant `codex exec`, provider request, provider network probe or model call ran; R6-T7 result and R6-T8 proof hashes remain unchanged; all evidence directories/files are 0700/0600 with no symlink; `externalExecutionAuthorized=false` and `productUnlockCount=0`
+- Known limitations/degradations: the 891774 ms horizon remains a bounded version/source-specific runner observation policy and does not prove provider reachability or its complete retry schedule; any Codex version/source/policy/data/environment drift fails closed
+- Next eligible task: none until the completed R6-T9 state is committed and pushed and the owner supplies a new exact R6-T10 authorization binding that commit plus all frozen hashes, destination/model, 10-arm target, 20-process cap, 1200000/5000/5000 ms termination policy, signals and retry boundary
+
+## R6-T10 — Authorized decision attempt three
+
+- Date: 2026-07-30
+- State/outcome: `done` / `passed`
+- Decision: `R6-RECOVERY=adjust`; attempts one/two/three are immutable, R6 remains `in_progress`, and R5 stop, R4 blocked/pending plus all earlier stop chains remain unchanged
+- Authorization: published commit `a1b49c3d927197ebd2c7a007aaac4fce0b15deb9`; OpenAI Codex service / `gpt-5.6-sol`; exact preregistration/instrumentation/data-scope/deadline-contract/deadline-candidate/termination-policy/outer-env bindings; 10-arm target, 20-process cap, 1200000/5000/5000 ms termination policy and provider-timeout-only retry boundary; canonical authorization hash `61767b2f1a7fc0dbd3c3734f2f672ad345eebb1a5febd3c56d124687f05509c4`
+- Execution result: one direct process obtained fresh thread `019fb2e2-311b-7803-b664-4cc6d17c9651`; trusted receipts observed WebSocket reconnect 2/5 at about 71956 ms, 3/5 at 87367 ms, 4/5 at 103218 ms, 5/5 at 119713 ms, fallback on `Network unreachable` at 123049 ms, then HTTPS reconnect 1/5 at 276928 ms through 5/5 at 865219 ms
+- Terminal/classification result: at about 992292 ms the provider emitted one `turn.failed` whose message was `error sending request`, not timeout. The process exited 1 before runner deadline with no signal, the process group was empty, final response was empty, provider terminal was not invented, and the sealed classifier returned nonretryable `protocol-or-unknown-failure`
+- Retry/budget result: intermediate reconnect timeout progress cannot substitute for the final non-timeout terminal, so no retry or next arm started; 1 process attempt, 0/10 successful arms and 19 process attempts unused
+- Evidence: `docs/test-evidence/R6-T10/20260730T195616-0800/`; canonical verdict hash `b2c75c2bafa45bf80f83a2158779f70591ab06dbde025f4ad144809a5ef9fb16`; raw verdict/run-index/RESULTS hashes `d1550d8b18c8ab5dd45e25c5a462de044f5605aa5a9eac7a7bfe82e2f1e1db4d` / `df9f95141b63b6c11369aeeb6b8b62f8a3c3e05126d273e047f602465dbf139c` / `a45f1970978996cdbe8df8b99e7b09fd3fbcf4865f76d8eeb504dcde2bead13b`
+- Changed files: immutable R6-T10 owner authorization/result evidence; evidence replay/classification tests; R6-T10 prompt completion annotation; explicit R6-T11/T12/T13 adjust route; roadmap/requirements/design/delivery/status/progress/decision metadata; current roadmap-count assertions in seven charter tests
+- Tests added/updated: exact authorization/preregistration binding, non-timeout provider-terminal classification, ordered WebSocket/fallback/HTTPS receipt timing, process/final/audit/permission boundary, no-retry one-process adjust verdict, result manifests, reverse contract mapping, 177-task roadmap and prior-decision immutability
+- Commands: published commit and remote SHA verification; exact preregistration/authorization verification; one authorized R6-T10 runner invocation; classification replay; top-level/per-attempt SHA verification; permission/symlink inspection; 20 targeted files / 102 tests; full test; build; typecheck; lint; roadmap validation; Git whitespace check
+- Test results: 20 targeted files / 102 tests and all 66 Vitest files / 358 tests passed; build, typecheck and lint passed; roadmap validates 16 phases, 177 tasks and 32 contracts
+- Edge/browser verification: not applicable; no browser or frontend product behavior changed
+- Security/data-lifecycle verification: participant transfer stayed within the authorized data-scope hash; only one authorized external process ran; generated-command auth remained denied and workspace read-only; attempts one/two and all earlier evidence were not overwritten; R6-T10 evidence directories/files are 0700/0600 with no symlink; manifests verify and product unlock count remains zero
+- Known limitations/degradations: the run produced no correctness, pairwise-time or cost result because zero arms completed; the exact cause behind `Network unreachable`/`error sending request` is not established, and the terminal cannot be reclassified as timeout without new evidence
+- Next eligible task: R6-T11 is structurally next but requires separate owner authorization for local-only failure-class remediation; R6-T12 and R6-T13 remain separately gated
+
+## R6-T11 — Local non-timeout provider-terminal remediation
+
+- Date: 2026-08-01
+- State/outcome: `done` / `passed`
+- Decision: `n/a`; `R6-RECOVERY` attempts one/two/three remain immutable `adjust`, attempt four remains pending
+- Authorization/publish result: the owner directed execution from the current latest prompt and required a completion annotation plus commit/push per stage; this was interpreted only as R6-T11 local-no-call authority. Prerequisite commit `b0317928670214b75dbea10922a2a47388436a4d` was already published and verified before work began
+- Replay result: attempts 1/2/3 result manifests and the R6-T10 per-attempt manifest remain exact. Ordered receipt correlation separates WebSocket reconnect 2/5–5/5, `Network unreachable` fallback at 123049 ms, HTTPS reconnect 1/5–5/5, one matching terminal precursor and the final `turn.failed/error sending request` at 992292 ms
+- Classification result: attempt three remains nonretryable `protocol-or-unknown-failure`; it is neither provider timeout nor runner deadline, and intermediate reconnect `request timed out` text is not promoted to the terminal class
+- Contract result: `continue-to-preregistration-only`; R6-T12 may separately freeze a distinct evidence-conjunctive non-timeout candidate class, but unknown/different non-timeout terminals remain nonretryable. No exact attempt-four policy was selected and no root cause is claimed
+- Evidence: `docs/test-evidence/R6-T11/20260801T123150-0800/`; proof hash `0c6b2357c745fe66ce8a88e2d49db8f5f8ae51112470ae058dbcbb5432a30dcf`; compatibility-contract hash `fa512a787a4d72d75704ebebbd06ab78cd796387483f0e625985fb6d9fbce1d2`
+- Changed files: provider-terminal immutable replay/contract module, proof generator, mutation and no-call tests, private proof evidence, owner decision metadata, and roadmap/design/delivery/prompt/progress/status updates
+- Tests added/updated: attempt-one/two/three manifest immutability, ordered WebSocket/HTTPS receipts, network-unreachable versus timeout separation, final non-timeout terminal integrity, no-retry preservation, bounded disposition, prior-manifest/boundary mutation rejection and zero-call source scan
+- Commands: immutable evidence/hash inspection; 2 targeted files / 11 tests; proof generation; lint; build; typecheck; sandboxed full test diagnostic; unrestricted full test; roadmap validation; evidence manifest/permission/symlink checks; Git whitespace and diff review
+- Test results: 2 targeted files / 11 tests passed; all 67 Vitest files / 365 tests passed outside the child-process-restricted sandbox; build, typecheck and lint passed; roadmap validates 16 phases, 177 tasks and 32 contracts. The restricted run's 16 failures were existing local-child-process/bubblewrap probes and all passed unchanged when the restriction was removed
+- Edge/browser verification: not applicable; no browser or frontend product behavior changed
+- Security/data-lifecycle verification: only immutable local audit evidence was read; participant process/provider request/network probe/external model call counts are zero; attempts one/two/three were not overwritten; evidence is bounded private audit metadata and product unlock count is zero
+- Known limitations/degradations: the observed `Network unreachable` followed by `error sending request` does not establish provider root cause; the compatibility contract is source/evidence-shape specific and does not itself make any future failure retryable
+- Next eligible task: R6-T12 is structurally next but requires separate owner authorization for no-call attempt-four preregistration; R6-T13 remains separately exact-authorized external work
+
+## R6-T12 — Attempt-four no-call preregistration
+
+- Date: 2026-08-01
+- State/outcome: `done` / `passed`
+- Decision: `pending`; `R6-RECOVERY` attempts one/two/three remain immutable `adjust`, current attempt four remains R6-T13
+- Authorization/publish result: owner explicitly authorized the R6-T11 private code/evidence push and R6-T12 local zero-call stage. HTTPS lacked credentials, so the already configured GitHub SSH identity `qwzx-qwas` pushed the same repository/branch; remote SHA exactly matched `4944699199b25427918d27a2b1d16989c1047934` before R6-T12 began
+- Policy result: preserves sealed provider timeout and selects `sealed-network-fallback-plus-nontimeout-provider-terminal-before-response` only for future attempts when all six immutable R6-T11 evidence predicates hold. The selected class is not timeout and makes no root-cause claim; unknown/different/incomplete non-timeout failures remain nonretryable and R6-T10 history is unchanged
+- Preregistration result: five fresh network-terminal tasks produce 10 counterbalanced arms with equal-base read-only capsules; 13 R6-T13 runtime sources, attempts 1/2/3 manifests, R6-T11 proof/contract, fixed outer env, task/data scope, failure policy, termination policy and separate authorization gate are hash-bound
+- Retry/budget result: the two selected retryable classes share one total retry per arm; runner deadline is nonretryable, every attempt consumes budget and retains evidence, and the batch cap is 20 process attempts
+- Evidence: `docs/test-evidence/R6-T12/20260801T131600-0800/`; preregistration `531e9ea500d198c60dfb834c0b210bee9fb2eaf52772fc1ae85876bcd0c5e62d`; instrumentation `6770f8caa440672c62bf57dfa8c9ef12ddbd2d8a3c119b6d20786f36aea19e06`; data scope `0bd7c96a8241cbc2e78b24e776973001bc2bf59ec51ec8cb97625d245f7a2a80`; failure contract/candidate `fa512a787a4d72d75704ebebbd06ab78cd796387483f0e625985fb6d9fbce1d2` / `53829a8291de64322223d91b224fa097988c22afcd4b30f6237db36a1b5b2c75`; termination policy `caa4ff6248fca549c601cb7bdcd80813bb91ee646606cacce627111deae16372`; outer env `cf24c3c5e349e230a9c04223dceb4854bd377915e21f46d830134b085bc3579d`
+- Changed files: attempt-four policy/plan/runner, R6-T12 preregistration generator and tests, private preregistration evidence, owner decision metadata, and roadmap/design/delivery/prompt/progress/status updates
+- Tests added/updated: exact selected-class contract validation, immutable R6-T10 replay under future classifier, incomplete-evidence nonretryability, one-retry cap, attempts-one/two/three immutability, fresh task/prompt identity, equal-base capsule/counterbalance, source drift, exact R6-T13 authorization binding and no-call source scan
+- Commands: R6-T11 SSH push and remote SHA verification; syntax/smoke generation; 14 targeted tests; 30 real local filesystem/Codex-binary/permission-profile probes; preregistration verifier; 68-file full test; build; typecheck; lint; roadmap validation; permission/symlink, Git whitespace and diff checks
+- Test results: 2 targeted files / 14 tests and all 68 Vitest files / 372 tests passed; build, typecheck and lint passed; roadmap validates 16 phases, 177 tasks and 32 contracts. The first targeted run exposed one local variable-name error; it was fixed before the clean rerun
+- Edge/browser verification: not applicable; no browser or frontend product behavior changed
+- Security/data-lifecycle verification: no participant `codex exec`, provider request, network reachability probe or model call ran; generated-command auth remains denied and workspace read-only; attempts one/two/three are immutable; all evidence is private bounded audit metadata with 0700/0600 permissions and no symlink; externalExecutionAuthorized=false and productUnlockCount=0
+- Known limitations/degradations: the selected class is tied to the exact observed evidence shape and source closure and still does not establish provider root cause or future reachability; any source/policy/data/environment drift fails closed
+- Next eligible task: none until R6-T12 is committed/pushed and the owner supplies an exact R6-T13 external authorization binding that published commit, destination/model, all frozen hashes, data scope, 10-arm target, 20-process cap, 1200000/5000/5000 ms termination policy, signals and the two-class shared one-retry boundary
+
+## R6-T13 — Authorized decision attempt four
+
+- Date: 2026-08-01
+- State/outcome: `done` / `passed`
+- Decision: `R6-RECOVERY=stop`; attempts one/two/three remain immutable `adjust`, attempt four is terminal, R6 is `failed`, and R5 stop, R4 blocked/pending plus all earlier stop chains remain unchanged
+- Authorization: published commit `53e2e1093fd107476efdc236afc07a75affabead`; OpenAI Codex service / `gpt-5.6-sol`; exact preregistration/instrumentation/data-scope/failure-contract/failure-candidate/termination-policy/outer-env bindings; 10-arm target, 20-process cap, 1200000/5000/5000 ms termination policy and two frozen classes sharing one retry per arm; canonical authorization hash `aa6d64d442416c0a3357e31bd350ef69c6fd748e269faa7b6ea0cf404e520967`
+- External execution result: one direct process obtained fresh thread `019fbbf5-a1b2-79c2-8959-70fa1ee1b861`; trusted receipts observed WebSocket timeout reconnect 2/5–5/5, explicit fallback to HTTPS, HTTPS reconnect 1/5–5/5, one timeout precursor and final `turn.failed/request timed out`
+- Attempt classification: process exited 1 before runner deadline with no signal, empty final response, empty process group, passed audit/permission boundary and valid per-attempt SHA manifest. Frozen classification is retryable `external-transport-timeout-before-response`; no wrong attribution or invented provider terminal occurred
+- Abort result: the frozen retry plan correctly authorized attempt 2, but `r6-t13.mjs` reused the same capsule and the second authoritative-output preparation raised `R2_CAPSULE_OUTPUT_ALREADY_PREPARED` before process spawn. Retry process count is zero, no later arm ran, and 19 process attempts remain unused
+- Fail-closed sealing: a separate local no-call abort sealer validated all frozen inputs, reproduced capsule-output reuse, reclassified/sealed the first attempt, recorded `aggregate-integrity-failed`, and wrote top-level verdict/run-index/batch-stop/manifest evidence without changing R6-T12 bound runtime sources or making another external call
+- Evidence: `docs/test-evidence/R6-T13/20260801T141247-0800/`; canonical verdict hash `f83caa14aa56b9c416bef538c8d3b38e8202cd2d40e50e457e116982f4da96b7`; verdict file hash `ff51df7ccfbb910776a96c85acb7fa5a8f705b915d6082d53865a807c23771af`; `RESULTS.sha256` file hash `4e81c4742b02bc3ccae63c733c8816208e742d60dc1608c49d386d56981f4f43`; runner-exception canonical hash `47b22b16a2c7d5e9e383e065ea2caa669eac6e5ac847f126116f2b88fae2eb50`
+- Changed files: exact owner authorization, one-process external evidence and post-abort aggregate seal, R6-T13 abort sealer/tests, prompt completion annotation, terminal roadmap/decision state, and design/delivery/status/progress updates
+- Tests added/updated: aggregate-exception stop evaluation, no manufactured attribution, actual authorization/verdict/run-index/batch-stop/classification/manifest binding, retry-not-spawned and remaining-budget assertions, plus existing attempt-four classifier and process-terminalizer regressions
+- Commands: remote published-commit verification; exact authorization/preregistration validation; one authorized R6-T13 runner invocation; per-attempt SHA and boundary inspection; zero-call abort sealing and defect reproduction; restricted targeted diagnostic; unrestricted terminalizer targeted rerun; terminal R6 charter-proof tightening; final 4-file targeted suite; full test; build; typecheck; lint; roadmap validation; evidence permission/symlink and Git diff checks
+- Test results: final 4 targeted files / 38 tests and all 69 Vitest files / 376 tests passed; build, typecheck and lint passed; final terminal-state roadmap validation passed with 16 phases, 177 tasks and 32 contracts. The restricted targeted run's two terminalizer failures were sandbox receipt false failures and passed unchanged outside that restriction; an intermediate full run correctly exposed the stale R6-T1 `in_progress` assertion, which was tightened to require R6-T13 `done/stop`, R6 `failed` and immutable prior adjusts before the clean rerun
+- Edge/browser verification: not applicable; no browser or frontend product behavior changed
+- Security/data-lifecycle verification: participant transfer stayed within the authorized data-scope hash; exactly one authorized external process ran; generated-command auth remained denied and workspace read-only; the retry process was not spawned; attempts one/two/three and all prior evidence remain unchanged; evidence is private bounded audit metadata with 0700/0600 permissions and no symlink; product unlock count remains zero
+- Known limitations/degradations: zero arms completed, so no correctness, pairwise-time or cost claim exists; the provider timeout does not establish provider root cause or future reachability; the frozen runner cannot safely reuse one capsule across retry attempts, and same-authorization rerun is forbidden
+- Next eligible task: none. `R6-RECOVERY=stop` makes R6 terminal failed; any further runner remediation would require a new independently scoped owner-authorized route, new task/decision chain, new no-call preregistration and later separate exact external authorization
+
+## R7-T1 — Retry-capsule isolation remediation charter
+
+- Date: 2026-08-01
+- State/outcome: `done` / `passed`
+- Decision: `n/a`; `R7-RECOVERY` remains pending, while R6-T13/R6, R5, R4 and every earlier decision/evidence remain immutable
+- Authorization/publish prerequisite: owner explicitly authorized a new independent R7 local-zero-call route through R7-T3 with stage-by-stage commit/push and separately gated all future external model calls; prerequisite R6-T13 commit `69b6fa42694eea00617913051bcca08cf0a78536` was already pushed and its remote SHA verified
+- Charter result: added `R7-RETRY-CAPSULE-ISOLATION-001`, independent R7/R7-RECOVERY, and four atomic tasks for charter, local runner isolation/sealing, no-call preregistration and separately authorized verdict. R7 has empty phase dependency, no existing phase/task depends on it, and its gate requires only `R7-RECOVERY=continue`
+- Preserved chain: R6-T13 remains `done/stop` and R6 `failed`; R5 remains `failed/stop`; R4 remains `blocked/pending`; P0 and R0–R3 remain terminal failed/stop. The ordered non-supersession chain is R6, R5, R4, R3, R2, R1, R0 and P0-VALUE, with product unlock count zero
+- Evidence: `docs/test-evidence/R7-T1/20260801T150632-0800/`; proof hash `077186d0e8216243db1d6f6d81d6aec2e688975e1f691e1ad60b88e691c1a321`; 0700 directory, 0600 files, SHA256 manifest and no-symlink checks pass
+- Changed files: R7 normative design/requirements contract, roadmap phase/tasks/decision, exact owner authorization record, delivery charter, R7-T1–T4 prompts, dedicated charter proof/tests, prior charter count assertions, status/progress and P0 scope note
+- Tests added/updated: real R7 full-chain proof, R6-stop/R4-blocked mutations, decision-order and product-dependency leakage, exact owner scope/external-false, premature R7-T2/R7-T4 rejection, reverse contract mapping and 17-phase/181-task/33-contract assertions
+- Commands: R6-T13 remote SHA verification; eligibility scan; required document/validator inspection; roadmap validation; 9-file targeted charter/validator suite; unrestricted full test; build; typecheck; lint; diff check; final proof generation and evidence audit
+- Test results: 9 targeted files / 55 tests and all 70 Vitest files / 381 tests passed; build, typecheck and lint passed; roadmap validates 17 phases, 181 tasks and 33 contracts
+- Edge/browser verification: not applicable; no browser or frontend product behavior changed
+- Security/data-lifecycle verification: no participant process, provider request, reachability probe or external model call ran; prior evidence was read-only; R7 has no product dependency edge; proof is bounded private audit metadata and product unlock count is zero
+- Known limitations/degradations: R7-T1 defines and proves only the remediation boundary; it does not yet implement per-attempt capsule isolation or exception-safe aggregate sealing and does not establish provider reachability
+- Next eligible task: R7-T2 after the complete R7-T1 commit is pushed and the remote SHA is verified; R7-T2 remains local zero-call under the current owner grant, while R7-T3 and R7-T4 remain separate atomic stages
+
+## R7-T2 — Per-attempt capsule isolation and aggregate sealing
+
+- Date: 2026-08-01
+- State/outcome: `done` / `passed`
+- Decision: `n/a`; `R7-RECOVERY` remains pending, while R6-T13/R6, R5, R4 and every earlier decision/evidence remain immutable
+- Authorization/publish prerequisite: owner explicitly authorized R7-T2 as local zero-call work after R7-T1; prerequisite R7-T1 commit `5a72b70ede3f15f53e26426efe8ab4e7cb521e2d` was manually pushed and the remote branch SHA was verified before implementation began
+- Isolation result: each task/arm/attempt is prepared exactly once in a fresh capsule with distinct capsule/control/workspace roots, permission-profile control file and authoritative final-output file. Equal-base fixture/schema/prompt hashes are enforced across retries and arms; the VEM arm's sole allowed treatment difference remains frozen `vem-context.json`
+- Lifecycle result: process budget is consumed only by an explicit positive process-start transition; `retryAuthorized` and `retryProcessStarted` are separate. A prepared but unspawned retry is locally contained and cleaned without being counted as a process attempt or retry exhaustion; started attempts cannot be cleaned until process-tree, streams, final observation, ledger, boundary and manifests are all sealed
+- Aggregate result: retry-planning, capsule-preparation, spawn, classification, aggregate-evaluation, terminal-manifest and cleanup exceptions are contained as structured fingerprints. All prior sealed attempt records are retained and batch-stop, exceptions, retry decisions, run-index, local non-decision verdict and `RESULTS.sha256` are written before return. An authorization ledger rejects the same authorization against an alternate result root
+- Evidence: `docs/test-evidence/R7-T2/20260801T160404-0800/`; proof hash `165c6634eca37c297e304eea19eef0f2e30597430e8ea79e5a834b7b5ee36e57`; private 0700 evidence root, 0600 files, SHA256 manifest and no-symlink checks pass
+- Changed files: R7 attempt factory/lifecycle, batch controller/sealer, proof generator and private proof evidence; R7-T2 completion annotation; roadmap/status/progress and R7 charter forward-compatible state assertion
+- Tests added/updated: distinct control/final/profile resources, equal-base/treatment parity across retries, seal-before-cleanup, duplicate/drift rejection, authorized retry lifecycle, pre/post-spawn and all declared stage exceptions, cleanup failure, process cap, same-authorization no-rerun, top-level manifest verification and zero-call source scans
+- Commands: remote R7-T1 SHA verification; targeted tests; local proof generation and verification; lint; build; typecheck; unrestricted full test; roadmap validation; evidence permission/symlink, Git whitespace and diff checks
+- Test results: 3 targeted files / 21 tests and all 73 Vitest files / 402 tests passed; build, typecheck and lint passed; roadmap validates 17 phases, 181 tasks and 33 contracts
+- Edge/browser verification: not applicable; no browser or frontend product behavior changed
+- Security/data-lifecycle verification: participant process, provider request, network probe and external model call counts are zero; generated invocations are prepared but never spawned; auth remains a read-only control input, participant workspace remains read-only, cleanup is per attempt, proof is bounded private audit metadata and product unlock count is zero
+- Known limitations/degradations: R7-T2 provides lifecycle and aggregate primitives only; it does not freeze fresh participant tasks or an executable external runner, establish provider reachability, authorize R7-T4 or change any prior stop/blocked decision
+- Next eligible task: R7-T3 after the complete R7-T2 commit is pushed and the remote SHA is verified; R7-T3 is local zero-call preregistration under the current owner grant, while R7-T4 still requires another exact authorization after that preregistration commit is published
+
+## R7-T3 — Retry-isolated no-call preregistration
+
+- Date: 2026-08-01
+- State/outcome: `done` / `passed`
+- Decision: `pending`; `R7-RECOVERY` current attempt remains R7-T4, while R6-T13/R6, R5, R4 and every earlier decision/evidence remain immutable
+- Authorization/publish prerequisite: owner authorized R7-T3 only as local zero-call preregistration work; prerequisite R7-T2 commit `ae90e8cd94641a4b3ae676d9ada5b5d2c11fc164` was manually pushed and its remote branch SHA exactly verified before R7-T3 began
+- Fresh-task result: five new `r7-retry-isolation-*` task identities and prompts produce 10 counterbalanced arms against a new isolation-specific fixture. All R6-T12 and transitive prior task/prompt identities plus the product holdout list are excluded; ground truth remains private
+- Runner/source result: new R7-T4 runner constructs every process attempt through the R7 attempt factory, records positive process starts separately from retry authorization, uses the exception-safe batch sealer, retains the R6-T12 validated failure classes and R5 process-tree terminal evidence, and writes a decision verdict inside the same top-level manifest. Fifteen transitive runtime sources are hash-bound
+- Isolation/probe result: each task prepared attempt 1/2 for direct/VEM as four distinct capsule/control/profile/final-file resources with stable base/prompt/treatment hashes and no spawn; 20 attempt-isolation preparations plus 30 real filesystem, Codex binary and permission-profile probes passed
+- Frozen policy result: 10 successful arms target, maximum 20 process attempts, one shared retry per arm, `1200000ms` deadline, `SIGTERM`, `5000ms` grace, `SIGKILL`, `5000ms` wait, fixed `{PATH: "/usr/bin:/bin"}` outer environment, unchanged selected R6 failure policy and independent retry-isolation contract
+- Evidence: `docs/test-evidence/R7-T3/20260801T162533-0800/`; preregistration `bc2bd50ca79aaac581c083232d4bf0d55b838c64228039921e6ae1adbb8a4a78`; instrumentation `ce7979ebf9414da72e7afb65de178da3c5da6dc49990d8f8088c2ba01f5a5274`; data scope `fca7658cc49b0e7eba3c29354a63433282a85048ff960122b7bd890a470dd8a7`; failure policy `9e9f3174f794ea1ed2ec18a54f983117179a867985c4107ca37e0425948588fa`; retry isolation `d847e93ad6d5ae3b0336d465105dc1f62bf0a92bcf7eda5307053b7b7ae8f79c`; termination policy `caa4ff6248fca549c601cb7bdcd80813bb91ee646606cacce627111deae16372`; outer environment `cf24c3c5e349e230a9c04223dceb4854bd377915e21f46d830134b085bc3579d`
+- Changed files: R7 plan/task fixture/verdict policy, executable but authorization-gated R7-T4 runner, R7-T3 preregistration generator/verifier, batch-sealer future-verdict integration, local/evidence tests, private preregistration evidence, prompt completion annotation and roadmap/status/progress updates
+- Tests added/updated: fresh identities/prompts, counterbalance, four-resource attempt isolation, equal base/treatment across retries, R6 stop and R7-T2 binding, product holdout exclusion, transitive source drift, failure/retry hash independence, exact future authorization binding, committed probe verification, prereg mutation, custom decision sealing and zero-call source scan
+- Commands: R7-T2 remote SHA verification; source/evidence hash inspection; syntax checks; 20 attempt-isolation preparations; 30 unrestricted local probes; targeted tests; lint; build; typecheck; unrestricted full test; roadmap validation; evidence permissions/symlinks and Git diff checks
+- Test results: 5 targeted files / 31 tests and all 75 Vitest files / 412 tests passed; build, typecheck and lint passed; roadmap validates 17 phases, 181 tasks and 33 contracts
+- Edge/browser verification: not applicable; no browser or frontend product behavior changed
+- Security/data-lifecycle verification: participant process, provider request, reachability probe and external model call counts are zero; only local capsule construction, binary `--version` and permission probes ran. Auth stayed a read-only control mount, workspaces stayed read-only, all probe capsules were independently cleaned, evidence is private 0700/0600 with no symlink, `externalExecutionAuthorized=false` and product unlock count is zero
+- Known limitations/degradations: preregistration does not establish provider reachability or any product-value result. R7-T4 has an executable external path but cannot be invoked lawfully from the current authorization; it requires the R7-T3 commit to be published and a new exact authorization bound to that commit and every frozen boundary
+- Next eligible task: none until this complete R7-T3 commit is pushed, its remote SHA is verified and the owner supplies a separate exact R7-T4 authorization binding published commit, destination/model, preregistration/instrumentation/data-scope/failure-policy/retry-isolation/termination/outer-environment hashes, 10-arm target and 20-process cap
+
+## R7-T4 — Authorized retry-isolated decision attempt one
+
+- Date: 2026-08-01
+- State/outcome: `done` / `passed`
+- Decision: `R7-RECOVERY=stop`; R7 is `failed`, while R6-T13/R6, R5, R4 and every earlier decision/evidence remain immutable
+- Authorization/publish prerequisite: prerequisite R7-T3 commit `91e0f08b064d48d757544aa0ca2ce9e186382d75` was manually pushed and its remote branch SHA verified; owner then precisely authorized OpenAI Codex service / `gpt-5.6-sol`, decision attempt 1 with no superseded attempt, every frozen hash, 10-arm target, 20-process cap, 1200000/5000/5000 ms termination policy, two retryable classes sharing one retry, independent attempt resources and no alternate-root replay. Canonical authorization hash is `3c1cbc8869a98fd65ef20c99ab5f13322afa617790ff9f5a75000fab423f717a`
+- External execution result: the first direct arm launched attempt 1 with fresh thread `019fbc8b-4452-78b3-9b45-5ba78f9e4210`; after its sealed retryable failure, the one authorized retry launched with distinct resource identity and fresh thread `019fbc9c-d648-7570-a75e-14499bc32a51`. Both observed WebSocket reconnect 2/5–5/5, explicit HTTPS fallback, HTTPS reconnect 1/5–5/5 and provider `turn.failed/request timed out`
+- Attempt result: both processes exited 1 before runner deadline with no signal, empty runner-owned final responses, empty process groups, passed audit/permission boundaries and valid per-attempt SHA manifests. Both were classified `external-transport-timeout-before-response`; no provider terminal was invented, no wrong attribution occurred and the two resource identity hashes are distinct while base context remained equal
+- Batch result: attempt 2 exhausted the first arm's one shared retry, so exception-safe sealing stopped before the other nine arms. Exactly 2/20 processes started, 0/10 arms completed and 18 attempts remained; no unspawned retry consumed budget, no prior evidence was overwritten, exception count is zero and the authorization ledger permanently binds the unique result root
+- Evidence: `docs/test-evidence/R7-T4/20260801T165602-0800/`; canonical verdict hash `18a24afc0709e42207d583048e2c7214b700f6c23ff2eb31387e23d1a75a8776`; verdict file hash `06e669fe56140ff04dd1701fddfae2f022d19466c3275766092eb945d8c2dc12`; `RESULTS.sha256` file hash `750b0140dd21fcaf901a0a1b9fa82d211d386ebf5d57fc64800bd334ed17bb19`
+- Changed files: exact owner authorization, one-use authorization ledger, two-process external evidence and aggregate stop; committed-evidence regression test; R7 terminal charter assertion; prompt completion annotation; roadmap/decision/design/delivery/status/progress updates
+- Tests added/updated: exact post-publish authorization binding, top-level and per-run manifests, distinct retry resources/fresh threads/equal base, real provider terminal and process-tree closure, retry/budget accounting, immutable stop/no product unlock, plus terminal R7 charter preservation
+- Commands: remote prerequisite SHA verification; exact authorization and no-call local preflight; one authorized R7-T4 runner invocation; top-level/per-run SHA and manifest verification; process-tree, permission, symlink and evidence inspection; 5-file targeted suite; unrestricted full test; build; typecheck; lint; roadmap validation; Git whitespace and diff checks
+- Test results: 5 targeted files / 30 tests and all 76 Vitest files / 415 tests passed; build, typecheck and lint passed; roadmap validates 17 phases, 181 tasks and 33 contracts
+- Edge/browser verification: not applicable; no browser or frontend product behavior changed
+- Security/data-lifecycle verification: transfer stayed within the authorized frozen data scope; exactly two authorized external processes ran, both used auth-denied/read-only isolated capsules and were independently cleaned after sealing; evidence is private bounded audit metadata with 0700/0600 permissions and no symlinks; same-authorization alternate-root replay is denied; prior evidence and product state remain unchanged
+- Known limitations/degradations: zero arms completed, so no correctness, pairwise-time, cost or product-value claim exists. Repeated provider timeouts do not establish provider root cause or future reachability. The immutable stop ends R7 without authorizing another retry, remediation route or product work
+- Next eligible task: none. `R7-RECOVERY=stop` makes R7 terminal failed; any further work requires a new independently scoped owner-authorized route with a new decision chain and separately gated external execution
+
+## R8-T1 — Final recovery exit and model-agnostic transition charter
+
+- Date: 2026-08-01
+- State/outcome: `done` / `passed`
+- Decision: `pending`; `R8-RECOVERY` current attempt is R8-T4, while R7/R6/R5 and every earlier terminal decision/evidence remain immutable and R4 remains blocked/pending
+- Authorization/publish prerequisite: owner stated `可以尝试一下，但超时就停止 recovery 实验，转向真正的模型无关 MCP 产品开发路线。`; prerequisite R7-T4 commit `689ebc5e89565e89937a54d6d31bab227d24545f` was manually pushed and its remote branch SHA exactly verified before R8-T1 began. This stage records only the local charter and does not authorize an external call
+- Charter result: added independent `R8-FINAL-RECOVERY-EXIT-001`, R8/R8-RECOVERY and four atomic tasks for charter, local adapter/sealer, no-call preregistration and one separately authorized exit process. R8 has empty dependencies, does not supersede R7 or any earlier decision, and no existing phase/task depends on it
+- Exit policy: any future external execution is capped at exactly one separately preregistered/authorized process with zero retry. Timeout, runner deadline, transport failure, missing terminal/final output or sealing failure records immutable stop and permanently ends recovery; R9 and equivalent continuation are forbidden
+- Model-agnostic boundary: VEM product runtime, MCP tools/resources, CapabilityReport, protocol negotiation and verification semantics cannot require or branch on participant model identity. A future experiment records client/model/destination only as reproducibility and authorization metadata; provider reachability does not substitute for MCP contract or product tests, and a future product route cannot depend on R8 continue
+- Evidence: `docs/test-evidence/R8-T1/20260801T180544+0800/`; proof hash `0d5e8651fb8fa03834f212f023b6119eee981add926e792716ea14aab202222d`; private 0700 evidence root, 0600 files, SHA256 manifest and no-symlink checks pass
+- Changed files: R8 normative design/requirements contract, roadmap phase/tasks/decision, exact owner direction, delivery charter, R8-T1–T4 prompts, dedicated proof/tests, prior charter count assertions, P0 scope note, status and progress
+- Tests added/updated: full prior terminal-chain preservation, R4 blocked/pending, exact owner direction, empty dependency/no reverse dependency, one-process/zero-retry, timeout-stop, no-R9, future product route independence, product source model-ID scan, external false, traceability and zero product unlock
+- Commands: R7-T4 remote SHA verification; roadmap/traceability validation; 10-file targeted charter/validator suite; unrestricted full test; build; typecheck; lint; local proof generation; evidence permission/symlink and Git diff checks
+- Test results: 11 targeted files / 62 tests and all 78 Vitest files / 422 tests passed; build, typecheck and lint passed; roadmap validates 18 phases, 185 tasks and 34 contracts
+- Edge/browser verification: not applicable; no browser or frontend product behavior changed
+- Security/data-lifecycle verification: participant process, provider request, reachability probe and external model call counts are zero; product-source scan found no hardcoded participant model IDs; proof is bounded private audit metadata, existing evidence was read-only and product unlock count is zero
+- Known limitations/degradations: R8-T1 defines governance only. It does not implement the adapter/sealer, select an experiment client/model, preregister or authorize the final process, establish provider reachability, or create the future product route
+- Next eligible task: R8-T2 is structurally next after this commit is pushed and its remote SHA is verified, but the recorded owner scope for this stage is R8-T1 only; R8-T2 remains local zero-call and requires owner direction before implementation
+
+## R8-T2 — Experiment adapter and one-shot exit sealer
+
+- Date: 2026-08-01
+- State/outcome: `done` / `passed`
+- Decision: `pending`; R8-T2 records no authoritative recovery verdict, `R8-RECOVERY` current attempt remains R8-T4, R7 and all prior stops remain immutable, and R4 remains blocked/pending
+- Authorization/publish prerequisite: after manually pushing prerequisite R8-T1 commit `622acb323b616b800837c6fd6586fa92b8136336`, the owner directed `已push,继续`; this was recorded as authorization for R8-T2 local zero-call implementation only, with external execution, provider probe, model selection and product unlock all false
+- Adapter result: exact client/model/destination metadata is represented by an experiment-only descriptor under `scripts/pilot`; it contains no credential field, makes no compatibility claim and is not forwarded into VEM product runtime. Product runtime input fails closed on model/provider/client/destination fields or concrete participant model identities
+- Sealer result: the dedicated controller exposes one process-start and one terminal-seal transition, caps logical attempts at one, exposes no retry API, rejects a second start and prevents the same authorization from being replayed into another result root. It seals run, bounded exception, verdict and SHA256 records before return
+- Exit result: only a complete schema-valid response is locally continue-eligible, without recording an authoritative decision. Timeout, transport/runner failure, absent/invalid final output, incomplete terminal evidence, second start or sealing exception yields stop; every path sets zero retries, `r9Allowed=false`, provider reachability not equal to MCP correctness and product unlock count zero
+- Evidence: `docs/test-evidence/R8-T2/20260801T185500+0800/`; proof hash `aa9a2bb7795dfdaea87f908a30baf40179d52dffc377934359eebb792010e0b9`; 0700 evidence root, 0600 files, source hashes and SHA256 manifest verify
+- Changed files: experiment adapter/guard, one-shot controller/sealer, local proof/evidence, unit and regression tests, R8-T1 forward-compatible charter assertion, point-in-time R8-T1 evidence test, exact owner scope record, roadmap/prompt/delivery/status/progress
+- Tests added/updated: descriptor shape and credential exclusion, experiment/product separation, model-ID product rejection, MCP capability acceptance, one process/zero retry, timeout-stop, incomplete-stop, second-start containment, alternate-root replay denial, manifest verification, source binding and zero external API/model/product scan
+- Commands: remote R8-T1 SHA verification; targeted test suites; local proof generation; roadmap validation; build; typecheck; lint; restricted full test diagnostic; unrestricted full test; evidence permission/hash inspection
+- Test results: 5 targeted files / 23 tests and all 81 Vitest files / 438 tests passed; build, typecheck and lint passed; roadmap validates 18 phases, 185 tasks and 34 contracts
+- Edge/browser verification: not applicable; no browser, extension or frontend product behavior changed
+- Security/data-lifecycle verification: no participant process, provider request, reachability probe, network probe or model call ran. Experiment metadata excludes credentials, result/ledger roots require private permissions, raw exception messages are not persisted, evidence files are 0600, same-authorization replay is rejected and product unlock count is zero
+- Known limitations/degradations: R8-T2 is a local adapter/sealer primitive and lifecycle proof only. It does not choose an experiment client/model/destination, freeze R8-T3 data/source/environment bindings, establish provider reachability, authorize R8-T4 or create/unlock the separate product route
+- Next eligible task: R8-T3 only after this complete R8-T2 commit is pushed and its remote SHA is verified, and only under fresh owner direction. R8-T3 is no-call preregistration; R8-T4 still requires a later exact post-publish external authorization
+
+## M0-T1 — Model-agnostic usable MCP route charter
+
+- Date: 2026-08-01
+- State/outcome: `done` / `passed`
+- Decision: `n/a`; M0 is a product implementation phase with no stop/go decision dependency. P0-VALUE, R0–R3/R5–R7 stops, R4 blocked/pending and the current R8 chain remain immutable
+- Authorization/publish prerequisite: owner explicitly prioritized coordinator/MCP STDIO, Vite/browser proxy, selection/source tools, confirmation/prepare/HMR/complete, real Edge walking skeleton and minimal install CLI. Prerequisite R8-T2 commit `c678c615817dddf35a1d598cba76e34887de5e62` is present on the tracked remote branch
+- Route result: added independent `USABLE-MCP-001` and M0 with empty phase dependency and empty decision gate. Thirteen tasks preserve the six priority groups while splitting coordinator/protocol, confirmation/verification, positive/negative Edge E2E and CLI/install lifecycle into separately reviewable results
+- Reuse boundary: M0 may reuse completed P0 preflight, workspace, protocol, fixture, selector, source-anchor and registry outputs with their existing tests and limitations. It does not change P0 failed/stop or claim the original value gate passed
+- Model boundary: VEM product runtime, MCP protocol/tools/resources, CapabilityReport and installer configuration remain independent of participant model identity; provider reachability is not an MCP correctness requirement. Local Edge/Vite/MCP processes are authorized only when required by their later task tests; no external participant/provider execution is authorized
+- Evidence: `docs/test-evidence/M0-T1/20260801T191800+0800/`; proof hash `8f0bb214d60cab886a0b19e06c53da1d8b367f1769e454e0ab3d62d909481e6e`; private 0700 root, 0600 files, SHA256 manifest and current source bindings verify
+- Changed files: M0 normative contract, requirements reverse mappings, roadmap phase/task chain, exact owner priority, delivery charter and P0 scope note, M0-T1–T13 prompts, dedicated charter proof/tests/evidence, historical current-count assertions, status and progress
+- Tests added/updated: exact owner priority/scope, full prior decision immutability, no recovery dependency, exact 13-task order, completed-asset reuse, model-ID product scan, local-process/external-model authorization separation, traceability counts, manifest/source bindings and zero-call evidence
+- Commands: tracked remote baseline verification; roadmap/contract inspection; targeted M0/validator and full roadmap suites; roadmap validation; build; typecheck; lint; unrestricted full test; proof generation; evidence permission/hash and Git whitespace checks
+- Test results: 12 roadmap files / 67 tests and all 82 Vitest files / 443 tests passed; build, typecheck and lint passed; roadmap validates 19 phases, 198 tasks and 35 contracts
+- Edge/browser verification: not applicable to this charter; no Edge or browser process ran
+- Security/data-lifecycle verification: external model calls, participant/provider requests, network probes and Edge/Vite/MCP process counts are zero. Evidence is bounded private audit metadata; source bindings are hashed; no prior evidence or decision changed
+- Known limitations/degradations: M0-T1 adds governance and an eligible task chain only. It does not implement coordinator/runtime discovery, MCP STDIO, proxy, tools, verification, Edge E2E or installer behavior and makes no new runtime capability claim
+- Next eligible task: M0-T2 after this complete M0-T1 commit is pushed and the remote SHA is verified; M0-T2 implements coordinator authority/private runtime discovery only

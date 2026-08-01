@@ -1,0 +1,9 @@
+Reading additional input from stdin...
+2026-07-29T09:25:12.721095Z ERROR codex_models_manager::cache: failed to load models cache: missing field `supports_reasoning_summaries` at line 86 column 5
+2026-07-29T09:25:14.806416Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back
+2026-07-29T09:25:14.814876Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back
+2026-07-29T09:25:14.821992Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back
+2026-07-29T09:25:14.829389Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back
+2026-07-29T09:25:14.836367Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back
+2026-07-29T09:25:14.845685Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back
+2026-07-29T09:25:39.665532Z  WARN codex_file_watcher: failed to unwatch /home/qwzx/.codex/skills/.system: No watch was found. about ["/home/qwzx/.codex/skills/.system"]

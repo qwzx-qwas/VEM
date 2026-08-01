@@ -1,0 +1,13 @@
+{
+  "schemaVersion": "R7-T4-local-preflight-v1",
+  "ok": true,
+  "codexVersion": "codex-cli 0.144.5",
+  "modelCall": false,
+  "providerNetworkProbed": false,
+  "exactDecisionInvocationExecuted": false,
+  "freshAttemptCapsulePrepared": true,
+  "distinctFinalFilePrepared": true,
+  "publishedCommit": "91e0f08b064d48d757544aa0ca2ce9e186382d75",
+  "preregistrationHash": "bc2bd50ca79aaac581c083232d4bf0d55b838c64228039921e6ae1adbb8a4a78",
+  "authorizationHash": "3c1cbc8869a98fd65ef20c99ab5f13322afa617790ff9f5a75000fab423f717a"
+}

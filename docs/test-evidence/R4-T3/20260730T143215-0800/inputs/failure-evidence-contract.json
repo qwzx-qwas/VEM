@@ -1,0 +1,1 @@
+{"batchPolicy":"retry-one-sealed-timeout-per-arm-stop-on-second-timeout-or-any-nonretryable-failure","laterSuccessMayNotOverwriteFailure":true,"perAttemptRawFinalTerminalLedgerErrorAuditAndHashes":true,"schemaVersion":"R4-T3-failure-evidence-contract-v1"}

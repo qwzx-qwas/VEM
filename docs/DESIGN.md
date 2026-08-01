@@ -234,6 +234,170 @@ P0-T17B / Codex
 
 Canonical bundle 至少记录每个 task 的 direct-search 与 VEM-assisted 两个 arm、setup cost、locate duration、direct primary source/ground-truth match、direct 不可用原因、仅在降级路径出现的 top-1/top-3 candidates 与 chosen candidate、wrong-attribution、target-changed/reselection、operator correction、raw-record hashes 和 continue/adjust/stop 判据。harness 不得执行源码写入、Shell 任务、网络搜索、候选人工调参或 holdout 替换。错误 source 自动归因、把 direct mapping 包装成常规候选、两个 arm 计时边界不同、输入 hash 变化或 later holdout 被消费时，verdict 必须 fail closed。
 
+### 2.7.2 Owner-authorized independent recovery research (`R0-RECOVERY-001`)
+
+P0 的 terminal `stop`、P0 failed 状态、attempt chain 和原始 evidence 必须保持不可覆盖；恢复研究不得把 P0-T17D 改回 pending/todo、追加 P0-VALUE attempt、满足 P0-T7 的 `requires_decisions`，也不得使 P1–P8 的 phase dependency 视为通过。Owner 可以在 P0 verdict 后显式授权一个拓扑独立的 R0 research phase，但该授权只允许修复评估可观测性并重新回答“是否值得提出新的独立研究路线”，不授权原 P0/P1 产品实现。
+
+R0 必须声明 `recovery_of_failed_phase: P0`、空 phase dependency、owner authorization reference 和 `independent-research-no-product-unlock` scope。ROADMAP validator 必须证明被恢复 phase 仍为 failed、R0 task 不成为任何既有 phase/task 的 dependency、R0 decision key 与 P0-VALUE attempt chain 分离，并且 `R0-RECOVERY` 明确 `does_not_supersede: P0-VALUE`。在另一次 owner-authorized normative change 前，任何 phase 都不得依赖 R0，任何 R0 verdict 都不能升级 P0/P1 状态。
+
+R0 的第一轮只允许四个原子结果：固定 recovery charter；实现有界 timing ledger；冻结 recovery-only task/evidence plan；执行一次新的 decision attempt。任务与证据仍遵循 fresh Codex context、counterbalance、相同 prompt/fixture/tool/sandbox/cache policy、withheld evaluator ground truth、later product holdout exclusion、separate setup cost 和 immutable raw hashes。恢复 task bank 必须独立标记为 recovery-only，不能冒充 P1/P3/P4 holdout，也不能与 P0 attempt 1/2 合并平均。
+
+Timing ledger 必须由 trusted outer runner 使用 monotonic nanoseconds 标记 process spawn/exit、stdout/stderr receipt、thread/turn/item event receipt 和最终 structured response receipt；所有 run 使用同一 instrumentation path，保留原始 event 顺序与 ledger hash。Receipt timestamp 只能界定 runner-observed transport/model/command 区间，不能冒充服务端生成时间、模型 compute time 或 shell 内部执行时间；缺少 receipt、倒序、重复 terminal event、clock domain 变化或 instrumentation hash 变化必须 fail closed。
+
+R0 decision 必须预登记 correctness、wrong attribution、capsule integrity、event-ledger completeness、pairwise cost 和 no-benefit stop conditions。`continue` 只表示 evidence 足以向 owner 提出一个新的独立 research implementation phase；它不自动创建该 phase，也不授权 P0-T7/P1。`adjust` 仍要求显式 remediation 和新的 immutable R0 attempt；`stop` 使 R0 failed。每批外部模型调用在发送任何 fixture/prompt/context 前仍需要独立明确 owner authorization。
+
+当前 owner-authorized 执行序列和 scope boundary 见 [`docs/delivery/R0_RECOVERY_RESEARCH.md`](delivery/R0_RECOVERY_RESEARCH.md)。
+
+### 2.7.3 Owner-authorized runner remediation after R0 stop (`R1-RUNNER-REMEDIATION-001`)
+
+R0-T4 的 `stop`、R0 failed、P0-T17D 的 `stop`、P0 failed 及两条 immutable evidence chain 都不得覆盖。Owner 可以另行授权拓扑独立的 R1 runner-remediation research phase；该授权只允许修复多 agent-message 分类、失败路径 evidence sealing，并冻结新的 recovery-only preregistration，不授权新的外部模型调用或产品实现。
+
+R1 必须声明 `recovery_of_failed_phase: R0`、空 phase dependency、owner authorization reference 与 `independent-research-no-product-unlock` scope。`R1-RECOVERY` 必须以 `does_not_supersede: R0-RECOVERY` 和 `also_does_not_supersede: [P0-VALUE]` 同时固定两条 terminal decision chain；任何既有 phase/task 不得依赖 R1。
+
+Runner 不得把每个 `item.completed/agent_message` 都升级为 final structured response。所有 JSONL line 先作为普通 receipt event 记录；stdout/进程收束后，只能从有界候选中选出唯一、最后且通过冻结 response schema 的 final response，再调用一次 `recordStructuredResponse`。零个有效候选、多个相互冲突的有效候选、倒序/重复终态或 instrumentation drift 都必须 fail closed。
+
+失败路径必须在抛错前保存有界 raw stdout/stderr、process terminal observation、ledger prefix 或显式 protocol-failure receipt、错误码与 hash manifest；不得再次出现只保留 stack、没有可重放 raw/ledger 的状态。失败证据与正常结果使用新 evidence root，不能写入或改动 R0-T4 evidence。
+
+R1 只允许四个原子结果：固定独立 remediation charter；修复并测试 runner/ledger failure sealing；冻结新的 recovery-only preregistration；在新的、绑定该 hash 的 owner authorization 后执行 decision attempt。外部调用授权必须发生在新预注册冻结以后。
+
+当前 owner-authorized 执行序列见 [`docs/delivery/R1_RUNNER_REMEDIATION.md`](delivery/R1_RUNNER_REMEDIATION.md)。
+
+### 2.7.4 Owner-authorized final-output authority remediation after R1 stop (`R2-FINAL-OUTPUT-001`)
+
+R1-T4 的 `stop`、R1 failed、R0-T4/P0-T17D 的 `stop`、R0/P0 failed 及三条 immutable evidence chain 都不得覆盖。Owner 可以另行授权拓扑独立的 R2 final-output remediation research phase；该授权只允许修复 Codex non-interactive final response 的权威通道、capsule 最小写入边界、协议失败分类，并冻结新的 recovery-only preregistration，不授权新的外部模型调用或产品实现。
+
+R2 必须声明 `recovery_of_failed_phase: R1`、空 phase dependency、owner authorization reference 与 `independent-research-no-product-unlock` scope。`R2-RECOVERY` 必须以 `does_not_supersede: R1-RECOVERY` 和 `also_does_not_supersede: [R0-RECOVERY, P0-VALUE]` 固定全部 terminal decision chain；任何既有 phase/task 不得依赖 R2。
+
+Runner 必须把 Codex `--output-last-message` 写入的 runner-owned bounded file 作为唯一 authoritative final response。`--json` JSONL 只保留为完整审计事件流：早期 `item.completed/agent_message` 是诊断 receipt，不因自身通过 response schema 而与 final file 竞争。进程和 stdout/stderr 全部收束后，runner 只能读取一次该文件，执行大小、regular-file、无 symlink、schema 与 canonical response 检查，并要求它与终止前最后一个 agent-message 一致；缺失、空、超限、无效、与最后 agent-message 不一致、倒序/重复终态或 instrumentation drift 必须 fail closed。
+
+Capsule 不得把 participant workspace 改为可写。Outer runner 必须预创建 `0700` control root 内的单个 `0600` output file，并只把该文件以读写 bind 暴露到 capsule 内固定的非 workspace 路径；页面、prompt、参与模型和 fixture 都不能选择宿主路径或扩大写入范围。进程退出后该文件必须复制并 hash-seal 到 task evidence，再随 capsule control root 清理。
+
+协议/runner integrity failure 必须与 evaluator attribution 分离。缺失或冲突的 authoritative response 使用专用 protocol failure code，不能在没有已选择响应时同时计为 `wrong-attribution`；`evidenceSealed` 只描述 raw/final/terminal/ledger/error/hash 可重放性，不能冒充 `successfulResponseComplete`。
+
+R2 只允许四个原子结果：固定独立 remediation charter；实现并测试 authoritative final-output file、最小 capsule bind 和失败分类；冻结新的 recovery-only preregistration；在新的、绑定该 hash 的 owner authorization 后执行 decision attempt。外部调用授权必须发生在新预注册冻结以后。
+
+当前 owner-authorized 执行序列见 [`docs/delivery/R2_FINAL_OUTPUT_REMEDIATION.md`](delivery/R2_FINAL_OUTPUT_REMEDIATION.md)。
+
+### 2.7.5 Owner-authorized capsule-audit containment remediation after R2 stop (`R3-CAPSULE-AUDIT-CONTAINMENT-001`)
+
+R2-T4 的 `stop`、R2 failed，以及 R1/R0/P0 的三条既有 terminal stop、failed phase 和全部 immutable evidence chain 都不得覆盖。Owner 可以另行授权拓扑独立的 R3 capsule-audit containment remediation research phase；该授权只允许修复审计语义、审计/评估异常的终态封存，并冻结新的 recovery-only preregistration，不授权新的外部模型调用或产品实现。
+
+R3 必须声明 `recovery_of_failed_phase: R2`、空 phase dependency、owner authorization reference 与 `independent-research-no-product-unlock` scope。`R3-RECOVERY` 必须以 `does_not_supersede: R2-RECOVERY` 和 `also_does_not_supersede: [R1-RECOVERY, R0-RECOVERY, P0-VALUE]` 固定全部 terminal decision chain；任何既有 phase/task 不得依赖 R3。
+
+Capsule audit 必须区分文本提及、受限查找尝试与已观测访问/逃逸。只在 `/work` 内执行、命令文本含 `AGENTS.md`/`SKILL.md` 等 marker、但没有返回该 marker 的路径或内容且没有 capsule 外路径证据的查找，只能记录为 non-authorizing attempted-discovery warning，不能单凭字符串提及升级为 escape。命令或 stderr 出现不在 allowlist 的绝对路径、结构化输出返回 capsule 外路径、输出暴露规则/skill 文件路径或内容、或任何实际越过只读 capsule 边界的证据，仍必须 fail closed。该区分不得削弱 Bubblewrap、只读 workspace、单文件写入、auth 不复制和 ground-truth/holdout 隔离。
+
+Auth 的只读 mount 只限制写入，不能被描述为对 participant command 不可读。R3 的 Codex CLI parent 可以在生成命令 sandbox 建立前读取该认证文件，但生成命令必须进入独立 permission profile：默认拒绝 filesystem root，只开放最小 runtime、只读 `/opt/codex` 与只读 `/work`，显式拒绝 `/codex-home/auth.json` 和 `/proc`，禁止交互式权限升级和 command network。由于当前 Linux sandbox 的运行时 `/proc/self/environ` 仍可读，CLI 传给生成命令的环境必须从 `inherit = "none"` 重建为固定非敏感值；任何 `/proc` 命令/输出证据仍由 auditor fail closed。无模型、假凭据 probe 必须证明 auth 不可读、workspace 不可写、环境不存在 auth/key/password/secret/token 变量；不支持该 profile 或 probe 不一致时不得执行 R3 external arm。
+
+Runner 必须把 audit、ground-truth/evaluator、hash verification 和 aggregate calculation 都放入有界终态封存边界。任一异常必须先保存 raw stdout/stderr、authoritative final-file observation、process terminal、ledger、audit/evaluator error、run metadata 与 SHA manifest，再返回结构化失败并触发 batch stop；异常不得在这些证据封存前逃出到顶层。协议失败、capsule integrity、evaluator attribution 和 evidence-sealing 状态必须保持独立字段，不能用 post-hoc 成功响应覆盖审计失败，也不能把没有 selected response 的失败制造成 wrong attribution。
+
+R3 只允许四个原子结果：固定独立 remediation charter；实现并测试 mention-versus-observed-access audit 与 in-run exception sealing；冻结新的 recovery-only preregistration；在新的、绑定该 hash 的 owner authorization 后执行 decision attempt。外部调用授权必须发生在新预注册冻结以后。
+
+当前 owner-authorized 执行序列见 [`docs/delivery/R3_CAPSULE_AUDIT_CONTAINMENT.md`](delivery/R3_CAPSULE_AUDIT_CONTAINMENT.md)。
+
+### 2.7.6 Owner-authorized external-transport timeout remediation after R3 stop (`R4-TRANSPORT-TIMEOUT-001`)
+
+R3-T4 的 `stop`、R3 failed，以及 R2/R1/R0/P0 的四条既有 terminal stop、failed phase 和全部 immutable evidence chain 都不得覆盖。Owner 可以另行授权拓扑独立的 R4 external-transport timeout remediation research phase；该授权只允许实现传输预检、超时分类、有限重试与新的 recovery-only preregistration，不授权新的外部模型调用或产品实现。
+
+R4 必须声明 `recovery_of_failed_phase: R3`、空 phase dependency、owner authorization reference 与 `independent-research-no-product-unlock` scope。`R4-RECOVERY` 必须以 `does_not_supersede: R3-RECOVERY` 和 `also_does_not_supersede: [R2-RECOVERY, R1-RECOVERY, R0-RECOVERY, P0-VALUE]` 固定全部 terminal decision chain；任何既有 phase/task 不得依赖 R4。
+
+本地 transport preflight 必须在零模型调用下验证当前 Codex binary、固定目的地/模型声明、capsule 与 permission profile、认证文件由可信 CLI 使用但对生成命令不可读、以及 runner 所需的 process/stream/final-file 能力。未实际探测 provider network 时必须记录 `networkRuntimeProbed=false`，不能把配置存在或本地模拟冒充外部可达性。
+
+只有在进程非零退出、没有 authoritative final response、没有 `turn.completed`、JSONL 以 timeout/connectivity `turn.failed` 终止且 audit/permission/evidence sealing 均通过时，runner 才能分类为 `external-transport-timeout-before-response`。任何部分响应、协议矛盾、未知错误、认证失败、rate limit、安全/审计失败或证据不完整都不得进入可重试分类。
+
+有限重试必须由冻结计划明确 `maxRetriesPerArm` 和全批 `maxProcessAttempts`，并受后续 owner authorization 的进程尝试上限约束。每次 retry 使用新的 process/run ID，若产生 thread ID 也必须唯一；失败 attempt 的 raw/final/terminal/ledger/error/audit/hash evidence 永久保留，后续成功不得覆盖或从指标中隐藏。只有上述窄 timeout 分类可以重试；第二次 timeout、任何非 timeout failure、preregistration/source drift 或封存失败立即停止对应 arm 与批次。
+
+R4 只允许四个原子结果：固定独立 remediation charter；实现并测试零模型 transport preflight、窄超时分类和 bounded retry controller；冻结新的 recovery-only preregistration及进程尝试预算；在新的、绑定该 hash、目的地、数据范围和最大进程尝试数的 owner authorization 后执行 decision attempt。外部调用授权必须发生在新预注册冻结以后。
+
+当前 owner-authorized 执行序列见 [`docs/delivery/R4_TRANSPORT_TIMEOUT_REMEDIATION.md`](delivery/R4_TRANSPORT_TIMEOUT_REMEDIATION.md)。
+
+### 2.7.7 Owner-authorized process-tree termination remediation after R4 blocked (`R5-PROCESS-TERMINATION-001`)
+
+R4-T4 的 `blocked`、R4 phase 的 `blocked` 和 `R4-RECOVERY=pending` 必须保持不可覆盖；R3/R2/R1/R0/P0 的五条 terminal stop、failed phase 与 immutable evidence chain 同样不得改变。Owner 可以另行授权拓扑独立的 R5 process-tree termination remediation research phase；该授权只允许修复 runner-owned wall-clock deadline、进程树终止、stream drain 与 interruption-safe partial-evidence sealing，并冻结新的 recovery-only preregistration，不授权新的外部模型调用或产品实现。
+
+R5 必须声明 `remediation_of_blocked_phase: R4`、空 phase dependency、owner authorization reference 与 `independent-research-no-product-unlock` scope。`R5-RECOVERY` 必须以 `does_not_supersede: R4-RECOVERY` 固定 R4 的 blocked/pending chain，并以 `also_does_not_supersede: [R3-RECOVERY, R2-RECOVERY, R1-RECOVERY, R0-RECOVERY, P0-VALUE]` 固定全部 terminal decision chain；任何既有 phase/task 不得依赖 R5。R5 的 verdict 不能完成、失败、重开或替代 R4-T4，也不能升级任何产品 phase。
+
+Wall-clock deadline 必须由 trusted outer runner 以 monotonic clock 从 process spawn 起计时，deadline 数值、grace window、signal escalation 和 process-attempt budget 在新预注册中冻结。超时后 runner 必须终止整个 participant process group/tree，而不是只结束父 shell；先发送有界 graceful termination，再在 grace 到期后强制终止，等待 stdout/stderr/final-file handles 收束并记录每个阶段。无法证明进程树已停止、出现 orphan、signal/exit observation 矛盾或 deadline controller 自身失败时必须 fail closed，且不得启动 retry 或下一 arm。
+
+超时、外部取消、runner 异常与信号中断都必须进入同一个 exception-safe terminalization boundary：在返回或抛错前保存 bounded raw stdout/stderr、authoritative final-file observation、process-tree terminal observations、receipt ledger、audit/permission/evaluator 状态、termination metadata、error classification 与 SHA manifest。只有证据完整封存后，新的 classifier 才可以区分 `external-transport-timeout-before-response`、`runner-wall-clock-terminated-before-response` 或不可重试的 integrity failure；被 runner 终止本身不能冒充 provider `turn.failed`。
+
+R5 只允许四个原子结果：固定独立 remediation charter；实现并测试 deadline/process-tree termination 与 interruption-safe sealing；冻结新的 recovery-only preregistration、deadline/grace 与 process-attempt budget；在新的、绑定该 hash、目的地、数据范围、deadline 和最大进程尝试数的 owner authorization 后执行 decision attempt。外部调用授权必须发生在新预注册冻结以后。
+
+当前 owner-authorized 执行序列见 [`docs/delivery/R5_PROCESS_TREE_TERMINATION_REMEDIATION.md`](delivery/R5_PROCESS_TREE_TERMINATION_REMEDIATION.md)。
+
+### 2.7.8 Owner-authorized pre-spawn invocation-contract remediation after R5 stop (`R6-PRESPAWN-INVOCATION-001`)
+
+R5-T4 的 `stop`、R5 phase 的 `failed`、R4-T4/R4 的 `blocked`、`R4-RECOVERY=pending`，以及 R3/R2/R1/R0/P0 的五条 terminal stop、failed phase 与全部 immutable evidence chain 都不得覆盖。Owner 可以另行授权拓扑独立的 R6 pre-spawn invocation-contract remediation research phase；该授权只允许修复 capsule invocation 与 process terminalizer 之间的显式环境契约、增加零模型兼容性预检、运行本地测试并冻结新的 recovery-only preregistration，不授权新的外部模型调用或产品实现。
+
+R6 必须声明 `recovery_of_failed_phase: R5`、空 phase dependency、owner authorization reference 与 `independent-research-no-product-unlock` scope。`R6-RECOVERY` 必须以 `does_not_supersede: R5-RECOVERY` 固定 R5 terminal stop，以 `also_does_not_supersede: [R4-RECOVERY, R3-RECOVERY, R2-RECOVERY, R1-RECOVERY, R0-RECOVERY, P0-VALUE]` 同时固定 R4 blocked/pending chain 与此前全部 terminal stop chain；任何既有 phase/task 不得依赖 R6。R6 的 verdict 不能完成、失败、重开或替代 R4-T4，也不能改写 R5 verdict 或升级任何产品 phase。
+
+所有交给 bounded process terminalizer 的 invocation 必须在构造时携带不可变、显式且只含字符串的 outer-process `env` record；不得依赖 `spawn` 的隐式环境继承，也不得在预注册后由 runner 静默补全。当前 Bubblewrap outer process 只允许固定 `PATH=/usr/bin:/bin`；Codex capsule 内部的 HOME、CODEX_HOME、TMPDIR 与 PATH 仍由 Bubblewrap 参数和 R3 permission profile 单独固定。Outer env 不得包含 auth、key、password、secret、token、代理凭据、用户目录或其他 host 环境值，且其精确内容和兼容性预检结果必须进入 instrumentation/source binding。
+
+R6 的零模型 preflight 必须构造与 decision runner 相同的 R3 capsule invocation，并复用 terminalizer 的同一 invocation predicate 验证 executable、args、cwd、explicit env 和 evidence shape；同时证明 outer env 是固定 allowlist、没有 host-secret inheritance、capsule workspace 只读、generated command 无 auth 读取权限。该 preflight 只允许执行本地 filesystem/binary/permission probe，不得启动 Codex `exec` participant 或探测 provider network；未观察外部 reachability 时继续记录 `networkRuntimeProbed=false`。
+
+R6 的首个 decision attempt 只允许四个原子结果：固定独立 remediation charter 与 blocked/terminal chain validator；实现并测试 explicit outer env、共享 invocation predicate 和 zero-model compatibility preflight；冻结新的 recovery-only preregistration、source hashes、deadline/grace/signal 与 process-attempt budget；在新的、绑定该 hash、目的地、数据范围、deadline、环境契约和最大进程尝试数的 owner authorization 后执行 decision attempt。外部调用授权必须发生在新预注册冻结以后，R5-T4 的旧授权不得复用。
+
+若该 attempt 在冻结的 outer deadline 到期前只观察到 Codex provider 重连进度、没有观察到 provider `turn.failed` 或权威 final response，则它必须归类为不可重试的 runner deadline termination，封存证据并记录 `adjust`；不得把重连日志提升为 provider timeout，也不得在同一授权下启动第二个进程。`adjust` 后的 attempt two 必须先有显式、零模型的 retry-horizon/deadline remediation task，再冻结新的 source/policy/preregistration，最后取得绑定全部新 hash、deadline 与 process budget 的单独 owner authorization；attempt two 必须以递增 ordinal 和 `supersedes_attempt` 保留 attempt one，不得覆盖其 evidence。
+
+Retry-horizon remediation 必须逐项验证 attempt-one immutable manifest、receipt/raw stream 对应关系与 trusted monotonic timestamps，只能从重连日志得到“不完整的已观察下界”，不能据此声称完整 provider retry horizon 或授权 retry。Attempt-two preregistration 必须绑定一个显式、有限、可 hash 且来源为 exact model/provider configuration 或 version-bound Codex instrumentation 的 horizon；outer deadline 从 process spawn 起计时，必须至少等于该 horizon 加一个有界 terminal-observation margin，同时保留原 grace/force/signal、process-tree termination、逐 attempt budget/evidence 与 runner-termination-nonretryable 语义。对 immutable R6-T4 evidence 的当前 replay，下界为：explicit horizon 至少 `120006ms`，margin 至少 `31574ms` 且不超过 `120000ms`，outer deadline 至少 `151580ms` 且不超过 `600000ms`。R6-T5 只固定这些 compatibility bounds，不选择 attempt-two 的具体 deadline；选择和冻结只属于另行授权的 R6-T6。
+
+当前 R6-T6 attempt-two preregistration 采用 compatibility envelope 的保守有限上界：对 exact Codex `0.144.5` source closure 固定 `480000ms` version-bound observation horizon、`120000ms` terminal margin 和 `600000ms` outer deadline。该 horizon 是 runner/instrumentation 的明确观察策略，不是对 provider 内部 retry schedule、reachability 或 terminal time 的事实声称；Codex version/source、R6-T5 contract、candidate、termination policy、task/data scope 与外部授权开关必须共同 hash-bind。Binary version 或任一 binding drift 时 R6-T7 必须在 spawn 前 fail closed。
+
+R6-T7 attempt two 在该最大冻结 deadline 内仍未观察到 provider terminal：trusted receipts 先完成 WebSocket reconnect 2/5 至 5/5，随后观察明确的 WebSocket→HTTPS fallback，再到 HTTPS reconnect 1/5、2/5、3/5，最后由 runner 在约 `600000ms` 终止。没有 `turn.failed`、`turn.completed`、agent message 或权威 final response，因此该 attempt 仍是 immutable `adjust`；runner deadline termination 不可重试，不得把未完成的 fallback 重连序列提升为 provider timeout。相同 reconnect payload 可以在 WebSocket 与 HTTPS 阶段重复并产生相同 raw hash，后续 replay 必须按 trusted receipt sequence、相邻 fallback evidence 和 monotonic timing 做关联，不能把 raw hash 唯一性当作 transport identity。
+
+R6-T8 的 local-only replay 必须把 JSONL chunk 与 stdout receipt 按 ordered occurrence 一一对应，再以唯一 fallback receipt 分隔 WebSocket/HTTPS phase；不得先按 raw hash 去重或要求 hash 唯一。对 immutable R6-T7 evidence 的当前 replay，WebSocket reconnect 为 2/5–5/5、fallback 在 `137057ms`，HTTPS reconnect 1/5–3/5，且有两个 raw hash 各自在两个 transport phase 重复。已观察 dual-transport terminal horizon 下界为 `600000ms`，HTTPS 内最大已观察 reconnect gap 为 `154113ms`；这些日志仍不证明 provider terminal，也不授权 retry。
+
+当前 R6-T8 compatibility disposition 只允许进入另行授权的 no-call preregistration：attempt-three explicit terminal horizon 至少 `600001ms`，terminal-observation margin 至少 `308226ms` 且不超过 `600000ms`，outer deadline 至少 `908227ms` 且不超过 `1200000ms`。具体 deadline、version/source binding、task/data scope 与 runner policy 只能由 R6-T9 选择并冻结，R6-T8 本身保持 `externalExecutionAuthorized=false`；任一 candidate 仍须保留 `5000/5000ms` termination windows、`SIGTERM`→`SIGKILL`、仅 sealed observed provider timeout 可 retry 一次、runner deadline 不可 retry、20-process cap 与逐 attempt evidence/budget 语义。
+
+当前 R6-T9 attempt-three preregistration 对 exact Codex `0.144.5` 选择 `version-bound-codex-instrumentation` provenance，并在 R6-T8 bounded envelope 内采用“保留 evidence-derived minimum margin 的最大有限 terminal horizon”：`891774ms` explicit horizon + `308226ms` terminal-observation margin = `1200000ms` outer deadline。该数值只是冻结 runner/source closure 下的 observation policy，不声称 provider 内部 retry schedule、reachability 或 terminal time。Preregistration 必须同时绑定 R6-T7 immutable result、R6-T8 proof/contract、fresh task/capsule、source/instrumentation、data scope、termination policy、fixed outer environment 与 `externalExecutionAuthorized=false`；任一 drift 均在 R6-T10 spawn 前 fail closed。
+
+任何 attempt three 都必须先完成新的零模型 R6-T8 dual-transport terminal-horizon remediation，再由 R6-T9 冻结新的 source/policy/preregistration，最后由 R6-T10 取得绑定全部新 hash、deadline、destination/model、data scope 与 process budget 的精确 owner authorization。Attempt three 必须以递增 ordinal 和 `supersedes_attempt: R6-T7` 同时保留 attempts one/two；R6-T7 的授权不能复用，也不解锁产品工作。
+
+R6-T10 attempt three 在 runner deadline 前真实观察到 provider terminal，但它不是可重试 timeout：ordered receipts 中 WebSocket reconnect 2/5–5/5 后以 `Network unreachable` fallback HTTPS，HTTPS reconnect 1/5–5/5 后的最终 `turn.failed` message 是 `error sending request`。中间 reconnect 文本中的 `request timed out` 不得替代最终 provider terminal 语义；冻结 classifier 因而返回 `protocol-or-unknown-failure`、`retryable=false`。该 attempt 必须保留 1 个 process、0/10 arms、无 retry、process group empty、empty final、完整 audit/permission/evidence 与 immutable `adjust`，不得把它回写为 provider timeout。
+
+R6-T11 对 attempts one/two/three 的 immutable manifests 与 attempt-three ordered receipts 做零模型重放后，只允许 `continue-to-preregistration-only`。R6-T10 的既有 `protocol-or-unknown-failure` 与 `retryable=false` 不变；未来若继续，只能由 R6-T12 另行冻结一个与 provider timeout 分离的 `sealed-network-fallback-plus-nontimeout-provider-terminal-before-response` 候选类别。该候选必须同时要求 ordered WebSocket→HTTPS receipts、明确的 `Network unreachable` fallback、最终 non-timeout `turn.failed/error sending request`、无 agent message/`turn.completed`、runner deadline 前 nonzero process exit，以及完整 audit/permission/terminal/manifest sealing；任一不同或未知 non-timeout terminal 仍不可重试。此命名不声称根因，R6-T11 不选择 exact attempt-four policy、不授权外部执行，并继续保留每 arm 最多一次 retry、全批 20 process cap、逐 attempt budget/evidence 与零产品解锁边界。
+
+当前 R6-T12 attempt-four preregistration 已选择上述 evidence-conjunctive 类，并保留原 `external-transport-timeout-before-response` 类；二者共享每 arm 总计最多一次 retry，而非各自一次。新 classifier 只有在六项证据同时成立时才把 future attempt 归入新类；缺少 fallback、final terminal、no-response、pre-deadline nonzero exit 或 sealing 任一项，均保持 `protocol-or-unknown-failure` 且不可重试。该选择不回写 R6-T10 的历史分类、不声称 provider 根因。Preregistration 必须绑定 attempts 1/2/3 immutable manifests、R6-T11 proof/contract、5 个 fresh tasks/10 arms、13 项 runner source、fixed outer env、`1200000/5000/5000ms` termination policy、20-process cap、data scope、holdout exclusion 与 `externalExecutionAuthorized=false`；任一 drift 在 R6-T13 spawn 前 fail closed。
+
+任何 attempt four 都必须先由 R6-T11 对 immutable attempts one/two/three 做零模型 failure-class remediation，明确 non-timeout provider terminal 的 bounded disposition；只有允许继续时，R6-T12 才能冻结 fresh source/policy/task/data/evidence closure，R6-T13 还必须取得绑定全部新边界的另一份精确 external authorization。Attempt four 使用 `decision_attempt: 4` 与 `supersedes_attempt: R6-T10`，不得复用 R6-T10 authorization、覆盖 prior evidence 或解锁产品工作。
+
+R6-T13 的精确授权与所有 frozen bindings 均验证通过。首个 direct process/fresh thread 完整经历 WebSocket 与 HTTPS timeout receipts，并在 runner deadline 前以 `turn.failed/request timed out`、exit 1、empty final、empty process group 和 sealed boundary 结束；该 attempt 正确归类为可重试 `external-transport-timeout-before-response`。Frozen runner 在准备已授权的唯一 retry 时复用了同一 capsule，第二次 authoritative-output preparation 在 process spawn 前触发 `R2_CAPSULE_OUTPUT_ALREADY_PREPARED`。因此第二 process 没有启动，既不能把第一 attempt 改写为 retry-exhausted，也不能继续消耗其他 arms。独立零调用 abort sealer 只读验证并封存首个 attempt、机械复现该 invocation defect、生成顶层 manifest，并依 preregistered `aggregate-integrity-failed` stop condition 记录 immutable `R6-RECOVERY=stop`；R6 phase 随之 failed，prior attempts、其他 recovery decisions、P0 product verdict 与零产品解锁边界不变。
+
+当前 owner-authorized 执行序列见 [`docs/delivery/R6_PRESPAWN_INVOCATION_REMEDIATION.md`](delivery/R6_PRESPAWN_INVOCATION_REMEDIATION.md)。
+
+### 2.7.9 Owner-authorized retry-capsule isolation remediation after R6 stop (`R7-RETRY-CAPSULE-ISOLATION-001`)
+
+R6-T13 的 `R6-RECOVERY=stop`、R6 failed、R5 stop、R4 blocked/pending 与此前全部 terminal decisions/evidence 必须保持不可覆盖。Owner 另行授权的 R7 仅处理冻结 runner 在合法 retry 前复用 capsule control root 与 authoritative-output file 的生命周期缺陷；R7 使用空 phase dependency、独立 `R7-RECOVERY` decision key 与 `independent-research-no-product-unlock` scope，任何既有 phase/task 不得依赖 R7。R7 verdict 不能完成、失败、重开或替代 R6/R5/R4 或更早 decision，也不能升级 P0 或 P1–P8。
+
+每个 process attempt 必须在 spawn 前创建独立 capsule instance、control root、permission-profile control files 与 runner-owned authoritative final-output file；retry 不得复用前一 attempt 的可写 output mount、final file、partial state 或 cleanup handle。Direct/VEM 两个 arm 仍须使用相同的只读 base fixture、prompt、schema 与 evaluation boundary，VEM treatment 仍只能增加冻结的 VEM context；per-attempt isolation 不得改变实验 treatment 或向 participant 暴露 prior-attempt evidence。每个 attempt 的资源必须在其 process tree 终止、streams/final observation/ledger/boundary/manifests 封存后独立清理，且清理失败必须 fail closed。
+
+Batch runner 必须在 retry planning、capsule preparation、spawn、classification、aggregate evaluation 或 terminal manifest 任一异常时，先保留所有已封存 attempts，再写入结构化 batch-stop、exception、run-index、verdict 与顶层 hash manifest；不得因 top-level exception 留下只有 `.partial` 或无 verdict 的批次，也不得自动换 result root 重放同一 authorization。计划了 retry 但尚未 spawn 时，`retryAuthorized=true` 与 `retryProcessStarted=false` 必须分开记录，未启动的进程不得消耗 process-attempt budget或伪装成 retry exhaustion。
+
+R7 采用四个原子结果：R7-T1 固定 charter、decision isolation、owner authorization 与历史链不可变性；R7-T2 只在本地实现并测试 per-attempt capsule/final-output isolation 和 exception-safe aggregate sealing；R7-T3 冻结 fresh tasks/capsules、runner/source closure、data/environment/policy/budget、local probes 与 `externalExecutionAuthorized=false`；R7-T4 只有在新预注册 commit 发布后取得绑定目的地、模型、data scope、source/policy hashes、termination/retry policy、arm target 与 process cap 的另一份精确 owner authorization，才可执行外部 batch。R7-T1–R7-T3 的原始本地授权没有被复用于外部执行；R7-T4 使用另一份精确授权，且不能复用任何 R6 authorization。
+
+R7-T4 的精确授权与全部 frozen bindings 均验证通过。首个 direct arm 的 attempt one 与唯一 retry 分别获得不同 capsule/control root、permission profile、runner-owned final file、resource identity 与 fresh thread；两次均完整观察 WebSocket→HTTPS timeout receipts，并以 provider `turn.failed/request timed out`、exit 1、empty final、empty process group 和 sealed boundary 结束。两次均正确归类为 `external-transport-timeout-before-response`，retry 只在首个 sealed failure 后授权且真实启动。第二次同类失败耗尽该 arm 的一次 retry 后，exception-safe batch sealer 保留两个 attempts、记录 2/20 processes、0/10 completed arms、18 unused budget、零异常和 verified top-level manifest，并依 `aggregate-integrity-failed` stop condition 记录 immutable `R7-RECOVERY=stop`。R7 phase 随之 failed；R6/R5/R4 与更早 decisions/evidence、P0 product verdict 和零产品解锁边界不变，同一 authorization 的 alternate-root replay 仍被 ledger 禁止。
+
+当前 owner-authorized 执行序列见 [`docs/delivery/R7_RETRY_CAPSULE_ISOLATION_REMEDIATION.md`](delivery/R7_RETRY_CAPSULE_ISOLATION_REMEDIATION.md)。
+
+### 2.7.10 Final single-attempt recovery exit before model-agnostic MCP product work (`R8-FINAL-RECOVERY-EXIT-001`)
+
+R7-T4 的 `R7-RECOVERY=stop`、R7 failed 与全部既有 decision/evidence 必须保持不可覆盖。Owner 允许再做一次最终 recovery 尝试，并明确如果该尝试 timeout 就停止 recovery 实验、转向真正的模型无关 MCP 产品开发路线。R8 因此是空依赖、独立 decision key、零产品解锁的最终 research exit gate；不得创建 R9 或把 R8 verdict 写回 R7/R6/P0。
+
+VEM 产品 runtime、MCP tools/resources、CapabilityReport、协议协商与验证语义不得读取、要求、分支或宣称任何 participant model ID。未来 R8 预注册必须为外部实验单独记录 client、model、destination 与 data scope，以便复核和精确授权，但这些 experiment-only 字段不得进入 VEM 产品配置、MCP capability 或兼容性判断。模型是否可连接也不得替代 MCP contract、模拟 client、协议或浏览器集成测试。
+
+R8 external execution 最多且必须恰好启动一个 separately authorized process，不设 retry；所有 timeout、runner deadline、transport failure、缺失 terminal/final 或 evidence sealing failure 必须记录 immutable `stop` 并永久结束 recovery research。非 timeout 的 schema-valid success 也只完成这一 exit gate，不自动证明 VEM 产品价值或解锁既有 product phases。未来模型无关产品路线必须另行定义任务与验收边界，不依赖 `R8-RECOVERY=continue`，并保留 provider unavailable/timeout 作为可见 limitation，而不是把它变成 MCP 产品阻断条件。
+
+当前 owner-authorized 执行序列见 [`docs/delivery/R8_FINAL_RECOVERY_EXIT.md`](delivery/R8_FINAL_RECOVERY_EXIT.md)。
+
+### 2.7.11 Owner-prioritized model-agnostic usable MCP route (`USABLE-MCP-001`)
+
+M0 是 owner 明确要求优先完成的独立产品路线，不是 recovery、P0 verdict 重试或既有 phase 解锁。它必须保持 `P0-VALUE=stop`、R0–R3/R5–R7 terminal stops、R4 blocked/pending 与 R8 当前链全部不可覆盖；M0 不得依赖 `P0-VALUE` 或任何 R0–R8 verdict，也不得把 provider reachability、participant model identity 或 recovery 成功当作 MCP correctness 条件。M0 可以复用 P0 已完成并通过各自测试的环境、protocol、fixture、selector、source-anchor 与 registry 资产，但这种复用不得改写 P0 的 failed 状态或声称原 value gate 已通过。
+
+M0 的首个可用目标固定为本地 React/Vite injected-preview vertical slice，并按 owner 优先级依次交付：MCP-owned coordinator 与 MCP STDIO；Vite same-origin browser proxy；bounded selection/source MCP tools；server-derived claim、immutable single-use confirmation、prepare-before-edit、relevant-HMR causality 与 fresh complete；真实 Edge Stable walking skeleton 及必要负例；最小安装 CLI、Codex MCP 配置、升级回滚和 clean uninstall。为了保持原子性，coordinator authority 与 STDIO protocol、confirmation 与 verification、正向与负向 Edge E2E、CLI implementation 与 fresh-project validation 必须拆成独立任务，且前一任务通过、提交并发布后才能开始下一任务。
+
+产品 runtime、MCP protocol/tools/resources、CapabilityReport 与安装配置必须保持 participant-model-agnostic：不得接受、要求、默认或分支于具体 model ID。M0 的本地实现和验证可以启动 owner 授权范围内的 Edge、Vite 与 MCP OS processes，但不得调用外部 participant model/provider。Page ingress 继续视为不可信，build-registry publication 使用独立 capability；每层身份、schema、size、privacy、project/document/revision、TTL 与 semantic checks 必须独立执行，不能因本地开发环境而绕过。
+
+在 M0-T13 之前不得宣称“可安装 MCP”完成。完成必须同时证明：fresh project 可 idempotent 安装并生成明确 MCP config；真实 Edge 能完成 select → source → confirm → prepare → source edit → relevant HMR → fresh complete；stale/restart/unrelated/ambiguous 路径 fail closed；production build 不参与；upgrade 可回滚；clean uninstall 保留用户文件且不残留 VEM production runtime/data。当前执行序列见 [`docs/delivery/M0_USABLE_MCP.md`](delivery/M0_USABLE_MCP.md)。
+
 ## 2.8 项目与依赖许可证 (`LICENSE-POLICY-001`)
 
 P0-T1 在生成 package metadata 前必须记录项目自身许可证或明确的 private/unlicensed 状态、版权主体、贡献接收方式和发布边界；设计文档不能替项目所有者默认选择 MIT、Apache-2.0、AGPL 或商业许可。若许可证决定尚未获得项目所有者确认，允许完成不发布的 workspace scaffold，但 public package、复制第三方代码或分发 extension 的工作保持 blocked。
@@ -246,7 +410,7 @@ P0-T1 在生成 package metadata 前必须记录项目自身许可证或明确�
 
 ## 2.9 P0 建议执行顺序与范围
 
-单人使用 Codex 时，当前 owner-approved scope 是 **P0 proof-of-value / go-no-go prototype**，不是完整 Visual V1。当前执行序列位于 `docs/delivery/P0_PROOF_OF_VALUE.md`；`docs/ONE_WEEK_EXECUTION.md` 仅为旧链接兼容入口。Step 只表达依赖友好的建议顺序，不是硬日历、工时估算或“一周必须完成”的承诺。Codex 可以加快编码，但不能替代真实环境、Edge、隔离 pilot 和证据门禁。当前 scope 只包括：
+单人使用 Codex 的原 P0 owner-approved scope 是 **P0 proof-of-value / go-no-go prototype**，不是完整 Visual V1。该历史执行序列位于 `docs/delivery/P0_PROOF_OF_VALUE.md`；`docs/ONE_WEEK_EXECUTION.md` 仅为旧链接兼容入口。Step 只表达依赖友好的建议顺序，不是硬日历、工时估算或“一周必须完成”的承诺。Codex 可以加快编码，但不能替代真实环境、Edge、隔离 pilot 和证据门禁。P0 scope 只包括：
 
 1. 完成并保存 execution preflight verdict；
 2. 建立最小 TypeScript workspace、React/Vite fixture 和 protocol schema；
@@ -256,6 +420,8 @@ P0-T1 在生成 package metadata 前必须记录项目自身许可证或明确�
 P0-T17B 是逻辑 decision `P0-VALUE` 的首个 attempt。只有当前 attempt 的 `decision: continue` 时，stretch 才能按 P0-T7 → P0-T11 → P0-T12A → P0-T12B → P0-T12C 的依赖顺序向 bounded MCP read-only source-resolution smoke 前进；未完成这五个任务不得声称 MCP smoke 可用。当前 scope 不承诺 HMR transaction verification、MV3 pairing、capture 或 Visual V1。
 
 stop condition 由结果而不是日历触发：canonical WSL ext4 root 或 Tier-1 preflight 未通过；selector→source bundle 在有界排错后仍不可重复；micro-pilot 出现 wrong attribution；或者 `adjust/stop` verdict 未被新的、预登记的重试证据取代。进入 stop 后只修复阻断点和保存 evidence，不通过删测试、缩小安全边界或把未完成能力改名为 MVP 来制造完成。长期 P1–P8 保留为后续 backlog，不自动进入当前 scope。
+
+P0 已以 terminal stop 结束。当前 owner-approved 产品 scope 是 2.7.11 定义的独立 M0 usable MCP route；它不改变本节的 P0 历史范围、verdict 或完成条件。
 
 # 二、浏览器策略：Edge 优先、Chromium 共用
 

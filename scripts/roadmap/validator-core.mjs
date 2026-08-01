@@ -105,6 +105,18 @@ export function validateModel(root, roadmap, requirements) {
   const taskIds = new Set(unique(tasks.map((task) => task.id), "orphan-task", "task ids"));
   const byTask = new Map(tasks.map((task) => [task.id, task]));
   const byContract = new Map(contracts.map((contract) => [contract.id, contract]));
+  const taskReachesDependency = (fromTaskId, targetTaskId) => {
+    const seen = new Set();
+    const pending = [...(byTask.get(fromTaskId)?.depends_on ?? [])];
+    while (pending.length) {
+      const candidate = pending.pop();
+      if (candidate === targetTaskId) return true;
+      if (seen.has(candidate)) continue;
+      seen.add(candidate);
+      pending.push(...(byTask.get(candidate)?.depends_on ?? []));
+    }
+    return false;
+  };
 
   for (const task of tasks) {
     const bindings = unique(strings(task.contracts, "contract-reference", `${task.id}.contracts`), "contract-reference", `${task.id}.contracts`);
@@ -117,6 +129,59 @@ export function validateModel(root, roadmap, requirements) {
   }
   visitGraph(taskIds, (id) => byTask.get(id).depends_on ?? [], "dependency-cycle");
   visitGraph(phaseIds, (id) => phases.find((phase) => phase.id === id).depends_on ?? [], "phase-cycle");
+
+  const recoveryPhases = phases.filter((phase) => phase.recovery_of_failed_phase !== undefined);
+  const blockedRemediationPhases = phases.filter(
+    (phase) => phase.remediation_of_blocked_phase !== undefined,
+  );
+  if (phases.some((phase) => (
+    phase.recovery_of_failed_phase !== undefined
+      && phase.remediation_of_blocked_phase !== undefined
+  ))) {
+    fail("recovery-boundary", "phase cannot recover failed and remediate blocked state together");
+  }
+  for (const phase of recoveryPhases) {
+    if (typeof phase.recovery_of_failed_phase !== "string"
+      || phases.find((item) => item.id === phase.recovery_of_failed_phase)?.status !== "failed"
+      || (phase.depends_on ?? []).length !== 0
+      || phase.scope_boundary !== "independent-research-no-product-unlock"
+      || typeof phase.authorization_ref !== "string") {
+      fail("recovery-boundary", `${phase.id} recovery declaration invalid`);
+    }
+    safePath(root, phase.authorization_ref, "recovery-boundary");
+    const recoveryTaskIds = new Set(tasks
+      .filter((task) => task.phaseId === phase.id)
+      .map((task) => task.id));
+    if (phases.some((candidate) => (
+      candidate.id !== phase.id && (candidate.depends_on ?? []).includes(phase.id)
+    )) || tasks.some((task) => (
+      task.phaseId !== phase.id
+      && (task.depends_on ?? []).some((dependency) => recoveryTaskIds.has(dependency))
+    ))) {
+      fail("recovery-boundary", `${phase.id} leaks into an existing product dependency`);
+    }
+  }
+  for (const phase of blockedRemediationPhases) {
+    if (typeof phase.remediation_of_blocked_phase !== "string"
+      || phases.find((item) => item.id === phase.remediation_of_blocked_phase)?.status !== "blocked"
+      || (phase.depends_on ?? []).length !== 0
+      || phase.scope_boundary !== "independent-research-no-product-unlock"
+      || typeof phase.authorization_ref !== "string") {
+      fail("recovery-boundary", `${phase.id} blocked remediation declaration invalid`);
+    }
+    safePath(root, phase.authorization_ref, "recovery-boundary");
+    const remediationTaskIds = new Set(tasks
+      .filter((task) => task.phaseId === phase.id)
+      .map((task) => task.id));
+    if (phases.some((candidate) => (
+      candidate.id !== phase.id && (candidate.depends_on ?? []).includes(phase.id)
+    )) || tasks.some((task) => (
+      task.phaseId !== phase.id
+      && (task.depends_on ?? []).some((dependency) => remediationTaskIds.has(dependency))
+    ))) {
+      fail("recovery-boundary", `${phase.id} leaks into an existing product dependency`);
+    }
+  }
 
   for (const phase of phases) {
     if (!roadmap.status_values.phase.includes(phase.status)) fail("roadmap-state", `${phase.id}: ${phase.status}`);
@@ -152,9 +217,13 @@ export function validateModel(root, roadmap, requirements) {
   }
 
   const decisions = object(roadmap.decisions, "decision-reference", "decisions");
-  for (const [key, descriptor] of Object.entries(decisions)) {
+  for (const [key, rawDescriptor] of Object.entries(decisions)) {
+    const descriptor = object(rawDescriptor, "decision-reference", key);
     const attempts = tasks.filter((task) => task.decision_key === key).sort((a, b) => a.decision_attempt - b.decision_attempt);
     if (!attempts.length || descriptor.current_attempt !== attempts.at(-1).id) fail("decision-reference", `${key} current attempt mismatch`);
+    if (attempts.some((task) => task.phaseId !== descriptor.phase)) {
+      fail("decision-reference", `${key} phase mismatch`);
+    }
     attempts.forEach((task, index) => {
       if (task.decision_attempt !== index + 1) fail("decision-attempt", `${task.id} attempt sequence`);
       if ((index ? attempts[index - 1].id : null) !== task.supersedes_attempt) fail("decision-attempt", `${task.id} supersedes mismatch`);
@@ -162,8 +231,140 @@ export function validateModel(root, roadmap, requirements) {
       if (task.status === "done" && task.decision === "pending") fail("decision-verdict", `${task.id} done pending`);
       if (task.status !== "done" && task.decision !== "pending") fail("decision-verdict", `${task.id} verdict before done`);
     });
+    attempts.forEach((task, index) => {
+      if (task.decision !== "adjust") return;
+      const nextAttempt = attempts[index + 1];
+      const owningPhase = phases.find((phase) => phase.id === descriptor.phase);
+      if (nextAttempt === undefined) {
+        if (owningPhase?.status !== "failed") {
+          fail(
+            "decision-adjust",
+            `${task.id} adjust requires remediation and a new attempt`,
+          );
+        }
+        return;
+      }
+      const remediationExists = tasks.some((candidate) => (
+        candidate.phaseId === descriptor.phase
+          && candidate.decision_key === undefined
+          && taskReachesDependency(candidate.id, task.id)
+          && taskReachesDependency(nextAttempt.id, candidate.id)
+      ));
+      if (!remediationExists) {
+        fail(
+          "decision-adjust",
+          `${task.id} adjust has no remediation task before ${nextAttempt.id}`,
+        );
+      }
+    });
+    const recoveryPhase = recoveryPhases.find((phase) => phase.id === descriptor.phase);
+    if (recoveryPhase !== undefined) {
+      const excludedDecision = decisions[descriptor.does_not_supersede];
+      const excludedAttempt = excludedDecision === undefined
+        ? undefined
+        : byTask.get(excludedDecision.current_attempt);
+      const additionalExcludedKeys = descriptor.also_does_not_supersede ?? [];
+      const inheritedExcludedKeys = excludedDecision?.scope === "independent-research"
+        ? [
+            excludedDecision.does_not_supersede,
+            ...(excludedDecision.also_does_not_supersede ?? []),
+          ]
+        : [];
+      if (descriptor.scope !== "independent-research"
+        || typeof descriptor.does_not_supersede !== "string"
+        || excludedDecision === undefined
+        || excludedDecision.phase !== recoveryPhase.recovery_of_failed_phase
+        || excludedAttempt?.decision !== "stop"
+        || !Array.isArray(additionalExcludedKeys)
+        || additionalExcludedKeys.length !== inheritedExcludedKeys.length
+        || additionalExcludedKeys.some((excludedKey, index) => (
+          excludedKey !== inheritedExcludedKeys[index]
+        ))
+        || additionalExcludedKeys.some((excludedKey) => {
+          const additionalDecision = decisions[excludedKey];
+          const additionalAttempt = additionalDecision === undefined
+            ? undefined
+            : byTask.get(additionalDecision.current_attempt);
+          const additionalPhase = phases.find(
+            (phase) => phase.id === additionalDecision?.phase,
+          );
+          const preservedTerminalStop = additionalPhase?.status === "failed"
+            && additionalAttempt?.status === "done"
+            && additionalAttempt?.decision === "stop";
+          const preservedBlockedPending = additionalPhase?.status === "blocked"
+            && additionalAttempt?.status === "blocked"
+            && additionalAttempt?.decision === "pending";
+          return typeof excludedKey !== "string"
+            || excludedKey === key
+            || additionalDecision === undefined
+            || (!preservedTerminalStop && !preservedBlockedPending);
+        })
+        || new Set(additionalExcludedKeys).size !== additionalExcludedKeys.length
+        || recoveryPhase.gate?.requires_decisions?.[key] !== "continue"
+        || Object.keys(recoveryPhase.gate.requires_decisions).length !== 1) {
+        fail("recovery-boundary", `${key} recovery decision isolation invalid`);
+      }
+    }
+    const blockedRemediationPhase = blockedRemediationPhases.find(
+      (phase) => phase.id === descriptor.phase,
+    );
+    if (blockedRemediationPhase !== undefined) {
+      const excludedDecision = decisions[descriptor.does_not_supersede];
+      const excludedAttempt = excludedDecision === undefined
+        ? undefined
+        : byTask.get(excludedDecision.current_attempt);
+      const additionalExcludedKeys = descriptor.also_does_not_supersede ?? [];
+      const inheritedExcludedKeys = excludedDecision?.scope === "independent-research"
+        ? [
+            excludedDecision.does_not_supersede,
+            ...(excludedDecision.also_does_not_supersede ?? []),
+          ]
+        : [];
+      const blockedPhase = phases.find(
+        (phase) => phase.id === blockedRemediationPhase.remediation_of_blocked_phase,
+      );
+      if (descriptor.scope !== "independent-research"
+        || typeof descriptor.does_not_supersede !== "string"
+        || excludedDecision === undefined
+        || excludedDecision.phase !== blockedRemediationPhase.remediation_of_blocked_phase
+        || blockedPhase?.status !== "blocked"
+        || excludedAttempt?.status !== "blocked"
+        || excludedAttempt?.decision !== "pending"
+        || !Array.isArray(additionalExcludedKeys)
+        || additionalExcludedKeys.length !== inheritedExcludedKeys.length
+        || additionalExcludedKeys.some((excludedKey, index) => (
+          excludedKey !== inheritedExcludedKeys[index]
+        ))
+        || additionalExcludedKeys.some((excludedKey) => {
+          const additionalDecision = decisions[excludedKey];
+          const additionalAttempt = additionalDecision === undefined
+            ? undefined
+            : byTask.get(additionalDecision.current_attempt);
+          return typeof excludedKey !== "string"
+            || excludedKey === key
+            || additionalDecision === undefined
+            || phases.find((phase) => phase.id === additionalDecision.phase)?.status !== "failed"
+            || additionalAttempt?.decision !== "stop";
+        })
+        || new Set(additionalExcludedKeys).size !== additionalExcludedKeys.length
+        || blockedRemediationPhase.gate?.requires_decisions?.[key] !== "continue"
+        || Object.keys(blockedRemediationPhase.gate.requires_decisions).length !== 1) {
+        fail("recovery-boundary", `${key} blocked remediation decision isolation invalid`);
+      }
+    }
   }
-  for (const task of tasks) for (const key of Object.keys(task.requires_decisions ?? {})) if (!(key in decisions)) fail("decision-reference", `${task.id}: ${key}`);
+  for (const task of tasks) {
+    for (const [key, verdict] of Object.entries(task.requires_decisions ?? {})) {
+      if (!(key in decisions)) fail("decision-reference", `${task.id}: ${key}`);
+      if (verdict !== "continue") fail("decision-reference", `${task.id}: ${key} requires unsupported ${verdict}`);
+    }
+  }
+  for (const phase of phases) {
+    for (const [key, verdict] of Object.entries(phase.gate?.requires_decisions ?? {})) {
+      if (!(key in decisions)) fail("decision-reference", `${phase.id}: ${key}`);
+      if (verdict !== "continue") fail("decision-reference", `${phase.id}: ${key} requires unsupported ${verdict}`);
+    }
+  }
   validateLinks(root, strings(policy.internal_link_sources, "requirements-schema", "internal_link_sources"));
   return { phases: phases.length, tasks: tasks.length, contracts: contracts.length, authorityFiles: authorityPaths.size };
 }

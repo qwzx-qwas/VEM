@@ -1,0 +1,1 @@
+{"allocationPolicy":"integer-division-total-by-five-plus-per-task-capsule-setup","excludes":"capsule-materialization-and-codex-source-location-time","includes":"attempt-chain-input-copy-plan-and-hash-generation","schemaVersion":"P0-T17D-prepare-setup-cost-v1","totalPrepareSetupDurationNs":"35969893"}

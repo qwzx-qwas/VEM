@@ -1,0 +1,1 @@
+{"nonRetryable":["runner-wall-clock-terminated-before-response","integrity-failure","partial-or-completed-response","protocol-or-unknown-failure"],"providerTerminalMayBeSynthesized":false,"providerTurnFailedMustBeObserved":true,"retryable":["external-transport-timeout-before-response"],"schemaVersion":"R6-T3-attempt-classification-contract-v1"}

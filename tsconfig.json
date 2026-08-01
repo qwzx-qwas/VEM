@@ -6,6 +6,7 @@
     { "path": "./packages/injected-selector" },
     { "path": "./packages/vite-plugin" },
     { "path": "./packages/source-registry" },
+    { "path": "./packages/pilot-harness" },
     { "path": "./packages/demo-fixture" }
   ]
 }

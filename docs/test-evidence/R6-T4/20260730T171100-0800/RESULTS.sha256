@@ -1,0 +1,12 @@
+807425d284de90cea11e3fbca02663ac14f9e25520c55149576a69edbad0d2d7  results/local-preflight.json
+8ccba2d2eb9bede7121510ee9f615d95af84525b9cacbda4e3eeb9b356bb583f  results/run-index.json
+acf6fab787681e5ab7bb9213a9553ed950e4809ad167e1dad82f3ca6a7aa6902  results/verdict.json
+843a893411a311d8bd66ed2c87a56962ec1ce85891736a4ac7a03d9b1c8d4af9  runs/r6-invocation-01-env-heading-direct-search-attempt-1/boundary-state.json
+7f5e3a3c723510f99d40817d3a4c17c3254e40631dc790a04dfe4d2751f14fcf  runs/r6-invocation-01-env-heading-direct-search-attempt-1/failure.json
+824d7ba1b04fe34ce21393663e2cd4462fa5f3a23762f9454f8cc321dbdc6878  runs/r6-invocation-01-env-heading-direct-search-attempt-1/final-response-observation.json
+909f994dbd9a1d68ff60dc97242fd71bee4e8ce00a77cb12a4c2a00b0c8920ea  runs/r6-invocation-01-env-heading-direct-search-attempt-1/receipt-ledger.json
+5754069382666273c143d62751e98825f1aa0ae60e6984a8f2cccf687784c712  runs/r6-invocation-01-env-heading-direct-search-attempt-1/run.json
+82affa8d2fe523731b55032473ea46fe29c275f6acaa2521325cb6b587fea3e6  runs/r6-invocation-01-env-heading-direct-search-attempt-1/SHA256SUMS
+742a808bf3d6725f6b3c6d33a8dc5d9003a6f409976cdb44d0d29447c19bc57a  runs/r6-invocation-01-env-heading-direct-search-attempt-1/stderr.txt
+6890de3f47dac54f8582a255b7295113cac1cb753675ac0a2bdf3bf31f7c89a9  runs/r6-invocation-01-env-heading-direct-search-attempt-1/stdout.jsonl
+c342d271d26753275c49f4ea37451c01c01650f94d6122aeda00ec1ee393927d  runs/r6-invocation-01-env-heading-direct-search-attempt-1/termination.json

@@ -1,0 +1,15 @@
+Reading additional input from stdin...
+2026-07-29T09:21:59.152482Z ERROR codex_models_manager::cache: failed to load models cache: missing field `supports_reasoning_summaries` at line 86 column 5
+2026-07-29T09:22:04.066394Z ERROR codex_models_manager::manager: failed to refresh available models: timeout waiting for child process to exit
+2026-07-29T09:22:04.154148Z ERROR codex_models_manager::manager: failed to refresh available models: timeout waiting for child process to exit
+2026-07-29T09:22:04.305854Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back
+2026-07-29T09:22:04.313705Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back
+2026-07-29T09:22:04.320305Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back
+2026-07-29T09:22:04.326804Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back
+2026-07-29T09:22:04.333447Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back
+2026-07-29T09:22:04.344796Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back
+2026-07-29T09:22:12.218147Z ERROR codex_models_manager::manager: failed to refresh available models: timeout waiting for child process to exit
+2026-07-29T09:22:24.246674Z ERROR codex_models_manager::manager: failed to refresh available models: timeout waiting for child process to exit
+2026-07-29T09:22:32.208119Z  WARN codex_core_plugins::manager: failed to warm remote plugin catalog cache error=failed to parse remote plugin catalog response from https://chatgpt.com/backend-api/ps/plugins/list: EOF while parsing a value at line 1 column 0
+2026-07-29T09:22:32.892599Z ERROR codex_models_manager::manager: failed to refresh available models: timeout waiting for child process to exit
+2026-07-29T09:22:51.523382Z  WARN codex_file_watcher: failed to unwatch /home/qwzx/.codex/skills/.system: No watch was found. about ["/home/qwzx/.codex/skills/.system"]

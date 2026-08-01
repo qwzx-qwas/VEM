@@ -1,0 +1,4 @@
+Read-only source-location task. Do not edit files.
+In the provided React/Vite fixture, locate the exact intrinsic JSX element rendering the code element rendering the safe route candidate under “Sensitive URL components”.
+If vem-context.json exists, use it only as immutable VEM selection/direct-source evidence; otherwise locate the source by direct search.
+Return only the JSON object required by the response schema: project-relative relativeFile, one-based line, and sourceAnchorId when evidence supplies one (otherwise null).
