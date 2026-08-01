@@ -432,7 +432,7 @@ decisions:
         decided_at: 2026-07-30T20:13:02+08:00
         evidence_ref: docs/test-evidence/R6-T10/20260730T195616-0800/results/verdict.json
     authoritative_state_ref: ROADMAP.yaml
-    note: Attempts one through three are immutable adjust. Attempt three used the exact owner-authorized R6-T9 closure and started one fresh direct process. Ordered receipts observed WebSocket reconnect 2/5 through 5/5, fallback on Network unreachable, HTTPS reconnect 1/5 through 5/5, then one provider turn.failed at 992292 ms with an error-sending-request terminal that did not say timeout. The sealed classification remains nonretryable protocol-or-unknown-failure. R6-T11 completed a local-only immutable replay and recorded continue-to-preregistration-only without changing attempt three; R6-T12 no-call preregistration and separately authorized R6-T13 attempt four are still required and no product work is unlocked.
+    note: Attempts one through three are immutable adjust. Attempt three remains nonretryable protocol-or-unknown-failure. R6-T11 completed a local-only immutable replay and recorded continue-to-preregistration-only without changing attempt three. R6-T12 then froze a fresh attempt-four source/task/data/environment/failure-policy closure with externalExecutionAuthorized=false; only a future fully evidence-conjunctive selected class or the separately preserved provider-timeout class can consume the single retry per arm. R6-T13 still requires exact authorization binding the published R6-T12 commit and every frozen hash; no product work is unlocked.
 
   - id: OWNER-R6-T5-DEADLINE-HORIZON-REMEDIATION
     title: Authorize local-only R6 deadline-horizon remediation after attempt-one adjust
@@ -573,6 +573,30 @@ decisions:
       - docs/tasks/ATOMIC_TASK_PROMPTS.md
       - ROADMAP.yaml
     note: Authorization covered immutable attempts-one/two/three replay, ordered WebSocket-to-HTTPS receipt attribution, non-timeout provider-terminal separation, no-retry preservation, a bounded local compatibility disposition, proof evidence, tests and documentation. It completed with proof hash 0c6b2357c745fe66ce8a88e2d49db8f5f8ae51112470ae058dbcbb5432a30dcf and contract hash fa512a787a4d72d75704ebebbd06ab78cd796387483f0e625985fb6d9fbce1d2; external process/model/provider-request counts are zero. It does not change attempt three, claim a root cause, select an attempt-four policy, authorize R6-T12/R6-T13, consume product holdout or unlock product work.
+
+  - id: OWNER-R6-T12-ATTEMPT-FOUR-PREREGISTRATION
+    title: Authorize local-only R6 attempt-four preregistration
+    status: decided
+    decision_owner: project-owner
+    needed_by_task: R6-T12
+    decision: authorized
+    decided_at: 2026-08-01T13:03:00+08:00
+    evidence: Owner explicitly authorized pushing the complete R6-T11 commit to the named GitHub repository/branch and authorized continuing with the R6-T12 local zero-call stage.
+    owner_statement: "我明确授权将 commit 4944699199b25427918d27a2b1d16989c1047934 中的私有源代码和测试证据推送到 https://github.com/qwzx-qwas/VEM.git 的 agent/complete-p0-r1-stages 分支，并授权随后继续执行 R6-T12 本地零调用阶段。"
+    interpreted_scope: R6-T12-local-no-call-attempt-four-preregistration-only
+    prerequisite_publish:
+      commit: 4944699199b25427918d27a2b1d16989c1047934
+      branch: agent/complete-p0-r1-stages
+      repository: https://github.com/qwzx-qwas/VEM.git
+      remote_sha_verified: true
+    context_refs:
+      - docs/test-evidence/R6-T11/20260801T123150-0800/proof.json
+      - docs/test-evidence/R6-T11/20260801T123150-0800/SHA256SUMS
+      - docs/test-evidence/R6-T12/20260801T131600-0800/PREREGISTRATION.json
+      - docs/test-evidence/R6-T12/20260801T131600-0800/PREREGISTRATION.sha256
+      - docs/tasks/ATOMIC_TASK_PROMPTS.md
+      - ROADMAP.yaml
+    note: Authorization covered selecting and freezing one future-only failure policy compliant with the immutable R6-T11 contract, fresh tasks/capsules, R6-T13 runner/source closure, data/environment/evidence bindings, local probes, tests and documentation with externalExecutionAuthorized=false. It completed with preregistration hash 531e9ea500d198c60dfb834c0b210bee9fb2eaf52772fc1ae85876bcd0c5e62d, instrumentation hash 6770f8caa440672c62bf57dfa8c9ef12ddbd2d8a3c119b6d20786f36aea19e06, data-scope hash 0bd7c96a8241cbc2e78b24e776973001bc2bf59ec51ec8cb97625d245f7a2a80 and failure-candidate hash 53829a8291de64322223d91b224fa097988c22afcd4b30f6237db36a1b5b2c75; 30 local probes passed and external process/model/provider-request count remained zero. It does not authorize R6-T13, reuse R6-T10 authorization, overwrite attempts one/two/three, consume product holdout or unlock product work.
 
   - id: OWNER-R6-T7-EXTERNAL-BATCH
     title: Authorize the frozen R6-T7 attempt-two external batch
