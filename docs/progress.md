@@ -903,3 +903,21 @@ Each future entry must include task ID, date, changed files, commands, test evid
 - Security/data-lifecycle verification: participant transfer stayed within the authorized data-scope hash; exactly one authorized external process ran; generated-command auth remained denied and workspace read-only; the retry process was not spawned; attempts one/two/three and all prior evidence remain unchanged; evidence is private bounded audit metadata with 0700/0600 permissions and no symlink; product unlock count remains zero
 - Known limitations/degradations: zero arms completed, so no correctness, pairwise-time or cost claim exists; the provider timeout does not establish provider root cause or future reachability; the frozen runner cannot safely reuse one capsule across retry attempts, and same-authorization rerun is forbidden
 - Next eligible task: none. `R6-RECOVERY=stop` makes R6 terminal failed; any further runner remediation would require a new independently scoped owner-authorized route, new task/decision chain, new no-call preregistration and later separate exact external authorization
+
+## R7-T1 — Retry-capsule isolation remediation charter
+
+- Date: 2026-08-01
+- State/outcome: `done` / `passed`
+- Decision: `n/a`; `R7-RECOVERY` remains pending, while R6-T13/R6, R5, R4 and every earlier decision/evidence remain immutable
+- Authorization/publish prerequisite: owner explicitly authorized a new independent R7 local-zero-call route through R7-T3 with stage-by-stage commit/push and separately gated all future external model calls; prerequisite R6-T13 commit `69b6fa42694eea00617913051bcca08cf0a78536` was already pushed and its remote SHA verified
+- Charter result: added `R7-RETRY-CAPSULE-ISOLATION-001`, independent R7/R7-RECOVERY, and four atomic tasks for charter, local runner isolation/sealing, no-call preregistration and separately authorized verdict. R7 has empty phase dependency, no existing phase/task depends on it, and its gate requires only `R7-RECOVERY=continue`
+- Preserved chain: R6-T13 remains `done/stop` and R6 `failed`; R5 remains `failed/stop`; R4 remains `blocked/pending`; P0 and R0–R3 remain terminal failed/stop. The ordered non-supersession chain is R6, R5, R4, R3, R2, R1, R0 and P0-VALUE, with product unlock count zero
+- Evidence: `docs/test-evidence/R7-T1/20260801T150632-0800/`; proof hash `077186d0e8216243db1d6f6d81d6aec2e688975e1f691e1ad60b88e691c1a321`; 0700 directory, 0600 files, SHA256 manifest and no-symlink checks pass
+- Changed files: R7 normative design/requirements contract, roadmap phase/tasks/decision, exact owner authorization record, delivery charter, R7-T1–T4 prompts, dedicated charter proof/tests, prior charter count assertions, status/progress and P0 scope note
+- Tests added/updated: real R7 full-chain proof, R6-stop/R4-blocked mutations, decision-order and product-dependency leakage, exact owner scope/external-false, premature R7-T2/R7-T4 rejection, reverse contract mapping and 17-phase/181-task/33-contract assertions
+- Commands: R6-T13 remote SHA verification; eligibility scan; required document/validator inspection; roadmap validation; 9-file targeted charter/validator suite; unrestricted full test; build; typecheck; lint; diff check; final proof generation and evidence audit
+- Test results: 9 targeted files / 55 tests and all 70 Vitest files / 381 tests passed; build, typecheck and lint passed; roadmap validates 17 phases, 181 tasks and 33 contracts
+- Edge/browser verification: not applicable; no browser or frontend product behavior changed
+- Security/data-lifecycle verification: no participant process, provider request, reachability probe or external model call ran; prior evidence was read-only; R7 has no product dependency edge; proof is bounded private audit metadata and product unlock count is zero
+- Known limitations/degradations: R7-T1 defines and proves only the remediation boundary; it does not yet implement per-attempt capsule isolation or exception-safe aggregate sealing and does not establish provider reachability
+- Next eligible task: R7-T2 after the complete R7-T1 commit is pushed and the remote SHA is verified; R7-T2 remains local zero-call under the current owner grant, while R7-T3 and R7-T4 remain separate atomic stages

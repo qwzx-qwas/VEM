@@ -110,9 +110,9 @@ export function assertR6CharterModel({ roadmap, decisionInbox, validation }) {
     || owner?.status !== "decided"
     || owner?.decision !== "authorized"
     || owner?.owner_statement !== OWNER_STATEMENT
-    || validation.phases < 16
-    || validation.tasks < 171
-    || validation.contracts < 32) {
+    || validation.phases < 17
+    || validation.tasks < 181
+    || validation.contracts < 33) {
     throw new Error("R6_T1_CHARTER_PROOF_FAILED");
   }
   return Object.freeze({

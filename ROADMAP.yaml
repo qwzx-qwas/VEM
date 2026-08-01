@@ -48,6 +48,7 @@ decisions:
   R4-RECOVERY: {phase: R4, current_attempt: R4-T4, scope: independent-research, does_not_supersede: R3-RECOVERY, also_does_not_supersede: [R2-RECOVERY, R1-RECOVERY, R0-RECOVERY, P0-VALUE]}
   R5-RECOVERY: {phase: R5, current_attempt: R5-T4, scope: independent-research, does_not_supersede: R4-RECOVERY, also_does_not_supersede: [R3-RECOVERY, R2-RECOVERY, R1-RECOVERY, R0-RECOVERY, P0-VALUE]}
   R6-RECOVERY: {phase: R6, current_attempt: R6-T13, scope: independent-research, does_not_supersede: R5-RECOVERY, also_does_not_supersede: [R4-RECOVERY, R3-RECOVERY, R2-RECOVERY, R1-RECOVERY, R0-RECOVERY, P0-VALUE]}
+  R7-RECOVERY: {phase: R7, current_attempt: R7-T4, scope: independent-research, does_not_supersede: R6-RECOVERY, also_does_not_supersede: [R5-RECOVERY, R4-RECOVERY, R3-RECOVERY, R2-RECOVERY, R1-RECOVERY, R0-RECOVERY, P0-VALUE]}
   P1-INJECTED: {phase: P1, current_attempt: P1-T17}
   P2-TRUSTED: {phase: P2, current_attempt: P2-T13D}
   P3-VISUAL: {phase: P3, current_attempt: P3-T19}
@@ -269,6 +270,27 @@ phases:
       - {id: R6-T11, title: Remediate the non-timeout provider-terminal network failure using immutable R6-T10 evidence without external calls, contracts: [R6-PRESPAWN-INVOCATION-001], status: done, depends_on: [R6-T10], tests: [attempt-one-two-three-evidence-immutability provider-terminal-nontimeout-separation ordered-dual-transport-receipts network-unreachable-versus-timeout classification no-retry-preservation bounded-remediation-or-stop-disposition zero-model and no-product-unlock checks]}
       - {id: R6-T12, title: Freeze a new R6 attempt-four runner transport policy source environment task threshold and evidence preregistration without external calls, contracts: [R6-PRESPAWN-INVOCATION-001], status: done, depends_on: [R6-T11], tests: [attempt-one-two-three-evidence-immutability new-runner-and-policy-hash failure-remediation-binding fresh-task identity equal-base-context counterbalance process-budget holdout-exclusion external-authorization-false and no-product-unlock checks]}
       - {id: R6-T13, title: Execute a separately owner-authorized R6 attempt-four bounded batch and record the superseding immutable R6-RECOVERY verdict, contracts: [R6-PRESPAWN-INVOCATION-001], status: done, decision_key: R6-RECOVERY, decision_attempt: 4, supersedes_attempt: R6-T10, decision: stop, depends_on: [R6-T12], tests: [attempt-one-two-three-evidence-immutability fresh-context bounded-deadline provider-terminal-versus-runner-deadline retry-classification process-tree-terminal final-file-jsonl-audit consistency raw-ledger-hash correctness wrong-attribution pairwise-cost and continue-adjust-stop verdict checks]}
+
+  - id: R7
+    title: Owner-authorized independent retry-capsule isolation remediation after terminal R6 stop
+    status: in_progress
+    depends_on: []
+    recovery_of_failed_phase: R6
+    authorization_ref: docs/decisions/OPEN_DECISIONS.yaml
+    scope_boundary: independent-research-no-product-unlock
+    gate:
+      commands: ["pnpm roadmap:validate", "pnpm build", "pnpm typecheck", "pnpm lint", "pnpm test"]
+      requires_decisions: {R7-RECOVERY: continue}
+      done_when:
+        - R6-T13 stop and failed R6 remain immutable together with R5 stop, R4 blocked/pending and every earlier terminal stop.
+        - Every retry attempt receives a distinct capsule control root and runner-owned final-output file while preserving equal-base participant inputs and the arm treatment boundary.
+        - Batch-level exceptions before retry spawn or after a sealed attempt produce an immutable fail-closed aggregate result and never reuse an authorization by rerunning silently.
+        - R7 preregistration binds the isolated retry lifecycle, exception-safe aggregate sealing, source/data/environment/policy hashes, process budget and externalExecutionAuthorized=false.
+    tasks:
+      - {id: R7-T1, title: Record the owner-authorized independent R7 retry-capsule isolation charter and mechanically preserve R6 stop plus all prior blocked and terminal chains, contracts: [R7-RETRY-CAPSULE-ISOLATION-001], status: done, depends_on: [], tests: [failed-R6 and immutable-R6-T13-stop preservation R5-stop R4-blocked-pending earlier-stop full-decision-chain owner-authorization empty-dependencies no-existing-dependency and zero-product-unlock checks]}
+      - {id: R7-T2, title: Implement per-attempt capsule and final-output isolation plus exception-safe batch sealing without external calls, contracts: [R7-RETRY-CAPSULE-ISOLATION-001], status: todo, depends_on: [R7-T1], tests: [distinct-control-root distinct-final-file equal-base-treatment parity retry-spawn lifecycle cleanup batch-exception sealing attempt-retention process-budget no-rerun and zero-model-call checks]}
+      - {id: R7-T3, title: Freeze a fresh retry-isolated recovery runner source task data environment policy budget and evidence preregistration without external calls, contracts: [R7-RETRY-CAPSULE-ISOLATION-001], status: todo, depends_on: [R7-T2], tests: [R6-evidence-immutability new-runner-and-source-hash retry-isolation-binding exception-sealing-binding fresh-task equal-base counterbalance process-budget holdout-exclusion external-authorization-false and no-product-unlock checks]}
+      - {id: R7-T4, title: Execute a separately owner-authorized retry-isolated bounded batch and record the independent R7-RECOVERY verdict, contracts: [R7-RETRY-CAPSULE-ISOLATION-001], status: todo, decision_key: R7-RECOVERY, decision_attempt: 1, supersedes_attempt: null, decision: pending, depends_on: [R7-T3], tests: [R6-evidence-immutability fresh-context distinct-retry-capsules bounded-deadline retry-classification exception-safe-aggregate-seal process-tree-terminal final-file-jsonl-audit consistency raw-ledger-hash correctness wrong-attribution pairwise-cost and continue-adjust-stop verdict checks]}
 
   - id: P1
     title: Harden the Edge Vite-injected MVP

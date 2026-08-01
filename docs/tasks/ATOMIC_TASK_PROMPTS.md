@@ -884,6 +884,54 @@
 
 > **已完成（2026-08-01）**：Owner 对已发布 commit `53e2e1093fd107476efdc236afc07a75affabead`、OpenAI Codex service / `gpt-5.6-sol`、全部 preregistration/instrumentation/data-scope/failure/termination/environment hashes、10-arm 目标、20-process cap、`1200000/5000/5000ms` 与两类共享一次 retry 给出精确授权，canonical authorization hash 为 `aa6d64d442416c0a3357e31bd350ef69c6fd748e269faa7b6ea0cf404e520967`。唯一 direct process 获得 fresh thread，完整观察 WebSocket timeout 2/5–5/5、fallback HTTPS、HTTPS timeout 1/5–5/5 及最终 `turn.failed/request timed out`；进程在 deadline 前 exit 1、process group 清空、final 为空，sealed classification 正确为可重试 `external-transport-timeout-before-response`。Frozen runner 随后计划唯一 retry，但在第二 process spawn 前复用同一 capsule 的 authoritative-output 路径并触发 `R2_CAPSULE_OUTPUT_ALREADY_PREPARED`；第二 process 未启动。零调用 abort sealer 机械复现该缺陷、验证首个 attempt manifest，并以 `aggregate-integrity-failed` 记录 immutable `R6-RECOVERY=stop`。Evidence 位于 `docs/test-evidence/R6-T13/20260801T141247-0800/`；1 process、0/10 arms、19 budget unused、无 wrong attribution、无 product unlock，verdict canonical hash `f83caa14aa56b9c416bef538c8d3b38e8202cd2d40e50e457e116982f4da96b7`，`RESULTS.sha256` 文件 hash `4e81c4742b02bc3ccae63c733c8816208e742d60dc1608c49d386d56981f4f43`。
 
+## R7-T1 — Retry-capsule isolation remediation charter
+
+### Prompt
+
+- **背景**：R6-T13 首个 attempt 被正确封存为 retryable provider timeout，但 frozen runner 在 retry spawn 前复用同一 capsule authoritative-output 路径而 terminal stop。
+- **目标**：只建立独立 R7 charter，固定 R6 stop/failed、R5 stop、R4 blocked/pending、此前全部 terminal chain 与零产品解锁边界。
+- **本阶段做**：增加 R7 contract/phase/decision、owner authorization reference、完整 ancestor decision isolation、双向 traceability 与机械 charter proof。
+- **本阶段不做**：不修改 runner/capsule runtime，不生成新预注册，不运行 participant process、provider probe 或外部模型调用。
+- **实现约束**：R7 phase/task dependency 为空；`R7-RECOVERY` 不 supersede R6、R5、R4 或此前 decision；既有 phase/task 不依赖 R7。
+- **测试要求**：R6-T13 done/stop、R6 failed、R5 stop、R4 blocked/pending、此前 stops、八层 decision chain、authorization、dependency leak、traceability 与 product unlock 负例。
+- **验收标准**：charter proof 与完整门禁通过后 `done`；下一项仅为 R7-T2。
+
+> **已完成（2026-08-01）**：已建立独立 `R7-RETRY-CAPSULE-ISOLATION-001` contract、R7 phase、`R7-RECOVERY` decision 与 R7-T1–T4 原子链；owner 授权只覆盖 R7-T1–T3 本地零调用工作，R7-T4 仍需新预注册发布后的精确外部授权。专用 charter proof 机械固定 R6-T13/R6 stop、R5 stop、R4 blocked/pending、P0/R0–R3 stops、完整 `does_not_supersede` 顺序、空依赖、既有任务零反向依赖及零产品解锁。Roadmap/traceability 验证为 17 phases / 181 tasks / 33 contracts；9 个 charter/validator 文件 55 项定向测试与 70 files / 381 项全仓测试通过，build/typecheck/lint 通过，participant process/provider/model call 为 0。下一项仅为 R7-T2。
+
+## R7-T2 — Per-attempt capsule isolation and aggregate sealing
+
+### Prompt
+
+- **背景**：R7-T1 只固定修复边界；R6-T13 的 retry 在第二 process spawn 前因 capsule output reuse 失败。
+- **目标**：本地实现每 attempt 独立 capsule/control root/final file，并让 batch exception 在返回前完整封存。
+- **本阶段做**：attempt factory、equal-base/treatment parity、per-attempt cleanup、retry-spawn lifecycle、structured batch-stop/exception/run-index/verdict/manifest sealing。
+- **本阶段不做**：不生成 participant model call，不探测 provider，不冻结或执行外部 batch。
+- **实现约束**：未 spawn retry 不消耗 process budget；prior attempt evidence 不覆盖；同一 authorization 不自动换 root 重跑；cleanup failure fail closed。
+- **测试要求**：不同 control roots/final files、无 writable reuse、base/treatment parity、attempt retention、pre/post-spawn exceptions、cleanup failure、budget、no rerun、zero call。
+- **验收标准**：目标测试和 local proof 通过后 `done`；下一项仅为 R7-T3。
+
+## R7-T3 — Retry-isolated no-call preregistration
+
+### Prompt
+
+- **背景**：R7-T2 已提供本地 retry isolation 与 exception-safe aggregate sealing。
+- **目标**：冻结 fresh tasks/arms、runner/source closure、data/environment/failure/termination policy、budget 与 evidence gate。
+- **本阶段做**：R6 evidence immutability、fresh task identity、equal-base contexts、counterbalance、holdout exclusion、isolated retry lifecycle、aggregate seal、local probes 与 `externalExecutionAuthorized=false`。
+- **本阶段不做**：不运行外部 arm，不复用 R6 authorization，不覆盖 prior attempts，不消费产品 holdout。
+- **实现约束**：全部 source/policy/data/environment hashes、attempt factory 与 exception sealer fail closed；全批 process cap 保持有界。
+- **验收标准**：新预注册与本地 probes 通过后 `done`；R7-T4 等待绑定 published commit 与全部 frozen boundary 的另一份精确授权。
+
+## R7-T4 — Separately authorized retry-isolated verdict
+
+### Prompt
+
+- **背景**：仅当 R7-T3 新预注册完成并发布后，R7 external decision 才具有结构资格；当前没有执行授权。
+- **目标**：仅在新的精确 owner authorization 后执行 bounded paired arms，并记录 `R7-RECOVERY` verdict。
+- **本阶段做**：fresh per-attempt capsules、bounded retry/process lifecycle、provider/runner classification、exception-safe batch evidence、correctness 与 pairwise cost verdict。
+- **本阶段不做**：不覆盖 R6/R5/R4 或更早 evidence/decision，不自动解锁产品 phase。
+- **实现约束**：`decision_attempt: 1`；每个 attempt 资源唯一；任何 drift 或 aggregate sealing failure 均 fail closed。
+- **验收标准**：immutable verdict；只有 `continue` 满足 R7 gate，且也只允许提出新的独立研究路线。
+
 ## P0-T9A — Walking-skeleton 正向 Edge E2E
 
 ### Prompt

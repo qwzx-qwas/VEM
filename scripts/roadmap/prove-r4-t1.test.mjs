@@ -37,7 +37,7 @@ describe("R4-T1 independent external-transport timeout remediation charter", () 
         productUnlockCount: 0,
         externalExecutionAuthorized: false,
       },
-      validation: { phases: 16, tasks: 177, contracts: 32 },
+      validation: { phases: 17, tasks: 181, contracts: 33 },
     });
   });
 

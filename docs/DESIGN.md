@@ -364,6 +364,18 @@ R6-T13 的精确授权与所有 frozen bindings 均验证通过。首个 direct 
 
 当前 owner-authorized 执行序列见 [`docs/delivery/R6_PRESPAWN_INVOCATION_REMEDIATION.md`](delivery/R6_PRESPAWN_INVOCATION_REMEDIATION.md)。
 
+### 2.7.9 Owner-authorized retry-capsule isolation remediation after R6 stop (`R7-RETRY-CAPSULE-ISOLATION-001`)
+
+R6-T13 的 `R6-RECOVERY=stop`、R6 failed、R5 stop、R4 blocked/pending 与此前全部 terminal decisions/evidence 必须保持不可覆盖。Owner 另行授权的 R7 仅处理冻结 runner 在合法 retry 前复用 capsule control root 与 authoritative-output file 的生命周期缺陷；R7 使用空 phase dependency、独立 `R7-RECOVERY` decision key 与 `independent-research-no-product-unlock` scope，任何既有 phase/task 不得依赖 R7。R7 verdict 不能完成、失败、重开或替代 R6/R5/R4 或更早 decision，也不能升级 P0 或 P1–P8。
+
+每个 process attempt 必须在 spawn 前创建独立 capsule instance、control root、permission-profile control files 与 runner-owned authoritative final-output file；retry 不得复用前一 attempt 的可写 output mount、final file、partial state 或 cleanup handle。Direct/VEM 两个 arm 仍须使用相同的只读 base fixture、prompt、schema 与 evaluation boundary，VEM treatment 仍只能增加冻结的 VEM context；per-attempt isolation 不得改变实验 treatment 或向 participant 暴露 prior-attempt evidence。每个 attempt 的资源必须在其 process tree 终止、streams/final observation/ledger/boundary/manifests 封存后独立清理，且清理失败必须 fail closed。
+
+Batch runner 必须在 retry planning、capsule preparation、spawn、classification、aggregate evaluation 或 terminal manifest 任一异常时，先保留所有已封存 attempts，再写入结构化 batch-stop、exception、run-index、verdict 与顶层 hash manifest；不得因 top-level exception 留下只有 `.partial` 或无 verdict 的批次，也不得自动换 result root 重放同一 authorization。计划了 retry 但尚未 spawn 时，`retryAuthorized=true` 与 `retryProcessStarted=false` 必须分开记录，未启动的进程不得消耗 process-attempt budget或伪装成 retry exhaustion。
+
+R7 采用四个原子结果：R7-T1 固定 charter、decision isolation、owner authorization 与历史链不可变性；R7-T2 只在本地实现并测试 per-attempt capsule/final-output isolation 和 exception-safe aggregate sealing；R7-T3 冻结 fresh tasks/capsules、runner/source closure、data/environment/policy/budget、local probes 与 `externalExecutionAuthorized=false`；R7-T4 只有在新预注册 commit 发布后取得绑定目的地、模型、data scope、source/policy hashes、termination/retry policy、arm target 与 process cap 的另一份精确 owner authorization，才可执行外部 batch。当前 R7 授权只覆盖 R7-T1–R7-T3 的本地零调用工作，不能复用任何 R6 authorization，也不授权 R7-T4。
+
+当前 owner-authorized 执行序列见 [`docs/delivery/R7_RETRY_CAPSULE_ISOLATION_REMEDIATION.md`](delivery/R7_RETRY_CAPSULE_ISOLATION_REMEDIATION.md)。
+
 ## 2.8 项目与依赖许可证 (`LICENSE-POLICY-001`)
 
 P0-T1 在生成 package metadata 前必须记录项目自身许可证或明确的 private/unlicensed 状态、版权主体、贡献接收方式和发布边界；设计文档不能替项目所有者默认选择 MIT、Apache-2.0、AGPL 或商业许可。若许可证决定尚未获得项目所有者确认，允许完成不发布的 workspace scaffold，但 public package、复制第三方代码或分发 extension 的工作保持 blocked。

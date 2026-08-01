@@ -31,9 +31,9 @@ describe("R0-T1 recovery charter proof", () => {
         productUnlockCount: 0,
       },
       validation: {
-        phases: 16,
-        tasks: 177,
-        contracts: 32,
+        phases: 17,
+        tasks: 181,
+        contracts: 33,
       },
     });
     expect(["in_progress", "done"]).toContain(

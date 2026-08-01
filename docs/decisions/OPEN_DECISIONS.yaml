@@ -436,6 +436,39 @@ decisions:
     authoritative_state_ref: ROADMAP.yaml
     note: Attempts one through three remain immutable adjust. Exactly authorized attempt four started one fresh direct process, which ended before runner deadline with a sealed retryable provider timeout and an empty final response. The frozen runner then reused the same capsule while preparing the authorized retry and raised R2_CAPSULE_OUTPUT_ALREADY_PREPARED before a second process spawned. A no-call abort sealer verified the attempt manifest, reproduced the defect and recorded aggregate-integrity-failed stop. Attempt four used 1 process, completed 0/10 arms, left 19 attempts unused and produced no wrong attribution. R6 failed; this decision does not alter prior decisions or unlock product work.
 
+  - id: R7-RECOVERY
+    title: Continue, adjust, or stop the independent R7 retry-capsule isolation route
+    status: open
+    decision_owner: evidence-gate
+    needed_by_task: R7-T4
+    decision: pending
+    current_attempt: R7-T4
+    authoritative_state_ref: ROADMAP.yaml
+    note: R7 is a separately owner-authorized local remediation route after immutable R6-RECOVERY stop. It preserves R6, R5, R4 and every earlier decision/evidence, has no product dependency edge and cannot unlock product work. R7-T1 through R7-T3 are local zero-call work; R7-T4 requires another exact authorization after a new preregistration commit is published.
+
+  - id: OWNER-R7-RETRY-CAPSULE-ISOLATION-REMEDIATION
+    title: Authorize independent local-only R7 retry-capsule isolation remediation
+    status: decided
+    decision_owner: project-owner
+    needed_by_task: R7-T1
+    decision: authorized
+    decided_at: 2026-08-01T15:01:46+08:00
+    evidence: Owner explicitly authorized a new independent R7 local route for per-attempt capsule/final-output isolation, exception-safe batch sealing, tests and a new no-call preregistration while preserving every prior decision/evidence and requiring separate authorization for any future external call.
+    owner_statement: "我明确授权新增一个不覆盖 R6-RECOVERY stop、R5/R4 及此前所有 decision/evidence，且不解锁产品工作的独立 R7 retry-capsule isolation remediation 路线；先仅执行本地零调用的 charter、每次 retry 使用独立 capsule/final-output control root 的 runner 修复、exception-safe batch sealing、测试及新预注册，并按阶段 commit/push。任何外部模型调用仍须在新预注册发布后另行精确授权。"
+    authorized_scope: [R7-T1, R7-T2, R7-T3]
+    external_execution_authorized: false
+    prerequisite_publish:
+      commit: 69b6fa42694eea00617913051bcca08cf0a78536
+      branch: agent/complete-p0-r1-stages
+      remote_sha_verified: true
+    context_refs:
+      - docs/test-evidence/R6-T13/20260801T141247-0800/RESULTS.sha256
+      - docs/test-evidence/R6-T13/20260801T141247-0800/results/verdict.json
+      - docs/DESIGN.md
+      - docs/delivery/R7_RETRY_CAPSULE_ISOLATION_REMEDIATION.md
+      - ROADMAP.yaml
+    note: This grant covers charter/validator work, local runner remediation, local tests/probes, new preregistration evidence and stage-by-stage commit/push. It does not authorize a participant process, provider reachability probe, model request, reuse of any R6 authorization, mutation of prior evidence or product unlock.
+
   - id: OWNER-R6-T5-DEADLINE-HORIZON-REMEDIATION
     title: Authorize local-only R6 deadline-horizon remediation after attempt-one adjust
     status: decided
