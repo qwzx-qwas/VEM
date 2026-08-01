@@ -43,11 +43,13 @@ Attempt three exposed a non-timeout provider-terminal failure rather than anothe
 12. `R6-T12`: only if R6-T11 permits bounded continuation, freeze a fresh attempt-four runner/policy/preregistration with `externalExecutionAuthorized=false`.
 13. `R6-T13`: only after another exact authorization, execute decision attempt four with `supersedes_attempt: R6-T10`.
 
+R6-T11 was separately authorized and completed without an external process, provider request, network probe or model call. Its fail-closed replay verified the immutable result manifests for attempts one through three and bound each R6-T10 stdout chunk to the ordered receipt ledger. The replay separates WebSocket reconnect 2/5–5/5, the `Network unreachable` fallback, HTTPS reconnect 1/5–5/5 and the final non-timeout `turn.failed/error sending request`; attempt three remains nonretryable `protocol-or-unknown-failure`. The compatibility disposition is `continue-to-preregistration-only`: R6-T12 may separately freeze a distinct evidence-conjunctive future class, but R6-T11 selects no exact attempt-four policy and authorizes neither R6-T12 nor R6-T13. Proof and contract hashes are `0c6b2357c745fe66ce8a88e2d49db8f5f8ae51112470ae058dbcbb5432a30dcf` and `fa512a787a4d72d75704ebebbd06ab78cd796387483f0e625985fb6d9fbce1d2`.
+
 ## Security and data lifecycle boundary
 
 - The outer process receives no inherited host environment or secret-bearing values.
 - Bubblewrap continues to set the inner capsule environment separately; the R3 permission profile still denies generated-command auth and `/proc` access and keeps `/work` read-only.
-- R6-T1 through R6-T3, R6-T5, R6-T6, R6-T8, R6-T9, and any future R6-T11/R6-T12 work use local probes/replay only. They send no participant fixture, prompt, auth data, or other content to a provider.
+- R6-T1 through R6-T3, R6-T5, R6-T6, R6-T8, R6-T9, R6-T11, and any future R6-T12 work use local probes/replay only. They send no participant fixture, prompt, auth data, or other content to a provider.
 - Evidence is bounded immutable audit metadata under `docs/test-evidence/R6-*`; no new durable product artifact class is introduced.
 - R6 has no dependency edge into P0 or P1–P8 and cannot unlock product implementation.
 

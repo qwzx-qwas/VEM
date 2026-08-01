@@ -856,6 +856,8 @@
 - **实现约束**：中间 reconnect 的 `request timed out` 不得替代最终 `turn.failed` message；未知/非 timeout terminal 不得升级为 retryable timeout。
 - **验收标准**：独立 owner 授权后，本地 proof、immutability checks 与目标测试通过；只有 bounded remediation 才允许进入 R6-T12。
 
+> **已完成（2026-08-01）**：按 owner 要求从当前最新 prompt 执行 R6-T11，并将其解释为仅覆盖本地、零调用的 failure-class remediation。只读重放对 attempts 1/2/3 的 immutable result manifests、R6-T10 双层 manifest、ordered stdout receipts、final/process/audit/permission 边界全部做了 fail-closed 绑定；重放明确区分 WebSocket reconnect 2/5–5/5、`123049ms` 的 `Network unreachable` fallback、HTTPS reconnect 1/5–5/5，以及 `992292ms` 最终 non-timeout `turn.failed/error sending request`。Attempt 3 仍保持 `protocol-or-unknown-failure`、`retryable=false`，中间 `request timed out` 没有被提升为 provider terminal。Compatibility contract 仅给出 `continue-to-preregistration-only`：R6-T12 可另行冻结一个与 timeout 分离、要求完整 sealed evidence 的候选类别，但 R6-T11 不选择 attempt-four policy、不授权 R6-T12/R6-T13、不执行外部进程/模型/provider request，也不解锁产品工作。Evidence 位于 `docs/test-evidence/R6-T11/20260801T123150-0800/`，proof/contract hashes 为 `0c6b2357c745fe66ce8a88e2d49db8f5f8ae51112470ae058dbcbb5432a30dcf` / `fa512a787a4d72d75704ebebbd06ab78cd796387483f0e625985fb6d9fbce1d2`；11 项定向测试、67 files / 365 项全仓测试及 build/typecheck/lint/roadmap validation 全部通过。下一项仅为需单独 owner 授权的 R6-T12 no-call preregistration。
+
 ## R6-T12 — Attempt-four preregistration
 
 ### Prompt

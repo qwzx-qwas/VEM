@@ -432,7 +432,7 @@ decisions:
         decided_at: 2026-07-30T20:13:02+08:00
         evidence_ref: docs/test-evidence/R6-T10/20260730T195616-0800/results/verdict.json
     authoritative_state_ref: ROADMAP.yaml
-    note: Attempts one through three are immutable adjust. Attempt three used the exact owner-authorized R6-T9 closure and started one fresh direct process. Ordered receipts observed WebSocket reconnect 2/5 through 5/5, fallback on Network unreachable, HTTPS reconnect 1/5 through 5/5, then one provider turn.failed at 992292 ms with an error-sending-request terminal that did not say timeout. The sealed classification is nonretryable protocol-or-unknown-failure, so no retry or next arm started; 0/10 arms completed and 19 process attempts remain unused. R6-T11 local-only failure-class remediation, R6-T12 no-call preregistration and separately authorized R6-T13 attempt four are now required; none is authorized by R6-T10 and no product work is unlocked.
+    note: Attempts one through three are immutable adjust. Attempt three used the exact owner-authorized R6-T9 closure and started one fresh direct process. Ordered receipts observed WebSocket reconnect 2/5 through 5/5, fallback on Network unreachable, HTTPS reconnect 1/5 through 5/5, then one provider turn.failed at 992292 ms with an error-sending-request terminal that did not say timeout. The sealed classification remains nonretryable protocol-or-unknown-failure. R6-T11 completed a local-only immutable replay and recorded continue-to-preregistration-only without changing attempt three; R6-T12 no-call preregistration and separately authorized R6-T13 attempt four are still required and no product work is unlocked.
 
   - id: OWNER-R6-T5-DEADLINE-HORIZON-REMEDIATION
     title: Authorize local-only R6 deadline-horizon remediation after attempt-one adjust
@@ -548,6 +548,31 @@ decisions:
       - docs/test-evidence/R6-T9/20260730T194005-0800/PREREGISTRATION.sha256
       - scripts/pilot/r6-t10.mjs
     note: Authorization validated with canonical hash 61767b2f1a7fc0dbd3c3734f2f672ad345eebb1a5febd3c56d124687f05509c4. One external process/fresh thread started and emitted a provider turn.failed after complete WebSocket and HTTPS reconnect phases, but its terminal message was error sending request rather than timeout. The sealed protocol-or-unknown-failure classification was nonretryable, so no retry or next arm started. Attempt three recorded immutable adjust with canonical verdict hash b2c75c2bafa45bf80f83a2158779f70591ab06dbde025f4ad144809a5ef9fb16 and results-manifest file hash a45f1970978996cdbe8df8b99e7b09fd3fbcf4865f76d8eeb504dcde2bead13b. This authorization does not overwrite attempts one/two, authorize R6-T11/R6-T12/R6-T13, unlock product work or bind changed source/policy/data.
+
+  - id: OWNER-R6-T11-PROVIDER-TERMINAL-REMEDIATION
+    title: Authorize local-only R6 non-timeout provider-terminal remediation
+    status: decided
+    decision_owner: project-owner
+    needed_by_task: R6-T11
+    decision: authorized
+    decided_at: 2026-08-01T12:29:00+08:00
+    evidence: Owner directed Codex to start from the current latest documented prompt, mark each completed prompt with a brief summary, and commit/push at each stage after the assistant identified R6-T11 as the sole eligible local-only task and explicitly kept R6-T12/R6-T13 separately gated.
+    owner_statement: "结合文档内容，从当前最新阶段的prompt开始做，每完成一个阶段就在对应的prompt下面标注已完成，以及简短的概述做了什么，同时在每个阶段完成时进行commit push"
+    interpreted_scope: R6-T11-local-no-call-provider-terminal-remediation-only
+    prerequisite_publish:
+      commit: b0317928670214b75dbea10922a2a47388436a4d
+      branch: agent/complete-p0-r1-stages
+      remote_sha_verified: true
+    context_refs:
+      - docs/test-evidence/R6-T4/20260730T171100-0800/RESULTS.sha256
+      - docs/test-evidence/R6-T7/20260730T183547-0800/RESULTS.sha256
+      - docs/test-evidence/R6-T10/20260730T195616-0800/RESULTS.sha256
+      - docs/test-evidence/R6-T10/20260730T195616-0800/runs/r6-terminal-01-fallback-heading-direct-search-attempt-1/receipt-ledger.json
+      - docs/test-evidence/R6-T10/20260730T195616-0800/runs/r6-terminal-01-fallback-heading-direct-search-attempt-1/stdout.jsonl
+      - docs/test-evidence/R6-T11/20260801T123150-0800/proof.json
+      - docs/tasks/ATOMIC_TASK_PROMPTS.md
+      - ROADMAP.yaml
+    note: Authorization covered immutable attempts-one/two/three replay, ordered WebSocket-to-HTTPS receipt attribution, non-timeout provider-terminal separation, no-retry preservation, a bounded local compatibility disposition, proof evidence, tests and documentation. It completed with proof hash 0c6b2357c745fe66ce8a88e2d49db8f5f8ae51112470ae058dbcbb5432a30dcf and contract hash fa512a787a4d72d75704ebebbd06ab78cd796387483f0e625985fb6d9fbce1d2; external process/model/provider-request counts are zero. It does not change attempt three, claim a root cause, select an attempt-four policy, authorize R6-T12/R6-T13, consume product holdout or unlock product work.
 
   - id: OWNER-R6-T7-EXTERNAL-BATCH
     title: Authorize the frozen R6-T7 attempt-two external batch
