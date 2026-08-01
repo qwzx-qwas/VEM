@@ -958,6 +958,8 @@
 - **目标**：本地实现 experiment-only client/model config 与 VEM runtime 的硬隔离，以及 exactly-one-process、zero-retry、timeout-stop 的 terminal sealer。
 - **边界**：不选择或调用外部模型；不把 provider reachability 变成 MCP correctness 条件；不允许 R9。
 
+> **已完成（2026-08-01）**：已在 `scripts/pilot` 建立 experiment-only participant adapter；client/model/destination 仅形成可审计 descriptor，不进入或转发到 VEM 产品 runtime，产品配置出现 model/provider/client/destination 字段或具体 model ID 时 fail closed，产品 package 扫描未发现 participant model identity。独立 one-shot sealer 只暴露一次 process-start 与一次 terminal-seal，process cap 为 1、retry 为 0；第二次 start、runner/sealer exception、缺失/不完整 terminal、transport failure 和 timeout 均封存为 `stop`，完整 timeout 也禁止 R9，所有 disposition 的产品解锁数均为 0。Evidence 位于 `docs/test-evidence/R8-T2/20260801T185500+0800/`，proof hash `aa9a2bb7795dfdaea87f908a30baf40179d52dffc377934359eebb792010e0b9`；本阶段 participant process/provider request/network probe/model call 均为 0。
+
 ## R8-T3 — Final one-process no-call preregistration
 
 ### Prompt

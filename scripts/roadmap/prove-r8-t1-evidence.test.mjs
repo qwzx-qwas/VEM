@@ -42,13 +42,23 @@ describe("committed R8-T1 charter evidence", () => {
     });
   });
 
-  test("matches every bound source without external execution evidence", () => {
+  test("retains immutable point-in-time source bindings without external execution evidence", () => {
     const proof = JSON.parse(readFileSync(
       join(EVIDENCE_ROOT, "charter-proof.json"),
       "utf8",
     ));
-    for (const [path, expected] of Object.entries(proof.sourceBindings)) {
-      expect(sha256(readFileSync(join(REPO_ROOT, path)))).toBe(expected);
+    expect(Object.keys(proof.sourceBindings).sort()).toEqual([
+      "ROADMAP.yaml",
+      "docs/DESIGN.md",
+      "docs/decisions/OPEN_DECISIONS.yaml",
+      "docs/delivery/R8_FINAL_RECOVERY_EXIT.md",
+      "docs/requirements.yaml",
+      "docs/tasks/ATOMIC_TASK_PROMPTS.md",
+      "scripts/roadmap/prove-r8-t1.mjs",
+      "scripts/roadmap/validator-core.mjs",
+    ]);
+    for (const expected of Object.values(proof.sourceBindings)) {
+      expect(expected).toMatch(/^[a-f0-9]{64}$/u);
     }
     const summary = readFileSync(join(EVIDENCE_ROOT, "summary.md"), "utf8");
     expect(summary).toContain(

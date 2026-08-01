@@ -87,7 +87,7 @@ export function assertR8CharterModel({
     || r4Attempt?.decision !== "pending"
     || r8?.status !== "in_progress"
     || !["in_progress", "done"].includes(charter?.status)
-    || adapter?.status !== "todo"
+    || !["todo", "in_progress", "done"].includes(adapter?.status)
     || preregistration?.status !== "todo"
     || verdict?.status !== "todo"
     || verdict?.decision !== "pending"

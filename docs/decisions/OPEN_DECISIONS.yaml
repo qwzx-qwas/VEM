@@ -509,6 +509,28 @@ decisions:
       - ROADMAP.yaml
     note: This entry authorizes R8-T1 local charter work and records the owner's conditional direction. It does not select an experiment model/client, authorize R8-T2/R8-T3 automatically, authorize an external process, reopen product phases, or make model identity part of VEM MCP behavior. Future external execution requires a published no-call preregistration and another exact authorization.
 
+  - id: OWNER-R8-T2-LOCAL-ADAPTER-SEALER
+    title: Continue with the local model-agnostic experiment adapter and one-shot sealer
+    status: decided
+    decision_owner: project-owner
+    needed_by_task: R8-T2
+    decision: authorized
+    decided_at: 2026-08-01T18:20:00+08:00
+    evidence: After manually publishing the completed R8-T1 charter commit, the owner directed work to continue. Under the charter boundary this authorizes only R8-T2 local implementation and tests.
+    owner_statement: "已push,继续"
+    interpreted_scope: R8-T2-local-zero-call-only
+    authorized_scope: [R8-T2]
+    external_execution_authorized: false
+    participant_process_authorized: false
+    provider_probe_authorized: false
+    model_selection_authorized: false
+    model_identity_product_requirement: false
+    prerequisite_publish:
+      commit: 622acb323b616b800837c6fd6586fa92b8136336
+      branch: agent/complete-p0-r1-stages
+      remote_sha_verified: true
+    note: This entry does not authorize R8-T3, R8-T4, an external model call, provider reachability work, product unlock, R9, or any mutation of prior decision/evidence.
+
   - id: OWNER-R7-T4-EXTERNAL-BATCH
     title: Authorize the frozen R7-T4 retry-isolated external batch
     status: decided

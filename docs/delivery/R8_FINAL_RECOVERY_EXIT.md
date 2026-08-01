@@ -13,6 +13,14 @@ R8-T1 is local charter work only. No participant process, provider probe or exte
 3. `R8-T3`: preregister exactly one process, an explicit experiment client/model/destination, timeout-stop policy and full evidence bindings with `externalExecutionAuthorized=false`.
 4. `R8-T4`: only under a new exact post-publish authorization, execute one process, seal its evidence and record the immutable exit verdict.
 
+## Implemented local boundary
+
+R8-T2 keeps experiment identity in `scripts/pilot` only. Its descriptor accepts the exact auditable client/model/destination tuple but carries no credential field, makes no compatibility claim and is never forwarded into VEM product runtime. The product-side guard rejects participant model/provider/client/destination fields and concrete participant model identities.
+
+The R8 one-shot controller exposes one start transition and one terminal seal. It has no retry method, caps logical process attempts at one, rejects authorization replay against another result root and writes private run, exception, verdict and SHA256 evidence before returning. A schema-valid complete response is only continue-eligible; it is not an authoritative decision or product unlock. Timeout, transport/runner failure, missing or invalid final output, incomplete terminal evidence, a second start or sealing exception yields stop and never permits R9.
+
+R8-T2 validation is local-only. Its success/timeout/incomplete cases are lifecycle simulations: they do not spawn a participant process or contact a provider. The committed proof records zero participant processes, provider requests, network probes and model calls.
+
 ## Model-agnostic product boundary
 
 - VEM product runtime, MCP protocol, tools, resources and CapabilityReport do not accept or require a participant model ID.
