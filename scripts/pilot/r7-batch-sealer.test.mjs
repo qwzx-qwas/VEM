@@ -182,6 +182,35 @@ describe("R7 exception-safe batch sealing", () => {
       .toBe(false);
   });
 
+  test("seals an explicitly supplied future decision verdict into the same manifest", async () => {
+    const setup = makeBatch();
+    const result = await runR7ExceptionSafeBatch({
+      ...setup.options,
+      runBatch: async (batch) => {
+        const attempt = batch.prepareAttempt(spec("direct-search", 1));
+        batch.markProcessStarted(attempt, "run-attempt-1");
+        batch.sealAttempt(attempt, terminal("run-attempt-1"));
+        batch.completeArm("r7-local-task-01:direct-search");
+      },
+      aggregate: () => ({ successfulArmCount: 1 }),
+      verdictFactory: ({ aggregateObservation, stopped }) => ({
+        schemaVersion: "R7-future-decision-v1",
+        decisionKey: "R7-RECOVERY",
+        verdict: stopped ? "stop" : "continue",
+        successfulArmCount: aggregateObservation.successfulArmCount,
+      }),
+    });
+    expect(result.ok).toBe(true);
+    expect(json(setup.resultRoot, "results/verdict.json")).toMatchObject({
+      schemaVersion: "R7-future-decision-v1",
+      decisionKey: "R7-RECOVERY",
+      verdict: "continue",
+      successfulArmCount: 1,
+      evidenceSealedBeforeReturn: true,
+    });
+    expect(verifyR7BatchManifest(setup.resultRoot)).toBe(true);
+  });
+
   test("contains no provider, child-process, or network call primitive", () => {
     for (const file of ["r7-attempt-factory.mjs", "r7-batch-sealer.mjs"]) {
       const source = readFileSync(join(import.meta.dirname, file), "utf8");

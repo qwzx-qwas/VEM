@@ -40,6 +40,7 @@ export async function runR7ExceptionSafeBatch({
   runBatch,
   aggregate = () => ({ ok: true }),
   terminalManifestProbe = () => {},
+  verdictFactory = null,
 }) {
   const root = requirePrivateEmptyDirectory(resultRoot, "R7_BATCH_ROOT_INVALID");
   const ledgerRoot = requirePrivateDirectory(
@@ -56,7 +57,8 @@ export async function runR7ExceptionSafeBatch({
     || typeof attemptFactory?.prepare !== "function"
     || typeof runBatch !== "function"
     || typeof aggregate !== "function"
-    || typeof terminalManifestProbe !== "function") {
+    || typeof terminalManifestProbe !== "function"
+    || verdictFactory !== null && typeof verdictFactory !== "function") {
     throw new Error("R7_BATCH_REQUEST_INVALID");
   }
   claimAuthorization({ ledgerRoot, authorizationId, resultRoot: root });
@@ -106,7 +108,7 @@ export async function runR7ExceptionSafeBatch({
     recordException(state, "terminal-manifest", error);
   }
 
-  const stopped = state.exceptions.length > 0
+  let stopped = state.exceptions.length > 0
     || state.completedArms.size !== expectedArmCount
     || state.attempts.some((attempt) => (
       attempt.processStarted && !attempt.evidenceSealed
@@ -115,6 +117,32 @@ export async function runR7ExceptionSafeBatch({
   const retryProcessStarted = state.retryDecisions.some(
     (entry) => entry.processStarted,
   );
+  let suppliedVerdict = null;
+  if (verdictFactory !== null) {
+    try {
+      suppliedVerdict = await verdictFactory(Object.freeze({
+        stopped,
+        aggregateObservation,
+        attempts: Object.freeze([...state.attempts]),
+        completedArmCount: state.completedArms.size,
+        processAttemptCount: state.processAttemptCount,
+        retryAuthorized,
+        retryProcessStarted,
+      }));
+      if (typeof suppliedVerdict !== "object"
+        || suppliedVerdict === null
+        || Array.isArray(suppliedVerdict)
+        || typeof suppliedVerdict.schemaVersion !== "string"
+        || suppliedVerdict.schemaVersion.length < 1
+        || typeof suppliedVerdict.verdict !== "string") {
+        throw new Error("R7_VERDICT_FACTORY_RESULT_INVALID");
+      }
+    } catch (error) {
+      recordException(state, "aggregate-evaluation", error);
+      suppliedVerdict = null;
+      stopped = true;
+    }
+  }
   const batchStop = {
     schemaVersion: "R7-T2-batch-stop-v1",
     stopped,
@@ -142,12 +170,20 @@ export async function runR7ExceptionSafeBatch({
     exceptions: state.exceptions,
     rawMessagesPersisted: false,
   };
-  const verdict = {
+  const verdict = suppliedVerdict === null ? {
     schemaVersion: "R7-T2-local-batch-verdict-v1",
     outcome: stopped ? "stopped" : "completed",
     decision: "not-evaluated",
     externalExecutionAuthorized: false,
     productUnlockCount: 0,
+    aggregateObservationHash: aggregateObservation === null
+      ? null
+      : sha256(canonicalJson(aggregateObservation)),
+    exceptionCount: state.exceptions.length,
+    evidenceSealedBeforeReturn: true,
+  } : {
+    ...suppliedVerdict,
+    batchStopped: stopped,
     aggregateObservationHash: aggregateObservation === null
       ? null
       : sha256(canonicalJson(aggregateObservation)),

@@ -923,6 +923,8 @@
 - **实现约束**：全部 source/policy/data/environment hashes、attempt factory 与 exception sealer fail closed；全批 process cap 保持有界。
 - **验收标准**：新预注册与本地 probes 通过后 `done`；R7-T4 等待绑定 published commit 与全部 frozen boundary 的另一份精确授权。
 
+> **已完成（2026-08-01）**：已冻结独立 R7-T4 runner、15 项 transitive runtime source closure、5 个 fresh retry-isolation tasks / 10 个 counterbalanced arms、equal-base capsules、每个 task 的四个 attempt-1/2 direct/VEM 独立资源准备、R6-T13 stop 与 R7-T2 proof 不可变绑定、既有两类 failure policy、`1200000/5000/5000 ms` termination、20-process cap、固定 outer environment、product-holdout exclusion 与 exception-safe aggregate contract。20 个 attempt-isolation 准备探针及 30 个真实 filesystem/Codex-binary/permission-profile 本地探针通过，participant process/provider request/network probe/model call 均为 0。Evidence 位于 `docs/test-evidence/R7-T3/20260801T162533-0800/`；preregistration/instrumentation/data-scope/failure-policy/retry-isolation/termination/outer-environment hashes 分别为 `bc2bd50ca79aaac581c083232d4bf0d55b838c64228039921e6ae1adbb8a4a78` / `ce7979ebf9414da72e7afb65de178da3c5da6dc49990d8f8088c2ba01f5a5274` / `fca7658cc49b0e7eba3c29354a63433282a85048ff960122b7bd890a470dd8a7` / `9e9f3174f794ea1ed2ec18a54f983117179a867985c4107ca37e0425948588fa` / `d847e93ad6d5ae3b0336d465105dc1f62bf0a92bcf7eda5307053b7b7ae8f79c` / `caa4ff6248fca549c601cb7bdcd80813bb91ee646606cacce627111deae16372` / `cf24c3c5e349e230a9c04223dceb4854bd377915e21f46d830134b085bc3579d`。`externalExecutionAuthorized=false`、产品解锁数为 0；R7-T4 必须等待本提交发布后绑定全部 hashes、目的地、模型、10 arms 与 20-process cap 的另一份精确授权。
+
 ## R7-T4 — Separately authorized retry-isolated verdict
 
 ### Prompt
