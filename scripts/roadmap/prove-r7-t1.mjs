@@ -84,7 +84,7 @@ export function assertR7CharterModel({ roadmap, decisionInbox, validation }) {
     || r4Attempt?.decision !== "pending"
     || r7?.status !== "in_progress"
     || !["in_progress", "done"].includes(charter?.status)
-    || runner?.status !== "todo"
+    || !["todo", "done"].includes(runner?.status)
     || preregistration?.status !== "todo"
     || verdict?.status !== "todo"
     || verdict?.decision !== "pending"

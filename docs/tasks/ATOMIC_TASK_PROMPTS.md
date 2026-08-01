@@ -910,6 +910,8 @@
 - **测试要求**：不同 control roots/final files、无 writable reuse、base/treatment parity、attempt retention、pre/post-spawn exceptions、cleanup failure、budget、no rerun、zero call。
 - **验收标准**：目标测试和 local proof 通过后 `done`；下一项仅为 R7-T3。
 
+> **已完成（2026-08-01）**：已新增 R7 专属 per-attempt factory 与 exception-safe batch sealer；每个 arm/attempt 在 spawn 前获得独立 capsule、control root、permission profile 和 runner-owned authoritative final file，direct/VEM 只保留冻结 `vem-context.json` 这一 treatment 差异。Runner 将 `retryAuthorized` 与 `retryProcessStarted` 分开记账，未 spawn retry 不消耗 process budget；pre/post-spawn、retry planning、classification、aggregate、terminal-manifest 与 cleanup failure 均生成 batch-stop、exceptions、retry decisions、run-index、local verdict 和顶层 hash manifest，同一 authorization 换 result root 重放会被拒绝。证据位于 `docs/test-evidence/R7-T2/20260801T160404-0800/`，proof hash `165c6634eca37c297e304eea19eef0f2e30597430e8ea79e5a834b7b5ee36e57`；participant process/provider request/network probe/model call 与产品解锁数均为 0。下一项仅为 R7-T3，R7-T4 仍未授权。
+
 ## R7-T3 — Retry-isolated no-call preregistration
 
 ### Prompt
