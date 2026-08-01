@@ -378,6 +378,16 @@ R7-T4 的精确授权与全部 frozen bindings 均验证通过。首个 direct a
 
 当前 owner-authorized 执行序列见 [`docs/delivery/R7_RETRY_CAPSULE_ISOLATION_REMEDIATION.md`](delivery/R7_RETRY_CAPSULE_ISOLATION_REMEDIATION.md)。
 
+### 2.7.10 Final single-attempt recovery exit before model-agnostic MCP product work (`R8-FINAL-RECOVERY-EXIT-001`)
+
+R7-T4 的 `R7-RECOVERY=stop`、R7 failed 与全部既有 decision/evidence 必须保持不可覆盖。Owner 允许再做一次最终 recovery 尝试，并明确如果该尝试 timeout 就停止 recovery 实验、转向真正的模型无关 MCP 产品开发路线。R8 因此是空依赖、独立 decision key、零产品解锁的最终 research exit gate；不得创建 R9 或把 R8 verdict 写回 R7/R6/P0。
+
+VEM 产品 runtime、MCP tools/resources、CapabilityReport、协议协商与验证语义不得读取、要求、分支或宣称任何 participant model ID。未来 R8 预注册必须为外部实验单独记录 client、model、destination 与 data scope，以便复核和精确授权，但这些 experiment-only 字段不得进入 VEM 产品配置、MCP capability 或兼容性判断。模型是否可连接也不得替代 MCP contract、模拟 client、协议或浏览器集成测试。
+
+R8 external execution 最多且必须恰好启动一个 separately authorized process，不设 retry；所有 timeout、runner deadline、transport failure、缺失 terminal/final 或 evidence sealing failure 必须记录 immutable `stop` 并永久结束 recovery research。非 timeout 的 schema-valid success 也只完成这一 exit gate，不自动证明 VEM 产品价值或解锁既有 product phases。未来模型无关产品路线必须另行定义任务与验收边界，不依赖 `R8-RECOVERY=continue`，并保留 provider unavailable/timeout 作为可见 limitation，而不是把它变成 MCP 产品阻断条件。
+
+当前 owner-authorized 执行序列见 [`docs/delivery/R8_FINAL_RECOVERY_EXIT.md`](delivery/R8_FINAL_RECOVERY_EXIT.md)。
+
 ## 2.8 项目与依赖许可证 (`LICENSE-POLICY-001`)
 
 P0-T1 在生成 package metadata 前必须记录项目自身许可证或明确的 private/unlicensed 状态、版权主体、贡献接收方式和发布边界；设计文档不能替项目所有者默认选择 MIT、Apache-2.0、AGPL 或商业许可。若许可证决定尚未获得项目所有者确认，允许完成不发布的 workspace scaffold，但 public package、复制第三方代码或分发 extension 的工作保持 blocked。

@@ -45,7 +45,7 @@ describe("R7-T1 independent retry-capsule isolation charter", () => {
         externalExecutionAuthorized: false,
         currentDecision: "stop",
       },
-      validation: { phases: 17, tasks: 181, contracts: 33 },
+      validation: { phases: 18, tasks: 185, contracts: 34 },
     });
     expect(proof.preservedTerminalStates.map(({ phase }) => phase))
       .toEqual(["P0", "R0", "R1", "R2", "R3", "R5", "R6"]);

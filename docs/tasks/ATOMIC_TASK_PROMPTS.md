@@ -938,6 +938,40 @@
 
 > **已完成（2026-08-01）**：基于已发布 commit `91e0f08b064d48d757544aa0ca2ce9e186382d75` 与 owner 对全部冻结 hashes、OpenAI Codex service / `gpt-5.6-sol`、10-arm 目标和 20-process cap 的精确授权，执行了唯一 R7-T4 batch。第一个 direct arm 的 attempt 1 与唯一 retry 分别使用独立 capsule/control root/final file 和 fresh thread；两次均完整观察 WebSocket→HTTPS timeout 序列及 `turn.failed/request timed out`，exit 1、empty final、empty process group，封存为 `external-transport-timeout-before-response`。Retry 已真实启动并消耗预算，第二次失败后按策略停止；其余 9 arms 未启动，实际 2/20 processes、0/10 arms、剩余预算 18。顶层与两个 per-run manifests、raw ledger hashes、权限/审计边界和 exception-safe aggregate seal 均验证通过；immutable verdict 为 `R7-RECOVERY=stop`、R7 phase failed，产品解锁数为 0，R6/R5/R4 及更早 decision/evidence 均未覆盖。Evidence 位于 `docs/test-evidence/R7-T4/20260801T165602-0800/`。
 
+## R8-T1 — Final recovery exit and model-agnostic transition charter
+
+### Prompt
+
+- **背景**：R7 已 immutable stop；owner 只允许再尝试一次，并要求 timeout 后永久停止 recovery、转向模型无关 MCP 产品路线。
+- **目标**：建立最终 recovery exit gate，机械保持全部 prior decisions/evidence，并把模型 identity 限定为 future experiment metadata 而非 VEM 产品要求。
+- **本阶段做**：R8 contract/phase/decision、one-process/no-retry/timeout-stop/no-R9 规则、未来产品路线不依赖 R8 continue、owner direction、traceability 与本地 charter proof。
+- **本阶段不做**：不修改 participant runner，不选择模型或 client，不生成预注册，不运行 process/provider probe/model call，不创建或解锁产品 phase。
+- **实现约束**：R8 空 phase/task dependency；不 supersede R7 或更早链；任何现有 phase/task 不依赖 R8；产品 runtime/protocol/capability 不含 model ID。
+- **验收标准**：charter proof 与完整门禁通过后 `done`；下一项仅为 R8-T2 local-only adapter boundary。
+
+> **已完成（2026-08-01）**：已建立独立 `R8-FINAL-RECOVERY-EXIT-001` contract、R8 phase、`R8-RECOVERY` decision 与 R8-T1–T4 原子链，并机械固定 R7/R6/R5 与更早 terminal stops、R4 blocked/pending、完整 non-supersession 顺序、空依赖和零产品解锁。最终 recovery 被限制为另行预注册/授权的单 process、零 retry；任何 timeout/incomplete/sealing failure 均永久 stop，且禁止 R9。产品 runtime、MCP protocol/tools/resources/CapabilityReport 不得绑定 participant model ID；future experiment 的 client/model/destination 仅是可复核授权 metadata，未来产品路线不依赖 `R8-RECOVERY=continue`。本阶段 process/provider probe/model call 为 0。
+
+## R8-T2 — Experiment adapter and one-shot exit sealer
+
+### Prompt
+
+- **目标**：本地实现 experiment-only client/model config 与 VEM runtime 的硬隔离，以及 exactly-one-process、zero-retry、timeout-stop 的 terminal sealer。
+- **边界**：不选择或调用外部模型；不把 provider reachability 变成 MCP correctness 条件；不允许 R9。
+
+## R8-T3 — Final one-process no-call preregistration
+
+### Prompt
+
+- **目标**：冻结一个明确的 experiment client/model/destination、一个 process、零 retry、timeout-stop、source/data/environment/evidence bindings 与 `externalExecutionAuthorized=false`。
+- **边界**：模型只属于实验记录，不进入 VEM product runtime；发布后仍需另一份精确外部授权。
+
+## R8-T4 — Separately authorized final recovery exit
+
+### Prompt
+
+- **目标**：在精确授权后只启动一个 process，封存 terminal evidence 并记录 immutable `R8-RECOVERY` verdict。
+- **边界**：任何 timeout/incomplete/sealing failure 都是 `stop`，无 retry、无 R9；无论 verdict 如何都不自动证明产品价值或解锁旧 phase。
+
 ## P0-T9A — Walking-skeleton 正向 Edge E2E
 
 ### Prompt

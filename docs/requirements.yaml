@@ -88,6 +88,13 @@ contracts:
     roadmap_tasks: [R7-T1, R7-T2, R7-T3, R7-T4]
     required_tests: [r6-stop-r5-stop-r4-blocked-pending-and-prior-stops-immutability, independent-phase-boundary, per-attempt-capsule-control-root, per-attempt-authoritative-final-file, equal-base-treatment-parity, retry-lifecycle-cleanup, exception-safe-aggregate-sealing, no-silent-authorization-rerun, separate-external-authorization, no-product-unlock]
 
+  - id: R8-FINAL-RECOVERY-EXIT-001
+    title: Owner-authorized final single-attempt recovery exit and model-agnostic MCP product transition
+    authoritative_sections: ["2.7.10 Final single-attempt recovery exit before model-agnostic MCP product work (`R8-FINAL-RECOVERY-EXIT-001`)"]
+    introduced_phase: R8
+    roadmap_tasks: [R8-T1, R8-T2, R8-T3, R8-T4]
+    required_tests: [r7-and-prior-decision-immutability, independent-phase-boundary, product-runtime-model-identity-independence, experiment-only-client-model-binding, exactly-one-process, zero-retry, timeout-terminal-stop, no-r9, product-route-not-gated-by-recovery-continue, separate-external-authorization, no-product-unlock]
+
   - id: LICENSE-POLICY-001
     title: Project license decision and third-party dependency policy
     authoritative_sections: ["2.8 项目与依赖许可证 (`LICENSE-POLICY-001`)", "附录 B：调研与实现参考"]

@@ -471,6 +471,44 @@ decisions:
       - ROADMAP.yaml
     note: This grant covers charter/validator work, local runner remediation, local tests/probes, new preregistration evidence and stage-by-stage commit/push. It does not authorize a participant process, provider reachability probe, model request, reuse of any R6 authorization, mutation of prior evidence or product unlock.
 
+  - id: R8-RECOVERY
+    title: Record the final single-attempt recovery exit verdict
+    status: open
+    decision_owner: evidence-gate
+    needed_by_task: R8-T4
+    decision: pending
+    current_attempt: R8-T4
+    authoritative_state_ref: ROADMAP.yaml
+    note: R8 is the final independent recovery exit gate after immutable R7 stop. It permits at most one separately preregistered and authorized process with no retry. Any timeout or incomplete evidence records stop and forbids R9. A future model-agnostic MCP product route is separately scoped and must not depend on R8 continue.
+
+  - id: OWNER-R8-FINAL-RECOVERY-EXIT
+    title: Authorize a final recovery attempt with timeout-to-product transition
+    status: decided
+    decision_owner: project-owner
+    needed_by_task: R8-T1
+    decision: authorized
+    decided_at: 2026-08-01T18:00:00+08:00
+    evidence: Owner allowed one more attempt, but directed that a timeout ends recovery experimentation and transitions work to a genuinely model-agnostic MCP product route after clarifying that VEM must not bind its product architecture to a specific model.
+    owner_statement: "可以尝试一下，但超时就停止 recovery 实验，转向真正的模型无关 MCP 产品开发路线。"
+    interpreted_scope: R8-final-single-attempt-recovery-exit-charter-first
+    authorized_scope: [R8-T1]
+    external_execution_authorized: false
+    model_identity_product_requirement: false
+    timeout_disposition: stop-recovery-and-transition-to-separate-model-agnostic-product-route
+    maximum_future_external_processes: 1
+    maximum_future_retries: 0
+    prerequisite_publish:
+      commit: 689ebc5e89565e89937a54d6d31bab227d24545f
+      branch: agent/complete-p0-r1-stages
+      remote_sha_verified: true
+    context_refs:
+      - docs/test-evidence/R7-T4/20260801T165602-0800/RESULTS.sha256
+      - docs/test-evidence/R7-T4/20260801T165602-0800/results/verdict.json
+      - docs/DESIGN.md
+      - docs/delivery/R8_FINAL_RECOVERY_EXIT.md
+      - ROADMAP.yaml
+    note: This entry authorizes R8-T1 local charter work and records the owner's conditional direction. It does not select an experiment model/client, authorize R8-T2/R8-T3 automatically, authorize an external process, reopen product phases, or make model identity part of VEM MCP behavior. Future external execution requires a published no-call preregistration and another exact authorization.
+
   - id: OWNER-R7-T4-EXTERNAL-BATCH
     title: Authorize the frozen R7-T4 retry-isolated external batch
     status: decided

@@ -46,7 +46,7 @@ describe("R5-T1 independent process-tree termination remediation charter", () =>
         charterExternalExecutionAuthorized: false,
         currentDecision: "stop",
       },
-      validation: { phases: 17, tasks: 181, contracts: 33 },
+      validation: { phases: 18, tasks: 185, contracts: 34 },
     });
   });
 

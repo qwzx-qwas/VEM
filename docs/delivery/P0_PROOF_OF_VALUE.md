@@ -12,6 +12,8 @@
 
 2026-08-01 owner 另行授权的 R7 route 先以零调用修复 per-attempt capsule/final-output isolation 与 exception-safe aggregate sealing，随后在新预注册发布和另一份精确授权后执行 R7-T4。首个 direct arm 的两个独立 attempts 均以 sealed provider timeout 失败，0/10 arms 完成、2/20 processes 消耗，最终 `R7-RECOVERY=stop`、R7 failed；它不覆盖 R6 或此前 decision/evidence，也不解锁本 P0 产品路线。
 
+2026-08-01 owner 随后允许一次最终 R8 recovery exit，并明确 timeout 后永久停止 recovery、转向真正的模型无关 MCP 产品路线。R8 最多一个另行预注册/授权的 process、零 retry且禁止 R9；experiment client/model 只属于审计 metadata，不得进入 VEM 产品 runtime 或 MCP 兼容性语义。未来产品路线必须独立定义，保留全部既有 stops，且不以 `R8-RECOVERY=continue` 为依赖。
+
 ## 建议顺序
 
 | 步骤 | 依次执行的原子任务 | 必须产出 | 结果型 stop condition |
