@@ -388,6 +388,16 @@ R8 external execution 最多且必须恰好启动一个 separately authorized pr
 
 当前 owner-authorized 执行序列见 [`docs/delivery/R8_FINAL_RECOVERY_EXIT.md`](delivery/R8_FINAL_RECOVERY_EXIT.md)。
 
+### 2.7.11 Owner-prioritized model-agnostic usable MCP route (`USABLE-MCP-001`)
+
+M0 是 owner 明确要求优先完成的独立产品路线，不是 recovery、P0 verdict 重试或既有 phase 解锁。它必须保持 `P0-VALUE=stop`、R0–R3/R5–R7 terminal stops、R4 blocked/pending 与 R8 当前链全部不可覆盖；M0 不得依赖 `P0-VALUE` 或任何 R0–R8 verdict，也不得把 provider reachability、participant model identity 或 recovery 成功当作 MCP correctness 条件。M0 可以复用 P0 已完成并通过各自测试的环境、protocol、fixture、selector、source-anchor 与 registry 资产，但这种复用不得改写 P0 的 failed 状态或声称原 value gate 已通过。
+
+M0 的首个可用目标固定为本地 React/Vite injected-preview vertical slice，并按 owner 优先级依次交付：MCP-owned coordinator 与 MCP STDIO；Vite same-origin browser proxy；bounded selection/source MCP tools；server-derived claim、immutable single-use confirmation、prepare-before-edit、relevant-HMR causality 与 fresh complete；真实 Edge Stable walking skeleton 及必要负例；最小安装 CLI、Codex MCP 配置、升级回滚和 clean uninstall。为了保持原子性，coordinator authority 与 STDIO protocol、confirmation 与 verification、正向与负向 Edge E2E、CLI implementation 与 fresh-project validation 必须拆成独立任务，且前一任务通过、提交并发布后才能开始下一任务。
+
+产品 runtime、MCP protocol/tools/resources、CapabilityReport 与安装配置必须保持 participant-model-agnostic：不得接受、要求、默认或分支于具体 model ID。M0 的本地实现和验证可以启动 owner 授权范围内的 Edge、Vite 与 MCP OS processes，但不得调用外部 participant model/provider。Page ingress 继续视为不可信，build-registry publication 使用独立 capability；每层身份、schema、size、privacy、project/document/revision、TTL 与 semantic checks 必须独立执行，不能因本地开发环境而绕过。
+
+在 M0-T13 之前不得宣称“可安装 MCP”完成。完成必须同时证明：fresh project 可 idempotent 安装并生成明确 MCP config；真实 Edge 能完成 select → source → confirm → prepare → source edit → relevant HMR → fresh complete；stale/restart/unrelated/ambiguous 路径 fail closed；production build 不参与；upgrade 可回滚；clean uninstall 保留用户文件且不残留 VEM production runtime/data。当前执行序列见 [`docs/delivery/M0_USABLE_MCP.md`](delivery/M0_USABLE_MCP.md)。
+
 ## 2.8 项目与依赖许可证 (`LICENSE-POLICY-001`)
 
 P0-T1 在生成 package metadata 前必须记录项目自身许可证或明确的 private/unlicensed 状态、版权主体、贡献接收方式和发布边界；设计文档不能替项目所有者默认选择 MIT、Apache-2.0、AGPL 或商业许可。若许可证决定尚未获得项目所有者确认，允许完成不发布的 workspace scaffold，但 public package、复制第三方代码或分发 extension 的工作保持 blocked。
@@ -400,7 +410,7 @@ P0-T1 在生成 package metadata 前必须记录项目自身许可证或明确�
 
 ## 2.9 P0 建议执行顺序与范围
 
-单人使用 Codex 时，当前 owner-approved scope 是 **P0 proof-of-value / go-no-go prototype**，不是完整 Visual V1。当前执行序列位于 `docs/delivery/P0_PROOF_OF_VALUE.md`；`docs/ONE_WEEK_EXECUTION.md` 仅为旧链接兼容入口。Step 只表达依赖友好的建议顺序，不是硬日历、工时估算或“一周必须完成”的承诺。Codex 可以加快编码，但不能替代真实环境、Edge、隔离 pilot 和证据门禁。当前 scope 只包括：
+单人使用 Codex 的原 P0 owner-approved scope 是 **P0 proof-of-value / go-no-go prototype**，不是完整 Visual V1。该历史执行序列位于 `docs/delivery/P0_PROOF_OF_VALUE.md`；`docs/ONE_WEEK_EXECUTION.md` 仅为旧链接兼容入口。Step 只表达依赖友好的建议顺序，不是硬日历、工时估算或“一周必须完成”的承诺。Codex 可以加快编码，但不能替代真实环境、Edge、隔离 pilot 和证据门禁。P0 scope 只包括：
 
 1. 完成并保存 execution preflight verdict；
 2. 建立最小 TypeScript workspace、React/Vite fixture 和 protocol schema；
@@ -410,6 +420,8 @@ P0-T1 在生成 package metadata 前必须记录项目自身许可证或明确�
 P0-T17B 是逻辑 decision `P0-VALUE` 的首个 attempt。只有当前 attempt 的 `decision: continue` 时，stretch 才能按 P0-T7 → P0-T11 → P0-T12A → P0-T12B → P0-T12C 的依赖顺序向 bounded MCP read-only source-resolution smoke 前进；未完成这五个任务不得声称 MCP smoke 可用。当前 scope 不承诺 HMR transaction verification、MV3 pairing、capture 或 Visual V1。
 
 stop condition 由结果而不是日历触发：canonical WSL ext4 root 或 Tier-1 preflight 未通过；selector→source bundle 在有界排错后仍不可重复；micro-pilot 出现 wrong attribution；或者 `adjust/stop` verdict 未被新的、预登记的重试证据取代。进入 stop 后只修复阻断点和保存 evidence，不通过删测试、缩小安全边界或把未完成能力改名为 MVP 来制造完成。长期 P1–P8 保留为后续 backlog，不自动进入当前 scope。
+
+P0 已以 terminal stop 结束。当前 owner-approved 产品 scope 是 2.7.11 定义的独立 M0 usable MCP route；它不改变本节的 P0 历史范围、verdict 或完成条件。
 
 # 二、浏览器策略：Edge 优先、Chromium 共用
 

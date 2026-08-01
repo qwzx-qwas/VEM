@@ -531,6 +531,33 @@ decisions:
       remote_sha_verified: true
     note: This entry does not authorize R8-T3, R8-T4, an external model call, provider reachability work, product unlock, R9, or any mutation of prior decision/evidence.
 
+  - id: OWNER-M0-USABLE-MCP-PRIORITY
+    title: Prioritize the model-agnostic usable MCP vertical slice
+    status: decided
+    decision_owner: project-owner
+    needed_by_task: M0-T1
+    decision: authorized
+    decided_at: 2026-08-01T19:10:00+08:00
+    evidence: The owner explicitly prioritized the six user-visible capability groups needed to reach a usable MCP instead of treating recovery work as the product path.
+    owner_statement: |-
+      优先完成;coordinator + MCP STDIO；
+      Vite/browser proxy；
+      selection/source MCP tools；
+      confirmation + prepare/HMR/complete；
+      真实 Edge walking-skeleton；
+      最小安装 CLI。
+    interpreted_scope: M0-model-agnostic-usable-mcp-product-route
+    authorized_scope: [M0-T1, M0-T2, M0-T3, M0-T4, M0-T5, M0-T6, M0-T7, M0-T8, M0-T9, M0-T10, M0-T11, M0-T12, M0-T13]
+    external_model_execution_authorized: false
+    provider_reachability_required: false
+    participant_model_identity_requirement: false
+    local_edge_vite_mcp_process_tests_authorized: true
+    prerequisite_publish:
+      commit: c678c615817dddf35a1d598cba76e34887de5e62
+      branch: agent/complete-p0-r1-stages
+      remote_sha_verified: true
+    note: This product authorization does not reopen or supersede P0-VALUE, R0-R8 decisions or evidence. It authorizes staged local product implementation and real local Edge/Vite/MCP verification, but no external model/provider execution. Each task remains atomic and requires its own completed test gate plus commit/push before the next task begins.
+
   - id: OWNER-R7-T4-EXTERNAL-BATCH
     title: Authorize the frozen R7-T4 retry-isolated external batch
     status: decided

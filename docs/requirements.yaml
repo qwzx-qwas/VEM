@@ -15,21 +15,21 @@ contracts:
     title: Normative requirement traceability
     authoritative_sections: ["0. 文档地位与阅读方式", "17.3 原子任务门禁", "附录 B：调研与实现参考"]
     introduced_phase: P0
-    roadmap_tasks: [P0-T2, P0-T10]
+    roadmap_tasks: [P0-T2, P0-T10, M0-T1]
     required_tests: [requirements-schema, normative-section-coverage, contract-reference, multi-source-authority-reference, roadmap-state, decision-reference-and-verdict, internal-link]
 
   - id: CORE-BOUND-001
     title: VEM and Codex responsibility and capability boundary
     authoritative_sections: ["2.3 职责边界", "5.1 长期架构", "14.1 原则", "二十二、产品完成定义"]
     introduced_phase: P0
-    roadmap_tasks: [P0-T3, P0-T12A, P0-T12C, P6-T8]
+    roadmap_tasks: [P0-T3, P0-T12A, P0-T12C, P6-T8, M0-T3, M0-T5]
     required_tests: [tool-allowlist, no-file-shell-url-capability, capability-report]
 
   - id: UX-GATE-001
     title: Preregistered product evidence and user-visible task binding
     authoritative_sections: ["2.4 成功标准", "2.5 交付里程碑", "2.6 安装、升级与卸载是产品能力", "2.7 产品证据与 stop/go gate (`UX-GATE-001`)", "2.7.1 P0 value micro-pilot 两层只读 harness", "2.9 P0 建议执行顺序与范围", "16.7 产品效果与正确性指标"]
     introduced_phase: P0
-    roadmap_tasks: [P0-T17A, P0-T17B, P0-T17C, P0-T17D, P0-T17E, P0-T17F, P0-T9C, P1-T16, P1-T18A, P1-T18B, P1-T17, P2-T13A, P2-T13B, P2-T13C, P2-T13D, P3-T8B, P3-T19, P4-T6A, P4-T6B, P4-T6C, P7-T9A, P7-T9B, P7-T9C, P7-T9D]
+    roadmap_tasks: [P0-T17A, P0-T17B, P0-T17C, P0-T17D, P0-T17E, P0-T17F, P0-T9C, P1-T16, P1-T18A, P1-T18B, P1-T17, P2-T13A, P2-T13B, P2-T13C, P2-T13D, P3-T8B, P3-T19, P4-T6A, P4-T6B, P4-T6C, P7-T9A, P7-T9B, P7-T9C, P7-T9D, M0-T12, M0-T13]
     required_tests: [early-value-micro-pilot, evidence-plan-immutability, no-vem-baseline, holdout-separation, install-first-selection, edit-disposition, clean-uninstall, zero-false-positive-pass]
 
   - id: R0-RECOVERY-001
@@ -95,46 +95,53 @@ contracts:
     roadmap_tasks: [R8-T1, R8-T2, R8-T3, R8-T4]
     required_tests: [r7-and-prior-decision-immutability, independent-phase-boundary, product-runtime-model-identity-independence, experiment-only-client-model-binding, exactly-one-process, zero-retry, timeout-terminal-stop, no-r9, product-route-not-gated-by-recovery-continue, separate-external-authorization, no-product-unlock]
 
+  - id: USABLE-MCP-001
+    title: Owner-prioritized model-agnostic usable MCP vertical slice
+    authoritative_sections: ["2.7.11 Owner-prioritized model-agnostic usable MCP route (`USABLE-MCP-001`)" ]
+    introduced_phase: M0
+    roadmap_tasks: [M0-T1, M0-T2, M0-T3, M0-T4, M0-T5, M0-T6, M0-T7, M0-T8, M0-T9, M0-T10, M0-T11, M0-T12, M0-T13]
+    required_tests: [owner-priority-order, prior-decision-immutability, no-recovery-gate, completed-asset-reuse, participant-model-independence, coordinator-stdio, vite-browser-proxy, selection-source-tools, confirmation-prepare-hmr-complete, real-edge-walking-skeleton, minimal-install-cli, fresh-project-verified-edit, clean-uninstall]
+
   - id: LICENSE-POLICY-001
     title: Project license decision and third-party dependency policy
     authoritative_sections: ["2.8 项目与依赖许可证 (`LICENSE-POLICY-001`)", "附录 B：调研与实现参考"]
     introduced_phase: P0
-    roadmap_tasks: [P0-T1, P1-T16, P1-T18A, P1-T18B, P2-T1, P2-T13A, P2-T13C, P7-T9A, P7-T9B, P7-T9C, P7-T9D]
+    roadmap_tasks: [P0-T1, P1-T16, P1-T18A, P1-T18B, P2-T1, P2-T13A, P2-T13C, P7-T9A, P7-T9B, P7-T9C, P7-T9D, M0-T12, M0-T13]
     required_tests: [package-license-metadata, dependency-license-policy, third-party-notices, vendored-asset-provenance]
 
   - id: EDGE-PREFLIGHT-001
     title: Tier-1 Edge execution environment preflight
     authoritative_sections: ["3.1 支持优先级与执行预检 (`EDGE-PREFLIGHT-001`)", "3.1.1 已选 canonical root、迁移门禁与环境安装基线"]
     introduced_phase: P0
-    roadmap_tasks: [P0-T0A0, P0-T0A1, P0-T0A2, P0-T0B, P0-T0C, P0-T0D, P0-T0E, P0-T0F, P0-T0G, P0-T9A, P0-T9B, P2-T11]
+    roadmap_tasks: [P0-T0A0, P0-T0A1, P0-T0A2, P0-T0B, P0-T0C, P0-T0D, P0-T0E, P0-T0F, P0-T0G, P0-T9A, P0-T9B, P2-T11, M0-T10, M0-T11, M0-T13]
     required_tests: [canonical-git-worktree, pinned-node-pnpm, package-registry-proxy, filesystem-watch-hmr, edge-channel-launch, windows-wsl-http-websocket, private-runtime-acl, two-os-process, non-loopback-refusal, gate-evidence]
 
   - id: BROWSER-MODE-001
     title: Honest Edge injected extension and CDP capability boundaries
     authoritative_sections: ["3.2 三种浏览器模式", "A. Vite 注入模式", "B. Edge MV3 扩展模式", "C. Edge CDP/Playwright 模式", "3.3 单一扩展代码库", "5.5 部署组合"]
     introduced_phase: P0
-    roadmap_tasks: [P0-T5, P1-T7, P2-T1, P2-T9, P7-T1, P7-T2, P7-T5, P7-T6, P7-T7, P7-T8, P8-T1, P8-T2, P8-T3A, P8-T3B, P8-T4]
+    roadmap_tasks: [P0-T5, P1-T7, P2-T1, P2-T9, P7-T1, P7-T2, P7-T5, P7-T6, P7-T7, P7-T8, P8-T1, P8-T2, P8-T3A, P8-T3B, P8-T4, M0-T4, M0-T10, M0-T12, M0-T13]
     required_tests: [capability-by-mode, forbidden-capability, edge-first-manifest, provider-limitation]
 
   - id: REV-ID-001
     title: Project source runtime and document revision identity algebra
     authoritative_sections: ["4.3 选择类型", "4.4 身份必须拆分", "12.2 sourceAnchorId", "12.3 跨 revision 目标重附着", "12.6 HMR revision", "13.2 SelectionSnapshot", "13.3 PageContext"]
     introduced_phase: P0
-    roadmap_tasks: [P0-T3, P0-T15, P0-T16, P1-T5, P1-T6, P1-T8, P1-T12, P2-T10, P5-T1]
+    roadmap_tasks: [P0-T3, P0-T15, P0-T16, P1-T5, P1-T6, P1-T8, P1-T12, P2-T10, P5-T1, M0-T7, M0-T8, M0-T9]
     required_tests: [revision-equality-ordering, project-instance-reset, document-generation, anchor-collision, direct-current-anchor, relevant-update-plus-runtime-target-plus-current-registry-reattach, target-changed-reselection, no-revision-as-rollback, page-redaction]
 
   - id: EVIDENCE-TRUST-001
     title: Evidence graph provenance conflict and no trust laundering
     authoritative_sections: ["4.1 像素不是源码对象", "4.2 DOM 与源码不是双射", "4.5 SourceResolution 是证据集合", "6.1 威胁模型", "6.4 Page Runtime evidence 不能被认证成事实", "6.5 每层校验职责", "Page Runtime → Content Script", "Content Script → Service Worker", "Vite Build Integration → Coordinator", "6.6 Evidence 模型 (`EVIDENCE-TRUST-001`)", "8.4 StyleEvidence 分层", "12.1 映射等级", "12.5 自定义组件限制"]
     introduced_phase: P0
-    roadmap_tasks: [P0-T3, P0-T15, P0-T16, P0-T11, P0-T12B, P0-T12C, P1-T6, P2-T3, P2-T4, P3-T18, P4-T1, P5-T2, P5-T3, P5-T4, P5-T5, P5-T7, P5-T8, P6-T1, P6-T2, P6-T5, P6-T7, P7-T2, P8-T1, P8-T2, P8-T3A, P8-T3B]
+    roadmap_tasks: [P0-T3, P0-T15, P0-T16, P0-T11, P0-T12B, P0-T12C, P1-T6, P2-T3, P2-T4, P3-T18, P4-T1, P5-T2, P5-T3, P5-T4, P5-T5, P5-T7, P5-T8, P6-T1, P6-T2, P6-T5, P6-T7, P7-T2, P8-T1, P8-T2, P8-T3A, P8-T3B, M0-T4, M0-T5, M0-T6]
     required_tests: [provenance-edge, registry-membership-not-dom-binding, conflict-priority, candidate-confidence, shared-impact-unknown, malicious-marker-copy, no-layer-validation-bypass]
 
   - id: TOP-P0-001
     title: P0 process topology discovery and authority
     authoritative_sections: ["5.2 三条连接必须分开建模", "5.3 P0 reference topology and process ownership (`TOP-P0-001`)", "5.4 CoordinatorTransport", "5.6 Runtime discovery"]
     introduced_phase: P0
-    roadmap_tasks: [P0-T7, P0-T11, P0-T12A, P0-T12B, P0-T12C, P0-T9A, P0-T9B, P2-T8, P2-T9, P2-T10, P2-T11, P7-T3A, P7-T3B]
+    roadmap_tasks: [P0-T7, P0-T11, P0-T12A, P0-T12B, P0-T12C, P0-T9A, P0-T9B, P2-T8, P2-T9, P2-T10, P2-T11, P7-T3A, P7-T3B, M0-T2, M0-T3, M0-T4, M0-T5, M0-T6, M0-T10, M0-T11]
     required_tests: [real-process, private-discovery-acl, proxy-ingress, build-channel-auth, project-restart, ambiguous-instance]
 
   - id: SEC-PAIR-001
@@ -148,21 +155,21 @@ contracts:
     title: Selection provenance external confirmation and immutable task binding
     authoritative_sections: ["7.0 Selection provenance 与用户任务绑定 (`SEL-PROV-001`)", "7.1 选择算法", "7.2 交互", "7.4 selection handle", "7.5 Consumer identity 与 selection claim", "二十、Codex 页面修改工作流"]
     introduced_phase: P0
-    roadmap_tasks: [P0-T5, P0-T12B, P1-T1, P1-T2, P1-T3, P1-T4, P1-T9, P2-T2, P2-T6, P5-T6, P6-T6, P6-T7, P6-T8]
+    roadmap_tasks: [P0-T5, P0-T12B, P1-T1, P1-T2, P1-T3, P1-T4, P1-T9, P2-T2, P2-T6, P5-T6, P6-T6, P6-T7, P6-T8, M0-T5, M0-T6]
     required_tests: [page-untrusted-selection, strict-external-confirmation, prompt-claim-binding, sender-derived-interaction, active-selection-race, claim-ttl-release]
 
   - id: CONF-BIND-001
     title: Immutable source-and-action-bound single-use user confirmation
     authoritative_sections: ["7.0.1 ConfirmationBinding 协议与状态机 (`CONF-BIND-001`)"]
     introduced_phase: P0
-    roadmap_tasks: [P0-T3, P0-T12B, P0-T8, P0-T9A, P1-T9, P2-T6]
+    roadmap_tasks: [P0-T3, P0-T12B, P0-T8, P0-T9A, P1-T9, P2-T6, M0-T6, M0-T7, M0-T10]
     required_tests: [snapshot-hash-binding, direct-source-evidence-binding, degraded-candidate-binding, action-allowlist, ttl, single-consumption, concurrent-reservation, prepared-successor-no-second-confirmation, target-changed-no-confirmation-reuse, restart-fail-closed, cross-phase-state-semantics]
 
   - id: PRIV-MIN-001
     title: Minimum outbound privacy and untrusted prompt-data floor
     authoritative_sections: ["8.0 最小出站隐私底线 (`PRIV-MIN-001`)", "8.1 不推送全量上下文", "第二阶段：ContextRequest", "8.2 任务意图、上下文和验证分离", "8.3 Context profiles", "16.3 隐私过滤", "16.4 路径安全"]
     introduced_phase: P0
-    roadmap_tasks: [P0-T3, P0-T4, P0-T5, P0-T11, P0-T12C, P1-T7, P1-T11, P2-T3, P2-T4, P3-T2, P3-T3, P4-T2, P6-T1, P6-T2, P6-T3, P6-T5, P6-T13, P8-T1, P8-T2, P8-T3A, P8-T3B]
+    roadmap_tasks: [P0-T3, P0-T4, P0-T5, P0-T11, P0-T12C, P1-T7, P1-T11, P2-T3, P2-T4, P3-T2, P3-T3, P4-T2, P6-T1, P6-T2, P6-T3, P6-T5, P6-T13, P8-T1, P8-T2, P8-T3A, P8-T3B, M0-T4, M0-T5]
     required_tests: [form-value-redaction, private-subtree, url-redaction, bounded-text, prompt-data-marking, error-echo, path-confinement, imported-image-metadata-and-path-redaction, trusted-artifact-root-selection]
 
   - id: PIPE-BOUND-001
@@ -176,14 +183,14 @@ contracts:
     title: Runtime observation freshness and cache safety
     authoritative_sections: ["9.6 缓存层与运行时观察新鲜度 (`OBS-FRESH-001`)", "Context cache", "Capture reference cache", "15.3 ObservationDiff"]
     introduced_phase: P0
-    roadmap_tasks: [P0-T8, P0-T14, P3-T4, P3-T12, P3-T17, P4-T3]
+    roadmap_tasks: [P0-T8, P0-T14, P3-T4, P3-T12, P3-T17, P4-T3, M0-T7, M0-T9]
     required_tests: [runtime-mutation-epoch, target-resize-epoch, viewport-scroll-zoom-epoch, provider-namespace-reset, cache-revalidation, verification-cache-bypass]
 
   - id: DATA-LIFE-001
     title: Explicit storage classes managed and user-selected roots import ownership TTL quota lease and deletion
     authoritative_sections: ["10.2 MCP resource", "10.3 存储等级与 ArtifactStore (`DATA-LIFE-001`)", "10.3.1 P6 托管存储根", "10.3.2 用户自选存储根与迁移", "10.3.3 用户外部导入参考图", "10.4 默认保留策略", "10.5 删除、lease 和 quota"]
     introduced_phase: P0
-    roadmap_tasks: [P0-T5, P0-T12B, P0-T8, P1-T8, P3-T5, P3-T11, P3-T17, P5-T6, P6-T2, P6-T3, P6-T4, P6-T10, P6-T11, P6-T12, P6-T13, P6-T14]
+    roadmap_tasks: [P0-T5, P0-T12B, P0-T8, P1-T8, P3-T5, P3-T11, P3-T17, P5-T6, P6-T2, P6-T3, P6-T4, P6-T10, P6-T11, P6-T12, P6-T13, P6-T14, M0-T6, M0-T7]
     required_tests: [storage-class-capability, ownership, hard-and-absolute-ttl, quota, lease, manual-clear, process-exit, audit-default-on-opt-out-stop-new-writes, tombstone, orphan-recovery, platform-default-artifact-root, audit-artifact-store-separation, custom-root-trusted-selection-and-probe, migration-hash-rollback-and-no-split-store, import-copy-bounded-decode-and-normalization, import-provenance-and-original-independence, opaque-resource-and-path-redaction, linked-external-unavailable, active-reference-lease-and-bounded-grace, explicit-renewal-no-read-renewal, artifact-binding-delete-cascade]
 
   - id: VISUAL-BIND-001
@@ -211,21 +218,21 @@ contracts:
     title: Development-plane isolation production non-participation and non-leakage
     authoritative_sections: ["12.4 开发期注入", "16.5 开发平面隔离与生产不参与 (`PROD-LEAK-001`)"]
     introduced_phase: P0
-    roadmap_tasks: [P0-T15, P0-T10, P1-T7, P1-T15, P1-T18B, P8-T1, P8-T2, P8-T3A, P8-T3B]
+    roadmap_tasks: [P0-T15, P0-T10, P1-T7, P1-T15, P1-T18B, P8-T1, P8-T2, P8-T3A, P8-T3B, M0-T4, M0-T12, M0-T13]
     required_tests: [serve-build-separation, production-module-graph-non-resolution, no-client-endpoint-marker-map, private-registry-no-project-output, baseline-build-equivalence, user-attribute-preservation, readonly-leakage-gate, transform-side-effect, uninstall-residue]
 
   - id: MCP-COMPAT-001
     title: Negotiated MCP revisions task and no-task compatibility
     authoritative_sections: ["13.1 Protocol package 与 MCP 兼容基线 (`MCP-COMPAT-001`)", "14.2 V1 工具", "14.3 Resources", "14.4 Error model"]
     introduced_phase: P0
-    roadmap_tasks: [P0-T3, P0-T12A, P0-T12C, P1-T10]
+    roadmap_tasks: [P0-T3, P0-T12A, P0-T12C, P1-T10, M0-T3, M0-T5]
     required_tests: [primary-compat-initialization, structured-output, compatible-text, no-task-wait-cancel, optional-task-adapter, resource-subscription, tool-error]
 
   - id: VER-TXN-001
     title: Prepared verification and relevant update causality
     authoritative_sections: ["13.4 两阶段 VerificationRun，不持久化完整 EditRun (`VER-TXN-001`)", "15.1 HMR State Machine", "15.2 VerificationSpec", "15.4 视觉稳定化"]
     introduced_phase: P0
-    roadmap_tasks: [P0-T8, P0-T13, P0-T14, P0-T9A, P0-T9B, P1-T13, P3-T4, P4-T3, P4-T4, P4-T5, P5-T8, P8-T1, P8-T2, P8-T3A, P8-T3B]
+    roadmap_tasks: [P0-T8, P0-T13, P0-T14, P0-T9A, P0-T9B, P1-T13, P3-T4, P4-T3, P4-T4, P4-T5, P5-T8, P8-T1, P8-T2, P8-T3A, P8-T3B, M0-T7, M0-T8, M0-T9, M0-T10, M0-T11]
     required_tests: [atomic-prepare-before, journal-barrier-replay, module-intersection, irrelevant-update-ignore, bounded-batch, browser-receipt-settle, stale-ambiguous, objective-vs-subjective]
 
   - id: REMOTE-SEC-001
@@ -246,5 +253,5 @@ contracts:
     title: Layered tests phase commands fixtures and atomic execution
     authoritative_sections: ["十六、性能预算", "17.1 测试层级", "Unit（单元测试）", "E2E（End-to-End，端到端测试）", "Security（安全测试）", "17.2 Fixture matrix", "十八、仓库与模块边界", "十九、实施路线原则", "二十一、风险与缓解", "附录 A：关键验收用例"]
     introduced_phase: P0
-    roadmap_tasks: [P0-T1, P0-T2, P0-T10, P1-T14, P5-T9, P6-T9, P7-T9A, P7-T9B, P7-T9C, P7-T9D, P8-T1, P8-T2, P8-T3A, P8-T3B, P8-T4]
+    roadmap_tasks: [P0-T1, P0-T2, P0-T10, P1-T14, P5-T9, P6-T9, P7-T9A, P7-T9B, P7-T9C, P7-T9D, P8-T1, P8-T2, P8-T3A, P8-T3B, P8-T4, M0-T13]
     required_tests: [roadmap-validator, phase-command-presence, decision-gate, fixture-coverage, atomic-dependency, evidence-record, security-floor-versus-enhancement-performance-breakdown]

@@ -14,6 +14,8 @@
 
 2026-08-01 owner 随后允许一次最终 R8 recovery exit，并明确 timeout 后永久停止 recovery、转向真正的模型无关 MCP 产品路线。R8 最多一个另行预注册/授权的 process、零 retry且禁止 R9；experiment client/model 只属于审计 metadata，不得进入 VEM 产品 runtime 或 MCP 兼容性语义。未来产品路线必须独立定义，保留全部既有 stops，且不以 `R8-RECOVERY=continue` 为依赖。
 
+2026-08-01 owner 进一步明确优先完成 coordinator/MCP STDIO、Vite/browser proxy、selection/source tools、confirmation/prepare/HMR/complete、真实 Edge walking skeleton 与最小安装 CLI。独立产品 phase M0 因而按 `USABLE-MCP-001` 建立；它不依赖或重开 P0/R0–R8 decision，复用已完成 P0 资产但不改写 P0 failed/stop。M0 的完整任务链和 first-usable gate 见 [`M0_USABLE_MCP.md`](M0_USABLE_MCP.md)。
+
 ## 建议顺序
 
 | 步骤 | 依次执行的原子任务 | 必须产出 | 结果型 stop condition |

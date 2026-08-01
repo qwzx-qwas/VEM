@@ -27,7 +27,7 @@ describe("R1-T1 independent runner-remediation charter", () => {
         productUnlockCount: 0,
         externalExecutionAuthorized: false,
       },
-      validation: { phases: 18, tasks: 185, contracts: 34 },
+      validation: { phases: 19, tasks: 198, contracts: 35 },
     });
   });
 

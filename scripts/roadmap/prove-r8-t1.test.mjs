@@ -53,7 +53,7 @@ describe("R8-T1 final recovery exit charter", () => {
         externalExecutionAuthorized: false,
         currentDecision: "pending",
       },
-      validation: { phases: 18, tasks: 185, contracts: 34 },
+      validation: { phases: 19, tasks: 198, contracts: 35 },
     });
     expect(proof.preservedTerminalStates.map(({ phase }) => phase))
       .toEqual(["P0", "R0", "R1", "R2", "R3", "R5", "R6", "R7"]);

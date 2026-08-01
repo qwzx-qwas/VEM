@@ -974,6 +974,102 @@
 - **目标**：在精确授权后只启动一个 process，封存 terminal evidence 并记录 immutable `R8-RECOVERY` verdict。
 - **边界**：任何 timeout/incomplete/sealing failure 都是 `stop`，无 retry、无 R9；无论 verdict 如何都不自动证明产品价值或解锁旧 phase。
 
+## M0-T1 — Model-agnostic usable MCP route charter
+
+### Prompt
+
+- **背景**：owner 明确要求优先交付可用 MCP；P0 与 recovery decisions 保持原 verdict，不能通过重开或改写获得产品实现资格。
+- **目标**：建立不依赖 P0/R0–R8 verdict 的 M0 产品 phase，按 coordinator/STDIO → Vite proxy → selection/source → confirmation/prepare/HMR/complete → Edge walking skeleton → minimal CLI 固定原子任务链。
+- **本阶段做**：`USABLE-MCP-001`、M0 phase/tasks、owner priority、completed-asset reuse boundary、traceability、delivery charter 与零调用证明。
+- **本阶段不做**：不实现 coordinator 或协议代码，不启动 Edge/Vite/MCP participant process，不调用 provider/model，不改写任何 prior decision/evidence。
+- **验收标准**：prior chain、空 recovery dependency、模型无关、精确优先顺序、13 个原子任务、完整 reverse mapping 与 zero-call proof 通过。
+
+> **已完成（2026-08-01）**：已建立独立非 recovery 的 `USABLE-MCP-001` 与 M0 phase，将 owner 指定的六组优先能力拆为 13 个依次提交的原子任务：coordinator authority、MCP STDIO、Vite/browser proxy、selection/source tools、claim/confirmation、prepare、relevant HMR、fresh complete、Edge 正向/负向 E2E、minimal CLI 与 fresh-project lifecycle gate。M0 phase/task dependency 均不引用 `P0-VALUE` 或 R0–R8 verdict；P0 failed/stop、R0–R3/R5–R7 stops、R4 blocked/pending 与 R8 当前链保持不可覆盖。复用范围仅限已完成并测试的环境、protocol、fixture、selector、anchor 和 registry 资产，不声称 P0 gate 成功。产品 runtime/MCP 仍不含 participant model identity，provider reachability 不是 correctness 条件；本阶段 external model/provider/network probe 与 Edge/Vite/MCP process 均为 0。下一项为 M0-T2 coordinator authority/private discovery。
+
+## M0-T2 — Coordinator authority and private discovery
+
+### Prompt
+
+- **目标**：实现 MCP-owned coordinator、private runtime discovery、单一 authoritative project instance 与 restart/stale-instance semantics。
+- **边界**：不同时实现 MCP wire protocol、Vite proxy 或 browser tools；runtime metadata 私有且 bounded。
+
+## M0-T3 — Model-agnostic MCP STDIO
+
+### Prompt
+
+- **目标**：实现 MCP STDIO framing、primary/compat revision negotiation、无 Tasks 核心路径、connection-derived consumer identity 与 truthful CapabilityReport。
+- **边界**：不含 model ID/provider branch，不提前暴露未实现 tools/resources。
+
+## M0-T4 — Vite/browser proxy boundary
+
+### Prompt
+
+- **目标**：实现 Vite same-origin `/__vem/browser` proxy，并将 untrusted page ingress 与 authenticated build-registry channel 分离。
+- **边界**：页面不接收 token/filesystem/shell/absolute path；production build 不参与。
+
+## M0-T5 — Selection/source MCP tools
+
+### Prompt
+
+- **目标**：提供 bounded selection summary、source-resolution tools/resources、direct-primary/degraded evidence 与 compatible text output。
+- **边界**：read/metadata only；严格 privacy projection；heuristic candidate 不冒充 exact。
+
+## M0-T6 — Claim and ConfirmationBinding
+
+### Prompt
+
+- **目标**：实现 server-derived consumer claim 与 immutable source/action-bound、TTL、atomic single-use ConfirmationBinding。
+- **边界**：claim 不是 consent；mutable active selection 不能驱动 prepared work。
+
+## M0-T7 — Prepare-before-edit barrier
+
+### Prompt
+
+- **目标**：在源码编辑前原子消费 confirmation，记录 before Observation、RevisionContext barrier、fixed target scope 与 bounded journal cursor。
+- **边界**：不得用 edit-after-the-fact observation 替代 before state。
+
+## M0-T8 — Relevant HMR correlation
+
+### Prompt
+
+- **目标**：实现 coordinator-observed module intersection、bounded update batch、unrelated-update ignore 与 early-event replay。
+- **边界**：缺失或竞争证据必须 ambiguous，不能猜测 passed。
+
+## M0-T9 — Fresh verification complete
+
+### Prompt
+
+- **目标**：以 fresh after Observation、direct/transaction-matched reattachment 与 text assertions 完成 verification。
+- **边界**：普通 context cache hit 不得通过；target-changed/stale/ambiguous/unresolved 保持诚实终态。
+
+## M0-T10 — Real Edge walking skeleton
+
+### Prompt
+
+- **目标**：真实 Edge Stable + Vite/MCP 两进程完成 select → confirm → prepare → edit → relevant HMR → complete 正向闭环。
+- **边界**：不以 Playwright Chromium 替代 Tier-1 Edge；进程、profile 与 runtime metadata 必须清理。
+
+## M0-T11 — Edge negative lifecycle E2E
+
+### Prompt
+
+- **目标**：覆盖 project restart、stale session/confirmation、unrelated update、target changed 与 ambiguity 的真实 Edge fail-closed 行为。
+- **边界**：负例不得通过自动重选或降低 freshness/confirmation 要求制造成功。
+
+## M0-T12 — Minimal install CLI
+
+### Prompt
+
+- **目标**：提供 injected-preview CLI dry-run/idempotent integration 与明确的 Codex MCP config generator。
+- **边界**：只改 allowlisted dev files；不污染 production graph；保留用户配置与属性。
+
+## M0-T13 — Fresh-project usable gate
+
+### Prompt
+
+- **目标**：证明 fresh project install、first selection、verified edit、upgrade rollback 与 clean uninstall 无 production residue。
+- **边界**：完整 gate 前不宣称 installable；uninstall 不删除用户源码。
+
 ## P0-T9A — Walking-skeleton 正向 Edge E2E
 
 ### Prompt
